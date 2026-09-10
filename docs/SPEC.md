@@ -170,12 +170,13 @@ Field reference. Required unless marked optional.
 | `text_layer` | `always` \| `never` \| `sometimes` — drives OCR (section 6.2) |
 | `fingerprint.description` | prose the classifier prompt includes |
 | `fingerprint.footer_regex` | optional; enables `footer_check` (section 7.4) |
+| `fingerprint.page_size_hint`, `fingerprint.ocr_quality_note` | optional; documentation, included in the classifier prompt |
 | `record_scope.header_regex` | optional; regex with one capture group that extracts the `Property:` value from page text |
 | `sections[]` | ordered list; order is informational only |
 | `sections[].id` | snake_case, unique within the schema |
 | `sections[].semantic` | cross-manager tag from the controlled list in section 4.4 |
 | `sections[].cardinality` | `one` \| `per_record` |
-| `sections[].typical_pages` | string, documentation and a soft sanity check |
+| `sections[].typical_pages` | string or integer, documentation and a soft sanity check |
 | `sections[].optional` | optional, default false. A required section absent from a source → `NEEDS_REVIEW` (`missing_required`), unless the output definition lists it in `drop` (then absence is fine) |
 | `sections[].not_in_standard_export` | optional, documentation |
 | `sections[].description`, `visual_cues[]`, `text_cues[]` | **These are the classifier's label definitions.** Keep them visually precise |
@@ -289,8 +290,13 @@ class SourceRepository(Protocol):
     def publish(self, property: Property, period: PeriodId, files: list[Path], status: BuildStatus) -> None: ...
 ```
 
-- `LocalFsRepository(root)` — reads `<root>/<pm.folder>/<property.folder>/<period folder>/inputs/`,
-  publishes to `.../output/` (or `.../review/` when status is `NEEDS_REVIEW`).
+- `LocalFsRepository(root, publish_root=root)` — reads
+  `<root>/<pm.folder>/<property.folder>/<period folder>/inputs/`, publishes the same layout
+  under `publish_root` into `.../output/` (or `.../review/` when status is `NEEDS_REVIEW`).
+  `publish_root` defaults to `root`, but the CLI sets it from `CRR_PUBLISH_ROOT`, which itself
+  defaults to `<work_dir>/published`: the local repository root is normally the June bundle,
+  and the bundle is a read-only fixture (D-08). Point `CRR_PUBLISH_ROOT` at the repository root
+  to publish beside the inputs.
 - `GoogleDriveRepository(root_folder_id, service_account_json)` — identical layout on Drive.
   Uses `google-api-python-client` with a service account; lists by folder name; downloads to
   `dest`; uploads outputs with `supportsAllDrives=True`. Never deletes. Never overwrites: a
@@ -418,9 +424,21 @@ Implementations:
 
 One request per page, sequential per document (prior-page context is a dependency). Model from
 `settings.model` (default `claude-opus-5`; pin a dated snapshot if the API lists one and record
-the exact id in the manifest). `temperature=0`. `max_tokens=400`.
+the exact id in the manifest). `max_tokens=400`.
 
-**System block (cached, 1-hour TTL, identical for every page of a document):**
+`temperature` is **not sent**: it is rejected with a 400 on `claude-opus-5` (and on every model
+in that family), so the v1 build cannot set `temperature=0` as earlier drafts of this section
+said. Determinism comes instead from the forced tool with a closed `enum` on `section_id` and
+`strict: true` on the tool schema. Thinking is left at the model's default (adaptive) and depth
+is controlled with `output_config.effort`, which `settings.classifier_effort` sets to `low`:
+classifying one page image against a fixed catalogue is a perceptual call, not a reasoning
+problem, and disabling thinking outright on this model family has its own failure modes.
+
+**Cached prefix (1-hour TTL, identical for every page of a document).** The Messages API's
+`system` field carries text blocks only, so this prefix spans two places: the instruction block
+(items 1–3, 5) is the `system` field, and the exemplar images (item 4) are the leading blocks of
+the user turn. Each carries its own `cache_control` breakpoint; both are per-document constants,
+so pages 2..N read both from cache.
 
 1. Role: page classifier for property-management financial reports; label the page against the
    supplied schema; never invent sections; prefer `unknown` to guessing.
@@ -438,8 +456,8 @@ the exact id in the manifest). `temperature=0`. `max_tokens=400`.
    inherits the previous page's qualifier for null continuation pages, so do not guess one);
    report orientation of the *content* (text reading direction), not the page box.
 
-Mark the last system block with `cache_control: {"type": "ephemeral"}`. All exemplar images
-live in the system prompt so they cache; the per-page images do not.
+Mark the last block of each cached prefix with `cache_control: {"type": "ephemeral", "ttl":
+"1h"}`. The exemplar images are cached; the per-page image and text are not.
 
 **User turn (uncached):**
 
@@ -473,7 +491,9 @@ Extracted text (may be OCR, may be empty):
 
 Parse the tool input into `PageClassification` via pydantic; a validation failure is retried once
 with the validation error appended to the user turn, then recorded as `unknown` with
-`evidence="schema_violation"`.
+`evidence="schema_violation"`. A response with `stop_reason: "refusal"` is treated the same way:
+a safety decline is not a label, so the page becomes `unknown` and the build goes to review
+(D-12) rather than being retried into a guess.
 
 ### 7.3 Retries, limits, cost
 
@@ -589,9 +609,12 @@ A JSON Schema for this file is generated from the pydantic model and committed a
 ```
 crr validate-config                       # schemas, outputs, properties; exit 1 on error
 crr inspect <pdf>                         # page sizes, text-layer probe, footer lines
+crr inspect --repo local|gdrive --period X  # what each property has, and whether it is ready
 crr classify <pdf> --schema <id> [--classifier anthropic|golden] [--out json]
-crr build --period 2026-06 [--property <id>]... [--classifier anthropic|golden]
+crr build [--period 2026-06] [--property <id>]... [--classifier anthropic|golden]
           [--repo local|gdrive] [--dry-run] [--work-dir work/]
+          # --period defaults to the month just ended, so an unattended quarterly run
+          # (the 20th of Jan/Apr/Jul/Oct closes Dec/Mar/Jun/Sep) needs no argument.
 crr eval [--classifier anthropic|golden] [--pm <id>] [--gate]
 crr version
 ```
@@ -616,10 +639,13 @@ Never log page text or image bytes. Log document sha256s, not paths, at INFO.
 | `GOOGLE_SERVICE_ACCOUNT_B64` | — | base64 of the service-account JSON (one line, env-safe); no prefix |
 | `CRR_GDRIVE_ROOT_FOLDER_ID` | — | Drive folder that contains the `<PM>/` folders |
 | `CRR_WORK_DIR` | `work/` | |
+| `CRR_PUBLISH_ROOT` | `<work_dir>/published` | where the local repository publishes; keeps builds out of the read-only bundle |
 | `CRR_EXEMPLAR_POLICY` | `exclude_same_property` | `exclude_same_property` \| `any` |
+| `CRR_CLASSIFIER_EFFORT` | `low` | `output_config.effort` for the classifier: `low`\|`medium`\|`high`\|`xhigh`\|`max` |
 | `CRR_EVAL_MIN_PAGE_ACCURACY` | `0.98` | per-manager gate |
 | `CRR_EVAL_MIN_BOUNDARY_F1` | `0.98` | per-manager gate |
 | `CRR_PRICE_TABLE_JSON` | built-in | override `{model: {input, cache_read, cache_write, output}}` USD per MTok |
+| `CRR_OCRMYPDF_BIN` | `ocrmypdf` | ocrmypdf entry point; an escape hatch for environments where the distribution's entry point is broken or off PATH |
 
 ---
 

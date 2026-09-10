@@ -1,0 +1,40 @@
+# Output definition: investor report package for properties managed by Missoula Property Management
+# Soft target = the published 2026-06 packages, aligned to the sources actually available (D-03).
+output_id: missoula-investor-report
+version: 1
+property_manager: missoula
+title_template: "{property} - Investor Report - {period_label}"     # e.g. "Fort Grounds - Investor Report - June 2026"
+
+sources:
+  pm:       {schema: rentmanager-missoula, role: pm_source}
+  cs_bs:    {schema: cornerstone-qbo, role: cornerstone_balance_sheet}
+  cs_pl:    {schema: cornerstone-qbo, role: cornerstone_profit_loss_ytd}
+  cs_dist:  {schema: cornerstone-qbo, role: cornerstone_distribution_schedule, required: false}
+
+# Ordered list of flow items. Each resolves to zero or more page ranges via the address grammar
+# (SPEC.md section 5). `for_each_record` repeats its items once per property record, in source order.
+flow:
+  - {address: "cs_bs:balance_sheet",                      bookmark: "Balance Sheet (Cornerstone)"}
+  - {address: "cs_pl:profit_loss_ytd_comparison",         bookmark: "Profit & Loss YTD Comparison (Cornerstone)"}
+  - {address: "cs_dist:investor_distribution_schedule",   bookmark: "Investor Distributions", required: false}
+  - for_each_record:
+      - {address: "pm:profit_loss_comparison@{record}",   bookmark: "Profit & Loss Comparison - {record_name}"}
+      - {address: "pm:unit_availability@{record}",        bookmark: "Unit Availability - {record_name}"}
+  - {address: "pm:owner_statement",                       bookmark: "Owner Statement"}
+
+# Every section the PM source can contain must appear either in `flow` or here. A section found in
+# the source that is in neither goes to NEEDS_REVIEW with reason unmapped_section (SPEC.md §4.2, §6.8).
+unmapped_policy: explicit_drop
+drop:
+  - pm:financial_statement
+  - pm:rent_roll_analysis
+  - pm:general_ledger
+  - pm:actual_budget_fy_analysis
+  - pm:rent_roll_bank
+  - pm:delinquency
+  - pm:balance_sheet          # not in the baseline export; if it ever appears, drop it (D-03)
+
+transforms:
+  ocr_if_no_text: true        # no-op for this manager (text layer always present) but harmless
+  autorotate: true
+  add_bookmarks: true

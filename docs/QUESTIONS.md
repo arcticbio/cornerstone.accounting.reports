@@ -42,19 +42,110 @@ it up from here.
 
 *(format: `A-nn · <assumption> · <why> · <where it can be changed>`)*
 
-**A-01 · The classifier key is read from `CRR_ANTHROPIC_API_KEY`, with `ANTHROPIC_API_KEY` kept as a
-fallback.** · Claude Code on the web reserves the unprefixed `ANTHROPIC_API_KEY` for its own account
-auth and strips it from the session container, so a key set under that name never reaches `crr`
-(verified: `CRR_MODEL`, `CRR_GDRIVE_ROOT_FOLDER_ID` and `GOOGLE_SERVICE_ACCOUNT_B64` arrived from the
-same environment while `ANTHROPIC_API_KEY` was empty; the environment editor states the reservation).
-The fallback keeps local shells, GitHub Actions and Azure working under the SDK-conventional name. ·
-`SPEC.md` §12 and `settings.py`; full write-up in `docs/SETUP-CREDENTIALS.md`.
+**A-01 · `ocrmypdf` is located via `CRR_OCRMYPDF_BIN`, defaulting to `ocrmypdf` on PATH.**
+*Why:* the build container ships a Debian `ocrmypdf` built for python3.12 while `/usr/bin/python3`
+is a locally built 3.11, so the stock entry point cannot import PIL. Rather than special-case that
+in pipeline code, the entry point is one setting with the spec'd default; the session uses a
+git-ignored shim in `.venv/bin/`. CI and the Docker image use the stock apt entry point unchanged.
+*Where:* `src/crr/preprocess/ocr.py`, `SPEC.md` §12 (amended in the same commit).
+
+**A-02 · `temperature` is not sent to the classifier; `output_config.effort=low` replaces it.**
+*Why:* SPEC §7.2 specified `temperature=0`, but the parameter is rejected with a 400 on
+`claude-opus-5`. The safest equivalent is the one already in the design — a forced tool with a
+closed `enum` and `strict: true` — plus low effort, since page classification is perceptual, not
+a reasoning task. *Where:* `src/crr/settings.py` (`CRR_CLASSIFIER_EFFORT`), `SPEC.md` §7.2/§12
+(amended in the same commit).
+
+**A-03 · Exemplar images sit at the head of the user turn, not in the system prompt.**
+*Why:* SPEC §7.2 put them in the system block so they would cache, but the Messages API's
+`system` field accepts text blocks only. They now lead the user turn with their own 1-hour cache
+breakpoint, which preserves the caching behaviour the spec was actually after. *Where:*
+`src/crr/classify/anthropic_classifier.py`, `SPEC.md` §7.2 (amended in the same commit).
+
+**A-04 · No server-side refusal fallback model is configured.**
+*Why:* a `stop_reason: "refusal"` on a page of a rental property's financial report would be
+surprising, and adding a second model behind a beta flag widens the failure surface of an
+unattended quarterly job. A refusal is handled as `unknown` → review, which is the same
+conservative path as an unparseable response. Revisit if a real run ever refuses.
+*Where:* `src/crr/classify/anthropic_classifier.py`.
+
+**A-05 · Built-in price table set to current list prices for `claude-opus-5` ($5/$25 per MTok,
+cache read 0.1×, cache write 2× at the 1-hour TTL).**
+*Why:* SPEC §12 leaves the built-in table to the implementation. The estimate only ever appears
+in the manifest's `cost.usd_estimate`; `CRR_PRICE_TABLE_JSON` overrides it when list prices move.
+*Where:* `src/crr/settings.py`.
+
+**A-06 · The local repository publishes under `<work_dir>/published`, not beside the inputs.**
+*Why:* SPEC §6.1 has the local repository publish into `<period>/output/`, but the local root is
+the June bundle, which `CLAUDE.md` and D-08 make read-only. A golden build would otherwise write
+eight `output/` directories into the fixture. Publishing mirrors the same layout under
+`CRR_PUBLISH_ROOT` instead; set it to `bundle_root` to get the in-place behaviour. Drive (Phase 6)
+publishes in place, as production should. *Where:* `src/crr/settings.py`,
+`src/crr/repository/local_fs.py`, `SPEC.md` §6.1/§12 (amended in the same commit).
+
+**A-07 · `crr build --period` is optional, defaulting to the month just ended.**
+*Why:* the Azure job and the Actions cron both fire on a schedule, and a required `--period`
+would mean either editing the template every quarter or baking a fixed period into a recurring
+job — which would silently rebuild the same period forever. A run on the 20th of January closes
+December, so "the previous calendar month" is the period a scheduled run is for. Passing
+`--period` explicitly is unchanged. *Where:* `src/crr/cli.py`,
+`src/crr/config/properties.py`, `SPEC.md` §11 (amended in the same commit).
 
 ---
 
 ## Blocked (Claude Code appends here)
 
 *(format: `B-nn · <what is needed> · <what is blocked> · <what continues meanwhile>`)*
+
+**B-01 · `ANTHROPIC_API_KEY` does not reach the Claude Code session container.**
+*Status 2026-09-10:* the user has the key and is setting it for GitHub Actions (production).
+This session still reports `ANTHROPIC_API_KEY: not set`, and `GOOGLE_SERVICE_ACCOUNT_B64` /
+`CRR_GDRIVE_ROOT_FOLDER_ID` both arrive — so the variable is not on the environment this session
+uses, or was added after the container started. Environment variables are injected at container
+start, so a **new session** is what picks it up. See `docs/SETUP-CREDENTIALS.md`.
+*Blocked:* the Phase 3 real-model smoke run, the `api`-marked integration tests, and the Phase 5
+real-model eval and build. *What continues:* everything else — the classifier is unit-tested
+against a fake client, and `GoldenClassifier` drives the whole pipeline end to end.
+*Two commands close it out* in a session that can see the key:
+
+```
+uv run pytest -m api
+uv run crr eval --classifier anthropic --gate
+```
+
+**B-02 · ~~GitHub Actions has not run CI on PR #1.~~ RESOLVED 2026-09-10.**
+Green on the final tree `943e664`: runs
+[34464245438](https://github.com/arcticbio/cornerstone.accounting.reports/actions/runs/34464245438)
+(push) and
+[34464250151](https://github.com/arcticbio/cornerstone.accounting.reports/actions/runs/34464250151)
+(pull_request), all three jobs — lint/types/tests/validate-config/eval gate, the Bicep compile,
+and the image job with its in-container golden build and GHCR push.
+
+**B-03 · ~~No container runtime in the build environment.~~ RESOLVED 2026-09-10 in CI.**
+Still true locally — `/var/run/docker.sock` does not exist here — but CI's `image` job builds
+the image, runs `crr version`, proves `/app/data` is absent, checks all three OCR binaries
+inside the container, runs the golden build there, and pushes to GHCR. All green.
+
+**B-04 · Azure deployment — the user has chosen to proceed; instructions written.**
+*Status 2026-09-10:* the user wants Azure and has a subscription. `docs/SETUP-AZURE.md` is the
+end-to-end walkthrough, `infra/bootstrap.sh` does the credential-bearing parts in one guided
+run, and `deploy.yml` now reads its settings from repository variables so a deploy is one click.
+*Still needs the user, and cannot be done from a session with no Azure credentials:* the
+`az login` bootstrap, pasting `AZURE_CREDENTIALS` / `AZURE_RESOURCE_GROUP` /
+`AZURE_KEY_VAULT_NAME` into GitHub, and choosing whether the GHCR package goes public or gets a
+pull token. *Then:* Phase 8 task 4 — deploy, smoke-run `version` and `validate-config`, capture
+the logs into `PROGRESS.md`.
+
+**B-05 · ~~The `v1.0.0` tag cannot be pushed from this session.~~ RESOLVED 2026-09-10.**
+The user pushed it. The package version was `0.1.0` at the time and is now `1.0.0`, so
+`crr version` and every manifest's `runner_version` match the tag.
+
+**B-06 · ~~CI runs kept being cancelled by the workflow's own concurrency group.~~ RESOLVED.**
+`cancel-in-progress` on `ci-${{ github.ref }}` means each push cancels the previous run, and
+committing per task meant runs were routinely superseded before their slow steps finished.
+Twice I read a superseded run's stale step data as a stall; it was not one. Once pushing
+stopped, the run went green. Left as-is — cancelling superseded runs is the right default, and
+`cancel-in-progress: false` is the one-line change if it ever becomes a nuisance.
 
 ---
 

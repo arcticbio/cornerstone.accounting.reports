@@ -1,0 +1,58 @@
+# Source schema: Cornerstone Management Consulting - entity-level accounting components
+# Produced by Cornerstone itself (QuickBooks Online + a spreadsheet export), one page per component,
+# one component per file. These are the "additive" inputs that lead every investor package.
+schema_id: cornerstone-qbo
+version: 1
+producer: Cornerstone Management Consulting
+system: QuickBooks Online (accrual) + spreadsheet export
+text_layer: always            # born-digital; page text is always available
+fingerprint:
+  description: >
+    QuickBooks Online report pages are 619x802 pt portrait with the entity name on line 1, the
+    report title on line 2, "As of Jun 30, 2026" or a date range on line 3, and an "Accrual Basis"
+    line with a generation timestamp. The distribution schedule is a 792x612 landscape spreadsheet
+    grid with month columns and investor profile IDs (4-character codes) down the left.
+  page_size_hint: "619x802 portrait (QBO) | 792x612 landscape (spreadsheet)"
+
+sections:
+  - id: balance_sheet
+    semantic: balance_sheet
+    cardinality: one
+    typical_pages: 1
+    description: >
+      Entity-level Balance Sheet, accrual basis, as of period end. Sections: Assets (Bank Accounts,
+      Other Current Assets, Fixed Assets), Liabilities (Current, Long-term incl. the mortgage loan),
+      Equity. Ends with "Total for Liabilities and Equity".
+    visual_cues:
+      - "Entity name (e.g. 'Fort Grounds Apartment Homes LP') as the first line, then 'Balance Sheet'"
+      - "'As of Jun 30, 2026' and 'Accrual Basis' near the top"
+      - "Single TOTAL column; dollar figures with $ on subtotal rows"
+    text_cues: ["Balance Sheet", "Accrual Basis", "Total for Liabilities and Equity"]
+
+  - id: profit_loss_ytd_comparison
+    semantic: income_statement
+    cardinality: one
+    typical_pages: 1
+    description: >
+      Entity-level Profit and Loss YTD Comparison, accrual basis. Two columns: the quarter
+      (APR 1 - JUN 30 2026) and year-to-date (JAN 1 - JUN 30 2026). Income, Gross Profit, Expenses,
+      Net Operating Income, Other Expenses (Depreciation, Interest), Net Income.
+    visual_cues:
+      - "Entity name first line, then 'Profit and Loss YTD Comparison', then a month range"
+      - "Two numeric columns headed with date ranges"
+    text_cues: ["Profit and Loss YTD Comparison", "Accrual Basis", "Net Income"]
+
+  - id: investor_distribution_schedule
+    semantic: distribution_schedule
+    cardinality: one
+    typical_pages: 1
+    optional: true            # absent for Timber Place in 2026-06
+    description: >
+      Landscape spreadsheet: monthly distribution amounts across Jan-Dec columns, then one row per
+      investor (4-character profile ID, ownership percentage, per-month dollar amounts). May carry
+      multiple ownership-percentage columns when ownership was restated mid-year.
+    visual_cues:
+      - "Landscape grid; month names across the top; 'Paid Feb / Paid March ...' second header row"
+      - "Left column of 4-character alphanumeric codes (e.g. JRSZ, NJF3) with percentages"
+      - "No entity name header; may start directly with the month row"
+    text_cues: ["Ownership %", "Distribution", "Totals"]

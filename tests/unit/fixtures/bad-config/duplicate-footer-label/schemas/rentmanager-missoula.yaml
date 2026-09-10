@@ -1,0 +1,161 @@
+# Source schema: Missoula Property Management - monthly owner export from Rent Manager
+# Covers: Fort Grounds, Lolo Peak Village, Mullan Crossing, WayPointe
+schema_id: rentmanager-missoula
+version: 1
+producer: Missoula Property Management
+system: Rent Manager (footer shows "rentmanager.com - property management systems rev.12.2605532")
+text_layer: always
+fingerprint:
+  description: >
+    Every page carries a footer of the form
+    "<Report Name>          MM/DD/YY HH:MM AM  Page N of M  rentmanager.com - property management systems  rev.12.xxxxxxx".
+    The report name in that footer is the authoritative cross-check for the classifier
+    (SPEC.md section 7.4). Portrait pages are 612x792; several reports are 792x612 landscape.
+  footer_regex: 'rentmanager\.com - property management systems'
+  page_size_hint: "612x792 portrait | 792x612 landscape"
+record_scope:
+  description: >
+    A package may cover more than one Rent Manager property record under one owning entity
+    (WayPointe: "WayPointe Apartment Homes LP" and "128 S. 5th Street West"). Pages that are run
+    per record show "Property: <name>" in their header; pages run once across all records show
+    "Properties: <name>, <name>". The record_qualifier the classifier returns must be the
+    exact "Property:" value or null when the page is combined or carries no header.
+  header_regex: 'Propert(?:y|ies):\s*(.+)'
+
+sections:
+  - id: owner_statement
+    semantic: owner_statement
+    cardinality: one
+    typical_pages: 1-2
+    description: >
+      Owner Statement for the month. Page 1 opens with "Beginning Bank Balance", Income and Expense
+      totals, then a GL-coded income/expense detail (4000 Income, 5000 Move Out Expense ...).
+      Page 2 carries the "Owner Statement" title block with entity, property and date range,
+      COMMENTS ("Prepaid funds will be disbursed in the month they are applied"), Ending Bank
+      Balance, Cash Requirements (Total Reserve, Security Deposits Held, Prepaid Funds Balance),
+      escrow lines and 3003 Owner Distribution. On a two-record package it is a single combined page.
+    visual_cues:
+      - "Big numbers at top-left: Beginning Bank Balance / Income / Expense / Net Income/Loss"
+      - "Footer report name: Owner Statement"
+    text_cues: ["Owner Statement", "Beginning Bank Balance", "Prepaid funds will be disbursed", "Owner Distribution"]
+    footer_label: "Owner Statement"
+
+  - id: profit_loss_comparison
+    semantic: income_statement
+    cardinality: per_record
+    typical_pages: 1
+    description: >
+      "Profit & Loss Comparison" - year-to-date this year vs year-to-date last year, cash basis.
+      Header: "Comparison Periods: 01/01/26 - 06/30/26 and 01/01/25 - 06/30/25 (cash basis)
+      Property: <name>". Rows are GL-coded (4000 Income, 5001 Building Maintenance ...) with
+      $ Change and % Change columns, then CONTROLLABLE NOI, NON CONTROLLABLE EXPENSE, NET INCOME.
+    visual_cues:
+      - "Four numeric columns: current YTD, prior YTD, $ change, % change"
+      - "Footer report name: Profit & Loss Comparison"
+    text_cues: ["Profit & Loss Comparison", "Comparison Periods", "CONTROLLABLE NOI"]
+    footer_label: "Profit & Loss Comparison"
+
+  - id: unit_availability
+    semantic: occupancy
+    cardinality: per_record
+    typical_pages: 2
+    description: >
+      "Unit Availability Listing - Activity As of 06/30/26 - Property: <name>". Page 1 lists units
+      by status bucket (Available, Will Be Available, Occupied With Notice, Occupied Pre-Lease,
+      Pre-Lease Vacant, Pre-Lease Not Ready) with "Total Units: N" per bucket. Page 2 is the
+      "Unit Availability Summary By Unit Type" table (rows COA, ComCOA, M1bd, M2bd ... Trailer,
+      Vacation) - and can be nearly blank, carrying only the footer, when the summary fits on page 1.
+    visual_cues:
+      - "Status-bucket headings with 'Total Units:' counts"
+      - "Page 2: a wide table of unit-type rows with seven small integer columns"
+      - "Footer report name: Unit Availability Listing (both pages)"
+    text_cues: ["Unit Availability Listing", "Unit Availability Summary By Unit Type", "Total Units:"]
+    footer_label: "Unit Availability Listing"
+    continuation_note: "Page 2 may contain only the footer line. Label it as a continuation, never as unknown."
+
+  - id: financial_statement
+    semantic: balance_sheet
+    cardinality: one
+    typical_pages: 2
+    description: >
+      "Financial Statement 06/01/26 - 06/30/26 (cash)". Page 1: ASSETS (1003 SB - Trust Account),
+      LIABILITIES & EQUITY (2009 Security Deposits, 2200 Prepaid Funds, 2201 escrow), then an
+      income statement section by GL code. Page 2 continues the expense detail to Total Equity.
+      Not the same report as the Rent Manager "Balance Sheet" that appears in some published packages.
+    visual_cues: ["Title 'Financial Statement' with a date range; trust-account level assets"]
+    text_cues: ["Financial Statement", "SB - Trust Account", "Security Deposits"]
+    footer_label: "Financial Statement"
+
+  - id: rent_roll_analysis
+    semantic: rent_roll
+    cardinality: one
+    typical_pages: 2-3
+    description: >
+      Landscape "Rent Roll Analysis As of 06/30/26". Columns: Tenant Name, Unit, Unit Type, Sq Ft,
+      Market Rent, Rent, Vacancy Loss, Misc ... one row per unit. Final page may be a "Report Summary"
+      (Total Possible Rent, Vacancy Rent, Occupied Unit Rent).
+    visual_cues: ["Landscape; dense tenant rows; Market Rent / Rent columns"]
+    text_cues: ["Rent Roll Analysis", "Tenant Name", "Market", "Vacancy"]
+    footer_label: "Rent Roll Analysis"
+
+  - id: general_ledger
+    semantic: general_ledger
+    cardinality: one
+    typical_pages: 1
+    description: >
+      "General Ledger - Detail 06/01/26 - 06/30/26 (cash basis)". Date / Type / Reference /
+      Description / Debit / Credit / Balance transaction rows grouped by account.
+    visual_cues: ["Transaction ledger rows with Debit and Credit columns"]
+    text_cues: ["General Ledger", "Debit", "Credit", "Reference"]
+    footer_label: "General Ledger"
+
+  - id: actual_budget_fy_analysis
+    semantic: budget_variance
+    cardinality: one
+    typical_pages: 2-3
+    description: >
+      Landscape "Actual/Budget Fiscal Year Analysis - Analysis for Fiscal Year 01/01/26 - 12/31/26
+      (cash basis) as of 06/30/26". Twelve month columns JAN 26 ... DEC 26 plus REVISED TOTAL /
+      ORIGINAL; actual months to date, budget thereafter; rows are GL accounts.
+    visual_cues: ["Landscape; twelve narrow month columns; 'Actual' and 'Budget' labels"]
+    text_cues: ["Actual/Budget Fiscal Year Analysis", "JAN 26", "DEC 26", "ORIGINAL"]
+    footer_label: "Actual/Budget Fiscal Year Analysis"
+
+  - id: rent_roll_bank
+    semantic: rent_roll
+    cardinality: per_record
+    typical_pages: 1-2
+    description: >
+      Landscape "Rent Roll - Property: <name> - 6/1/2026 to 6/30/2026" (footer report name is
+      "Rent Roll - Bank"). One row per tenant: name, unit, unit type, sq ft, market rent, rent,
+      deposit, balance, move-in, lease end.
+    visual_cues: ["Landscape; tenant rows with move-in and lease-expiration dates"]
+    text_cues: ["Rent Roll", "Rent Roll - Bank"]
+    footer_label: "Rent Roll - Bank"
+
+  - id: delinquency
+    semantic: delinquency
+    cardinality: per_record
+    typical_pages: 1
+    description: >
+      "Delinquency (Detail) - Property: <name> - Current tenants as of 06/30/26". Tenant / Acct /
+      Unit / Unit Type / Charge / Date / Amount rows, then a Report Summary with Tenants,
+      Percent Delinquent, Delinquent Amount. May be a single summary line when nothing is delinquent.
+    visual_cues: ["Title 'Delinquency (Detail)'; 'Report Summary' block near the bottom"]
+    text_cues: ["Delinquency", "Percent Delinquent", "Delinquent Amount"]
+    footer_label: "Delinquency"
+
+  - id: balance_sheet
+    semantic: balance_sheet
+    cardinality: per_record
+    typical_pages: 1
+    optional: true
+    not_in_standard_export: true
+    description: >
+      Rent Manager "Balance Sheet As of 06/30/26 (cash basis) Property: <name>". Appears in the
+      published June packages but NOT in the manager's baseline export; it was run separately about
+      ten days later. Declared so the classifier can recognise it if the manager starts including it.
+      The 2026-06 output definition does not use it (DECISIONS.md D-03).
+    visual_cues: ["Title 'Balance Sheet' (not 'Financial Statement'); ASSETS / LIABILITIES & EQUITY only, no income section"]
+    text_cues: ["Balance Sheet", "cash basis", "TOTAL"]
+    footer_label: "Balance Sheet"

@@ -1,7 +1,11 @@
-"""Cornerstone Report Runner.
+"""Cornerstone Report Runner — assembles quarterly investor report PDFs."""
 
-Assembles quarterly investor report PDFs from property-manager exports and Cornerstone's
-accounting components. A vision model labels pages; deterministic code composes (D-01).
-"""
+from importlib.metadata import PackageNotFoundError
+from importlib.metadata import version as _version
 
-__version__ = "0.1.0"
+try:  # pragma: no cover - trivial packaging fallback
+    __version__ = _version("crr")
+except PackageNotFoundError:  # pragma: no cover
+    __version__ = "0.0.0+unknown"
+
+__all__ = ["__version__"]
