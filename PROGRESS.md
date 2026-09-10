@@ -15,8 +15,10 @@ PLAN.md defines the work and this file records what has been done.
 
 ## Phase 0 — Repository hygiene and scaffold
 
-- [ ] `git mv "Report Assembly Bundle" data/bundle/2026-06`. Remove every `.DS_Store` from git. Verify the shipped `.gitignore` covers Python, `work/`, `.env`, `.DS_Store`.
-- [ ] Verify the bundle: the three PM folder names are byte-equal to `folder` in `config/properties.yaml`; 8 property folders, each with `inputs/` (4 files, 3 for Timber Place), `target/`, `reference/`, `build-spec.json`. The bundle root also carries its own `README.md`, `BUILD-RULES.md`, `index.json` from the earlier analysis — leave them. Record counts in `PROGRESS.md`.
+- [x] `git mv "Report Assembly Bundle" data/bundle/2026-06`. Remove every `.DS_Store` from git. Verify the shipped `.gitignore` covers Python, `work/`, `.env`, `.DS_Store`.
+      → Moved. 5 tracked `.DS_Store` files untracked and deleted from the tree. Shipped `.gitignore` already covered all four categories; unchanged.
+- [x] Verify the bundle: the three PM folder names are byte-equal to `folder` in `config/properties.yaml`; 8 property folders, each with `inputs/` (4 files, 3 for Timber Place), `target/`, `reference/`, `build-spec.json`. The bundle root also carries its own `README.md`, `BUILD-RULES.md`, `index.json` from the earlier analysis — leave them. Record counts in `PROGRESS.md`.
+      → All checks pass. Counts below.
 - [ ] `pyproject.toml` (`crr` package, Python 3.12, deps: pydantic, pydantic-settings, typer, structlog, pyyaml, pypdf, pypdfium2, pillow, anthropic, jinja2, google-api-python-client, google-auth; dev: pytest, pytest-cov, ruff, mypy, reportlab, types-PyYAML). `uv lock`.
 - [ ] `src/crr/__init__.py`, `cli.py` with `crr version`, `settings.py` per SPEC §12.
 - [ ] Verify the shipped `.claude/settings.json` SessionStart hook and `scripts/session_start.sh` work once `pyproject.toml` exists (run the script by hand; it must exit 0).
@@ -25,6 +27,26 @@ PLAN.md defines the work and this file records what has been done.
 - [ ] Open PR `build/v1 → main` titled "Cornerstone Report Runner v1" with a phase table in the description.
 
 **Acceptance:** _(record evidence here when met)_
+
+### Bundle counts (verified 2026-09-10)
+
+Layout is `data/bundle/2026-06/<PM folder>/<Property folder>/2026-06 June/{inputs,target,reference,build-spec.json}` —
+note the period-folder level between property and `inputs/`, matching `period_folder_template`.
+
+| Check | Expected | Found |
+|---|---|---|
+| PM folders byte-equal to `properties.yaml` `folder` | 3 | 3 |
+| Property folders | 8 | 8 |
+| Input PDFs total | 31 | 31 |
+| — PM source PDFs (one per property) | 8 | 8 |
+| — Cornerstone component PDFs | 23 | 23 |
+| Properties with 4 inputs | 7 | 7 |
+| Properties with 3 inputs (Timber Place — no distribution schedule, D-06) | 1 | 1 |
+| `target/` PDF per property | 8 | 8 |
+| `reference/` PDF per property | 8 | 8 |
+| `build-spec.json` per property | 8 | 8 |
+
+Bundle root retains `README.md`, `BUILD-RULES.md`, `index.json` as instructed.
 
 ## Phase 1 — Document model, rendering, text, OCR
 
