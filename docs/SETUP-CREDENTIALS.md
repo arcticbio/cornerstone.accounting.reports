@@ -6,7 +6,7 @@ separate systems that never see each other's configuration.
 
 | Secret | What it is for |
 |---|---|
-| `ANTHROPIC_API_KEY` | the page classifier. Without it the runner can only replay the June golden labels |
+| `CRR_ANTHROPIC_API_KEY` | the page classifier. Without it the runner can only replay the June golden labels. `ANTHROPIC_API_KEY` is read as a fallback everywhere except Claude Code on the web, which reserves that name — see below |
 | `GOOGLE_SERVICE_ACCOUNT_B64` | reading inputs from Drive and publishing packages back |
 | `CRR_GDRIVE_ROOT_FOLDER_ID` | which Drive folder holds the manager folders. **Not a secret** — a variable |
 
@@ -21,7 +21,7 @@ work, and they are independent:
 |---|---|---|---|
 | 1 | **GitHub Actions repository secret** | `Build a period` workflow runs a real build | **Yes — this is the one that matters** |
 | 2 | **Azure Key Vault secret** | the scheduled Container Apps Job | Yes, once Azure is deployed |
-| 3 | **Claude Code cloud environment variable** | Claude running `crr eval --classifier anthropic` in a session | No — development only |
+| 3 | **Claude Code cloud environment variable** — must be named `CRR_ANTHROPIC_API_KEY` | Claude running `crr eval --classifier anthropic` in a session | No — development only |
 | 4 | Your own shell / `.env` | running `crr` on your laptop | No — optional |
 
 Do **1** now. Do **2** when you deploy Azure (`docs/SETUP-AZURE.md` step 4 covers it). **3** is
@@ -53,29 +53,43 @@ makes it invisible when you are trying to check it.
 
 ### 3. The Claude Code cloud environment — what I actually see
 
-You said the key is already set in the Claude Code cloud environment. **It is not reaching the
-session container**: at the start of this session the hook reported
+You said the key is already set in the Claude Code cloud environment, and it was — under the
+name `ANTHROPIC_API_KEY`. That name does not work here, and no amount of restarting fixes it.
 
-```
-ANTHROPIC_API_KEY: not set (classifier phases degrade to golden)
-```
+**Claude Code on the web reserves `ANTHROPIC_API_KEY`.** Sessions authenticate their own model
+calls through your Anthropic account, so the platform strips that variable before the session
+container starts. The cloud-environment editor says so itself, under the variables box:
 
-and `printenv ANTHROPIC_API_KEY` is empty here, while `GOOGLE_SERVICE_ACCOUNT_B64` and
-`CRR_GDRIVE_ROOT_FOLDER_ID` both arrive fine. So the two Google values are configured on the
-environment this session uses, and the Anthropic one is not — or not yet.
+> "ANTHROPIC_API_KEY" won't be used to authenticate requests. Claude Code sessions are
+> authenticated through your Anthropic account.
 
-The usual cause is timing: environment variables are injected when the session's container
-starts, so a variable added afterwards is not visible to the session that is already running.
+It is saved in the editor and it never arrives. This was misdiagnosed once as an injection-timing
+problem — variables *are* injected at container start, so that is a real effect, just not this
+one. The evidence that separates them: `CRR_MODEL`, `CRR_GDRIVE_ROOT_FOLDER_ID` and
+`GOOGLE_SERVICE_ACCOUNT_B64` all arrive from the same environment in the same session while
+`ANTHROPIC_API_KEY` is empty. One name is filtered, not the whole environment.
+
+`crr` needs a key of its own because the classifier is an ordinary API client — it is not the
+session's model call and cannot borrow the session's account auth.
+
+**Use `CRR_ANTHROPIC_API_KEY`.** The `CRR_` prefix is not reserved and passes through untouched.
+`settings.py` reads that name first and falls back to `ANTHROPIC_API_KEY`, so places 1, 2 and 4
+in the table above are unaffected — GitHub Actions and Azure keep the conventional name, and the
+`build-period` workflow still passes `secrets.ANTHROPIC_API_KEY`.
 
 To fix it:
 
 1. Open <https://claude.ai/code> → **Environments** → the **`cornerstone-reports`** environment
    (the one named in this session's header — if you have more than one, it must be this one).
-2. Check for a variable named exactly `ANTHROPIC_API_KEY`. Add it if it is missing; if it is
-   there, confirm the value has no surrounding quotes or whitespace.
-3. **Start a new Claude Code session** on this repository. The variable is picked up at
-   container start, so the existing session will never see it.
-4. The session-start banner will then read `ANTHROPIC_API_KEY: set`.
+2. Rename the variable to `CRR_ANTHROPIC_API_KEY`, exactly, case-sensitive. Same value; no
+   surrounding quotes or whitespace.
+3. **Start a new Claude Code session.** Variables are injected at container start, so a running
+   session keeps the values it booted with — this part of the original advice was right.
+4. The session-start banner then reads `CRR_ANTHROPIC_API_KEY: set (classifier live)`.
+
+One caution about that box: the editor warns its variables "are visible to anyone using this
+environment", and it is not a secret store. Treat a key pasted there as shared with everyone who
+can open the environment, and prefer a key you are willing to rotate.
 
 In that new session, ask Claude to close out B-01 — it is two commands:
 

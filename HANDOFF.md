@@ -84,7 +84,7 @@ checkpoint asking for these two values.
 
    **Environment variables** (one per line):
    ```
-   ANTHROPIC_API_KEY=sk-ant-…
+   CRR_ANTHROPIC_API_KEY=sk-ant-…   # not ANTHROPIC_API_KEY — see docs/SETUP-CREDENTIALS.md
    GOOGLE_SERVICE_ACCOUNT_B64=…paste from clipboard…
    CRR_GDRIVE_ROOT_FOLDER_ID=…the folder id…
    CRR_MODEL=claude-opus-5
@@ -181,7 +181,7 @@ build is heavy usage; if it pauses on a limit, it resumes when the window resets
 
 | Symptom | What to do |
 |---|---|
-| Session says it cannot reach `api.anthropic.com` for the pipeline | `ANTHROPIC_API_KEY` is not set in the environment. Edit the environment, add it, start a new session (running sessions keep their original variables). |
+| Session says it cannot reach `api.anthropic.com` for the pipeline | The classifier key is not set. Set **`CRR_ANTHROPIC_API_KEY`** in the cloud environment and start a new session — the unprefixed `ANTHROPIC_API_KEY` is reserved by Claude Code on the web and stripped from the container, so setting that name has no effect. `docs/SETUP-CREDENTIALS.md`. |
 | `tesseract missing` in the session-start output | The setup script did not run or failed. Edit the environment's setup script (any change rebuilds the cache) and start a new session. |
 | PR CI is red and the session is idle | Send `CI is failing on build/v1 — fix it and continue with PLAN.md` |
 | It asks something you have already decided | Point it at `docs/DECISIONS.md` by id, e.g. "See D-03. Continue." |

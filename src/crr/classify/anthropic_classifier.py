@@ -159,7 +159,8 @@ class AnthropicClassifier:
     ) -> None:
         if client is None and not settings.anthropic_api_key:
             raise RuntimeError(
-                "ANTHROPIC_API_KEY is not set; use --classifier golden or set the key"
+                "No classifier key: set CRR_ANTHROPIC_API_KEY (or ANTHROPIC_API_KEY); "
+                "use --classifier golden to run without one"
             )
         self._settings = settings
         self._exemplars = exemplars or []

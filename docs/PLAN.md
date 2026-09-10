@@ -103,7 +103,7 @@ Acceptance
 - Golden classifier round-trips 100 % of golden pages.
 - Anthropic classifier smoke run ≥ 95 % on Fort Grounds; token usage recorded; cache reads observed on pages 2+ (assert `cache_read_input_tokens > 0`).
 
-Checkpoint: none. (If `ANTHROPIC_API_KEY` is absent in the environment, complete everything except the smoke run, write `CHECKPOINT: need ANTHROPIC_API_KEY set in the cloud environment` to `QUESTIONS.md`, and continue to Phase 4 using the golden classifier.)
+Checkpoint: none. (If no classifier key is present, complete everything except the smoke run, write `CHECKPOINT: need CRR_ANTHROPIC_API_KEY set in the cloud environment` to `QUESTIONS.md`, and continue to Phase 4 using the golden classifier. Note the name: `docs/SETUP-CREDENTIALS.md`.)
 
 ---
 

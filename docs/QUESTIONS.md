@@ -97,70 +97,25 @@ December, so "the previous calendar month" is the period a scheduled run is for.
 
 *(format: `B-nn · <what is needed> · <what is blocked> · <what continues meanwhile>`)*
 
-**B-01 · `ANTHROPIC_API_KEY` does not reach the Claude Code session container.**
-*Status 2026-09-10 (later):* **the Actions half is closed.** The repository secret
-`ANTHROPIC_API_KEY` reaches the container and the classifier authenticates — run
+**B-01 · ~~The classifier key does not reach the Claude Code session container.~~ RESOLVED.**
+*Root cause:* **Claude Code on the web reserves the name `ANTHROPIC_API_KEY`** — sessions
+authenticate their own model calls through the user's Anthropic account, so the platform strips
+that variable before the container starts. The cloud-environment editor says so under the
+variables box. It was misread twice as an injection-timing problem; the evidence that separates
+them is that `CRR_MODEL`, `CRR_GDRIVE_ROOT_FOLDER_ID` and `GOOGLE_SERVICE_ACCOUNT_B64` all arrive
+from the same environment in the same session while `ANTHROPIC_API_KEY` is empty. One name is
+filtered, not the whole environment.
+*Fix:* `settings.py` reads `AliasChoices("CRR_ANTHROPIC_API_KEY", "ANTHROPIC_API_KEY")`. The user
+renamed the variable; a session now resolves the key locally. GitHub Actions and Azure keep the
+conventional name — `build-period.yml` still passes `secrets.ANTHROPIC_API_KEY`, unchanged.
+*Both halves are closed:* the Actions half by run
 [34524350634](https://github.com/arcticbio/cornerstone.accounting.reports/actions/runs/34524350634)
-got a 400 on the tool schema (B-07), not a 401. What remains blocked is only the part that needs
-the key *in a session container*: `pytest -m api` and a local `crr eval --classifier anthropic`.
-Both run in Actions instead.
-*Status 2026-09-10:* the user has the key and is setting it for GitHub Actions (production).
-This session still reports `ANTHROPIC_API_KEY: not set`, and `GOOGLE_SERVICE_ACCOUNT_B64` /
-`CRR_GDRIVE_ROOT_FOLDER_ID` both arrive — so the variable is not on the environment this session
-uses, or was added after the container started. Environment variables are injected at container
-start, so a **new session** is what picks it up. See `docs/SETUP-CREDENTIALS.md`.
-*Blocked:* the Phase 3 real-model smoke run, the `api`-marked integration tests, and the Phase 5
-real-model eval and build. *What continues:* everything else — the classifier is unit-tested
-against a fake client, and `GoldenClassifier` drives the whole pipeline end to end.
-*Two commands close it out* in a session that can see the key:
+(a 400 on the tool schema, not a 401), and the session half by this fix. `pytest -m api` and a
+local `crr eval --classifier anthropic` both run in-session now.
 
-```
-uv run pytest -m api
-uv run crr eval --classifier anthropic --gate
-```
-
-**B-08 · Both McCathren properties go to review on `cardinality_violation` with the real model.**
-*Found 2026-09-10* by the first full keyed run, dispatch
-[34527782436](https://github.com/arcticbio/cornerstone.accounting.reports/actions/runs/34527782436):
-six of eight built, Timber Place and River Falls went to `review/`. Both resolved to their exact
-golden page count (25 and 29), so no page was misplaced — `segment.done` counted one more run
-than there are section ids (12 across 11 on Timber Place, 11 across 10 on River Falls), meaning a
-`cardinality: one` section was split into two runs by a page that continues a section being
-labelled as starting a new one. Confidence was 0.95–0.98 throughout and nothing came back
-`unknown`, so the split is a continuation call, not an uncertain page.
-*This is the gate working as specified* (D-12): it declined to publish a segmentation it could
-not prove, rather than guessing. It is not a build failure and exit code 2 is the contract.
-*Open:* which section and which page, in each package's `REVIEW.md` inside the run's manifests
-artifact — `is_continuation` is not in the per-page log line, so the run log alone cannot say.
-Both properties are the scanned, OCR'd ones, and the golden classifier builds both cleanly, so
-this is a genuine model-vs-golden difference rather than a config problem.
-*Next:* read the two `REVIEW.md` files; then `crr eval --classifier anthropic` to measure
-continuation accuracy against the golden labels across all 31 documents. Consider logging
-`is_continuation` on `classify.page` so a run log can answer this without the artifact.
-
-**B-07 · ~~The forced tool's schema is rejected by the live API under `strict: true`.~~ RESOLVED 2026-09-10.**
-*Found 2026-09-10* by the first keyed run — dispatch
-[34524350634](https://github.com/arcticbio/cornerstone.accounting.reports/actions/runs/34524350634),
-`2026-06` / `fort-grounds` / `local` / `anthropic`. Everything up to the first API call worked:
-the key arrived, the four sources were fetched, all 19 pages rendered, OCR correctly skipped.
-The first `POST /v1/messages` then returned **400** —
-`tools.0.custom: For 'number' type, properties maximum, minimum are not supported` — from
-`confidence: {"type": "number", "minimum": 0, "maximum": 1}` in `build_tool`. No fake client can
-see this: the schema is only validated by the API. *Fix:* the keywords are gone; the bounds live
-in the property descriptions and are enforced on parse, where `PageClassification.confidence` is
-already `ge=0.0, le=1.0` and evidence already truncates at 300 — an out-of-range value now fails
-the parse and sends the page to review, which is what the schema bound would have bought us.
-`maxLength` on `evidence` went with it as the same class of keyword, unverified against the API
-but redundant given the truncation. A unit test now walks the schema for the whole family.
-*Confirmed:* `record_qualifier: {"type": ["string", "null"]}` **is** accepted under
-`strict: true` — the re-run classified all 19 pages with no further schema error, so the union
-type stays.
-*Was blocked on* a rebuilt image: CI published to GHCR on the session branch or a `v*` tag only,
-so the merge to `main` did not republish and `:build-v1` carried the defect. `BUILD_BRANCH` is
-now `main`, so the merge carrying the fix republished the image (PR #3).
-*Verified* by dispatch
-[34526230410](https://github.com/arcticbio/cornerstone.accounting.reports/actions/runs/34526230410):
-exit 0, `fort-grounds ok 8 pages`, no review. See "First keyed run" below.
+*Note for whoever reads this next:* the fix lived only on the abandoned branch
+`claude/ecstatic-goodall-ji7yur` (PR #2) for a while, so `main` carried the diagnosis without the
+alias — which is why an intervening session concluded the local key path was impossible. It is not.
 
 **B-02 · ~~GitHub Actions has not run CI on PR #1.~~ RESOLVED 2026-09-10.**
 Green on the final tree `943e664`: runs

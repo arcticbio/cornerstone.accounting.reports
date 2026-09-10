@@ -1,4 +1,4 @@
-"""One real classification per manager (SPEC §15). Skipped without ANTHROPIC_API_KEY."""
+"""One real classification per manager (SPEC §15). Skipped without a classifier key."""
 
 from __future__ import annotations
 
@@ -19,7 +19,10 @@ from crr.settings import Settings
 
 pytestmark = [
     pytest.mark.api,
-    pytest.mark.skipif(not os.environ.get("ANTHROPIC_API_KEY"), reason="needs ANTHROPIC_API_KEY"),
+    pytest.mark.skipif(
+        not (os.environ.get("CRR_ANTHROPIC_API_KEY") or os.environ.get("ANTHROPIC_API_KEY")),
+        reason="needs CRR_ANTHROPIC_API_KEY (or ANTHROPIC_API_KEY)",
+    ),
 ]
 
 BUNDLE = Path("data/bundle/2026-06")

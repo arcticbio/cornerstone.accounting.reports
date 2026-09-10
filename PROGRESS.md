@@ -41,9 +41,11 @@ properties end to end.
 4. **B-04 — Azure.** Untouched and still gated on `AZURE_CREDENTIALS`; `docs/SETUP-AZURE.md` and
    `infra/bootstrap.sh` are written and waiting. Actions is a working host in the meantime (D-13),
    so this is a choice, not a blocker.
-5. **B-01's remaining half** — `pytest -m api` and a local keyed eval still cannot run in a
-   Claude Code session container, which strips `ANTHROPIC_API_KEY`. The GitHub Actions secret
-   works; that half is closed.
+5. ~~**B-01's remaining half**~~ — **closed 2026-09-11.** The session container strips
+   `ANTHROPIC_API_KEY`, but not `CRR_ANTHROPIC_API_KEY`; `settings.py` now reads either name.
+   The fix existed on the abandoned branch `claude/ecstatic-goodall-ji7yur` (PR #2) and had never
+   reached `main`, which is why this was recorded as impossible. `pytest -m api` runs in-session:
+   **5 passed**. A local `crr eval --classifier anthropic` is now possible too.
 
 **Two traps worth knowing.** `ocrmypdf` is broken in the Claude Code container, so 10 OCR
 invariant tests fail locally and pass in CI — check a failure against `main` before believing it.
