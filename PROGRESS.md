@@ -51,9 +51,11 @@ properties end to end.
    reached `main`, which is why this was recorded as impossible. `pytest -m api` runs in-session:
    **5 passed**. A local `crr eval --classifier anthropic` is now possible too.
 
-**Two traps worth knowing.** `ocrmypdf` is broken in the Claude Code container, so 10 OCR
-invariant tests fail locally and pass in CI — check a failure against `main` before believing it.
-And the `2026-09` Drive skeleton already exists (folders only); a real September run writes into it.
+**Traps worth knowing.** ~~`ocrmypdf` is broken in the Claude Code container, so 10 OCR invariant
+tests fail locally and pass in CI.~~ **Fixed 2026-09-11:** apt installs `ocrmypdf` for CPython 3.12
+while `/usr/bin/python3` is 3.11, so it died importing PIL; `scripts/session_start.sh` now repoints
+its shebang, and the full invariant suite passes locally — **60 passed**. Still true: the `2026-09`
+Drive skeleton already exists (folders only), so a real September run writes into it.
 
 ## Session log
 

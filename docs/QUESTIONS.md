@@ -91,6 +91,23 @@ December, so "the previous calendar month" is the period a scheduled run is for.
 `--period` explicitly is unchanged. *Where:* `src/crr/cli.py`,
 `src/crr/config/properties.py`, `SPEC.md` §11 (amended in the same commit).
 
+**A-08 · v1 classifies zero-shot: the exemplar mechanism is built but not wired in.**
+*What is true:* SPEC §7.2 item 4 and §8 describe up to two labelled exemplar pages per section,
+drawn from `eval/golden` under `exemplar_policy`. `select_exemplars()` and
+`build_exemplar_blocks()` exist and are unit-tested, but the only place that constructs an
+`AnthropicClassifier` — `cli.py` — passes no exemplars. So **both `crr build --classifier
+anthropic` and `crr eval --classifier anthropic` run zero-shot**, and `exemplar_policy` has no
+effect on either.
+*Why it is being recorded rather than "fixed":* the zero-shot numbers are already at ceiling
+(see the eval report), so adding ~20 images to every request would multiply the per-run cost for
+no measurable accuracy. It also explains the cost gap — the ~$10 modelled estimate assumed
+exemplars; the measured run without them is $4.72.
+*The decision this leaves open:* either wire exemplars in (and re-measure cost and accuracy on a
+period where accuracy is not already perfect), or amend SPEC §7.2 to say v1 ships zero-shot by
+choice. Worth revisiting the first time a new manager's schema scores below threshold — that is
+exactly the case exemplars are for.
+*Where:* `src/crr/cli.py` (`_make_classifier`), `src/crr/classify/prompts.py`, SPEC §7.2/§8.
+
 ---
 
 ## Blocked (Claude Code appends here)
