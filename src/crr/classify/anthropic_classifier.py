@@ -308,6 +308,10 @@ class AnthropicClassifier:
                 doc_role=doc.role,
                 page=page.page,
                 section_id=label.section_id,
+                # A cardinality_violation is a continuation read as a section start, so the
+                # run log has to carry the flag that decides it — otherwise diagnosing one
+                # means digging the manifest out of a CI artifact.
+                is_continuation=label.is_continuation,
                 confidence=round(label.confidence, 3),
                 cache_read_tokens=result.usage.cache_read_tokens,
             )

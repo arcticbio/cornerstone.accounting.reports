@@ -27,12 +27,16 @@ properties end to end.
 
 **Open, in the order it is worth doing.**
 
-1. **B-08 — the two McCathren packages go to review on `cardinality_violation`.** Both scanned,
-   both OCR'd, both correct on page count. One `cardinality: one` section is split into two runs,
-   i.e. a continuation read as a section start. **Which page is not knowable from the run log** —
-   `is_continuation` is not in the `classify.page` line. It is in each package's `REVIEW.md`
-   inside the run's manifests artifact. Start there. The golden classifier builds both cleanly,
-   so this is a real model-vs-golden difference, not config.
+1. ~~**B-08 — the two McCathren packages go to review on `cardinality_violation`.**~~
+   **Fixed 2026-09-11, root-caused with a real-model run.** Not a labelling error: a re-run of
+   Timber Place returned **23/23 correct labels**, continuations included. The split was the
+   segmenter's. The model transcribed the `Property:` header on pages 20–23 of the seven-page
+   General Ledger and not on 17–19, and SPEC §6.4 broke a run on any `record_qualifier` change —
+   so `general_ledger` (`cardinality: one`) appeared twice. A qualifier only distinguishes
+   instances of a `per_record` section; on a one-cardinality section §5 rule 1 discards it
+   anyway. The break condition is now qualified, SPEC §6.4 amended, three tests pin both
+   directions. **Both properties rebuilt against the real model: `ok`, 25 and 29 pages, exit 0**
+   ($1.63 for the pair).
 2. **`crr eval --classifier anthropic`** — the one measurement still missing, and what would
    quantify B-08's continuation accuracy across all 31 documents. It needs the key, so it has to
    run in Actions; there is no dispatchable workflow for it yet (CI runs only the golden eval).

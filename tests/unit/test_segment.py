@@ -191,3 +191,42 @@ def test_single_record_source_with_or_without_a_header(qualifier: str | None) ->
     result = segment([_page(1, "rent_roll", qualifier=qualifier)], _schema(), SINGLE, "pm_source")
     assert result.sections[0].record_id == "default"
     assert not result.reasons
+
+
+def test_a_qualifier_appearing_mid_run_does_not_split_a_one_section() -> None:
+    """B-08: the bug that sent both McCathren packages to review.
+
+    The model transcribed the property header on the back half of a seven-page General Ledger
+    and not the front half. `general_ledger` is `cardinality: one`, so splitting on the
+    qualifier made it appear twice and the correct package was held back on a
+    `cardinality_violation`. A qualifier is not part of a one-cardinality section's identity.
+    """
+    pages = [
+        _page(1, "ledger"),
+        _page(2, "ledger", True),
+        _page(3, "ledger", True, qualifier="Timber Place by the Lake (1000)"),
+        _page(4, "ledger", True, qualifier="Timber Place by the Lake (1000)"),
+    ]
+    result = segment(pages, _schema(), SINGLE, "pm_source")
+    assert [s.pages for s in result.sections] == [(1, 2, 3, 4)]
+    assert result.sections[0].record_id is None
+    assert not result.reasons
+
+
+def test_a_per_record_section_still_splits_on_a_qualifier_change() -> None:
+    """The rule exists for WayPointe's back-to-back per-record runs; it must survive B-08's fix."""
+    pages = [
+        _page(1, "rent_roll", qualifier="Alpha LP"),
+        _page(2, "rent_roll", True, qualifier="Alpha LP"),
+        _page(3, "rent_roll", True, qualifier="Beta LP"),
+    ]
+    result = segment(pages, _schema(), MULTI, "pm_source")
+    assert [(s.pages, s.record_id) for s in result.sections] == [((1, 2), "a"), ((3,), "b")]
+
+
+def test_a_one_section_still_splits_when_a_new_instance_starts() -> None:
+    """Guard the other direction: `is_continuation=False` is what starts a second instance."""
+    pages = [_page(1, "ledger"), _page(2, "ledger", qualifier="Anything")]
+    result = segment(pages, _schema(), SINGLE, "pm_source")
+    assert [s.pages for s in result.sections] == [(1,), (2,)]
+    assert [r.code for r in result.reasons] == ["cardinality_violation"]

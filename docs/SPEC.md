@@ -329,9 +329,15 @@ investor package).
 
 Group consecutive `PageClassification`s into `ResolvedSection`s:
 
-- A new section starts when `section_id` changes, **or** `record_qualifier` changes, **or**
-  `is_continuation` is false while the previous page had the same `section_id` (two back-to-back
-  instances).
+- A new section starts when `section_id` changes, **or** `record_qualifier` changes *on a
+  `per_record` section*, **or** `is_continuation` is false while the previous page had the same
+  `section_id` (two back-to-back instances).
+  The `per_record` qualification matters: a qualifier distinguishes instances only where the
+  schema says a section runs once per record. On a `cardinality: one` section the qualifier is
+  not part of the section's identity — §5 rule 1 discards it — so it must not split a run. A
+  model that transcribes the `Property:` header on some pages of a long report and not others
+  would otherwise turn one section into two and hold a correct package back on a
+  `cardinality_violation`. Observed on both McCathren packages; see B-08.
 - A continuation page whose `record_qualifier` is null inherits the previous page's qualifier
   (footer-only continuation pages carry no `Property:` header).
 - Pages labelled `unknown` are never merged into a neighbour. Each is its own review item.
