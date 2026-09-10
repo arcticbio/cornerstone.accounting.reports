@@ -119,6 +119,18 @@ Still true locally — `/var/run/docker.sock` does not exist here — but CI's `
 builds the image, runs `crr version`, proves `/app/data` is absent, checks all three OCR
 binaries inside the container, runs the golden build there, and pushes to GHCR. All green.
 
+**B-05 · The `v1.0.0` tag cannot be pushed from this session.**
+*Needed:* one command from someone with push rights on refs other than the session branch. The
+annotated tag exists locally on `c34c69b`; `git push origin v1.0.0` returns `HTTP 403`, because
+cloud sessions may push only their own branch (D-15). *Blocked:* only the tag, and with it the
+`:latest` / `:v1.0.0` GHCR images, which the CI workflow publishes on a `v*` tag.
+*What continues:* everything else; `:build-v1` and `:sha-<short>` are already published.
+After merging PR #1:
+
+```
+git tag -a v1.0.0 -m "Cornerstone Report Runner v1.0.0" && git push origin v1.0.0
+```
+
 ---
 
 ## Known unknowns the user may want to act on (not blocking)

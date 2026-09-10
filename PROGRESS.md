@@ -177,7 +177,7 @@ OCR included), and the image is pushed to GHCR as `:build-v1` and `:sha-<short>`
 - [x] `tests/unit/test_logging_hygiene.py` runs a real build with structlog captured and asserts no page text, no tenant name, no path, no PDF or PNG bytes and no secret appears in any record — while confirming sha256s *are* logged. **It caught one leak:** `repository.published` logged the output filename, which carries the property's public name. Both repositories now log the artefact's shape, not its name.
 - [x] `README.md`: what the system is and why it is shaped this way, a five-line quickstart, the exit-code contract, and a map of the repository.
 - [x] See "v1.0.0 summary" at the foot of this file.
-- [ ] Tag `v1.0.0`.
+- [x] Tag `v1.0.0` created (annotated, on `c34c69b`) — **but not pushed**: this session's credentials are scoped to its branch and the remote refuses a tag ref with `HTTP 403`. Push it after merging: `git tag -a v1.0.0 <merge commit> -m "Cornerstone Report Runner v1.0.0" && git push origin v1.0.0`. The tag message is reproduced in B-05.
 
 **Acceptance:** `README.md` → `docs/RUNBOOK.md` takes someone who has never seen the repository from "the exports arrived" to "the packages are in Drive", including what to do with a review outcome. The `v1.0.0` tag is the last task.
 
