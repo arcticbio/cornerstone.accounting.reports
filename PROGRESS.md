@@ -4,7 +4,7 @@ Single source of truth for build state. Claude Code ticks tasks here after each 
 commits. Humans read this to see where things stand. Mirrors `docs/PLAN.md`; if they diverge,
 PLAN.md defines the work and this file records what has been done.
 
-**Branch:** `claude/gifted-lamport-wwgenm` (session-scoped branch; D-15 — every reference to `build/v1` in these documents means this branch) · **PR:** _(link after Phase 0)_ · **Current phase:** 0 · **Last session note:** _(none yet)_
+**Branch:** `claude/gifted-lamport-wwgenm` (session-scoped branch; D-15 — every reference to `build/v1` in these documents means this branch) · **PR:** [#1](https://github.com/arcticbio/cornerstone.accounting.reports/pull/1) · **Current phase:** 0 · **Last session note:** _(none yet)_
 
 ## Session log
 
@@ -22,9 +22,11 @@ PLAN.md defines the work and this file records what has been done.
 - [x] `scripts/session_start.sh` run by hand: exit 0, `uv sync: ok`. It reports `ocrmypdf:` with a traceback in this container — see "Environment notes" below; tesseract 5.3.4 and gs 10.02.1 are fine.
 - [x] `.github/workflows/ci.yml`: apt OCR toolchain, `uv sync --frozen`, ruff check + format, `mypy src`, pytest with coverage, `crr validate-config`, `crr eval --classifier golden --gate` (both stubs for now).
 - [x] Confirmed present: `docs/` (SPEC, PLAN, DECISIONS, QUESTIONS, 2 × ANALYSIS), `config/` (`properties.yaml`, 4 schemas, 3 output definitions), `eval/golden/` (8 property label files + README). `crr validate-config` loads all 8 YAML files.
-- [ ] Open PR `build/v1 → main` titled "Cornerstone Report Runner v1" with a phase table in the description.
+- [x] PR opened: [#1 Cornerstone Report Runner v1](https://github.com/arcticbio/cornerstone.accounting.reports/pull/1) with the phase table in the description.
 
-**Acceptance:** _(record evidence here when met)_
+**Acceptance:** `uv run crr version` → `crr 0.1.0`. Local gate green: `ruff check` + `ruff format
+--check`, `mypy src` (4 files), `pytest -q` (7 passed), `crr validate-config` (8 YAML files),
+`crr eval --classifier golden` (stub). CI runs the same gate on PR #1.
 
 ### Environment notes (this container)
 
