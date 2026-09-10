@@ -41,7 +41,7 @@ PLAN.md defines the work and this file records what has been done.
 
 ## Phase 1 — Document model, rendering, text, OCR
 
-- [ ] `models/` per SPEC §3.
+- [x] `models/domain.py` per SPEC §3 — frozen, `extra="forbid"`; `Orientation.correcting_rotation` encodes the SPEC §6.5 rotation table; `ResolvedSection` validates page contiguity and that `orientation_fixes` stay inside the section.
 - [ ] `preprocess/render.py`: pypdfium2 → PNG per page, 150 DPI, long edge ≤ 1568. Cache by (sha256, page, dpi).
 - [ ] `preprocess/text.py`: pypdf text per page, normalised; text-layer probe per SPEC §6.2.
 - [ ] `preprocess/ocr.py`: ocrmypdf wrapper (subprocess), `--skip-text --rotate-pages --optimize 1`; version capture; graceful error if tesseract absent.
