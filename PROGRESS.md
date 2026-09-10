@@ -17,14 +17,25 @@ PLAN.md defines the work and this file records what has been done.
 
 - [x] `git mv "Report Assembly Bundle" data/bundle/2026-06`. Removed 5 `.DS_Store` files from git and disk; shipped `.gitignore` already covers Python, `work/`, `.env`, `.DS_Store` — unchanged.
 - [x] Bundle verified — see "Bundle verification" at the foot of this file. All checks pass.
-- [ ] `pyproject.toml` (`crr` package, Python 3.12, deps: pydantic, pydantic-settings, typer, structlog, pyyaml, pypdf, pypdfium2, pillow, anthropic, jinja2, google-api-python-client, google-auth; dev: pytest, pytest-cov, ruff, mypy, reportlab, types-PyYAML). `uv lock`.
-- [ ] `src/crr/__init__.py`, `cli.py` with `crr version`, `settings.py` per SPEC §12.
-- [ ] Verify the shipped `.claude/settings.json` SessionStart hook and `scripts/session_start.sh` work once `pyproject.toml` exists (run the script by hand; it must exit 0).
-- [ ] `.github/workflows/ci.yml`: ruff, mypy, pytest with coverage, `crr validate-config`, `crr eval --classifier golden --gate`. Python 3.12, `uv`. Until Phase 5, `crr eval` may be a stub that exits 0 and prints "eval not implemented"; `validate-config` may be a stub that only loads the YAML.
-- [ ] Copy `docs/ANALYSIS-*.md` from the handoff (already present). Confirm `docs/`, `config/`, `eval/golden/` are in place and `crr validate-config` is wired (may be a stub that loads YAML).
+- [x] `pyproject.toml` written with all listed deps; `uv lock` → 68 packages; hatchling build backend, `crr` console script. `extend-exclude = ["*.md", "data"]` on ruff because ruff ≥ 0.16 reformats python fences inside markdown and `docs/SPEC.md` is prose.
+- [x] `src/crr/__init__.py`, `cli.py` (`version`, stub `validate-config`, stub `eval`), `settings.py` per SPEC §12, `log.py` (structlog → JSON on stderr). `uv run crr version` prints `crr 0.1.0`.
+- [x] `scripts/session_start.sh` run by hand: exit 0, `uv sync: ok`. It reports `ocrmypdf:` with a traceback in this container — see "Environment notes" below; tesseract 5.3.4 and gs 10.02.1 are fine.
+- [x] `.github/workflows/ci.yml`: apt OCR toolchain, `uv sync --frozen`, ruff check + format, `mypy src`, pytest with coverage, `crr validate-config`, `crr eval --classifier golden --gate` (both stubs for now).
+- [x] Confirmed present: `docs/` (SPEC, PLAN, DECISIONS, QUESTIONS, 2 × ANALYSIS), `config/` (`properties.yaml`, 4 schemas, 3 output definitions), `eval/golden/` (8 property label files + README). `crr validate-config` loads all 8 YAML files.
 - [ ] Open PR `build/v1 → main` titled "Cornerstone Report Runner v1" with a phase table in the description.
 
 **Acceptance:** _(record evidence here when met)_
+
+### Environment notes (this container)
+
+- `/usr/bin/python3` is a locally built 3.11 while Debian's `ocrmypdf` entry point targets the
+  distribution's 3.12, so `ocrmypdf --version` fails with `ImportError: cannot import name
+  '_imaging' from 'PIL'`. Run under 3.12 it is **ocrmypdf 15.2.0**. A one-line shim was dropped in
+  the git-ignored `.venv/bin/ocrmypdf` so `uv run` finds a working entry point; CI and the Docker
+  image install `ocrmypdf` from apt and use the stock one. Nothing in `src/` depends on the shim.
+- tesseract 5.3.4, ghostscript 10.02.1, `uv` 0.8.17.
+- `ANTHROPIC_API_KEY` is **not set** → Phase 3/5 real-model work degrades to the golden classifier.
+- `GOOGLE_SERVICE_ACCOUNT_B64` and `CRR_GDRIVE_ROOT_FOLDER_ID` are set → Phase 6 can run for real.
 
 ## Phase 1 — Document model, rendering, text, OCR
 
