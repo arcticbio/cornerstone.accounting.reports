@@ -1,9 +1,13 @@
 # Cornerstone Report Runner — instructions for Claude Code
 
-You are building `crr`, a Python service that assembles quarterly investor report PDFs from
-property-manager exports and Cornerstone's accounting components, using a vision model to
-classify pages and deterministic code to compose. You are expected to build it **end to end,
-autonomously**, coming back to the user only at the checkpoints defined in `docs/PLAN.md`.
+`crr` is a Python service that assembles quarterly investor report PDFs from property-manager
+exports and Cornerstone's accounting components, using a vision model to classify pages and
+deterministic code to compose.
+
+> **v1 is built, merged and tagged `v1.0.0`.** All nine phases of `docs/PLAN.md` are complete and
+> on `main`; the container publishes to GHCR; the real model has run all eight properties end to
+> end. This file's build-it-from-nothing framing below is history — read the "Pick up here" block
+> at the top of `PROGRESS.md` for what is actually open before doing anything else.
 
 ## Read these first, in this order
 
@@ -18,8 +22,11 @@ autonomously**, coming back to the user only at the checkpoints defined in `docs
 
 - **Follow the operating loop in `PLAN.md`** for every task: read spec → implement with tests →
   lint/type/test green → tick `PROGRESS.md` → commit → push → next task.
-- **Work on branch `build/v1`.** Open one PR to `main` in Phase 0 and keep its description's
-  phase table current. Never force-push. Never rewrite history.
+- **`main` is the release line.** v1 landed there via #1, #3 and #4; `build/v1` was never
+  created (D-15 — cloud sessions get a session-scoped branch, and that is what built v1). Work on
+  your own session branch and open a PR to `main`. Never force-push. Never rewrite history.
+  Pushing to `main` also republishes the GHCR image `:build-v1`, which is what
+  `build-period.yml` runs — so a merge to `main` ships to production.
 - **Never modify anything under `data/bundle/`** after the Phase 0 move. It is a fixture.
 - **Never read `reference/` or `target/` folders from pipeline code.** Tests enforce this.
 - **Never commit `work/`, `.env`, PDFs outside `data/bundle/`, or anything containing a key.**

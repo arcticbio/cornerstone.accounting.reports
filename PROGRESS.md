@@ -4,7 +4,50 @@ Single source of truth for build state. Claude Code ticks tasks here after each 
 commits. Humans read this to see where things stand. Mirrors `docs/PLAN.md`; if they diverge,
 PLAN.md defines the work and this file records what has been done.
 
-**Branch:** `main` — v1 landed there via [#1](https://github.com/arcticbio/cornerstone.accounting.reports/pull/1) (built on the session branch `claude/gifted-lamport-wwgenm`; D-15 — every reference to `build/v1` in these documents means the release line, now `main`) · **Current phase:** 9 (complete) · **Tag:** `v1.0.0` pushed · **Last session note:** first keyed run green; B-07 fixed in [#3](https://github.com/arcticbio/cornerstone.accounting.reports/pull/3)
+**Branch:** `main` — v1 landed there via [#1](https://github.com/arcticbio/cornerstone.accounting.reports/pull/1) (built on the session branch `claude/gifted-lamport-wwgenm`; D-15 — every reference to `build/v1` in these documents means the release line, now `main`) · **Current phase:** 9 (complete) · **Tag:** `v1.0.0` pushed · **Last session note:** all eight properties built against the real model — 6 built, 2 to review, $4.72/run. See "Pick up here" below.
+
+## Pick up here
+
+_Last updated 2026-09-10 by a side session; the effort moves back to the primary thread from
+here. Everything below this block is the historical build record._
+
+**State.** v1 is complete, merged to `main`, tagged `v1.0.0`. CI is green. The container is on
+GHCR as `:build-v1`, republished by every push to `main`. The real model has built all eight
+properties end to end.
+
+**What the keyed runs established.**
+
+| | |
+|---|---|
+| Full run | [34527782436](https://github.com/arcticbio/cornerstone.accounting.reports/actions/runs/34527782436) — 6 built, 2 to review, exit 2, 11m30s |
+| Cost | **$4.72 per 8-property run, $0.59 per property** (172 calls) — the modelled ~$10 was over 2× high |
+| Accuracy | every property resolved to its exact golden page count, the two review cases included; no `unknown`, no repair round, no retry, no refusal; confidence 0.95–0.98 across all 172 pages |
+| Fixed on the way | **B-07** — the forced tool's schema carried `minimum`/`maximum`, which the live API rejects under `strict: true`. Invisible to every test, because a tool schema is only validated by the API. |
+| Also fixed | CI's `BUILD_BRANCH` still named the pre-merge session branch, so merges to `main` rebuilt the image and silently did not push it |
+
+**Open, in the order it is worth doing.**
+
+1. **B-08 — the two McCathren packages go to review on `cardinality_violation`.** Both scanned,
+   both OCR'd, both correct on page count. One `cardinality: one` section is split into two runs,
+   i.e. a continuation read as a section start. **Which page is not knowable from the run log** —
+   `is_continuation` is not in the `classify.page` line. It is in each package's `REVIEW.md`
+   inside the run's manifests artifact. Start there. The golden classifier builds both cleanly,
+   so this is a real model-vs-golden difference, not config.
+2. **`crr eval --classifier anthropic`** — the one measurement still missing, and what would
+   quantify B-08's continuation accuracy across all 31 documents. It needs the key, so it has to
+   run in Actions; there is no dispatchable workflow for it yet (CI runs only the golden eval).
+   Adding a `command` input to `build-period.yml`, or a small `eval.yml`, is the cheap way in.
+3. **Log `is_continuation` on `classify.page`** so a run log can answer (1) without the artifact.
+4. **B-04 — Azure.** Untouched and still gated on `AZURE_CREDENTIALS`; `docs/SETUP-AZURE.md` and
+   `infra/bootstrap.sh` are written and waiting. Actions is a working host in the meantime (D-13),
+   so this is a choice, not a blocker.
+5. **B-01's remaining half** — `pytest -m api` and a local keyed eval still cannot run in a
+   Claude Code session container, which strips `ANTHROPIC_API_KEY`. The GitHub Actions secret
+   works; that half is closed.
+
+**Two traps worth knowing.** `ocrmypdf` is broken in the Claude Code container, so 10 OCR
+invariant tests fail locally and pass in CI — check a failure against `main` before believing it.
+And the `2026-09` Drive skeleton already exists (folders only); a real September run writes into it.
 
 ## Session log
 
@@ -25,6 +68,7 @@ PLAN.md defines the work and this file records what has been done.
 | 2026-09-10 | post-v1 | `v1.0.0` pushed by the user; CI green on the final tree; version bumped 0.1.0 → 1.0.0; Azure + credentials setup docs written | Azure bootstrap (user), then B-01/B-04 |
 | 2026-09-10 | post-v1 | PR #1 merged to `main`; first keyed run dispatched (`2026-06`/`fort-grounds`/`local`/`anthropic`) — the key works, the tool schema does not (B-07); fix on `claude/wonderful-wright-scuu96` | Republish the image, re-dispatch |
 | 2026-09-10 | post-v1 | B-07 fixed and merged (PR #3); CI now publishes the image from `main`; re-run green — `fort-grounds` built, 8/8 pages match golden, **$0.56** | Full 8-property keyed run; `crr eval --classifier anthropic` |
+| 2026-09-10 | post-v1 | Full 8-property keyed run: 6 built, 2 to review (`cardinality_violation`, both McCathren); every property hit its golden page count; **$4.72/run, $0.59/property** | Work the two review cases; `crr eval --classifier anthropic` |
 
 ## Phase 0 — Repository hygiene and scaffold
 
@@ -189,6 +233,7 @@ OCR included), and the image is pushed to GHCR as `:build-v1` and `:sha-<short>`
 
 | Date | Classifier | Model | Prompt | Overall | Missoula | McCathren | Cobalt | Cost/run | Report |
 |---|---|---|---|---|---|---|---|---|---|
+| 2026-09-10 | anthropic | `claude-opus-5` | v1 | 6/8 built, 2 to review | 4/4 built | 0/2 built (both `cardinality_violation`) | 2/2 built | **$4.72** (8 properties) | [run 34527782436](https://github.com/arcticbio/cornerstone.accounting.reports/actions/runs/34527782436) |
 | 2026-09-10 | anthropic | `claude-opus-5` | v1 | — | fort-grounds only: 8/8 output pages, 19/19 pages 0.96–0.98 | — | — | $0.56 (1 property) | [run 34526230410](https://github.com/arcticbio/cornerstone.accounting.reports/actions/runs/34526230410) |
 | 2026-09-10 | golden | — | — | 1.0000 | 1.0000 | 1.0000 | 1.0000 | $0.00 | [LATEST](eval/reports/LATEST.md) |
 
@@ -257,7 +302,46 @@ Azure Container Apps Job in `infra/`.
 
 ### Cost per run
 
-**Measured 2026-09-10, one property.** Dispatch
+**Measured 2026-09-10, all eight properties.** Dispatch
+[34527782436](https://github.com/arcticbio/cornerstone.accounting.reports/actions/runs/34527782436)
+— `2026-06`, every property, `local` / `anthropic`, on `claude-opus-5`. Exit code 2: six built,
+two to review. 11m30s wall clock.
+
+| | |
+|---|---|
+| API calls | 172 — one per page, as designed |
+| Tokens | input 694,361 · cache read 601,254 · cache write 7,193 · output 35,086 |
+| **Measured** | **$4.72 per full run — $0.59 per property** |
+
+| Property | Status | Pages | Golden | |
+|---|---|---|---|---|
+| fort-grounds | built | 8 | 8 | ✅ |
+| lolo-peak-village | built | 8 | 8 | ✅ |
+| mullan-crossing | built | 8 | 8 | ✅ |
+| waypointe | built | 10 | 10 | ✅ |
+| timber-place | **needs_review** | 25 | 25 | `cardinality_violation` |
+| river-falls | **needs_review** | 29 | 29 | `cardinality_violation` |
+| bridgewater | built | 24 | 24 | ✅ |
+| salmon-crossing | built | 18 | 18 | ✅ |
+
+Every property resolved to its golden page count, the two review cases included. No page was
+classified `unknown`, no repair round fired, no retry, no refusal; page confidence ran 0.95–0.98
+across all 172. Timber Place p3 — the sideways Financial Aged Receivable — came back
+`aged_receivable` at 0.96.
+
+**The two review cases are the review gate doing its job, not a failure.** Both are McCathren,
+both OCR'd, and both trip the same rule: `segment.done` counted 12 runs across 11 section ids on
+Timber Place (11 across 10 on River Falls), so one `cardinality: one` section was split into two
+runs — a page that continues a section was labelled as starting a new one. The resolver still
+placed every page correctly, which is why the page counts match; the gate refused to publish on
+a segmentation it could not prove (D-12). **Which section and which page is not in the run log**
+— `is_continuation` is not logged per page — it is in each package's `REVIEW.md` inside the
+[manifests artifact](https://github.com/arcticbio/cornerstone.accounting.reports/actions/runs/34527782436).
+Worth noting the golden classifier builds both of these cleanly, so this is a real
+model-vs-golden difference on the two scanned properties, and `crr eval --classifier anthropic`
+is what would quantify it.
+
+The earlier single-property measurement, kept for the cache comparison — dispatch
 [34526230410](https://github.com/arcticbio/cornerstone.accounting.reports/actions/runs/34526230410)
 — `2026-06` / `fort-grounds` / `local` / `anthropic`, against `:build-v1` on `claude-opus-5`:
 

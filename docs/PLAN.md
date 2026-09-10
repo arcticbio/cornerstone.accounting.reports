@@ -13,8 +13,10 @@ it after every completed task, before every commit.
    Fix everything. Never skip a failing test; never `@pytest.mark.skip` something to make the
    suite green.
 5. Tick the task in `PROGRESS.md` with a one-line note (what, and anything surprising).
-6. Commit on `build/v1` with a conventional message (`feat(resolve): address grammar parser`).
-   Push. Keep the PR description's phase table current.
+6. Commit on your session branch with a conventional message
+   (`feat(resolve): address grammar parser`). Push, and open a PR to `main`. (v1 was built this
+   way and merged; `build/v1` was never created — see D-15 and the "Pick up here" block in
+   `PROGRESS.md`.)
 7. Continue to the next task. Do not stop at the end of a phase unless the phase has a
    checkpoint marked **STOP**.
 
