@@ -176,9 +176,12 @@ the image, runs `crr version`, proves `/app/data` is absent, checks all three OC
 inside the container, runs the golden build there, and pushes to GHCR. All green.
 
 **B-04 · Azure deployment — the user has chosen to proceed; instructions written.**
-*Status 2026-09-10:* the user wants Azure and has a subscription. `docs/SETUP-AZURE.md` is the
-end-to-end walkthrough, `infra/bootstrap.sh` does the credential-bearing parts in one guided
-run, and `deploy.yml` now reads its settings from repository variables so a deploy is one click.
+*Status 2026-09-10:* the user wants Azure and has a subscription, and is working through setup
+in the portal. Two walkthroughs: `docs/SETUP-AZURE.md` (CLI, with `infra/bootstrap.sh` doing the
+credential-bearing parts in one guided run) and `docs/SETUP-AZURE-PORTAL.md` (click by click,
+with the three unavoidable commands run in Cloud Shell). `deploy.yml` reads its settings from
+repository variables so a deploy is one click, and CI publishes the compiled ARM template as an
+artifact so a portal-only deployment uses a template that provably compiles.
 *Still needs the user, and cannot be done from a session with no Azure credentials:* the
 `az login` bootstrap, pasting `AZURE_CREDENTIALS` / `AZURE_RESOURCE_GROUP` /
 `AZURE_KEY_VAULT_NAME` into GitHub, and choosing whether the GHCR package goes public or gets a

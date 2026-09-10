@@ -3,6 +3,10 @@
 End-to-end setup for running the quarterly build as an **Azure Container Apps Job**. Follow it
 top to bottom once; after that a deploy is one click in GitHub Actions.
 
+**Prefer clicking to typing?** [`SETUP-AZURE-PORTAL.md`](SETUP-AZURE-PORTAL.md) is the same
+setup done in the Azure portal, with the three unavoidable commands run in Cloud Shell. Follow
+one document or the other, not both.
+
 **What you need before starting:** an Azure subscription where you are Owner (or Contributor
 plus User Access Administrator) on at least one resource group, and the Azure CLI installed
 (`az version` — get it from <https://learn.microsoft.com/cli/azure/install-azure-cli>).
