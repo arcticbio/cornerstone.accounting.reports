@@ -119,6 +119,25 @@ uv run pytest -m api
 uv run crr eval --classifier anthropic --gate
 ```
 
+**B-08 · Both McCathren properties go to review on `cardinality_violation` with the real model.**
+*Found 2026-09-10* by the first full keyed run, dispatch
+[34527782436](https://github.com/arcticbio/cornerstone.accounting.reports/actions/runs/34527782436):
+six of eight built, Timber Place and River Falls went to `review/`. Both resolved to their exact
+golden page count (25 and 29), so no page was misplaced — `segment.done` counted one more run
+than there are section ids (12 across 11 on Timber Place, 11 across 10 on River Falls), meaning a
+`cardinality: one` section was split into two runs by a page that continues a section being
+labelled as starting a new one. Confidence was 0.95–0.98 throughout and nothing came back
+`unknown`, so the split is a continuation call, not an uncertain page.
+*This is the gate working as specified* (D-12): it declined to publish a segmentation it could
+not prove, rather than guessing. It is not a build failure and exit code 2 is the contract.
+*Open:* which section and which page, in each package's `REVIEW.md` inside the run's manifests
+artifact — `is_continuation` is not in the per-page log line, so the run log alone cannot say.
+Both properties are the scanned, OCR'd ones, and the golden classifier builds both cleanly, so
+this is a genuine model-vs-golden difference rather than a config problem.
+*Next:* read the two `REVIEW.md` files; then `crr eval --classifier anthropic` to measure
+continuation accuracy against the golden labels across all 31 documents. Consider logging
+`is_continuation` on `classify.page` so a run log can answer this without the artifact.
+
 **B-07 · ~~The forced tool's schema is rejected by the live API under `strict: true`.~~ RESOLVED 2026-09-10.**
 *Found 2026-09-10* by the first keyed run — dispatch
 [34524350634](https://github.com/arcticbio/cornerstone.accounting.reports/actions/runs/34524350634),

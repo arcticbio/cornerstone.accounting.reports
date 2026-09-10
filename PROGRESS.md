@@ -25,6 +25,7 @@ PLAN.md defines the work and this file records what has been done.
 | 2026-09-10 | post-v1 | `v1.0.0` pushed by the user; CI green on the final tree; version bumped 0.1.0 → 1.0.0; Azure + credentials setup docs written | Azure bootstrap (user), then B-01/B-04 |
 | 2026-09-10 | post-v1 | PR #1 merged to `main`; first keyed run dispatched (`2026-06`/`fort-grounds`/`local`/`anthropic`) — the key works, the tool schema does not (B-07); fix on `claude/wonderful-wright-scuu96` | Republish the image, re-dispatch |
 | 2026-09-10 | post-v1 | B-07 fixed and merged (PR #3); CI now publishes the image from `main`; re-run green — `fort-grounds` built, 8/8 pages match golden, **$0.56** | Full 8-property keyed run; `crr eval --classifier anthropic` |
+| 2026-09-10 | post-v1 | Full 8-property keyed run: 6 built, 2 to review (`cardinality_violation`, both McCathren); every property hit its golden page count; **$4.72/run, $0.59/property** | Work the two review cases; `crr eval --classifier anthropic` |
 
 ## Phase 0 — Repository hygiene and scaffold
 
@@ -189,6 +190,7 @@ OCR included), and the image is pushed to GHCR as `:build-v1` and `:sha-<short>`
 
 | Date | Classifier | Model | Prompt | Overall | Missoula | McCathren | Cobalt | Cost/run | Report |
 |---|---|---|---|---|---|---|---|---|---|
+| 2026-09-10 | anthropic | `claude-opus-5` | v1 | 6/8 built, 2 to review | 4/4 built | 0/2 built (both `cardinality_violation`) | 2/2 built | **$4.72** (8 properties) | [run 34527782436](https://github.com/arcticbio/cornerstone.accounting.reports/actions/runs/34527782436) |
 | 2026-09-10 | anthropic | `claude-opus-5` | v1 | — | fort-grounds only: 8/8 output pages, 19/19 pages 0.96–0.98 | — | — | $0.56 (1 property) | [run 34526230410](https://github.com/arcticbio/cornerstone.accounting.reports/actions/runs/34526230410) |
 | 2026-09-10 | golden | — | — | 1.0000 | 1.0000 | 1.0000 | 1.0000 | $0.00 | [LATEST](eval/reports/LATEST.md) |
 
@@ -257,7 +259,46 @@ Azure Container Apps Job in `infra/`.
 
 ### Cost per run
 
-**Measured 2026-09-10, one property.** Dispatch
+**Measured 2026-09-10, all eight properties.** Dispatch
+[34527782436](https://github.com/arcticbio/cornerstone.accounting.reports/actions/runs/34527782436)
+— `2026-06`, every property, `local` / `anthropic`, on `claude-opus-5`. Exit code 2: six built,
+two to review. 11m30s wall clock.
+
+| | |
+|---|---|
+| API calls | 172 — one per page, as designed |
+| Tokens | input 694,361 · cache read 601,254 · cache write 7,193 · output 35,086 |
+| **Measured** | **$4.72 per full run — $0.59 per property** |
+
+| Property | Status | Pages | Golden | |
+|---|---|---|---|---|
+| fort-grounds | built | 8 | 8 | ✅ |
+| lolo-peak-village | built | 8 | 8 | ✅ |
+| mullan-crossing | built | 8 | 8 | ✅ |
+| waypointe | built | 10 | 10 | ✅ |
+| timber-place | **needs_review** | 25 | 25 | `cardinality_violation` |
+| river-falls | **needs_review** | 29 | 29 | `cardinality_violation` |
+| bridgewater | built | 24 | 24 | ✅ |
+| salmon-crossing | built | 18 | 18 | ✅ |
+
+Every property resolved to its golden page count, the two review cases included. No page was
+classified `unknown`, no repair round fired, no retry, no refusal; page confidence ran 0.95–0.98
+across all 172. Timber Place p3 — the sideways Financial Aged Receivable — came back
+`aged_receivable` at 0.96.
+
+**The two review cases are the review gate doing its job, not a failure.** Both are McCathren,
+both OCR'd, and both trip the same rule: `segment.done` counted 12 runs across 11 section ids on
+Timber Place (11 across 10 on River Falls), so one `cardinality: one` section was split into two
+runs — a page that continues a section was labelled as starting a new one. The resolver still
+placed every page correctly, which is why the page counts match; the gate refused to publish on
+a segmentation it could not prove (D-12). **Which section and which page is not in the run log**
+— `is_continuation` is not logged per page — it is in each package's `REVIEW.md` inside the
+[manifests artifact](https://github.com/arcticbio/cornerstone.accounting.reports/actions/runs/34527782436).
+Worth noting the golden classifier builds both of these cleanly, so this is a real
+model-vs-golden difference on the two scanned properties, and `crr eval --classifier anthropic`
+is what would quantify it.
+
+The earlier single-property measurement, kept for the cache comparison — dispatch
 [34526230410](https://github.com/arcticbio/cornerstone.accounting.reports/actions/runs/34526230410)
 — `2026-06` / `fort-grounds` / `local` / `anthropic`, against `:build-v1` on `claude-opus-5`:
 
