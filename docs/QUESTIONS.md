@@ -42,6 +42,14 @@ it up from here.
 
 *(format: `A-nn · <assumption> · <why> · <where it can be changed>`)*
 
+**A-01 · The classifier key is read from `CRR_ANTHROPIC_API_KEY`, with `ANTHROPIC_API_KEY` kept as a
+fallback.** · Claude Code on the web reserves the unprefixed `ANTHROPIC_API_KEY` for its own account
+auth and strips it from the session container, so a key set under that name never reaches `crr`
+(verified: `CRR_MODEL`, `CRR_GDRIVE_ROOT_FOLDER_ID` and `GOOGLE_SERVICE_ACCOUNT_B64` arrived from the
+same environment while `ANTHROPIC_API_KEY` was empty; the environment editor states the reservation).
+The fallback keeps local shells, GitHub Actions and Azure working under the SDK-conventional name. ·
+`SPEC.md` §12 and `settings.py`; full write-up in `docs/SETUP-CREDENTIALS.md`.
+
 ---
 
 ## Blocked (Claude Code appends here)

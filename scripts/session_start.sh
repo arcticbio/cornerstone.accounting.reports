@@ -18,7 +18,16 @@ for tool in tesseract ocrmypdf gs; do
   fi
 done
 
-[ -n "${ANTHROPIC_API_KEY:-}" ] && echo "ANTHROPIC_API_KEY: set" || echo "ANTHROPIC_API_KEY: not set (classifier phases degrade to golden)"
+# Claude Code on the web reserves ANTHROPIC_API_KEY and strips it from the container
+# (the cloud-environment editor says so). CRR_ANTHROPIC_API_KEY is the name that survives.
+# ANTHROPIC_API_KEY is still honoured for local shells and GitHub Actions. See docs/SETUP-CREDENTIALS.md.
+if [ -n "${CRR_ANTHROPIC_API_KEY:-}" ]; then
+  echo "CRR_ANTHROPIC_API_KEY: set (classifier live)"
+elif [ -n "${ANTHROPIC_API_KEY:-}" ]; then
+  echo "ANTHROPIC_API_KEY: set (classifier live)"
+else
+  echo "CRR_ANTHROPIC_API_KEY: not set (classifier phases degrade to golden) — see docs/SETUP-CREDENTIALS.md"
+fi
 [ -n "${GOOGLE_SERVICE_ACCOUNT_B64:-}" ] && echo "GOOGLE_SERVICE_ACCOUNT_B64: set" || echo "GOOGLE_SERVICE_ACCOUNT_B64: not set (Drive phase uses fake)"
 [ -n "${CRR_GDRIVE_ROOT_FOLDER_ID:-}" ] && echo "CRR_GDRIVE_ROOT_FOLDER_ID: set" || echo "CRR_GDRIVE_ROOT_FOLDER_ID: not set"
 

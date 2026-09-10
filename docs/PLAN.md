@@ -101,7 +101,7 @@ Acceptance
 - Golden classifier round-trips 100 % of golden pages.
 - Anthropic classifier smoke run ≥ 95 % on Fort Grounds; token usage recorded; cache reads observed on pages 2+ (assert `cache_read_input_tokens > 0`).
 
-Checkpoint: none. (If `ANTHROPIC_API_KEY` is absent in the environment, complete everything except the smoke run, write `CHECKPOINT: need ANTHROPIC_API_KEY set in the cloud environment` to `QUESTIONS.md`, and continue to Phase 4 using the golden classifier.)
+Checkpoint: none. (If no classifier key is present, complete everything except the smoke run, write `CHECKPOINT: need CRR_ANTHROPIC_API_KEY set in the cloud environment` to `QUESTIONS.md`, and continue to Phase 4 using the golden classifier. Note the name: `docs/SETUP-CREDENTIALS.md`.)
 
 ---
 
@@ -162,7 +162,7 @@ Tasks
 - [ ] `Dockerfile` per SPEC §14; multi-stage; non-root user; `crr version` healthcheck.
 - [ ] CI job that builds the image and runs `crr build --classifier golden --repo local` inside it with the checkout mounted (`-v $PWD/data:/data -e CRR_BUNDLE_ROOT=/data/bundle/2026-06`) — proves tesseract/ocrmypdf/ghostscript are present and OCR works in-container. The image itself must not contain `data/bundle/` (SPEC §14, §16).
 - [ ] Publish image to GHCR: `:build-v1` and `:sha-<short>` on every push to `build/v1`; `:latest` and `:vX.Y.Z` on tags `v*`. Workflows that pull need `packages: read` and `docker login ghcr.io`.
-- [ ] `.github/workflows/build-period.yml`: `workflow_dispatch` with `period` (required), `property` (optional), `repo` (`gdrive` default, `local` for testing), `image_tag` (default `build-v1`); optional cron commented with the quarterly schedule; runs the GHCR image with secrets `ANTHROPIC_API_KEY`, `GOOGLE_SERVICE_ACCOUNT_B64`, vars `CRR_GDRIVE_ROOT_FOLDER_ID`; uploads `work/` manifests as an artifact; fails the job on exit 1, marks a warning annotation on exit 2.
+- [ ] `.github/workflows/build-period.yml`: `workflow_dispatch` with `period` (required), `property` (optional), `repo` (`gdrive` default, `local` for testing), `image_tag` (default `build-v1`); optional cron commented with the quarterly schedule; runs the GHCR image with secrets `CRR_ANTHROPIC_API_KEY`, `GOOGLE_SERVICE_ACCOUNT_B64`, vars `CRR_GDRIVE_ROOT_FOLDER_ID`; uploads `work/` manifests as an artifact; fails the job on exit 1, marks a warning annotation on exit 2.
 - [ ] `docs/RUNBOOK.md`: "Running a build from GitHub Actions" with screenshots-in-words.
 
 Acceptance

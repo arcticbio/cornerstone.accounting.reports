@@ -4,13 +4,14 @@ Single source of truth for build state. Claude Code ticks tasks here after each 
 commits. Humans read this to see where things stand. Mirrors `docs/PLAN.md`; if they diverge,
 PLAN.md defines the work and this file records what has been done.
 
-**Branch:** `build/v1` (or the session branch — see D-15) · **PR:** _(link after Phase 0)_ · **Current phase:** 0 · **Last session note:** _(none yet)_
+**Branch:** `claude/ecstatic-goodall-ji7yur` (session-scoped branch per D-15; every `build/v1` reference means this branch) · **PR:** _(link after Phase 0)_ · **Current phase:** 0 · **Last session note:** _(none yet)_
 
 ## Session log
 
 | Date (UTC) | Phase | What happened | Next |
 |---|---|---|---|
 | — | — | Handoff package committed; build not started | Phase 0, task 1 |
+| 2026-09-10 | 0 | Classifier key renamed to `CRR_ANTHROPIC_API_KEY` (the unprefixed name is reserved by Claude Code on the web and stripped from the container); added `docs/SETUP-CREDENTIALS.md`. No build tasks started. | Phase 0, task 1 |
 
 ## Phase 0 — Repository hygiene and scaffold
 
@@ -98,7 +99,7 @@ PLAN.md defines the work and this file records what has been done.
 - [ ] `Dockerfile` per SPEC §14; multi-stage; non-root user; `crr version` healthcheck.
 - [ ] CI job that builds the image and runs `crr build --classifier golden --repo local` inside it with the checkout mounted (`-v $PWD/data:/data -e CRR_BUNDLE_ROOT=/data/bundle/2026-06`) — proves tesseract/ocrmypdf/ghostscript are present and OCR works in-container. The image itself must not contain `data/bundle/` (SPEC §14, §16).
 - [ ] Publish image to GHCR: `:build-v1` and `:sha-<short>` on every push to `build/v1`; `:latest` and `:vX.Y.Z` on tags `v*`. Workflows that pull need `packages: read` and `docker login ghcr.io`.
-- [ ] `.github/workflows/build-period.yml`: `workflow_dispatch` with `period` (required), `property` (optional), `repo` (`gdrive` default, `local` for testing), `image_tag` (default `build-v1`); optional cron commented with the quarterly schedule; runs the GHCR image with secrets `ANTHROPIC_API_KEY`, `GOOGLE_SERVICE_ACCOUNT_B64`, vars `CRR_GDRIVE_ROOT_FOLDER_ID`; uploads `work/` manifests as an artifact; fails the job on exit 1, marks a warning annotation on exit 2.
+- [ ] `.github/workflows/build-period.yml`: `workflow_dispatch` with `period` (required), `property` (optional), `repo` (`gdrive` default, `local` for testing), `image_tag` (default `build-v1`); optional cron commented with the quarterly schedule; runs the GHCR image with secrets `CRR_ANTHROPIC_API_KEY`, `GOOGLE_SERVICE_ACCOUNT_B64`, vars `CRR_GDRIVE_ROOT_FOLDER_ID`; uploads `work/` manifests as an artifact; fails the job on exit 1, marks a warning annotation on exit 2.
 - [ ] `docs/RUNBOOK.md`: "Running a build from GitHub Actions" with screenshots-in-words.
 
 **Acceptance:** _(record evidence here when met)_

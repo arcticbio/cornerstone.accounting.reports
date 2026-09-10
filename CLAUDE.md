@@ -47,9 +47,15 @@ tasks and note it in `PROGRESS.md`.
 
 ## Environment variables you may find set
 
-`ANTHROPIC_API_KEY` (classifier), `GOOGLE_SERVICE_ACCOUNT_B64` + `CRR_GDRIVE_ROOT_FOLDER_ID`
+`CRR_ANTHROPIC_API_KEY` (classifier), `GOOGLE_SERVICE_ACCOUNT_B64` + `CRR_GDRIVE_ROOT_FOLDER_ID`
 (Drive), `CRR_MODEL`. If a key is absent, the affected phase degrades as `PLAN.md` describes;
 it does not block the build.
+
+The classifier key is **`CRR_ANTHROPIC_API_KEY`**, not `ANTHROPIC_API_KEY`: Claude Code on the web
+reserves the unprefixed name for its own account auth and strips it from the session container, so
+it never arrives however it is set. `ANTHROPIC_API_KEY` remains a read-only fallback for local
+shells and CI. Do not "fix" a missing key by asking for the unprefixed name to be set again —
+see `docs/SETUP-CREDENTIALS.md`.
 
 ## Definition of done for v1
 
