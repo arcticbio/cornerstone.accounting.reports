@@ -59,18 +59,30 @@ def inspect(
 
 @app.command("validate-config")
 def validate_config() -> None:
-    """Validate schemas, outputs and the property registry (Phase 0 stub: loads YAML only)."""
-    import yaml
-
+    """Validate the schemas, output definitions and property registry (SPEC §4, §9.6)."""
+    from crr.config import ConfigError, load_config
     from crr.settings import Settings
 
     settings = Settings()
-    loaded = 0
-    for path in sorted(settings.config_dir.rglob("*.yaml")):
-        with path.open("rb") as fh:
-            yaml.safe_load(fh)
-        loaded += 1
-    typer.echo(f"validate-config: loaded {loaded} YAML file(s) (stub — full validation in Phase 2)")
+    try:
+        bundle = load_config(settings.config_dir)
+    except ConfigError as exc:
+        typer.echo(f"config invalid ({len(exc.problems)} problem(s)):", err=True)
+        typer.echo(str(exc), err=True)
+        raise typer.Exit(code=1) from None
+    typer.echo(
+        f"config ok: {len(bundle.schemas)} schema(s), {len(bundle.outputs)} output "
+        f"definition(s), {len(bundle.properties.properties)} propert(ies)"
+    )
+    for schema in bundle.schemas.values():
+        typer.echo(
+            f"  schema {schema.schema_id:<22} v{schema.version}  {len(schema.sections)} sections"
+        )
+    for output in bundle.outputs.values():
+        typer.echo(
+            f"  output {output.output_id:<28} v{output.version}  "
+            f"{len(output.leaves)} flow item(s), {len(output.drop)} dropped"
+        )
 
 
 @app.command("eval")

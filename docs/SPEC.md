@@ -170,12 +170,13 @@ Field reference. Required unless marked optional.
 | `text_layer` | `always` \| `never` \| `sometimes` — drives OCR (section 6.2) |
 | `fingerprint.description` | prose the classifier prompt includes |
 | `fingerprint.footer_regex` | optional; enables `footer_check` (section 7.4) |
+| `fingerprint.page_size_hint`, `fingerprint.ocr_quality_note` | optional; documentation, included in the classifier prompt |
 | `record_scope.header_regex` | optional; regex with one capture group that extracts the `Property:` value from page text |
 | `sections[]` | ordered list; order is informational only |
 | `sections[].id` | snake_case, unique within the schema |
 | `sections[].semantic` | cross-manager tag from the controlled list in section 4.4 |
 | `sections[].cardinality` | `one` \| `per_record` |
-| `sections[].typical_pages` | string, documentation and a soft sanity check |
+| `sections[].typical_pages` | string or integer, documentation and a soft sanity check |
 | `sections[].optional` | optional, default false. A required section absent from a source → `NEEDS_REVIEW` (`missing_required`), unless the output definition lists it in `drop` (then absence is fine) |
 | `sections[].not_in_standard_export` | optional, documentation |
 | `sections[].description`, `visual_cues[]`, `text_cues[]` | **These are the classifier's label definitions.** Keep them visually precise |
