@@ -108,6 +108,37 @@ choice. Worth revisiting the first time a new manager's schema scores below thre
 exactly the case exemplars are for.
 *Where:* `src/crr/cli.py` (`_make_classifier`), `src/crr/classify/prompts.py`, SPEC §7.2/§8.
 
+**A-09 · Orientation is decided by a cross-check, not by the classifier alone.**
+*What the eval found:* the real-model eval scored **orientation 0.00 % (0/1)**. On Timber Place
+page 3 — the only rotated page in the corpus — the classifier answers `rotated_90_cw` where the
+truth is `rotated_90_ccw`, the opposite direction, at 0.96 confidence. The composer applied the
+complementary rotation and **the aged-receivable page shipped to investors upside down**, with
+page counts, dimensions, both eval gates and every review code passing, because either rotation
+yields the same 792x612 landscape page. Only the eval's orientation metric saw it.
+*What was tried and did not work:* rewriting the prompt rule twice — once to lead with the edge
+the top of the content faces, once to key purely on the reading direction, with the mapping given
+as a lookup table. The first went from 1-in-4 right to 0-in-4; the second was 0-in-6, and the
+model's *evidence* string contradicted its own label ("reading bottom-to-top" → `rotated_90_cw`).
+Both prompt versions were reverted rather than shipped: a `prompt_version` bump costs a re-eval
+and neither bought anything.
+*What was taken instead:* two independent signals must agree before the composer turns a page
+(SPEC §7.6). Tesseract OSD at 400 DPI agreed with all **172/172** golden pages. It is not
+authoritative either — over the 150 DPI classifier images, ink-cropped and upscaled, the same
+detector called eight upright pages `rotated_180`, three of them at higher confidence than the
+page it got right, so **OSD confidence is not a safety margin**. On disagreement an arbiter shows
+the page in all four rotations, shuffled, and asks which reads normally: a discrimination, not a
+mental rotation, and **12/12** including the page the naming task never gets right. Unsettled →
+`orientation_uncertain` and a human (D-12).
+*Cost:* one 400 DPI render plus a tesseract run per page, and one extra API call per
+disagreement — one page in 172. Timber Place rebuilt clean end to end at $0.74 and the shipped
+page now reads right-side-up.
+*The decision this leaves open:* whether `orientation` should stay in the classifier's tool
+schema at all. It is now only ever a hint, and dropping it would save output tokens — but it is
+also the signal the cross-check is measured against, so it stays until a second rotated page
+exists to test with.
+*Where:* `src/crr/preprocess/orientation.py`, `src/crr/classify/orientation_check.py`,
+`src/crr/classify/orientation_arbiter.py`, SPEC §6.2/§6.5/§6.8/§7.6/§12.
+
 ---
 
 ## Blocked (Claude Code appends here)

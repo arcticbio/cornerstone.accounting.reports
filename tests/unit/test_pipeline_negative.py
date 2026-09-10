@@ -169,7 +169,10 @@ def repo_root(tmp_path: Path, make_pdf: MakePdf) -> Path:
 
 def _build(repo_root: Path, tmp_path: Path, classifier: StubClassifier):  # type: ignore[no-untyped-def]
     settings = Settings(  # type: ignore[call-arg]
-        _env_file=None, work_dir=tmp_path / "work", publish_root=tmp_path / "published"
+        _env_file=None,
+        work_dir=tmp_path / "work",
+        publish_root=tmp_path / "published",
+        orientation_check=False,
     )
     bundle = _bundle()
     repository = LocalFsRepository(

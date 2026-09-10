@@ -19,6 +19,7 @@ REVIEW_CODES = (
     "missing_required",
     "unresolved_record",
     "cardinality_violation",
+    "orientation_uncertain",
     "page_count_drift",
 )
 
@@ -53,6 +54,11 @@ EXPLANATIONS: dict[str, str] = {
     "cardinality_violation": (
         "A section the schema says appears once was found more than once, and the flow does "
         "not say which instance to use."
+    ),
+    "orientation_uncertain": (
+        "The two orientation checks disagree about which way up this page is, and the "
+        "tie-breaker could not settle it. Nothing was guessed: an upside-down page reads as "
+        "the right shape to every other check, so this always comes to a human."
     ),
     "page_count_drift": (
         "The manager's export changed size sharply since the last period. Worth a look before "

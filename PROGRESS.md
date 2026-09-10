@@ -4,7 +4,7 @@ Single source of truth for build state. Claude Code ticks tasks here after each 
 commits. Humans read this to see where things stand. Mirrors `docs/PLAN.md`; if they diverge,
 PLAN.md defines the work and this file records what has been done.
 
-**Branch:** `main` — v1 landed there via [#1](https://github.com/arcticbio/cornerstone.accounting.reports/pull/1) (built on the session branch `claude/gifted-lamport-wwgenm`; D-15 — every reference to `build/v1` in these documents means the release line, now `main`) · **Current phase:** 9 (complete) · **Tag:** `v1.0.0` pushed · **Last session note:** all eight properties built against the real model — 6 built, 2 to review, $4.72/run. See "Pick up here" below.
+**Branch:** `main` — v1 landed there via [#1](https://github.com/arcticbio/cornerstone.accounting.reports/pull/1) (built on the session branch `claude/gifted-lamport-wwgenm`; D-15 — every reference to `build/v1` in these documents means the release line, now `main`) · **Current phase:** 9 (complete) · **Tag:** `v1.0.0` pushed · **Last session note:** B-08 fixed, real-model eval run (172 pages, 1.0000 across page/continuation/boundary, $4.66), and the orientation defect it surfaced fixed — a page was shipping upside down. See "Pick up here" below.
 
 ## Pick up here
 
@@ -37,15 +37,34 @@ properties end to end.
    anyway. The break condition is now qualified, SPEC §6.4 amended, three tests pin both
    directions. **Both properties rebuilt against the real model: `ok`, 25 and 29 pages, exit 0**
    ($1.63 for the pair).
-2. **`crr eval --classifier anthropic`** — the one measurement still missing, and what would
-   quantify B-08's continuation accuracy across all 31 documents. It needs the key, so it has to
-   run in Actions; there is no dispatchable workflow for it yet (CI runs only the golden eval).
-   Adding a `command` input to `build-period.yml`, or a small `eval.yml`, is the cheap way in.
-3. **Log `is_continuation` on `classify.page`** so a run log can answer (1) without the artifact.
-4. **B-04 — Azure.** Untouched and still gated on `AZURE_CREDENTIALS`; `docs/SETUP-AZURE.md` and
+2. ~~**`crr eval --classifier anthropic`**~~ — **run 2026-09-11, locally, now that B-01 is
+   closed.** All 31 documents, 172 pages: **page accuracy 1.0000, continuation 1.0000, boundary
+   F1 1.0000**, gate passed, **$4.66**. Report in `eval/reports/`. It found one real defect and
+   one open question:
+   - ~~**orientation 0.00 % (0/1)**~~ — **fixed 2026-09-11.** Not a metric artefact: the
+     classifier named Timber Place p3 `rotated_90_cw` where the truth is `rotated_90_ccw`, the
+     composer applied 270° instead of 90°, and **the page shipped to investors upside down**.
+     Every gate passed — both rotations give the same 792×612 landscape page — so only this
+     metric saw it. Two prompt rewrites made it *worse* (1/4 → 0/4 → 0/6) and were reverted.
+     Orientation is now a cross-check of two independent signals with a discrimination arbiter
+     on disagreement (SPEC §7.6, A-09). Timber Place rebuilt clean, page verified right-side-up,
+     eval orientation now **100 % (1/1)**.
+   - **Missoula `record_qualifier` 59.38 % (38/64)** — still unexplained. The hypothesis is that
+     it is benign: the model transcribes the `Property:` header on single-record properties where
+     golden carries `null`, and `map_qualifier` maps null *or* a matching `pm_name` to the same
+     single record, so resolution is unaffected. Every Missoula property resolved to its exact
+     golden page count, which is consistent with that. Worth confirming before trusting the
+     number either way — it is the same "the model transcribes the header anyway" behaviour that
+     caused B-08.
+3. **A dispatchable eval workflow.** The eval now runs locally, but CI still runs only the
+   golden one; there is no way to trigger a keyed eval from Actions. A `command` input on
+   `build-period.yml`, or a small `eval.yml`, is the cheap way in.
+4. ~~**Log `is_continuation` on `classify.page`**~~ — done; a run log now answers the B-08
+   question without the artifact.
+5. **B-04 — Azure.** Untouched and still gated on `AZURE_CREDENTIALS`; `docs/SETUP-AZURE.md` and
    `infra/bootstrap.sh` are written and waiting. Actions is a working host in the meantime (D-13),
    so this is a choice, not a blocker.
-5. ~~**B-01's remaining half**~~ — **closed 2026-09-11.** The session container strips
+6. ~~**B-01's remaining half**~~ — **closed 2026-09-11.** The session container strips
    `ANTHROPIC_API_KEY`, but not `CRR_ANTHROPIC_API_KEY`; `settings.py` now reads either name.
    The fix existed on the abandoned branch `claude/ecstatic-goodall-ji7yur` (PR #2) and had never
    reached `main`, which is why this was recorded as impossible. `pytest -m api` runs in-session:

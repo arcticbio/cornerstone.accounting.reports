@@ -176,6 +176,19 @@ def _make_classifier(kind: str, settings: Settings, property_id: str | None):  #
     raise typer.Exit(code=1)
 
 
+def _make_orientation_arbiter(settings: Settings):  # type: ignore[no-untyped-def]
+    """The tie-breaker for a page the two orientation checks disagree on (SPEC §7.6).
+
+    Needs a key of its own right: a golden build has no key and simply goes without, which
+    turns an unsettled disagreement into `orientation_uncertain` rather than a wrong rotation.
+    """
+    if not settings.orientation_check or not settings.anthropic_api_key:
+        return None
+    from crr.classify.orientation_arbiter import AnthropicOrientationArbiter
+
+    return AnthropicOrientationArbiter(settings)
+
+
 def _inspect_period(repo: str, period: str | None) -> None:
     """What each property has in `inputs/` for a period, and whether it is ready to build."""
     from crr.config import ConfigError, load_config
@@ -303,6 +316,7 @@ def build(
             settings=settings,
             repository=repository,
             classifier=engine,
+            arbiter=_make_orientation_arbiter(settings),
             dry_run=dry_run,
         )
         results.append(result)
@@ -429,6 +443,7 @@ def eval_cmd(
         lambda property_id: _make_classifier(classifier, settings, property_id),
         property_ids=property_ids,
         pm_id=pm,
+        arbiter=_make_orientation_arbiter(settings),
     )
     if not result.documents:
         typer.echo("no golden documents in scope", err=True)

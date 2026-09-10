@@ -38,7 +38,16 @@ def builds(work_root: Path) -> dict[str, object]:
     from crr.classify.golden_classifier import GoldenClassifier
 
     work = work_root
-    settings = Settings(_env_file=None, work_dir=work, publish_root=work / "published")  # type: ignore[call-arg]
+    settings = Settings(  # type: ignore[call-arg]
+        _env_file=None,
+        work_dir=work,
+        publish_root=work / "published",
+        # The golden labels already carry the right orientation, so the OSD cross-check has
+        # nothing to find here and costs a 400 DPI render plus a tesseract run per page —
+        # minutes across the corpus. `test_orientation.py` exercises it on the page that
+        # needs it.
+        orientation_check=False,
+    )
     repository = LocalFsRepository(
         settings.bundle_root,
         CONFIG.properties,
@@ -122,7 +131,9 @@ def test_invariant_3_the_composer_opens_only_planned_sources(
     from crr.classify.golden_classifier import GoldenClassifier
 
     work = work_root
-    settings = Settings(_env_file=None, work_dir=work, publish_root=work / "pub")  # type: ignore[call-arg]
+    settings = Settings(  # type: ignore[call-arg]
+        _env_file=None, work_dir=work, publish_root=work / "pub", orientation_check=False
+    )
     repository = LocalFsRepository(
         settings.bundle_root,
         CONFIG.properties,
@@ -149,7 +160,9 @@ def test_invariant_4_two_builds_agree_except_for_the_creation_date(work_root: Pa
     outputs = []
     for _run in ("one", "two"):
         work = work_root
-        settings = Settings(_env_file=None, work_dir=work, publish_root=work / "pub")  # type: ignore[call-arg]
+        settings = Settings(  # type: ignore[call-arg]
+            _env_file=None, work_dir=work, publish_root=work / "pub", orientation_check=False
+        )
         repository = LocalFsRepository(
             settings.bundle_root,
             CONFIG.properties,

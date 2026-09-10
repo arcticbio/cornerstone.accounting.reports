@@ -11,6 +11,7 @@ import time
 from collections import Counter
 from dataclasses import dataclass, field
 
+from crr.classify.orientation_check import OrientationArbiter, apply_orientation_check
 from crr.classify.protocol import Classifier, PageInput, Usage
 from crr.config.loader import ConfigBundle
 from crr.evaluate.metrics import Scores, score_boundaries, score_document
@@ -77,6 +78,7 @@ def evaluate(
     *,
     property_ids: list[str] | None = None,
     pm_id: str | None = None,
+    arbiter: OrientationArbiter | None = None,
 ) -> EvalResult:
     """Score `classifier_for(property_id)` over every golden document in scope."""
     started = time.monotonic()
@@ -91,7 +93,7 @@ def evaluate(
         result.classifier = classifier.name
         result.model = settings.model if classifier.name.startswith("anthropic") else None
         result.prompt_version = getattr(classifier, "prompt_version", None)
-        documents, usage = _evaluate_property(entry, prop, config, settings, classifier)
+        documents, usage = _evaluate_property(entry, prop, config, settings, classifier, arbiter)
         result.documents.extend(documents)
         result.usage.add(usage)
         log.info("eval.property_done", property=property_id)
@@ -105,6 +107,7 @@ def _evaluate_property(
     config: ConfigBundle,
     settings: Settings,
     classifier: Classifier,
+    arbiter: OrientationArbiter | None = None,
 ) -> tuple[list[DocumentResult], Usage]:
     out: list[DocumentResult] = []
     usage = Usage()
@@ -161,17 +164,30 @@ def _evaluate_property(
         ]
         classified = classifier.classify(doc, schema, pages)
         usage.add(classified.usage)
+        # Score what would ship, not the raw label: the orientation a build applies is the one
+        # the §7.6 cross-check settled. Skipped for a classifier that reads no images — the
+        # golden one, whose labels are the answer key — so the CI self-consistency run stays
+        # free.
+        predictions = classified.pages
+        if settings.orientation_check and needs_images:
+            predictions, _ = apply_orientation_check(
+                predictions,
+                path,
+                doc_role=golden_doc.role,
+                dpi=settings.osd_dpi,
+                arbiter=arbiter,
+            )
 
         scores = score_document(
             golden_doc,
-            classified.pages,
+            predictions,
             score_record=golden_doc.schema_id in RECORD_SCORED_SCHEMAS,
             golden_record_names={r.id: r.pm_name for r in golden.records} | {None: None},
         )
         golden_labels = golden.classifications(golden_doc.role)
         scores.boundary = score_boundaries(
             list(segment(golden_labels, schema, prop, golden_doc.role).sections),
-            list(segment(classified.pages, schema, prop, golden_doc.role).sections),
+            list(segment(predictions, schema, prop, golden_doc.role).sections),
         )
         out.append(
             DocumentResult(
@@ -181,7 +197,7 @@ def _evaluate_property(
                 schema_id=golden_doc.schema_id,
                 pages=len(golden_doc.pages),
                 scores=scores,
-                predictions=classified.pages,
+                predictions=predictions,
             )
         )
     return out, usage

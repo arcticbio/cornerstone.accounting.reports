@@ -313,7 +313,8 @@ missing is a hard failure for that property; a missing optional Cornerstone file
    The OCR'd file replaces the source for all later stages *and* is what gets composed, so the
    published package is searchable. Record the ocrmypdf version and whether `--rotate-pages`
    changed any page in the manifest. (`--rotate-pages` is a first pass at orientation; the
-   classifier's orientation label is authoritative and the composer applies any remaining fix.)
+   remaining fix comes from the orientation cross-check in §7.6, not from the classifier's
+   label alone.)
 3. **Render**: `pypdfium2`, 150 DPI, RGB, PNG, one file per page in `work/.../pages/`. Long edge
    capped at 1568 px (Anthropic's resize threshold) so the model sees exactly what is stored.
 4. **Text**: `pypdf` `extract_text()` per page, whitespace-normalised, capped at 6 000 characters.
@@ -355,11 +356,17 @@ section), `property`, `period_label`. Compute the transform list per page:
 *content* is currently turned; the rotation applied is what brings it upright (pypdf's
 `rotate(n)` turns the page clockwise):
 
-| classifier orientation | meaning | `rotate:` |
+| orientation | meaning | `rotate:` |
 |---|---|---|
 | `rotated_90_cw` | content reads top-to-bottom down the right edge | 270 |
 | `rotated_90_ccw` | content reads bottom-to-top up the left edge | 90 |
 | `rotated_180` | upside down | 180 |
+
+The orientation used here is the one the cross-check in §7.6 settled, not the classifier's raw
+label. The two differ rarely, but when they do the classifier is as likely to name the opposite
+rotation as the right one, and the composer cannot tell: turning a page 270° instead of 90°
+produces a page of exactly the same shape, so an inverted label ships upside down past every
+other gate.
 
 `record_name` renders as the record's `pm_name`; for a property with a single record the
 bookmark template's ` - {record_name}` suffix is dropped entirely.
@@ -389,6 +396,7 @@ The build is `NEEDS_REVIEW` (never silently `BUILT`) when any of:
 | `missing_required` | a required flow item resolved to nothing, or a required source file is absent |
 | `unresolved_record` | a `per_record` section on a multi-record property whose qualifier maps to no record |
 | `cardinality_violation` | a `one` section found more than once and no `#n` in the flow |
+| `orientation_uncertain` | the two orientation signals in §7.6 disagree and the arbiter did not settle it |
 | `page_count_drift` | PM source page count differs from the last built period for this property by more than 50 % (only when a prior manifest exists) |
 
 `FAILED` is reserved for exceptions: unreadable PDF, missing PM source, API errors after retries.
@@ -526,6 +534,45 @@ Prompts live in `src/crr/classify/prompts/<schema_id>/v<N>.md` (Jinja2). `prompt
 recorded per page and in the manifest. Changing a prompt requires re-running `crr eval` and
 recording the result in `PROGRESS.md`.
 
+### 7.6 Orientation cross-check
+
+`orientation` is the one field the classifier is measurably bad at. On the single rotated page
+in the golden corpus it answers `rotated_90_cw` where the truth is `rotated_90_ccw` — the
+opposite direction — at 0.96 confidence, and goes on doing so when the prompt rule is rewritten
+to lead with the reading direction or with the edge the top of the content faces. Its *evidence*
+string is often right ("reading bottom-to-top") while the label it picks is wrong, so this is a
+mapping failure, not a perception one. It is also invisible downstream: both rotations yield a
+792x612 landscape page, so page counts, dimensions and every review code pass while the page
+goes to investors upside down.
+
+So the label is not trusted on its own. Two independent signals must agree before the composer
+turns a page:
+
+1. the classifier's `orientation`, produced with the rest of the page label;
+2. **Tesseract OSD** (`tesseract --psm 0`) on a page rendered fresh at `CRR_OSD_DPI`.
+
+OSD's `Rotate: N` is the clockwise turn that would bring the page upright, which is exactly
+`Orientation.correcting_rotation`; the orientation is its inverse. At 400 DPI OSD agreed with
+all 172 golden pages. It is not authoritative either: run over the 150 DPI classifier images,
+ink-cropped and upscaled, the same detector called eight upright pages `rotated_180`, three of
+them at a higher confidence than it reported for the page it got right. **OSD confidence is not
+a safety margin** — do not gate on it.
+
+When the two disagree, an **arbiter** settles it: the page is rendered in all four rotations, in
+shuffled order, and the model is asked which one reads normally. That is a discrimination rather
+than a mental rotation, and the model is reliable at it — 12 of 12 across upright and rotated
+pages, including the page it names wrongly every time. The arbiter needs enough `max_tokens` to
+finish thinking before it answers; too small a budget returns an empty text block, which reads
+as a refusal and sends a correctly-answered page to review.
+
+If the arbiter is absent (no key, or a golden build) or does not return a single letter, the
+classifier's label stands and the build raises `orientation_uncertain` (§6.8). Nothing is
+guessed: an unsettled page goes to a human (D-12).
+
+The check runs per page and costs a 400 DPI render plus a tesseract run; `CRR_ORIENTATION_CHECK`
+turns it off, which is how the test fixtures stay fast. Turning it off restores the behaviour
+that shipped an upside-down page.
+
 ---
 
 ## 8. Eval harness
@@ -639,6 +686,8 @@ Never log page text or image bytes. Log document sha256s, not paths, at INFO.
 | `CRR_MODEL` | `claude-opus-5` | classifier model id |
 | `CRR_MIN_CONFIDENCE` | `0.85` | review gate |
 | `CRR_RENDER_DPI` | `150` | |
+| `CRR_ORIENTATION_CHECK` | `true` | run the §7.6 cross-check before the composer rotates a page |
+| `CRR_OSD_DPI` | `400` | DPI for the Tesseract OSD render; the detector degrades materially below this |
 | `CRR_MAX_PARALLEL_DOCS` | `2` | |
 | `CRR_BUNDLE_ROOT` | `data/bundle/2026-06` | local repository root for golden data |
 | `CRR_REPO` | `local` | `local` \| `gdrive` |
