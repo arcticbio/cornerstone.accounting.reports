@@ -41,5 +41,5 @@ def test_price_table_override(monkeypatch: pytest.MonkeyPatch) -> None:
     s = Settings(_env_file=None)  # type: ignore[call-arg]
     assert s.price_table["claude-opus-5"].input == 1.0
     # the built-in table is not mutated by an override
-    assert DEFAULT_PRICE_TABLE["claude-opus-5"].input == 15.0
+    assert DEFAULT_PRICE_TABLE["claude-opus-5"].input == 5.0
     assert "claude-sonnet-5" in s.price_table

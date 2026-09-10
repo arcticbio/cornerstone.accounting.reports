@@ -26,12 +26,13 @@ class ModelPrice(BaseModel):
 
 #: Built-in list price estimate, USD per MTok. Override with CRR_PRICE_TABLE_JSON when the
 #: published price list moves; the manifest records the estimate, never a billed amount.
+#: `cache_write` is the 1-hour-TTL rate (2x base input) because that is the TTL the classifier
+#: asks for; cache reads are 0.1x base input.
 DEFAULT_PRICE_TABLE: dict[str, ModelPrice] = {
-    "claude-opus-5": ModelPrice(input=15.0, cache_read=1.5, cache_write=18.75, output=75.0),
-    "claude-sonnet-5": ModelPrice(input=3.0, cache_read=0.3, cache_write=3.75, output=15.0),
-    "claude-haiku-4-5-20251001": ModelPrice(
-        input=1.0, cache_read=0.1, cache_write=1.25, output=5.0
-    ),
+    "claude-opus-5": ModelPrice(input=5.0, cache_read=0.5, cache_write=10.0, output=25.0),
+    "claude-sonnet-5": ModelPrice(input=2.0, cache_read=0.2, cache_write=4.0, output=10.0),
+    "claude-haiku-4-5": ModelPrice(input=1.0, cache_read=0.1, cache_write=2.0, output=5.0),
+    "claude-haiku-4-5-20251001": ModelPrice(input=1.0, cache_read=0.1, cache_write=2.0, output=5.0),
 }
 
 
@@ -50,6 +51,9 @@ class Settings(BaseSettings):
     model: str = "claude-opus-5"
     min_confidence: float = 0.85
     max_parallel_docs: int = 2
+    #: `output_config.effort` for the classifier. Page classification is a perceptual call on
+    #: a single image, not a reasoning problem; `low` is both cheaper and no less accurate here.
+    classifier_effort: Literal["low", "medium", "high", "xhigh", "max"] = "low"
     exemplar_policy: ExemplarPolicy = "exclude_same_property"
 
     # -- preprocessing ---------------------------------------------------------------

@@ -9,6 +9,8 @@ import typer
 
 from crr import __version__
 from crr.log import configure
+from crr.models import SourceDocument
+from crr.settings import Settings
 
 app = typer.Typer(
     name="crr",
@@ -55,6 +57,109 @@ def inspect(
         typer.echo(
             f"  {page.page:>4}  {size:>13}  {page.rotate:>3}  {page.text_chars:>6}  {footer}"
         )
+
+
+@app.command()
+def classify(
+    pdf: Annotated[Path, typer.Argument(help="PDF to classify", exists=True, dir_okay=False)],
+    schema_id: Annotated[str, typer.Option("--schema", help="Source schema id")],
+    classifier: Annotated[str, typer.Option("--classifier", help="anthropic|golden")] = "anthropic",
+    doc_role: Annotated[str, typer.Option("--role", help="Document role to label")] = "pm_source",
+    property_id: Annotated[
+        str | None,
+        typer.Option("--property", help="Property id (required for --classifier golden)"),
+    ] = None,
+    out: Annotated[Path | None, typer.Option("--out", help="Write the labels as JSON here")] = None,
+) -> None:
+    """Classify every page of one PDF and print the labels."""
+    import json as _json
+
+    from crr.classify.footer_check import apply_footer_check
+    from crr.classify.protocol import PageInput
+    from crr.config import load_config
+    from crr.preprocess.render import render_pages
+    from crr.preprocess.text import document_text_layer, sha256_file
+    from crr.settings import Settings
+
+    settings = Settings()
+    bundle = load_config(settings.config_dir)
+    if schema_id not in bundle.schemas:
+        typer.echo(
+            f"unknown schema {schema_id!r}; have {', '.join(sorted(bundle.schemas))}", err=True
+        )
+        raise typer.Exit(code=1)
+    schema = bundle.schemas[schema_id]
+
+    sha = sha256_file(pdf)
+    texts, has_text = document_text_layer(pdf, max_chars=settings.page_text_chars)
+    doc = SourceDocument(
+        role=doc_role,
+        schema_id=schema_id,
+        path=pdf,
+        sha256=sha,
+        page_count=len(texts),
+        has_text_layer=has_text,
+    )
+    pages_dir = settings.work_dir / "classify" / sha[:16]
+    images = render_pages(
+        pdf, sha, pages_dir, dpi=settings.render_dpi, max_edge=settings.render_max_edge_px
+    )
+    page_inputs = [
+        PageInput(page=n, image_path=images[n], text=texts[n - 1] or None) for n in sorted(images)
+    ]
+
+    engine = _make_classifier(classifier, settings, property_id)
+    result = engine.classify(doc, schema, page_inputs)
+    labelled = apply_footer_check(result.pages, schema, {n: texts[n - 1] for n in sorted(images)})
+
+    typer.echo(f"{pdf.name}  schema={schema_id}  classifier={engine.name}")
+    typer.echo(f"  {'page':>4}  {'section':<30}{'cont':>5}{'conf':>7}  {'footer':<28} record")
+    for label in labelled:
+        agrees = "" if label.footer_agrees is None else ("=" if label.footer_agrees else " !=")
+        typer.echo(
+            f"  {label.page:>4}  {label.section_id:<30}{label.is_continuation!s:>5}"
+            f"{label.confidence:>7.2f}  {(label.footer_label or '-')[:26]:<26}{agrees:<2} "
+            f"{label.record_qualifier or ''}"
+        )
+    if result.usage.api_calls:
+        typer.echo(
+            f"  tokens: input={result.usage.input_tokens} "
+            f"cache_read={result.usage.cache_read_tokens} "
+            f"cache_write={result.usage.cache_write_tokens} "
+            f"output={result.usage.output_tokens} calls={result.usage.api_calls}"
+        )
+    if out is not None:
+        out.parent.mkdir(parents=True, exist_ok=True)
+        out.write_text(
+            _json.dumps([label.model_dump(mode="json") for label in labelled], indent=2) + "\n"
+        )
+        typer.echo(f"  wrote {out}")
+
+
+def _make_classifier(kind: str, settings: Settings, property_id: str | None):  # type: ignore[no-untyped-def]
+    """Build a classifier by name. Kept out of the command body so `build` can reuse it."""
+    from crr.classify.golden_classifier import GoldenClassifier
+    from crr.golden import load_all_golden
+
+    if kind == "golden":
+        if property_id is None:
+            typer.echo("--classifier golden needs --property <id>", err=True)
+            raise typer.Exit(code=1)
+        golden = load_all_golden(settings.golden_dir)
+        if property_id not in golden:
+            typer.echo(f"no golden labels for {property_id!r}", err=True)
+            raise typer.Exit(code=1)
+        return GoldenClassifier(golden[property_id])
+    if kind == "anthropic":
+        from crr.classify.anthropic_classifier import AnthropicClassifier
+
+        try:
+            return AnthropicClassifier(settings)
+        except RuntimeError as exc:
+            typer.echo(str(exc), err=True)
+            raise typer.Exit(code=1) from None
+    typer.echo(f"unknown classifier {kind!r}; use anthropic or golden", err=True)
+    raise typer.Exit(code=1)
 
 
 @app.command("validate-config")

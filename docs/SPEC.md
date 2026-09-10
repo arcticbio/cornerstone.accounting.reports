@@ -419,9 +419,21 @@ Implementations:
 
 One request per page, sequential per document (prior-page context is a dependency). Model from
 `settings.model` (default `claude-opus-5`; pin a dated snapshot if the API lists one and record
-the exact id in the manifest). `temperature=0`. `max_tokens=400`.
+the exact id in the manifest). `max_tokens=400`.
 
-**System block (cached, 1-hour TTL, identical for every page of a document):**
+`temperature` is **not sent**: it is rejected with a 400 on `claude-opus-5` (and on every model
+in that family), so the v1 build cannot set `temperature=0` as earlier drafts of this section
+said. Determinism comes instead from the forced tool with a closed `enum` on `section_id` and
+`strict: true` on the tool schema. Thinking is left at the model's default (adaptive) and depth
+is controlled with `output_config.effort`, which `settings.classifier_effort` sets to `low`:
+classifying one page image against a fixed catalogue is a perceptual call, not a reasoning
+problem, and disabling thinking outright on this model family has its own failure modes.
+
+**Cached prefix (1-hour TTL, identical for every page of a document).** The Messages API's
+`system` field carries text blocks only, so this prefix spans two places: the instruction block
+(items 1–3, 5) is the `system` field, and the exemplar images (item 4) are the leading blocks of
+the user turn. Each carries its own `cache_control` breakpoint; both are per-document constants,
+so pages 2..N read both from cache.
 
 1. Role: page classifier for property-management financial reports; label the page against the
    supplied schema; never invent sections; prefer `unknown` to guessing.
@@ -439,8 +451,8 @@ the exact id in the manifest). `temperature=0`. `max_tokens=400`.
    inherits the previous page's qualifier for null continuation pages, so do not guess one);
    report orientation of the *content* (text reading direction), not the page box.
 
-Mark the last system block with `cache_control: {"type": "ephemeral"}`. All exemplar images
-live in the system prompt so they cache; the per-page images do not.
+Mark the last block of each cached prefix with `cache_control: {"type": "ephemeral", "ttl":
+"1h"}`. The exemplar images are cached; the per-page image and text are not.
 
 **User turn (uncached):**
 
@@ -474,7 +486,9 @@ Extracted text (may be OCR, may be empty):
 
 Parse the tool input into `PageClassification` via pydantic; a validation failure is retried once
 with the validation error appended to the user turn, then recorded as `unknown` with
-`evidence="schema_violation"`.
+`evidence="schema_violation"`. A response with `stop_reason: "refusal"` is treated the same way:
+a safety decline is not a label, so the page becomes `unknown` and the build goes to review
+(D-12) rather than being retried into a guess.
 
 ### 7.3 Retries, limits, cost
 
@@ -617,6 +631,7 @@ Never log page text or image bytes. Log document sha256s, not paths, at INFO.
 | `CRR_GDRIVE_ROOT_FOLDER_ID` | — | Drive folder that contains the `<PM>/` folders |
 | `CRR_WORK_DIR` | `work/` | |
 | `CRR_EXEMPLAR_POLICY` | `exclude_same_property` | `exclude_same_property` \| `any` |
+| `CRR_CLASSIFIER_EFFORT` | `low` | `output_config.effort` for the classifier: `low`\|`medium`\|`high`\|`xhigh`\|`max` |
 | `CRR_EVAL_MIN_PAGE_ACCURACY` | `0.98` | per-manager gate |
 | `CRR_EVAL_MIN_BOUNDARY_F1` | `0.98` | per-manager gate |
 | `CRR_PRICE_TABLE_JSON` | built-in | override `{model: {input, cache_read, cache_write, output}}` USD per MTok |

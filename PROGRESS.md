@@ -4,7 +4,7 @@ Single source of truth for build state. Claude Code ticks tasks here after each 
 commits. Humans read this to see where things stand. Mirrors `docs/PLAN.md`; if they diverge,
 PLAN.md defines the work and this file records what has been done.
 
-**Branch:** `claude/gifted-lamport-wwgenm` (session-scoped branch; D-15 — every reference to `build/v1` in these documents means this branch) · **PR:** [#1](https://github.com/arcticbio/cornerstone.accounting.reports/pull/1) · **Current phase:** 3 · **Last session note:** _(none yet)_
+**Branch:** `claude/gifted-lamport-wwgenm` (session-scoped branch; D-15 — every reference to `build/v1` in these documents means this branch) · **PR:** [#1](https://github.com/arcticbio/cornerstone.accounting.reports/pull/1) · **Current phase:** 4 · **Last session note:** _(none yet)_
 
 ## Session log
 
@@ -15,6 +15,7 @@ PLAN.md defines the work and this file records what has been done.
 | 2026-09-10 | 0 | Scaffold, settings, CLI, CI, PR #1 opened | Phase 1 |
 | 2026-09-10 | 1 | Models, render/text/OCR/inspect, 31-document sweep, McCathren labels visually verified | Phase 2 |
 | 2026-09-10 | 2 | Config validation, address grammar, segmenter, resolver; `expected_output` frozen for all 8 | Phase 3 |
+| 2026-09-10 | 3 | Classifier protocol, golden classifier, footer check, prompts, Anthropic classifier, `crr classify` | Phase 4 |
 
 ## Phase 0 — Repository hygiene and scaffold
 
@@ -76,15 +77,15 @@ source rather than an exception. Cobalt and McCathren pass through every PM page
 
 ## Phase 3 — Classifier
 
-- [ ] `classify/protocol.py`, `classify/golden_classifier.py`.
-- [ ] `classify/footer_check.py` per SPEC §7.4 with tests on real page text from the bundle (Missoula and Cobalt).
-- [ ] `classify/prompts/<schema>/v1.md` Jinja2 templates per SPEC §7.2. Exemplar selection per `exemplar_policy`.
-- [ ] `classify/anthropic_classifier.py`: message construction with cache_control, forced tool, retries, token accounting, pydantic parsing with one repair retry.
-- [ ] `crr classify <pdf> --schema <id>` command printing a table and writing JSON.
-- [ ] Integration test (marker `api`): classify page 1 of each of the 4 PM sources (one per manager + WayPointe) and assert the expected section id. Skips without key.
-- [ ] Smoke run: `crr classify` on Fort Grounds PM source with the real model; eyeball against golden; record accuracy and token counts in `PROGRESS.md`.
+- [x] `classify/protocol.py` (`Classifier` protocol, `PageInput`, `Usage`) and `classify/golden_classifier.py`. The golden classifier renders each label's *record id* back to the record's `pm_name`, so the segmenter's qualifier→record mapping is exercised on every golden build rather than bypassed.
+- [x] `classify/footer_check.py`. Verified on real bundle text: it names the right section on **16/16** Missoula pages (report name leads the matched footer line) and **12/12** Cobalt report pages (report name is the line *above* the `Created on …` match). Cobalt's nine owner-statement pages correctly yield no verdict — that section declares no `footer_label`, and `Page N of M` names no report. Disagreement is recorded, never applied (D-05).
+- [x] `classify/prompts/<schema_id>/v1.md` for all four schemas over a shared `_shared/` body, so one manager's prompt can be revised and its `prompt_version` bumped without touching the others. Exemplar selection honours `exclude_same_property` (which is what keeps an eval from scoring the model against its own answer key) and caps at two pages per section.
+- [x] `classify/anthropic_classifier.py`. Three corrections to SPEC §7.2, all recorded in `QUESTIONS.md` and amended in the spec: `temperature` is rejected on this model family (A-02 — determinism now comes from the forced tool's closed enum plus `strict: true`, with `output_config.effort=low`); the API's `system` field takes text blocks only, so exemplar images lead the *user* turn with their own 1-hour cache breakpoint (A-03); and a `stop_reason: "refusal"` is handled as `unknown` → review rather than retried into a guess (A-04). 16 unit tests against a fake client cover argv, both cached prefixes, previous-page carry-over, the repair round, retries and cost.
+- [x] `crr classify <pdf> --schema <id> [--classifier golden --property <id>] [--out json]`. Prints section, continuation, confidence, the footer verdict and its agreement marker, and the record qualifier.
+- [x] `tests/integration/test_classify_api.py` (marker `api`): page 1 of Fort Grounds, WayPointe, Timber Place and Bridgewater, plus a cache-read assertion on page 2. Skipped in this environment — no `ANTHROPIC_API_KEY` (B-01).
+- [ ] **Blocked (B-01):** smoke run needs `ANTHROPIC_API_KEY`. Run `uv run crr classify "data/bundle/2026-06/Missoula Property Management/Fort Grounds/2026-06 June/inputs/05 PM Source - Missoula PM Baseline.pdf" --schema rentmanager-missoula` once the key is set.
 
-**Acceptance:** _(record evidence here when met)_
+**Acceptance:** Golden classifier round-trips 100 % of golden pages (`tests/eval/test_golden_plans.py` builds every plan from it). The real-model smoke run and the ≥ 95 % / cache-read assertions are blocked on B-01. Gate: ruff, `mypy src`, 206 passed + 5 skipped (the `api` tests).
 
 ## Phase 4 — Composer, manifest, review gate, end-to-end with golden labels
 

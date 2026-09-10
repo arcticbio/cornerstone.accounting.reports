@@ -49,11 +49,47 @@ in pipeline code, the entry point is one setting with the spec'd default; the se
 git-ignored shim in `.venv/bin/`. CI and the Docker image use the stock apt entry point unchanged.
 *Where:* `src/crr/preprocess/ocr.py`, `SPEC.md` §12 (amended in the same commit).
 
+**A-02 · `temperature` is not sent to the classifier; `output_config.effort=low` replaces it.**
+*Why:* SPEC §7.2 specified `temperature=0`, but the parameter is rejected with a 400 on
+`claude-opus-5`. The safest equivalent is the one already in the design — a forced tool with a
+closed `enum` and `strict: true` — plus low effort, since page classification is perceptual, not
+a reasoning task. *Where:* `src/crr/settings.py` (`CRR_CLASSIFIER_EFFORT`), `SPEC.md` §7.2/§12
+(amended in the same commit).
+
+**A-03 · Exemplar images sit at the head of the user turn, not in the system prompt.**
+*Why:* SPEC §7.2 put them in the system block so they would cache, but the Messages API's
+`system` field accepts text blocks only. They now lead the user turn with their own 1-hour cache
+breakpoint, which preserves the caching behaviour the spec was actually after. *Where:*
+`src/crr/classify/anthropic_classifier.py`, `SPEC.md` §7.2 (amended in the same commit).
+
+**A-04 · No server-side refusal fallback model is configured.**
+*Why:* a `stop_reason: "refusal"` on a page of a rental property's financial report would be
+surprising, and adding a second model behind a beta flag widens the failure surface of an
+unattended quarterly job. A refusal is handled as `unknown` → review, which is the same
+conservative path as an unparseable response. Revisit if a real run ever refuses.
+*Where:* `src/crr/classify/anthropic_classifier.py`.
+
+**A-05 · Built-in price table set to current list prices for `claude-opus-5` ($5/$25 per MTok,
+cache read 0.1×, cache write 2× at the 1-hour TTL).**
+*Why:* SPEC §12 leaves the built-in table to the implementation. The estimate only ever appears
+in the manifest's `cost.usd_estimate`; `CRR_PRICE_TABLE_JSON` overrides it when list prices move.
+*Where:* `src/crr/settings.py`.
+
 ---
 
 ## Blocked (Claude Code appends here)
 
 *(format: `B-nn · <what is needed> · <what is blocked> · <what continues meanwhile>`)*
+
+**B-01 · `ANTHROPIC_API_KEY` is not set in the build environment.**
+*Blocked:* the Phase 3 smoke run against the real model (accuracy and token counts on the Fort
+Grounds PM source), the Phase 3 `api`-marked integration tests, and the Phase 5 real-model eval
+and build (`crr eval --classifier anthropic`, `crr build --classifier anthropic`).
+*What continues:* everything else. The classifier itself is built and unit-tested against a fake
+client — message construction, the cached prefixes, forced tool, retries, the repair round, the
+refusal path and token accounting. `GoldenClassifier` drives the whole pipeline end to end, so
+Phases 4, 6, 7, 8 and 9 are unaffected. The moment the key is set, `uv run pytest -m api` and
+`uv run crr eval --classifier anthropic` are the two commands that close this out.
 
 ---
 
