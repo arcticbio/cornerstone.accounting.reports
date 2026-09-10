@@ -28,6 +28,8 @@ any property failed. Outputs, the manifest and `REVIEW.md` land beside the input
 | | |
 |---|---|
 | [`docs/RUNBOOK.md`](docs/RUNBOOK.md) | how to run a quarter, work the review queue, add a property or a manager |
+| [`docs/SETUP-CREDENTIALS.md`](docs/SETUP-CREDENTIALS.md) | where each secret goes, and which copy does what |
+| [`docs/SETUP-AZURE.md`](docs/SETUP-AZURE.md) | one-time Azure setup, end to end |
 | [`docs/SPEC.md`](docs/SPEC.md) | the technical contract: interfaces, formats, invariants |
 | [`docs/DECISIONS.md`](docs/DECISIONS.md) | why it is built this way |
 | [`docs/PLAN.md`](docs/PLAN.md) · [`PROGRESS.md`](PROGRESS.md) | the build plan and where it got to |
@@ -42,4 +44,5 @@ has both procedures.
 ## Hosting
 
 The same container runs everywhere. GitHub Actions is the host today — *Actions → Build a period
-→ Run workflow*. `infra/` holds the Bicep for an Azure Container Apps Job when that is wanted.
+→ Run workflow*. For the scheduled Azure Container Apps Job, run `./infra/bootstrap.sh` once and
+follow [`docs/SETUP-AZURE.md`](docs/SETUP-AZURE.md).

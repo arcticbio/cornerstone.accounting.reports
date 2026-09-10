@@ -6,6 +6,7 @@ work it.
 
 ## Contents
 
+- One-time setup: [credentials](SETUP-CREDENTIALS.md) · [Azure](SETUP-AZURE.md)
 - [The quarterly checklist](#the-quarterly-checklist)
 - [Preparing a period in Drive](#preparing-a-period-in-drive)
 - [Running a build from GitHub Actions](#running-a-build-from-github-actions)

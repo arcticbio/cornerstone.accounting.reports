@@ -1,31 +1,41 @@
 name: Deploy to Azure
 
-# Gated on AZURE_CREDENTIALS (SPEC §14, D-13). Without it, the template is still compiled on
-# every push by the `bicep` job in ci.yml — a template that does not compile is a bug whether
-# or not anyone can deploy it.
+# Deploys the Container Apps Job from infra/main.bicep (SPEC §14, D-13).
+#
+# Everything it needs comes from repository variables and secrets, so a normal deploy is
+# "Run workflow" with no typing. docs/SETUP-AZURE.md is the one-time setup.
+#
+# Without AZURE_CREDENTIALS this workflow simply cannot sign in; the template is still
+# compiled on every push by the `bicep` job in ci.yml, because a template that does not
+# compile is a bug whether or not anyone can deploy it.
 
 on:
   workflow_dispatch:
     inputs:
-      resource_group:
-        description: "Resource group to deploy into"
-        required: true
-        type: string
-      key_vault_name:
-        description: "Existing Key Vault holding the two secrets"
-        required: true
-        type: string
-      gdrive_root_folder_id:
-        description: "Drive folder id holding the manager folders"
-        required: true
-        type: string
-      image:
-        description: "Container image to run"
-        required: true
-        default: ghcr.io/arcticbio/crr:build-v1
-        type: string
       what_if_only:
         description: "Preview the changes without applying them"
+        required: true
+        default: true
+        type: boolean
+      image:
+        description: "Container image to run (blank = vars.CRR_IMAGE, else :build-v1)"
+        required: false
+        type: string
+      resource_group:
+        description: "Resource group (blank = vars.AZURE_RESOURCE_GROUP)"
+        required: false
+        type: string
+      key_vault_name:
+        description: "Key Vault name (blank = vars.AZURE_KEY_VAULT_NAME)"
+        required: false
+        type: string
+      grant_key_vault_access:
+        description: "Try to grant the job's identity read access to the vault after deploying"
+        required: true
+        default: true
+        type: boolean
+      schedule_enabled:
+        description: "Arm the quarterly cron (untick to deploy the job without a schedule)"
         required: true
         default: true
         type: boolean
@@ -38,38 +48,122 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      # Compile before touching Azure: a template error should cost nothing.
       - name: Compile the template
         run: az bicep build --file infra/main.bicep --stdout > /dev/null
+
+      - name: Resolve settings
+        id: settings
+        env:
+          IN_RG: ${{ inputs.resource_group }}
+          IN_KV: ${{ inputs.key_vault_name }}
+          IN_IMAGE: ${{ inputs.image }}
+          VAR_RG: ${{ vars.AZURE_RESOURCE_GROUP }}
+          VAR_KV: ${{ vars.AZURE_KEY_VAULT_NAME }}
+          VAR_IMAGE: ${{ vars.CRR_IMAGE }}
+          VAR_GDRIVE: ${{ vars.CRR_GDRIVE_ROOT_FOLDER_ID }}
+        run: |
+          set -euo pipefail
+          rg="${IN_RG:-$VAR_RG}"
+          kv="${IN_KV:-$VAR_KV}"
+          image="${IN_IMAGE:-${VAR_IMAGE:-ghcr.io/${GITHUB_REPOSITORY_OWNER,,}/crr:build-v1}}"
+          missing=""
+          [ -n "$rg" ]           || missing="$missing AZURE_RESOURCE_GROUP"
+          [ -n "$kv" ]           || missing="$missing AZURE_KEY_VAULT_NAME"
+          [ -n "$VAR_GDRIVE" ]   || missing="$missing CRR_GDRIVE_ROOT_FOLDER_ID"
+          if [ -n "$missing" ]; then
+            echo "::error title=Missing repository variables::Set these under Settings → Secrets and variables → Actions → Variables:$missing. See docs/SETUP-AZURE.md."
+            exit 1
+          fi
+          {
+            echo "resource_group=$rg"
+            echo "key_vault_name=$kv"
+            echo "image=$image"
+            echo "gdrive=$VAR_GDRIVE"
+          } >> "$GITHUB_OUTPUT"
+          echo "Deploying $image into $rg, secrets from $kv"
 
       - name: Sign in to Azure
         uses: azure/login@v2
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
+      - name: Build the parameter list
+        id: params
+        env:
+          GHCR_USER: ${{ secrets.GHCR_PULL_USERNAME }}
+          GHCR_TOKEN: ${{ secrets.GHCR_PULL_TOKEN }}
+        run: |
+          set -euo pipefail
+          params=(
+            "keyVaultName=${{ steps.settings.outputs.key_vault_name }}"
+            "gdriveRootFolderId=${{ steps.settings.outputs.gdrive }}"
+            "image=${{ steps.settings.outputs.image }}"
+            "scheduleEnabled=${{ inputs.schedule_enabled }}"
+          )
+          # Only needed when the GHCR package is private (docs/SETUP-AZURE.md, step 6).
+          if [ -n "${GHCR_USER}" ]; then
+            params+=("registryUsername=${GHCR_USER}" "registryPassword=${GHCR_TOKEN}")
+            echo "GHCR pull credentials: supplied"
+          else
+            echo "GHCR pull credentials: none (the image must be public)"
+          fi
+          printf '%s\n' "${params[@]}" > /tmp/crr-params.txt
+
       - name: What-if
         run: |
+          set -euo pipefail
+          mapfile -t params < /tmp/crr-params.txt
           az deployment group what-if \
-            --resource-group "${{ inputs.resource_group }}" \
+            --resource-group "${{ steps.settings.outputs.resource_group }}" \
             --template-file infra/main.bicep \
-            --parameters \
-              keyVaultName="${{ inputs.key_vault_name }}" \
-              gdriveRootFolderId="${{ inputs.gdrive_root_folder_id }}" \
-              image="${{ inputs.image }}"
+            --parameters "${params[@]}"
 
       - name: Deploy
         if: ${{ !inputs.what_if_only }}
         id: deploy
         run: |
+          set -euo pipefail
+          mapfile -t params < /tmp/crr-params.txt
+          name="crr-$(date +%Y%m%d%H%M%S)"
           az deployment group create \
-            --resource-group "${{ inputs.resource_group }}" \
-            --name crr-$(date +%Y%m%d%H%M%S) \
+            --resource-group "${{ steps.settings.outputs.resource_group }}" \
+            --name "$name" \
             --template-file infra/main.bicep \
-            --parameters \
-              keyVaultName="${{ inputs.key_vault_name }}" \
-              gdriveRootFolderId="${{ inputs.gdrive_root_folder_id }}" \
-              image="${{ inputs.image }}"
+            --parameters "${params[@]}" \
+            --output none
+          principal=$(az deployment group show \
+            --resource-group "${{ steps.settings.outputs.resource_group }}" \
+            --name "$name" --query properties.outputs.principalId.value -o tsv)
+          job=$(az deployment group show \
+            --resource-group "${{ steps.settings.outputs.resource_group }}" \
+            --name "$name" --query properties.outputs.jobName.value -o tsv)
+          echo "principal_id=$principal" >> "$GITHUB_OUTPUT"
+          echo "job_name=$job" >> "$GITHUB_OUTPUT"
+          echo "Deployed job $job; its identity is $principal"
 
-      - name: Next step
+      # The job's managed identity does not exist until the job does, so this cannot be part
+      # of the template. It needs User Access Administrator (or Owner) on the vault; if the
+      # service principal does not have that, the run continues and prints the command.
+      - name: Grant the job read access to Key Vault
+        if: ${{ !inputs.what_if_only && inputs.grant_key_vault_access }}
+        continue-on-error: true
+        id: grant
+        run: |
+          set -euo pipefail
+          vault=$(az keyvault show -n "${{ steps.settings.outputs.key_vault_name }}" --query id -o tsv)
+          az role assignment create \
+            --assignee-object-id "${{ steps.deploy.outputs.principal_id }}" \
+            --assignee-principal-type ServicePrincipal \
+            --role "Key Vault Secrets User" \
+            --scope "$vault" \
+            --output none
+          echo "Granted 'Key Vault Secrets User' on $vault"
+
+      - name: What to do next
         if: ${{ !inputs.what_if_only }}
         run: |
-          echo "::notice title=Grant the job access to Key Vault::The job's system-assigned identity needs the 'Key Vault Secrets User' role on the vault before it can read its secrets. infra/README.md has the two commands."
+          if [ "${{ steps.grant.outcome }}" != "success" ]; then
+            echo "::warning title=Grant Key Vault access by hand::Run: az role assignment create --assignee-object-id ${{ steps.deploy.outputs.principal_id }} --assignee-principal-type ServicePrincipal --role 'Key Vault Secrets User' --scope \$(az keyvault show -n ${{ steps.settings.outputs.key_vault_name }} --query id -o tsv) — then re-run this workflow. See docs/SETUP-AZURE.md step 8."
+          fi
+          echo "::notice title=Smoke test the job::az containerapp job start --name ${{ steps.deploy.outputs.job_name }} --resource-group ${{ steps.settings.outputs.resource_group }} --args version"

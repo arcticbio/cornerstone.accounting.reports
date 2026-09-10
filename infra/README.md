@@ -3,6 +3,10 @@
 The quarterly runner as a scheduled Container Apps Job (SPEC §14, D-13). GitHub Actions runs
 the same image today; this is the target once Azure is provisioned.
 
+**Setting this up for the first time? Follow [`../docs/SETUP-AZURE.md`](../docs/SETUP-AZURE.md)
+instead** — it starts with `./infra/bootstrap.sh` and covers the parts this file assumes are
+already done. What follows is the reference for the template itself.
+
 ## What `main.bicep` deploys
 
 | Resource | Why |

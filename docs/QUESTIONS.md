@@ -97,55 +97,55 @@ December, so "the previous calendar month" is the period a scheduled run is for.
 
 *(format: `B-nn · <what is needed> · <what is blocked> · <what continues meanwhile>`)*
 
-**B-01 · `ANTHROPIC_API_KEY` is not set in the build environment.**
-*Blocked:* the Phase 3 smoke run against the real model (accuracy and token counts on the Fort
-Grounds PM source), the Phase 3 `api`-marked integration tests, and the Phase 5 real-model eval
-and build (`crr eval --classifier anthropic`, `crr build --classifier anthropic`).
-*What continues:* everything else. The classifier itself is built and unit-tested against a fake
-client — message construction, the cached prefixes, forced tool, retries, the repair round, the
-refusal path and token accounting. `GoldenClassifier` drives the whole pipeline end to end, so
-Phases 4, 6, 7, 8 and 9 are unaffected. The moment the key is set, `uv run pytest -m api` and
-`uv run crr eval --classifier anthropic` are the two commands that close this out.
+**B-01 · `ANTHROPIC_API_KEY` does not reach the Claude Code session container.**
+*Status 2026-09-10:* the user has the key and is setting it for GitHub Actions (production).
+This session still reports `ANTHROPIC_API_KEY: not set`, and `GOOGLE_SERVICE_ACCOUNT_B64` /
+`CRR_GDRIVE_ROOT_FOLDER_ID` both arrive — so the variable is not on the environment this session
+uses, or was added after the container started. Environment variables are injected at container
+start, so a **new session** is what picks it up. See `docs/SETUP-CREDENTIALS.md`.
+*Blocked:* the Phase 3 real-model smoke run, the `api`-marked integration tests, and the Phase 5
+real-model eval and build. *What continues:* everything else — the classifier is unit-tested
+against a fake client, and `GoldenClassifier` drives the whole pipeline end to end.
+*Two commands close it out* in a session that can see the key:
+
+```
+uv run pytest -m api
+uv run crr eval --classifier anthropic --gate
+```
 
 **B-02 · ~~GitHub Actions has not run CI on PR #1.~~ RESOLVED 2026-09-10.**
-Earlier runs were cancelled by the workflow's own concurrency group as commits landed in quick
-succession, not stalled for want of a runner. Run
-[34462978204](https://github.com/arcticbio/cornerstone.accounting.reports/actions/runs/34462978204)
-is green on all three jobs: lint/types/tests/validate-config/eval gate, the Bicep compile, and
-the image job.
+Green on the final tree `943e664`: runs
+[34464245438](https://github.com/arcticbio/cornerstone.accounting.reports/actions/runs/34464245438)
+(push) and
+[34464250151](https://github.com/arcticbio/cornerstone.accounting.reports/actions/runs/34464250151)
+(pull_request), all three jobs — lint/types/tests/validate-config/eval gate, the Bicep compile,
+and the image job with its in-container golden build and GHCR push.
 
 **B-03 · ~~No container runtime in the build environment.~~ RESOLVED 2026-09-10 in CI.**
-Still true locally — `/var/run/docker.sock` does not exist here — but CI's `image` job now
-builds the image, runs `crr version`, proves `/app/data` is absent, checks all three OCR
-binaries inside the container, runs the golden build there, and pushes to GHCR. All green.
+Still true locally — `/var/run/docker.sock` does not exist here — but CI's `image` job builds
+the image, runs `crr version`, proves `/app/data` is absent, checks all three OCR binaries
+inside the container, runs the golden build there, and pushes to GHCR. All green.
 
-**B-05 · The `v1.0.0` tag cannot be pushed from this session.**
-*Needed:* one command from someone with push rights on refs other than the session branch. The
-annotated tag exists locally on `c34c69b`; `git push origin v1.0.0` returns `HTTP 403`, because
-cloud sessions may push only their own branch (D-15). *Blocked:* only the tag, and with it the
-`:latest` / `:v1.0.0` GHCR images, which the CI workflow publishes on a `v*` tag.
-*What continues:* everything else; `:build-v1` and `:sha-<short>` are already published.
-After merging PR #1:
+**B-04 · Azure deployment — the user has chosen to proceed; instructions written.**
+*Status 2026-09-10:* the user wants Azure and has a subscription. `docs/SETUP-AZURE.md` is the
+end-to-end walkthrough, `infra/bootstrap.sh` does the credential-bearing parts in one guided
+run, and `deploy.yml` now reads its settings from repository variables so a deploy is one click.
+*Still needs the user, and cannot be done from a session with no Azure credentials:* the
+`az login` bootstrap, pasting `AZURE_CREDENTIALS` / `AZURE_RESOURCE_GROUP` /
+`AZURE_KEY_VAULT_NAME` into GitHub, and choosing whether the GHCR package goes public or gets a
+pull token. *Then:* Phase 8 task 4 — deploy, smoke-run `version` and `validate-config`, capture
+the logs into `PROGRESS.md`.
 
-```
-git tag -a v1.0.0 -m "Cornerstone Report Runner v1.0.0" && git push origin v1.0.0
-```
+**B-05 · ~~The `v1.0.0` tag cannot be pushed from this session.~~ RESOLVED 2026-09-10.**
+The user pushed it. The package version was `0.1.0` at the time and is now `1.0.0`, so
+`crr version` and every manifest's `runner_version` match the tag.
 
-**B-06 · CI runs kept being cancelled by the workflow's own concurrency group.**
-*What actually happened:* `concurrency: cancel-in-progress` on `ci-${{ github.ref }}` means each
-push cancels the previous run. Committing every task, as the operating loop requires, meant runs
-were routinely superseded before the slow steps finished. Twice I read a superseded run's stale
-step data as a stall; it was not one.
-*What is actually evidenced:* run
-[34462978204](https://github.com/arcticbio/cornerstone.accounting.reports/actions/runs/34462978204)
-(`1beaf40`) is green on all three jobs. On the Phase 9 tree (`4c88852`) the `image` job completed
-**every** step successfully — image build, `crr version`, the bundle-absence check, all three OCR
-binaries in-container, the golden build in 101 s, and the GHCR push — before the run as a whole
-was cancelled by the next push; the `Tests` step is the one thing not yet observed to completion
-in CI, and it passes locally (375 passed, 94 % coverage).
-*What to do:* let the final run finish without pushing over it, and confirm green before merging.
-If the cancellations become a nuisance, `cancel-in-progress: false` on the build branch is the
-one-line change.
+**B-06 · ~~CI runs kept being cancelled by the workflow's own concurrency group.~~ RESOLVED.**
+`cancel-in-progress` on `ci-${{ github.ref }}` means each push cancels the previous run, and
+committing per task meant runs were routinely superseded before their slow steps finished.
+Twice I read a superseded run's stale step data as a stall; it was not one. Once pushing
+stopped, the run went green. Left as-is — cancelling superseded runs is the right default, and
+`cancel-in-progress: false` is the one-line change if it ever becomes a nuisance.
 
 ---
 

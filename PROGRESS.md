@@ -4,7 +4,7 @@ Single source of truth for build state. Claude Code ticks tasks here after each 
 commits. Humans read this to see where things stand. Mirrors `docs/PLAN.md`; if they diverge,
 PLAN.md defines the work and this file records what has been done.
 
-**Branch:** `claude/gifted-lamport-wwgenm` (session-scoped branch; D-15 — every reference to `build/v1` in these documents means this branch) · **PR:** [#1](https://github.com/arcticbio/cornerstone.accounting.reports/pull/1) · **Current phase:** 9 (complete) · **Last session note:** _(none yet)_
+**Branch:** `claude/gifted-lamport-wwgenm` (session-scoped branch; D-15 — every reference to `build/v1` in these documents means this branch) · **PR:** [#1](https://github.com/arcticbio/cornerstone.accounting.reports/pull/1) · **Current phase:** 9 (complete) · **Tag:** `v1.0.0` pushed · **Last session note:** _(none yet)_
 
 ## Session log
 
@@ -22,6 +22,7 @@ PLAN.md defines the work and this file records what has been done.
 | 2026-09-10 | 7 | Dockerfile, CI image job, GHCR publish, build-period workflow, runbook | Phase 8 (tasks 1-3) |
 | 2026-09-10 | 8 | Bicep, infra README, deploy workflow; deploy step gated on credentials | Phase 9 |
 | 2026-09-10 | 9 | Drift rule, cost report, logging hygiene (one leak found and fixed), runbook, README, tag | v1.0.0 |
+| 2026-09-10 | post-v1 | `v1.0.0` pushed by the user; CI green on the final tree; version bumped 0.1.0 → 1.0.0; Azure + credentials setup docs written | Azure bootstrap (user), then B-01/B-04 |
 
 ## Phase 0 — Repository hygiene and scaffold
 
@@ -177,7 +178,7 @@ OCR included), and the image is pushed to GHCR as `:build-v1` and `:sha-<short>`
 - [x] `tests/unit/test_logging_hygiene.py` runs a real build with structlog captured and asserts no page text, no tenant name, no path, no PDF or PNG bytes and no secret appears in any record — while confirming sha256s *are* logged. **It caught one leak:** `repository.published` logged the output filename, which carries the property's public name. Both repositories now log the artefact's shape, not its name.
 - [x] `README.md`: what the system is and why it is shaped this way, a five-line quickstart, the exit-code contract, and a map of the repository.
 - [x] See "v1.0.0 summary" at the foot of this file.
-- [x] Tag `v1.0.0` created (annotated, on `c34c69b`) — **but not pushed**: this session's credentials are scoped to its branch and the remote refuses a tag ref with `HTTP 403`. Push it after merging: `git tag -a v1.0.0 <merge commit> -m "Cornerstone Report Runner v1.0.0" && git push origin v1.0.0`. The tag message is reproduced in B-05.
+- [x] Tag `v1.0.0` — created here, **pushed by the user** (this session's credentials are scoped to its branch and the remote refused the tag ref). The package version was `0.1.0` at tag time and has since been bumped to `1.0.0`, so `crr version` and every manifest's `runner_version` match the tag.
 
 **Acceptance:** `README.md` → `docs/RUNBOOK.md` takes someone who has never seen the repository from "the exports arrived" to "the packages are in Drive", including what to do with a review outcome. The `v1.0.0` tag is the last task.
 
@@ -248,7 +249,7 @@ Azure Container Apps Job in `infra/`.
 | Eval (golden classifier) | page accuracy **1.0000**, continuation **1.0000**, record **1.0000**, orientation **1.0000**, boundary F1 **1.0000** over 31 documents / 172 pages |
 | Eval (real model) | **not yet run** — no `ANTHROPIC_API_KEY` in this environment (B-01) |
 | Tests | **375 passed, 5 skipped** (the `api` tests), 94 % coverage on `src/crr` |
-| CI | green on all three jobs at `1beaf40`; on the final tree the `image` job completed every step (in-container golden build 101 s, GHCR push) before the run was cancelled by the next push. See B-06; **confirm the last run goes green before merging.** |
+| CI | **green on the final tree `943e664`** — runs [34464245438](https://github.com/arcticbio/cornerstone.accounting.reports/actions/runs/34464245438) and [34464250151](https://github.com/arcticbio/cornerstone.accounting.reports/actions/runs/34464250151), all three jobs |
 | Invariants | all six of SPEC §9, over the eight real builds |
 
 ### Cost per run
@@ -274,8 +275,8 @@ section per document is a large cached prefix. If the real number matters, the f
 
 | | |
 |---|---|
-| **B-01** | `ANTHROPIC_API_KEY` unset → the real-model smoke run, eval and build are unrun. Everything else is built and tested against a fake client. |
-| **B-04** | Azure deployment gated on `AZURE_CREDENTIALS`, or on a decision that Actions is enough. This is the Phase 7 checkpoint. |
+| **B-01** | `ANTHROPIC_API_KEY` does not reach the session container → the real-model smoke run, eval and build are unrun. A **new session** picks the variable up; see `docs/SETUP-CREDENTIALS.md`. |
+| **B-04** | Azure: the user has chosen to proceed. `docs/SETUP-AZURE.md` + `infra/bootstrap.sh` are the walkthrough; the bootstrap needs their `az login`. |
 | A-01 … A-07 | Seven assumptions taken where the spec was silent or wrong, each recorded in `QUESTIONS.md` and amended into `SPEC.md` in the same commit. The three worth a second look: `temperature` cannot be sent to this model family (A-02), exemplar images cannot live in the system prompt (A-03), and the local repository publishes under `work/published` so a build never writes into the read-only bundle (A-06). |
 
 ### What the second period will test
