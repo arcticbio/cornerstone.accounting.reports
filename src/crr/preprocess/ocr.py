@@ -7,6 +7,7 @@ McCathren package ships searchable. ocrmypdf is invoked as a subprocess — it i
 
 from __future__ import annotations
 
+import json
 import os
 import re
 import shutil
@@ -106,11 +107,46 @@ def ocr_if_needed(
     bin_path: str | None = None,
 ) -> OcrResult:
     """Run OCR only when the output definition asks for it and the document has no text layer
-    (SPEC §6.2 step 2). Otherwise return a skipped result pointing at the untouched source."""
+    (SPEC §6.2 step 2). Otherwise return a skipped result pointing at the untouched source.
+
+    A completed run is cached beside `dest`: OCR is the slowest stage by an order of
+    magnitude, and re-running a build after a review fix should not re-OCR pages whose bytes
+    have not changed. `dest` is content-addressed by the caller, so a stale hit is not
+    possible.
+    """
     if not enabled or has_text_layer:
         log.info("ocr.skip", enabled=enabled, has_text_layer=has_text_layer)
         return OcrResult(path=src, version="", rotated_pages=False, skipped=True)
-    return ocr_pdf(src, dest, bin_path=bin_path)
+    cached = _read_cache(dest)
+    if cached is not None:
+        log.info("ocr.cache_hit", version=cached.version)
+        return cached
+    result = ocr_pdf(src, dest, bin_path=bin_path)
+    _write_cache(result)
+    return result
+
+
+def _sidecar(dest: Path) -> Path:
+    return dest.with_suffix(dest.suffix + ".json")
+
+
+def _read_cache(dest: Path) -> OcrResult | None:
+    sidecar = _sidecar(dest)
+    if not (dest.is_file() and sidecar.is_file()):
+        return None
+    try:
+        data = json.loads(sidecar.read_text())
+        return OcrResult(
+            path=dest, version=str(data["version"]), rotated_pages=bool(data["rotated_pages"])
+        )
+    except (OSError, ValueError, KeyError):
+        return None
+
+
+def _write_cache(result: OcrResult) -> None:
+    _sidecar(result.path).write_text(
+        json.dumps({"version": result.version, "rotated_pages": result.rotated_pages})
+    )
 
 
 _PATHish = re.compile(r"(/[^\s'\"]{4,})")

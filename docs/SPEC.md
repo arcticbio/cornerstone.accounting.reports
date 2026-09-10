@@ -290,8 +290,13 @@ class SourceRepository(Protocol):
     def publish(self, property: Property, period: PeriodId, files: list[Path], status: BuildStatus) -> None: ...
 ```
 
-- `LocalFsRepository(root)` — reads `<root>/<pm.folder>/<property.folder>/<period folder>/inputs/`,
-  publishes to `.../output/` (or `.../review/` when status is `NEEDS_REVIEW`).
+- `LocalFsRepository(root, publish_root=root)` — reads
+  `<root>/<pm.folder>/<property.folder>/<period folder>/inputs/`, publishes the same layout
+  under `publish_root` into `.../output/` (or `.../review/` when status is `NEEDS_REVIEW`).
+  `publish_root` defaults to `root`, but the CLI sets it from `CRR_PUBLISH_ROOT`, which itself
+  defaults to `<work_dir>/published`: the local repository root is normally the June bundle,
+  and the bundle is a read-only fixture (D-08). Point `CRR_PUBLISH_ROOT` at the repository root
+  to publish beside the inputs.
 - `GoogleDriveRepository(root_folder_id, service_account_json)` — identical layout on Drive.
   Uses `google-api-python-client` with a service account; lists by folder name; downloads to
   `dest`; uploads outputs with `supportsAllDrives=True`. Never deletes. Never overwrites: a
@@ -630,6 +635,7 @@ Never log page text or image bytes. Log document sha256s, not paths, at INFO.
 | `GOOGLE_SERVICE_ACCOUNT_B64` | — | base64 of the service-account JSON (one line, env-safe); no prefix |
 | `CRR_GDRIVE_ROOT_FOLDER_ID` | — | Drive folder that contains the `<PM>/` folders |
 | `CRR_WORK_DIR` | `work/` | |
+| `CRR_PUBLISH_ROOT` | `<work_dir>/published` | where the local repository publishes; keeps builds out of the read-only bundle |
 | `CRR_EXEMPLAR_POLICY` | `exclude_same_property` | `exclude_same_property` \| `any` |
 | `CRR_CLASSIFIER_EFFORT` | `low` | `output_config.effort` for the classifier: `low`\|`medium`\|`high`\|`xhigh`\|`max` |
 | `CRR_EVAL_MIN_PAGE_ACCURACY` | `0.98` | per-manager gate |

@@ -135,6 +135,8 @@ def build_page_blocks(
 class AnthropicClassifier:
     """Vision classification against a schema's section catalogue."""
 
+    needs_page_images = True
+
     def __init__(
         self,
         settings: Settings,

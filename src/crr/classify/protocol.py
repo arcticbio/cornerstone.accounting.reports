@@ -55,6 +55,11 @@ class Classifier(Protocol):
 
     name: str
 
+    #: False when the implementation never looks at a page image. The pipeline skips
+    #: rasterising for such a classifier, which is what makes a golden build fast enough to
+    #: be a test fixture; OCR still runs, because OCR changes what gets composed.
+    needs_page_images: bool
+
     def classify(
         self, doc: SourceDocument, schema: SourceSchema, pages: list[PageInput]
     ) -> ClassificationResult: ...

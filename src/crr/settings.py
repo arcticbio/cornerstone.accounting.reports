@@ -65,6 +65,10 @@ class Settings(BaseSettings):
     repo: RepoKind = "local"
     bundle_root: Path = Path("data/bundle/2026-06")
     work_dir: Path = Path("work")
+    #: Where the local repository publishes. Defaults to `<work_dir>/published`, which mirrors
+    #: the repository layout without writing into `bundle_root` — the June bundle is a
+    #: read-only fixture (D-08). Set it to `bundle_root` to publish beside the inputs.
+    publish_root: Path | None = None
     google_service_account_b64: Annotated[
         str | None, Field(validation_alias="GOOGLE_SERVICE_ACCOUNT_B64")
     ] = None
@@ -87,6 +91,10 @@ class Settings(BaseSettings):
         if not 0.0 <= v <= 1.0:
             raise ValueError("must be between 0 and 1")
         return v
+
+    @property
+    def local_publish_root(self) -> Path:
+        return self.publish_root if self.publish_root is not None else self.work_dir / "published"
 
     @property
     def price_table(self) -> dict[str, ModelPrice]:

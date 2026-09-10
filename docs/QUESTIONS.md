@@ -75,6 +75,14 @@ cache read 0.1×, cache write 2× at the 1-hour TTL).**
 in the manifest's `cost.usd_estimate`; `CRR_PRICE_TABLE_JSON` overrides it when list prices move.
 *Where:* `src/crr/settings.py`.
 
+**A-06 · The local repository publishes under `<work_dir>/published`, not beside the inputs.**
+*Why:* SPEC §6.1 has the local repository publish into `<period>/output/`, but the local root is
+the June bundle, which `CLAUDE.md` and D-08 make read-only. A golden build would otherwise write
+eight `output/` directories into the fixture. Publishing mirrors the same layout under
+`CRR_PUBLISH_ROOT` instead; set it to `bundle_root` to get the in-place behaviour. Drive (Phase 6)
+publishes in place, as production should. *Where:* `src/crr/settings.py`,
+`src/crr/repository/local_fs.py`, `SPEC.md` §6.1/§12 (amended in the same commit).
+
 ---
 
 ## Blocked (Claude Code appends here)

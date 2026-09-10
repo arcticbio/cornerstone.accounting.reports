@@ -1,0 +1,737 @@
+{
+  "$defs": {
+    "BuildStatus": {
+      "enum": [
+        "built",
+        "needs_review",
+        "failed"
+      ],
+      "title": "BuildStatus",
+      "type": "string"
+    },
+    "ClassifierBlock": {
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "title": "Name",
+          "type": "string"
+        },
+        "model": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Model"
+        },
+        "prompt_version": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Prompt Version"
+        },
+        "effort": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Effort"
+        }
+      },
+      "required": [
+        "name"
+      ],
+      "title": "ClassifierBlock",
+      "type": "object"
+    },
+    "ConfigBlock": {
+      "additionalProperties": false,
+      "properties": {
+        "schema": {
+          "$ref": "#/$defs/ConfigRef"
+        },
+        "output": {
+          "$ref": "#/$defs/ConfigRef"
+        },
+        "properties_sha256": {
+          "title": "Properties Sha256",
+          "type": "string"
+        }
+      },
+      "required": [
+        "schema",
+        "output",
+        "properties_sha256"
+      ],
+      "title": "ConfigBlock",
+      "type": "object"
+    },
+    "ConfigRef": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "version": {
+          "title": "Version",
+          "type": "integer"
+        },
+        "sha256": {
+          "title": "Sha256",
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "version",
+        "sha256"
+      ],
+      "title": "ConfigRef",
+      "type": "object"
+    },
+    "CostBlock": {
+      "additionalProperties": false,
+      "properties": {
+        "tokens": {
+          "$ref": "#/$defs/TokenCounts",
+          "default": {
+            "input": 0,
+            "cache_read": 0,
+            "cache_write": 0,
+            "output": 0
+          }
+        },
+        "usd_estimate": {
+          "default": 0.0,
+          "title": "Usd Estimate",
+          "type": "number"
+        },
+        "api_calls": {
+          "default": 0,
+          "title": "Api Calls",
+          "type": "integer"
+        }
+      },
+      "title": "CostBlock",
+      "type": "object"
+    },
+    "DroppedRef": {
+      "additionalProperties": false,
+      "properties": {
+        "section_id": {
+          "title": "Section Id",
+          "type": "string"
+        },
+        "doc_role": {
+          "title": "Doc Role",
+          "type": "string"
+        },
+        "record_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Record Id"
+        },
+        "pages": {
+          "items": {
+            "type": "integer"
+          },
+          "title": "Pages",
+          "type": "array"
+        }
+      },
+      "required": [
+        "section_id",
+        "doc_role",
+        "pages"
+      ],
+      "title": "DroppedRef",
+      "type": "object"
+    },
+    "InputRef": {
+      "additionalProperties": false,
+      "properties": {
+        "role": {
+          "title": "Role",
+          "type": "string"
+        },
+        "file": {
+          "title": "File",
+          "type": "string"
+        },
+        "sha256": {
+          "title": "Sha256",
+          "type": "string"
+        },
+        "pages": {
+          "title": "Pages",
+          "type": "integer"
+        },
+        "has_text_layer": {
+          "title": "Has Text Layer",
+          "type": "boolean"
+        },
+        "ocr_applied": {
+          "default": false,
+          "title": "Ocr Applied",
+          "type": "boolean"
+        },
+        "ocr_version": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Ocr Version"
+        },
+        "ocr_rotated_pages": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Ocr Rotated Pages"
+        }
+      },
+      "required": [
+        "role",
+        "file",
+        "sha256",
+        "pages",
+        "has_text_layer"
+      ],
+      "title": "InputRef",
+      "type": "object"
+    },
+    "Orientation": {
+      "description": "How the page *content* is turned, not how the page box is set.",
+      "enum": [
+        "upright",
+        "rotated_90_cw",
+        "rotated_90_ccw",
+        "rotated_180"
+      ],
+      "title": "Orientation",
+      "type": "string"
+    },
+    "OutputRef": {
+      "additionalProperties": false,
+      "properties": {
+        "file": {
+          "title": "File",
+          "type": "string"
+        },
+        "sha256": {
+          "title": "Sha256",
+          "type": "string"
+        },
+        "pages": {
+          "title": "Pages",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "file",
+        "sha256",
+        "pages"
+      ],
+      "title": "OutputRef",
+      "type": "object"
+    },
+    "PageClassification": {
+      "additionalProperties": false,
+      "description": "One page's label. The classifier's entire output surface (D-01).",
+      "properties": {
+        "doc_role": {
+          "title": "Doc Role",
+          "type": "string"
+        },
+        "page": {
+          "minimum": 1,
+          "title": "Page",
+          "type": "integer"
+        },
+        "section_id": {
+          "title": "Section Id",
+          "type": "string"
+        },
+        "is_continuation": {
+          "title": "Is Continuation",
+          "type": "boolean"
+        },
+        "record_qualifier": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Record Qualifier"
+        },
+        "orientation": {
+          "$ref": "#/$defs/Orientation"
+        },
+        "confidence": {
+          "maximum": 1.0,
+          "minimum": 0.0,
+          "title": "Confidence",
+          "type": "number"
+        },
+        "evidence": {
+          "title": "Evidence",
+          "type": "string"
+        },
+        "footer_label": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Footer Label"
+        },
+        "footer_agrees": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Footer Agrees"
+        },
+        "classifier": {
+          "title": "Classifier",
+          "type": "string"
+        }
+      },
+      "required": [
+        "doc_role",
+        "page",
+        "section_id",
+        "is_continuation",
+        "record_qualifier",
+        "orientation",
+        "confidence",
+        "evidence",
+        "classifier"
+      ],
+      "title": "PageClassification",
+      "type": "object"
+    },
+    "PlanItem": {
+      "additionalProperties": false,
+      "description": "One output page: where it comes from and what happens to it.",
+      "properties": {
+        "output_page": {
+          "minimum": 1,
+          "title": "Output Page",
+          "type": "integer"
+        },
+        "doc_role": {
+          "title": "Doc Role",
+          "type": "string"
+        },
+        "source_page": {
+          "minimum": 1,
+          "title": "Source Page",
+          "type": "integer"
+        },
+        "section_id": {
+          "title": "Section Id",
+          "type": "string"
+        },
+        "record_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Record Id"
+        },
+        "transforms": {
+          "default": [
+            "copy"
+          ],
+          "items": {
+            "type": "string"
+          },
+          "title": "Transforms",
+          "type": "array"
+        },
+        "bookmark": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Bookmark"
+        }
+      },
+      "required": [
+        "output_page",
+        "doc_role",
+        "source_page",
+        "section_id",
+        "record_id"
+      ],
+      "title": "PlanItem",
+      "type": "object"
+    },
+    "PropertyBlock": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "name": {
+          "title": "Name",
+          "type": "string"
+        },
+        "property_manager": {
+          "title": "Property Manager",
+          "type": "string"
+        },
+        "owning_entity": {
+          "title": "Owning Entity",
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "property_manager",
+        "owning_entity"
+      ],
+      "title": "PropertyBlock",
+      "type": "object"
+    },
+    "ResolvedSection": {
+      "additionalProperties": false,
+      "description": "A run of consecutive pages the segmenter grouped into one instance of a section.",
+      "properties": {
+        "doc_role": {
+          "title": "Doc Role",
+          "type": "string"
+        },
+        "section_id": {
+          "title": "Section Id",
+          "type": "string"
+        },
+        "record_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Record Id"
+        },
+        "pages": {
+          "items": {
+            "type": "integer"
+          },
+          "title": "Pages",
+          "type": "array"
+        },
+        "orientation_fixes": {
+          "additionalProperties": {
+            "$ref": "#/$defs/Orientation"
+          },
+          "title": "Orientation Fixes",
+          "type": "object"
+        }
+      },
+      "required": [
+        "doc_role",
+        "section_id",
+        "record_id",
+        "pages"
+      ],
+      "title": "ResolvedSection",
+      "type": "object"
+    },
+    "ReviewReason": {
+      "additionalProperties": false,
+      "description": "One entry in the review gate's verdict (SPEC \u00a76.8).",
+      "properties": {
+        "code": {
+          "title": "Code",
+          "type": "string"
+        },
+        "doc_role": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Doc Role"
+        },
+        "page": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Page"
+        },
+        "detail": {
+          "default": "",
+          "title": "Detail",
+          "type": "string"
+        }
+      },
+      "required": [
+        "code"
+      ],
+      "title": "ReviewReason",
+      "type": "object"
+    },
+    "Timings": {
+      "additionalProperties": false,
+      "properties": {
+        "fetch": {
+          "default": 0,
+          "title": "Fetch",
+          "type": "integer"
+        },
+        "preprocess": {
+          "default": 0,
+          "title": "Preprocess",
+          "type": "integer"
+        },
+        "classify": {
+          "default": 0,
+          "title": "Classify",
+          "type": "integer"
+        },
+        "compose": {
+          "default": 0,
+          "title": "Compose",
+          "type": "integer"
+        },
+        "publish": {
+          "default": 0,
+          "title": "Publish",
+          "type": "integer"
+        }
+      },
+      "title": "Timings",
+      "type": "object"
+    },
+    "TokenCounts": {
+      "additionalProperties": false,
+      "properties": {
+        "input": {
+          "default": 0,
+          "title": "Input",
+          "type": "integer"
+        },
+        "cache_read": {
+          "default": 0,
+          "title": "Cache Read",
+          "type": "integer"
+        },
+        "cache_write": {
+          "default": 0,
+          "title": "Cache Write",
+          "type": "integer"
+        },
+        "output": {
+          "default": 0,
+          "title": "Output",
+          "type": "integer"
+        }
+      },
+      "title": "TokenCounts",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "manifest_version": {
+      "const": 1,
+      "default": 1,
+      "title": "Manifest Version",
+      "type": "integer"
+    },
+    "runner_version": {
+      "default": "0.1.0",
+      "title": "Runner Version",
+      "type": "string"
+    },
+    "built_at": {
+      "format": "date-time",
+      "title": "Built At",
+      "type": "string"
+    },
+    "status": {
+      "$ref": "#/$defs/BuildStatus"
+    },
+    "review_reasons": {
+      "items": {
+        "$ref": "#/$defs/ReviewReason"
+      },
+      "title": "Review Reasons",
+      "type": "array"
+    },
+    "property": {
+      "$ref": "#/$defs/PropertyBlock"
+    },
+    "period": {
+      "title": "Period",
+      "type": "string"
+    },
+    "config": {
+      "$ref": "#/$defs/ConfigBlock"
+    },
+    "classifier": {
+      "$ref": "#/$defs/ClassifierBlock"
+    },
+    "inputs": {
+      "items": {
+        "$ref": "#/$defs/InputRef"
+      },
+      "title": "Inputs",
+      "type": "array"
+    },
+    "classifications": {
+      "items": {
+        "$ref": "#/$defs/PageClassification"
+      },
+      "title": "Classifications",
+      "type": "array"
+    },
+    "sections": {
+      "items": {
+        "$ref": "#/$defs/ResolvedSection"
+      },
+      "title": "Sections",
+      "type": "array"
+    },
+    "dropped": {
+      "items": {
+        "$ref": "#/$defs/DroppedRef"
+      },
+      "title": "Dropped",
+      "type": "array"
+    },
+    "plan": {
+      "items": {
+        "$ref": "#/$defs/PlanItem"
+      },
+      "title": "Plan",
+      "type": "array"
+    },
+    "output": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/OutputRef"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "cost": {
+      "$ref": "#/$defs/CostBlock",
+      "default": {
+        "tokens": {
+          "cache_read": 0,
+          "cache_write": 0,
+          "input": 0,
+          "output": 0
+        },
+        "usd_estimate": 0.0,
+        "api_calls": 0
+      }
+    },
+    "timings_ms": {
+      "$ref": "#/$defs/Timings",
+      "default": {
+        "fetch": 0,
+        "preprocess": 0,
+        "classify": 0,
+        "compose": 0,
+        "publish": 0
+      }
+    },
+    "error": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Error"
+    }
+  },
+  "required": [
+    "status",
+    "property",
+    "period",
+    "config",
+    "classifier"
+  ],
+  "title": "BuildManifest",
+  "type": "object"
+}

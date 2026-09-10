@@ -21,6 +21,8 @@ class GoldenClassifier:
     """Serves one property's golden labels."""
 
     name = GOLDEN_CLASSIFIER_NAME
+    #: Labels come off disk; no page image is ever read.
+    needs_page_images = False
 
     def __init__(self, golden: GoldenProperty) -> None:
         self._golden = golden

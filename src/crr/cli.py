@@ -190,6 +190,105 @@ def validate_config() -> None:
         )
 
 
+@app.command()
+def build(
+    period: Annotated[str, typer.Option("--period", help="Period id, e.g. 2026-06")],
+    property_ids: Annotated[
+        list[str] | None, typer.Option("--property", help="Property id; repeatable")
+    ] = None,
+    classifier: Annotated[str, typer.Option("--classifier", help="anthropic|golden")] = "anthropic",
+    repo: Annotated[str, typer.Option("--repo", help="local|gdrive")] = "local",
+    dry_run: Annotated[bool, typer.Option("--dry-run", help="Plan but do not compose")] = False,
+    work_dir: Annotated[Path | None, typer.Option("--work-dir")] = None,
+) -> None:
+    """Build investor packages for a period.
+
+    Exit codes (SPEC §6.8): 0 all built, 2 any needs review, 1 any failed.
+    """
+    from crr.config import ConfigError, load_config
+    from crr.models import BuildStatus
+    from crr.pipeline import build_property
+    from crr.settings import Settings
+
+    settings = Settings()
+    if work_dir is not None:
+        settings = settings.model_copy(update={"work_dir": work_dir})
+    try:
+        bundle = load_config(settings.config_dir)
+    except ConfigError as exc:
+        typer.echo(f"config invalid:\n{exc}", err=True)
+        raise typer.Exit(code=1) from None
+
+    wanted = property_ids or [p.id for p in bundle.properties.properties]
+    unknown = [p for p in wanted if p not in {e.id for e in bundle.properties.properties}]
+    if unknown:
+        typer.echo(f"unknown propert(ies): {', '.join(unknown)}", err=True)
+        raise typer.Exit(code=1)
+
+    repository = _make_repository(repo, settings, bundle)
+    results = []
+    for property_id in wanted:
+        prop = bundle.properties.property(property_id).to_domain()
+        engine = _make_classifier(classifier, settings, property_id)
+        result = build_property(
+            prop,
+            period,
+            config=bundle,
+            settings=settings,
+            repository=repository,
+            classifier=engine,
+            dry_run=dry_run,
+        )
+        results.append(result)
+        marker = {
+            BuildStatus.BUILT: "ok",
+            BuildStatus.NEEDS_REVIEW: "review",
+            BuildStatus.FAILED: "FAILED",
+        }[result.status]
+        pages = len(result.manifest.plan)
+        detail = ""
+        if result.status is BuildStatus.NEEDS_REVIEW:
+            detail = "  " + ", ".join(sorted({r.code for r in result.reasons}))
+        elif result.status is BuildStatus.FAILED:
+            detail = f"  {result.manifest.error}"
+        typer.echo(f"{property_id:<20} {marker:<8} {pages:>3} pages{detail}")
+
+    cost = sum(r.manifest.cost.usd_estimate for r in results)
+    calls = sum(r.manifest.cost.api_calls for r in results)
+    if calls:
+        typer.echo(f"\n{calls} API call(s), estimated ${cost:.2f}")
+
+    if any(r.status is BuildStatus.FAILED for r in results):
+        raise typer.Exit(code=1)
+    if any(r.status is BuildStatus.NEEDS_REVIEW for r in results):
+        raise typer.Exit(code=2)
+
+
+def _make_repository(kind: str, settings: Settings, bundle):  # type: ignore[no-untyped-def]
+    from crr.repository.local_fs import LocalFsRepository
+
+    if kind == "local":
+
+        def schema_for_role(prop, role):  # type: ignore[no-untyped-def]
+            output = bundle.output_for_property(prop.id)
+            for source in output.sources.values():
+                if source.role == role:
+                    return source.schema_id
+            return bundle.properties.manager(prop.property_manager).schema_id
+
+        return LocalFsRepository(
+            settings.bundle_root,
+            bundle.properties,
+            schema_for_role,
+            publish_root=settings.local_publish_root,
+        )
+    if kind == "gdrive":
+        typer.echo("--repo gdrive is not implemented yet (Phase 6)", err=True)
+        raise typer.Exit(code=1)
+    typer.echo(f"unknown repo {kind!r}; use local or gdrive", err=True)
+    raise typer.Exit(code=1)
+
+
 @app.command("eval")
 def eval_cmd(
     classifier: str = typer.Option("golden", "--classifier", help="golden|anthropic"),

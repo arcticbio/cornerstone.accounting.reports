@@ -4,7 +4,7 @@ Single source of truth for build state. Claude Code ticks tasks here after each 
 commits. Humans read this to see where things stand. Mirrors `docs/PLAN.md`; if they diverge,
 PLAN.md defines the work and this file records what has been done.
 
-**Branch:** `claude/gifted-lamport-wwgenm` (session-scoped branch; D-15 — every reference to `build/v1` in these documents means this branch) · **PR:** [#1](https://github.com/arcticbio/cornerstone.accounting.reports/pull/1) · **Current phase:** 4 · **Last session note:** _(none yet)_
+**Branch:** `claude/gifted-lamport-wwgenm` (session-scoped branch; D-15 — every reference to `build/v1` in these documents means this branch) · **PR:** [#1](https://github.com/arcticbio/cornerstone.accounting.reports/pull/1) · **Current phase:** 5 · **Last session note:** _(none yet)_
 
 ## Session log
 
@@ -16,6 +16,7 @@ PLAN.md defines the work and this file records what has been done.
 | 2026-09-10 | 1 | Models, render/text/OCR/inspect, 31-document sweep, McCathren labels visually verified | Phase 2 |
 | 2026-09-10 | 2 | Config validation, address grammar, segmenter, resolver; `expected_output` frozen for all 8 | Phase 3 |
 | 2026-09-10 | 3 | Classifier protocol, golden classifier, footer check, prompts, Anthropic classifier, `crr classify` | Phase 4 |
+| 2026-09-10 | 4 | Composer, manifest, review gate, local repository, pipeline, `crr build`; 8/8 golden builds | Phase 5 |
 
 ## Phase 0 — Repository hygiene and scaffold
 
@@ -89,16 +90,16 @@ source rather than an exception. Cobalt and McCathren pass through every PM page
 
 ## Phase 4 — Composer, manifest, review gate, end-to-end with golden labels
 
-- [ ] `compose/`: pypdf composer per SPEC §6.6 incl. rotation, bookmarks, metadata, filename.
-- [ ] `manifest/`: model, writer, generated JSON schema committed.
-- [ ] `review/`: rules per SPEC §6.8; `REVIEW.md` renderer.
-- [ ] `repository/local_fs.py` per SPEC §6.1.
-- [ ] `pipeline.py` orchestrating one property; `crr build` command with `--classifier golden`.
-- [ ] Run `crr build --period 2026-06 --classifier golden` for all 8. Assert status BUILT, page sequence equals `expected_output`, bookmarks present (one per section), McCathren outputs have a text layer on every page, and the Timber Place aged-receivable output page has effective landscape dimensions (792×612 after `/Rotate`). Commit the 8 manifests to `eval/reports/golden-build-2026-06/` (manifests only, not PDFs).
-- [ ] Invariant tests per SPEC §9 (all six).
-- [ ] Negative tests: an `unknown` page → NEEDS_REVIEW; a missing required section → NEEDS_REVIEW; a section in neither flow nor drop → NEEDS_REVIEW; missing PM source → FAILED.
+- [x] `compose/composer.py`: plan-order page copying across documents, `/Rotate` fixes with the mediabox preserved, one outline entry per section at its first page, `/Title`/`/Producer`/`/CreationDate` metadata, and the spec'd filename. Deterministic — two runs are byte-identical apart from `/CreationDate`.
+- [x] `manifest/`: the SPEC §10 model, a canonical writer, and `schema.json` generated from the model and committed (a test fails if they drift).
+- [x] `review/`: all eight reason codes, ordered by severity then position, and a `REVIEW.md` that explains each finding in plain language, groups repeats, and says what to do next.
+- [x] `repository/local_fs.py`: period discovery, input fetch with a missing PM source as a hard failure and a missing Cornerstone component simply absent, and publishing that never overwrites (`… (build 2).pdf`). **Publishes under `CRR_PUBLISH_ROOT` (default `<work_dir>/published`) rather than beside the inputs** — the local root is the June bundle, which is a read-only fixture (A-06).
+- [x] `pipeline.py` runs fetch → preprocess → classify → segment → resolve → plan → compose → manifest → review → publish, writing every artefact under `work/<period>/<property>/`. Data problems become review reasons; only exceptions become `FAILED`, and even then the manifest is written. `crr build` exits 0/2/1 per SPEC §6.8. OCR output is content-addressed and cached, so a rebuild never re-OCRs unchanged bytes.
+- [x] All 8 built. Every assertion holds: status `BUILT`, plan equals `expected_output` page for page, PDF page count equals plan length, no review reasons, one bookmark per section (6/6/6/8/13/13/8/8), `/Title` set, McCathren PM pages carry a text layer on **every** page with `ocr_applied` recorded, and Timber Place's aged-receivable page comes out 792×612 effective. Manifests committed to `eval/reports/golden-build-2026-06/`.
+- [x] `tests/eval/test_invariants.py` — all six, over the eight real builds. §9.1 reconciles *every* input page against plan ∪ dropped ∪ reasons per document; §9.3 additionally spies on every `PdfReader` the composer opens; §9.4 compares two builds byte for byte with `/CreationDate` masked.
+- [x] `tests/unit/test_pipeline_negative.py` on synthetic PDFs: unknown page, missing required section, unmapped section, low confidence → `NEEDS_REVIEW` (published to `review/` with `REVIEW.md`); missing PM source → `FAILED` with a manifest written and nothing published; and a second publish lands as `(build 2)`.
 
-**Acceptance:** _(record evidence here when met)_
+**Acceptance:** All eight golden builds `BUILT`; the six invariants green; coverage **95 %** on `src/crr` (target 85 %). Full gate: ruff, `mypy src`, 299 passed + 5 skipped (the `api` tests) in 2 m 50 s.
 
 ## Phase 5 — Eval harness and the real model
 

@@ -1,0 +1,594 @@
+{
+  "manifest_version": 1,
+  "runner_version": "0.1.0",
+  "built_at": "2026-09-10T09:15:27.065685Z",
+  "status": "built",
+  "review_reasons": [],
+  "property": {
+    "id": "lolo-peak-village",
+    "name": "Lolo Peak Village",
+    "property_manager": "missoula",
+    "owning_entity": "Lolo Peak Village LP"
+  },
+  "period": "2026-06",
+  "config": {
+    "schema": {
+      "id": "rentmanager-missoula",
+      "version": 1,
+      "sha256": "34be19dfd9838ac5a848e6eb32c92cd547dded6d2e7297208ecc4332e9c20918"
+    },
+    "output": {
+      "id": "missoula-investor-report",
+      "version": 1,
+      "sha256": "8bbcea6630a99703ea05f92526b47bae35137ac3ecdb9f6b9d88c811bc90cc04"
+    },
+    "properties_sha256": "defec2a7afe160120bd727dbb8fa5c15c611126e18299b9a2a5b5eebdaa394b2"
+  },
+  "classifier": {
+    "name": "golden",
+    "model": null,
+    "prompt_version": null,
+    "effort": null
+  },
+  "inputs": [
+    {
+      "role": "pm_source",
+      "file": "05 PM Source - Missoula PM Baseline.pdf",
+      "sha256": "3ad43c4ae9161403b0c2fed0d83b079380dc46b9e21287cd4a0c9eea2130280a",
+      "pages": 15,
+      "has_text_layer": true,
+      "ocr_applied": false,
+      "ocr_version": null,
+      "ocr_rotated_pages": null
+    },
+    {
+      "role": "cornerstone_balance_sheet",
+      "file": "01 Cornerstone - Balance Sheet.pdf",
+      "sha256": "b8b1870675893a11c533183fea35d7c72a4a4dfb186abba966c59b6bc7075d2e",
+      "pages": 1,
+      "has_text_layer": true,
+      "ocr_applied": false,
+      "ocr_version": null,
+      "ocr_rotated_pages": null
+    },
+    {
+      "role": "cornerstone_profit_loss_ytd",
+      "file": "02 Cornerstone - Profit and Loss YTD Comparison.pdf",
+      "sha256": "b22472306032dc91c9edb0e113f2031b37c1bb409635bd5a4fafd3c5c53239f4",
+      "pages": 1,
+      "has_text_layer": true,
+      "ocr_applied": false,
+      "ocr_version": null,
+      "ocr_rotated_pages": null
+    },
+    {
+      "role": "cornerstone_distribution_schedule",
+      "file": "03 Cornerstone - Investor Distribution Schedule.pdf",
+      "sha256": "9025f6fbfb466bd914037d28b93307bbae74f0702bb9b40459d09098056678e8",
+      "pages": 1,
+      "has_text_layer": true,
+      "ocr_applied": false,
+      "ocr_version": null,
+      "ocr_rotated_pages": null
+    }
+  ],
+  "classifications": [
+    {
+      "doc_role": "pm_source",
+      "page": 1,
+      "section_id": "owner_statement",
+      "is_continuation": false,
+      "record_qualifier": null,
+      "orientation": "upright",
+      "confidence": 1.0,
+      "evidence": "golden label",
+      "footer_label": "Owner Statement",
+      "footer_agrees": true,
+      "classifier": "golden"
+    },
+    {
+      "doc_role": "pm_source",
+      "page": 2,
+      "section_id": "owner_statement",
+      "is_continuation": true,
+      "record_qualifier": null,
+      "orientation": "upright",
+      "confidence": 1.0,
+      "evidence": "golden label",
+      "footer_label": "Owner Statement",
+      "footer_agrees": true,
+      "classifier": "golden"
+    },
+    {
+      "doc_role": "pm_source",
+      "page": 3,
+      "section_id": "profit_loss_comparison",
+      "is_continuation": false,
+      "record_qualifier": null,
+      "orientation": "upright",
+      "confidence": 1.0,
+      "evidence": "golden label",
+      "footer_label": "Profit & Loss Comparison",
+      "footer_agrees": true,
+      "classifier": "golden"
+    },
+    {
+      "doc_role": "pm_source",
+      "page": 4,
+      "section_id": "unit_availability",
+      "is_continuation": false,
+      "record_qualifier": null,
+      "orientation": "upright",
+      "confidence": 1.0,
+      "evidence": "golden label",
+      "footer_label": "Unit Availability Listing",
+      "footer_agrees": true,
+      "classifier": "golden"
+    },
+    {
+      "doc_role": "pm_source",
+      "page": 5,
+      "section_id": "unit_availability",
+      "is_continuation": true,
+      "record_qualifier": null,
+      "orientation": "upright",
+      "confidence": 1.0,
+      "evidence": "golden label",
+      "footer_label": "Unit Availability Listing",
+      "footer_agrees": true,
+      "classifier": "golden"
+    },
+    {
+      "doc_role": "pm_source",
+      "page": 6,
+      "section_id": "financial_statement",
+      "is_continuation": false,
+      "record_qualifier": null,
+      "orientation": "upright",
+      "confidence": 1.0,
+      "evidence": "golden label",
+      "footer_label": "Financial Statement",
+      "footer_agrees": true,
+      "classifier": "golden"
+    },
+    {
+      "doc_role": "pm_source",
+      "page": 7,
+      "section_id": "financial_statement",
+      "is_continuation": true,
+      "record_qualifier": null,
+      "orientation": "upright",
+      "confidence": 1.0,
+      "evidence": "golden label",
+      "footer_label": "Financial Statement",
+      "footer_agrees": true,
+      "classifier": "golden"
+    },
+    {
+      "doc_role": "pm_source",
+      "page": 8,
+      "section_id": "rent_roll_analysis",
+      "is_continuation": false,
+      "record_qualifier": null,
+      "orientation": "upright",
+      "confidence": 1.0,
+      "evidence": "golden label",
+      "footer_label": "Rent Roll Analysis",
+      "footer_agrees": true,
+      "classifier": "golden"
+    },
+    {
+      "doc_role": "pm_source",
+      "page": 9,
+      "section_id": "rent_roll_analysis",
+      "is_continuation": true,
+      "record_qualifier": null,
+      "orientation": "upright",
+      "confidence": 1.0,
+      "evidence": "golden label",
+      "footer_label": "Rent Roll Analysis",
+      "footer_agrees": true,
+      "classifier": "golden"
+    },
+    {
+      "doc_role": "pm_source",
+      "page": 10,
+      "section_id": "general_ledger",
+      "is_continuation": false,
+      "record_qualifier": null,
+      "orientation": "upright",
+      "confidence": 1.0,
+      "evidence": "golden label",
+      "footer_label": "General Ledger",
+      "footer_agrees": true,
+      "classifier": "golden"
+    },
+    {
+      "doc_role": "pm_source",
+      "page": 11,
+      "section_id": "actual_budget_fy_analysis",
+      "is_continuation": false,
+      "record_qualifier": null,
+      "orientation": "upright",
+      "confidence": 1.0,
+      "evidence": "golden label",
+      "footer_label": "Actual/Budget Fiscal Year Analysis",
+      "footer_agrees": true,
+      "classifier": "golden"
+    },
+    {
+      "doc_role": "pm_source",
+      "page": 12,
+      "section_id": "actual_budget_fy_analysis",
+      "is_continuation": true,
+      "record_qualifier": null,
+      "orientation": "upright",
+      "confidence": 1.0,
+      "evidence": "golden label",
+      "footer_label": "Actual/Budget Fiscal Year Analysis",
+      "footer_agrees": true,
+      "classifier": "golden"
+    },
+    {
+      "doc_role": "pm_source",
+      "page": 13,
+      "section_id": "actual_budget_fy_analysis",
+      "is_continuation": true,
+      "record_qualifier": null,
+      "orientation": "upright",
+      "confidence": 1.0,
+      "evidence": "golden label",
+      "footer_label": "Actual/Budget Fiscal Year Analysis",
+      "footer_agrees": true,
+      "classifier": "golden"
+    },
+    {
+      "doc_role": "pm_source",
+      "page": 14,
+      "section_id": "rent_roll_bank",
+      "is_continuation": false,
+      "record_qualifier": null,
+      "orientation": "upright",
+      "confidence": 1.0,
+      "evidence": "golden label",
+      "footer_label": "Rent Roll - Bank",
+      "footer_agrees": true,
+      "classifier": "golden"
+    },
+    {
+      "doc_role": "pm_source",
+      "page": 15,
+      "section_id": "delinquency",
+      "is_continuation": false,
+      "record_qualifier": null,
+      "orientation": "upright",
+      "confidence": 1.0,
+      "evidence": "golden label",
+      "footer_label": "Delinquency",
+      "footer_agrees": true,
+      "classifier": "golden"
+    },
+    {
+      "doc_role": "cornerstone_balance_sheet",
+      "page": 1,
+      "section_id": "balance_sheet",
+      "is_continuation": false,
+      "record_qualifier": null,
+      "orientation": "upright",
+      "confidence": 1.0,
+      "evidence": "golden label",
+      "footer_label": null,
+      "footer_agrees": null,
+      "classifier": "golden"
+    },
+    {
+      "doc_role": "cornerstone_profit_loss_ytd",
+      "page": 1,
+      "section_id": "profit_loss_ytd_comparison",
+      "is_continuation": false,
+      "record_qualifier": null,
+      "orientation": "upright",
+      "confidence": 1.0,
+      "evidence": "golden label",
+      "footer_label": null,
+      "footer_agrees": null,
+      "classifier": "golden"
+    },
+    {
+      "doc_role": "cornerstone_distribution_schedule",
+      "page": 1,
+      "section_id": "investor_distribution_schedule",
+      "is_continuation": false,
+      "record_qualifier": null,
+      "orientation": "upright",
+      "confidence": 1.0,
+      "evidence": "golden label",
+      "footer_label": null,
+      "footer_agrees": null,
+      "classifier": "golden"
+    }
+  ],
+  "sections": [
+    {
+      "doc_role": "pm_source",
+      "section_id": "owner_statement",
+      "record_id": null,
+      "pages": [
+        1,
+        2
+      ],
+      "orientation_fixes": {}
+    },
+    {
+      "doc_role": "pm_source",
+      "section_id": "profit_loss_comparison",
+      "record_id": "default",
+      "pages": [
+        3
+      ],
+      "orientation_fixes": {}
+    },
+    {
+      "doc_role": "pm_source",
+      "section_id": "unit_availability",
+      "record_id": "default",
+      "pages": [
+        4,
+        5
+      ],
+      "orientation_fixes": {}
+    },
+    {
+      "doc_role": "pm_source",
+      "section_id": "financial_statement",
+      "record_id": null,
+      "pages": [
+        6,
+        7
+      ],
+      "orientation_fixes": {}
+    },
+    {
+      "doc_role": "pm_source",
+      "section_id": "rent_roll_analysis",
+      "record_id": null,
+      "pages": [
+        8,
+        9
+      ],
+      "orientation_fixes": {}
+    },
+    {
+      "doc_role": "pm_source",
+      "section_id": "general_ledger",
+      "record_id": null,
+      "pages": [
+        10
+      ],
+      "orientation_fixes": {}
+    },
+    {
+      "doc_role": "pm_source",
+      "section_id": "actual_budget_fy_analysis",
+      "record_id": null,
+      "pages": [
+        11,
+        12,
+        13
+      ],
+      "orientation_fixes": {}
+    },
+    {
+      "doc_role": "pm_source",
+      "section_id": "rent_roll_bank",
+      "record_id": "default",
+      "pages": [
+        14
+      ],
+      "orientation_fixes": {}
+    },
+    {
+      "doc_role": "pm_source",
+      "section_id": "delinquency",
+      "record_id": "default",
+      "pages": [
+        15
+      ],
+      "orientation_fixes": {}
+    },
+    {
+      "doc_role": "cornerstone_balance_sheet",
+      "section_id": "balance_sheet",
+      "record_id": null,
+      "pages": [
+        1
+      ],
+      "orientation_fixes": {}
+    },
+    {
+      "doc_role": "cornerstone_profit_loss_ytd",
+      "section_id": "profit_loss_ytd_comparison",
+      "record_id": null,
+      "pages": [
+        1
+      ],
+      "orientation_fixes": {}
+    },
+    {
+      "doc_role": "cornerstone_distribution_schedule",
+      "section_id": "investor_distribution_schedule",
+      "record_id": null,
+      "pages": [
+        1
+      ],
+      "orientation_fixes": {}
+    }
+  ],
+  "dropped": [
+    {
+      "section_id": "financial_statement",
+      "doc_role": "pm_source",
+      "record_id": null,
+      "pages": [
+        6,
+        7
+      ]
+    },
+    {
+      "section_id": "rent_roll_analysis",
+      "doc_role": "pm_source",
+      "record_id": null,
+      "pages": [
+        8,
+        9
+      ]
+    },
+    {
+      "section_id": "general_ledger",
+      "doc_role": "pm_source",
+      "record_id": null,
+      "pages": [
+        10
+      ]
+    },
+    {
+      "section_id": "actual_budget_fy_analysis",
+      "doc_role": "pm_source",
+      "record_id": null,
+      "pages": [
+        11,
+        12,
+        13
+      ]
+    },
+    {
+      "section_id": "rent_roll_bank",
+      "doc_role": "pm_source",
+      "record_id": "default",
+      "pages": [
+        14
+      ]
+    },
+    {
+      "section_id": "delinquency",
+      "doc_role": "pm_source",
+      "record_id": "default",
+      "pages": [
+        15
+      ]
+    }
+  ],
+  "plan": [
+    {
+      "output_page": 1,
+      "doc_role": "cornerstone_balance_sheet",
+      "source_page": 1,
+      "section_id": "balance_sheet",
+      "record_id": null,
+      "transforms": [
+        "copy"
+      ],
+      "bookmark": "Balance Sheet (Cornerstone)"
+    },
+    {
+      "output_page": 2,
+      "doc_role": "cornerstone_profit_loss_ytd",
+      "source_page": 1,
+      "section_id": "profit_loss_ytd_comparison",
+      "record_id": null,
+      "transforms": [
+        "copy"
+      ],
+      "bookmark": "Profit & Loss YTD Comparison (Cornerstone)"
+    },
+    {
+      "output_page": 3,
+      "doc_role": "cornerstone_distribution_schedule",
+      "source_page": 1,
+      "section_id": "investor_distribution_schedule",
+      "record_id": null,
+      "transforms": [
+        "copy"
+      ],
+      "bookmark": "Investor Distributions"
+    },
+    {
+      "output_page": 4,
+      "doc_role": "pm_source",
+      "source_page": 3,
+      "section_id": "profit_loss_comparison",
+      "record_id": "default",
+      "transforms": [
+        "copy"
+      ],
+      "bookmark": "Profit & Loss Comparison"
+    },
+    {
+      "output_page": 5,
+      "doc_role": "pm_source",
+      "source_page": 4,
+      "section_id": "unit_availability",
+      "record_id": "default",
+      "transforms": [
+        "copy"
+      ],
+      "bookmark": "Unit Availability"
+    },
+    {
+      "output_page": 6,
+      "doc_role": "pm_source",
+      "source_page": 5,
+      "section_id": "unit_availability",
+      "record_id": "default",
+      "transforms": [
+        "copy"
+      ],
+      "bookmark": null
+    },
+    {
+      "output_page": 7,
+      "doc_role": "pm_source",
+      "source_page": 1,
+      "section_id": "owner_statement",
+      "record_id": null,
+      "transforms": [
+        "copy"
+      ],
+      "bookmark": "Owner Statement"
+    },
+    {
+      "output_page": 8,
+      "doc_role": "pm_source",
+      "source_page": 2,
+      "section_id": "owner_statement",
+      "record_id": null,
+      "transforms": [
+        "copy"
+      ],
+      "bookmark": null
+    }
+  ],
+  "output": {
+    "file": "Lolo Peak Village - Investor Report - June 2026.pdf",
+    "sha256": "5057a0f5d879f14d3ec0dcca45d4a9634b1b83a63796e1f14dd334534afa8f77",
+    "pages": 8
+  },
+  "cost": {
+    "tokens": {
+      "input": 0,
+      "cache_read": 0,
+      "cache_write": 0,
+      "output": 0
+    },
+    "usd_estimate": 0.0,
+    "api_calls": 0
+  },
+  "timings_ms": {
+    "fetch": 629,
+    "preprocess": 1765,
+    "classify": 0,
+    "compose": 143,
+    "publish": 0
+  },
+  "error": null
+}
