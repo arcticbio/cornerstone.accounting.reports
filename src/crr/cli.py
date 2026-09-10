@@ -36,10 +36,24 @@ def version() -> None:
 
 @app.command()
 def inspect(
-    pdf: Annotated[Path, typer.Argument(help="PDF to inspect", exists=True, dir_okay=False)],
+    pdf: Annotated[
+        Path | None,
+        typer.Argument(help="PDF to inspect", exists=True, dir_okay=False),
+    ] = None,
     as_json: Annotated[bool, typer.Option("--json", help="Emit JSON instead of a table")] = False,
+    repo: Annotated[
+        str | None, typer.Option("--repo", help="local|gdrive: list a period instead of a PDF")
+    ] = None,
+    period: Annotated[str | None, typer.Option("--period", help="Period id to list")] = None,
 ) -> None:
-    """Page sizes, the text-layer probe and footer lines for one PDF."""
+    """Inspect one PDF, or — with `--repo` and `--period` — list what a period holds."""
+    if repo is not None:
+        _inspect_period(repo, period)
+        return
+    if pdf is None:
+        typer.echo("give a PDF, or --repo <local|gdrive> --period <id>", err=True)
+        raise typer.Exit(code=1)
+
     from crr.preprocess.inspect import inspect_pdf
 
     facts = inspect_pdf(pdf)
@@ -160,6 +174,51 @@ def _make_classifier(kind: str, settings: Settings, property_id: str | None):  #
             raise typer.Exit(code=1) from None
     typer.echo(f"unknown classifier {kind!r}; use anthropic or golden", err=True)
     raise typer.Exit(code=1)
+
+
+def _inspect_period(repo: str, period: str | None) -> None:
+    """What each property has in `inputs/` for a period, and whether it is ready to build."""
+    from crr.config import ConfigError, load_config
+    from crr.settings import Settings
+
+    if period is None:
+        typer.echo("--repo needs --period <id>", err=True)
+        raise typer.Exit(code=1)
+
+    settings = Settings()
+    try:
+        bundle = load_config(settings.config_dir)
+    except ConfigError as exc:
+        typer.echo(f"config invalid:\n{exc}", err=True)
+        raise typer.Exit(code=1) from None
+
+    repository = _make_repository(repo, settings, bundle)
+    filenames = bundle.properties.cornerstone_files
+    typer.echo(f"period {period} via {repo}")
+    ready = 0
+    for entry in bundle.properties.properties:
+        prop = entry.to_domain()
+        if hasattr(repository, "present_inputs"):
+            present = {
+                role: file is not None
+                for role, file in repository.present_inputs(prop, period).items()
+            }
+        else:
+            inputs_dir = repository.period_dir(prop, period) / "inputs"
+            names = bundle.properties.input_filenames(prop.id)
+            present = {role: (inputs_dir / name).is_file() for role, name in names.items()}
+        has_pm = present.get("pm_source", False)
+        ready += int(has_pm)
+        missing = [role for role, there in present.items() if not there]
+        optional_only = all(role in filenames for role in missing)
+        state = "ready" if has_pm else "NOT READY"
+        note = ""
+        if missing:
+            note = "  missing: " + ", ".join(sorted(missing))
+            if has_pm and optional_only:
+                note += " (optional)"
+        typer.echo(f"  {entry.id:<20} {state:<10}{note}")
+    typer.echo(f"{ready}/{len(bundle.properties.properties)} propert(ies) ready to build")
 
 
 @app.command("validate-config")
@@ -283,8 +342,31 @@ def _make_repository(kind: str, settings: Settings, bundle):  # type: ignore[no-
             publish_root=settings.local_publish_root,
         )
     if kind == "gdrive":
-        typer.echo("--repo gdrive is not implemented yet (Phase 6)", err=True)
-        raise typer.Exit(code=1)
+        from crr.repository.drive_client import DriveError, GoogleDriveApi
+        from crr.repository.google_drive import GoogleDriveRepository
+
+        if not settings.google_service_account_b64:
+            typer.echo("GOOGLE_SERVICE_ACCOUNT_B64 is not set", err=True)
+            raise typer.Exit(code=1)
+        if not settings.gdrive_root_folder_id:
+            typer.echo("CRR_GDRIVE_ROOT_FOLDER_ID is not set", err=True)
+            raise typer.Exit(code=1)
+
+        def gdrive_schema_for_role(prop, role):  # type: ignore[no-untyped-def]
+            output = bundle.output_for_property(prop.id)
+            for source in output.sources.values():
+                if source.role == role:
+                    return source.schema_id
+            return bundle.properties.manager(prop.property_manager).schema_id
+
+        try:
+            api = GoogleDriveApi.from_b64(settings.google_service_account_b64)
+        except DriveError as exc:
+            typer.echo(str(exc), err=True)
+            raise typer.Exit(code=1) from None
+        return GoogleDriveRepository(
+            api, settings.gdrive_root_folder_id, bundle.properties, gdrive_schema_for_role
+        )
     typer.echo(f"unknown repo {kind!r}; use local or gdrive", err=True)
     raise typer.Exit(code=1)
 

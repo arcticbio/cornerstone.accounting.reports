@@ -4,7 +4,7 @@ Single source of truth for build state. Claude Code ticks tasks here after each 
 commits. Humans read this to see where things stand. Mirrors `docs/PLAN.md`; if they diverge,
 PLAN.md defines the work and this file records what has been done.
 
-**Branch:** `claude/gifted-lamport-wwgenm` (session-scoped branch; D-15 — every reference to `build/v1` in these documents means this branch) · **PR:** [#1](https://github.com/arcticbio/cornerstone.accounting.reports/pull/1) · **Current phase:** 6 · **Last session note:** _(none yet)_
+**Branch:** `claude/gifted-lamport-wwgenm` (session-scoped branch; D-15 — every reference to `build/v1` in these documents means this branch) · **PR:** [#1](https://github.com/arcticbio/cornerstone.accounting.reports/pull/1) · **Current phase:** 7 · **Last session note:** _(none yet)_
 
 ## Session log
 
@@ -18,6 +18,7 @@ PLAN.md defines the work and this file records what has been done.
 | 2026-09-10 | 3 | Classifier protocol, golden classifier, footer check, prompts, Anthropic classifier, `crr classify` | Phase 4 |
 | 2026-09-10 | 4 | Composer, manifest, review gate, local repository, pipeline, `crr build`; 8/8 golden builds | Phase 5 |
 | 2026-09-10 | 5 | Eval harness, metrics, markdown report, gate; golden eval 100 % | Phase 6 (real-model eval blocked on B-01) |
+| 2026-09-10 | 6 | Drive repository, fake-Drive tests, live tests green, 2026-09 skeleton created | Phase 7 |
 
 ## Phase 0 — Repository hygiene and scaffold
 
@@ -113,13 +114,34 @@ source rather than an exception. Cobalt and McCathren pass through every PM page
 
 ## Phase 6 — Google Drive repository
 
-- [ ] `repository/google_drive.py` per SPEC §6.1 and §13. Service account from `GOOGLE_SERVICE_ACCOUNT_B64`. Folder-name navigation with caching; downloads; uploads; never delete/overwrite.
-- [ ] `--repo gdrive` on `crr build`; `crr inspect --repo gdrive --period X` lists what is present per property.
-- [ ] Unit tests with a fake Drive service (in-memory tree). Integration test (marker `gdrive`) that lists the root folder; skipped without credentials.
-- [ ] `docs/RUNBOOK.md` section: "Preparing a period in Drive" — the exact folder/file names, what "ready" means.
-- [ ] If credentials are present: create the folder skeleton for `2026-09 September` under the root (folders only, no files) so the user can see the expected layout, and record the folder ids.
+- [x] `repository/drive_client.py` (the whole Drive API surface, and the seam the fake replaces — `supportsAllDrives`/`includeItemsFromAllDrives` live in one place) and `repository/google_drive.py`: folder-name navigation with per-object caching, a case-insensitive fallback that warns, downloads that skip a file already local at the same size, uploads that never overwrite (`… (build N).pdf`), and `ensure_period_skeleton` for preparing a period.
+- [x] `--repo gdrive` on `crr build`; `crr inspect --repo <local|gdrive> --period X` lists each property as `ready` / `NOT READY` with the missing roles named and optional ones marked. Verified live against the real Drive root.
+- [x] 17 unit tests against an in-memory Drive that records every call, so "never deleted" and "never overwrote" are assertions rather than hopes. 3 live tests (marker `gdrive`) **pass against the real Drive**: the root is reachable, every folder in it is one a manager claims, and listing any period never raises.
+- [x] `docs/RUNBOOK.md` → "Preparing a period in Drive": the layout, the byte-for-byte folder and file names per manager, how to create the folders (by hand or with the one-liner), what "ready to build" means, and the service-account sharing the runner needs.
+- [x] Credentials are present and work. The Drive root was **empty**; the `2026-09 September` skeleton now exists for all eight properties (folders only, no files) — see "Drive folder ids" below. `crr inspect --repo gdrive --period 2026-09` reports 0/8 ready, which is correct: the folders are waiting for inputs.
 
-**Acceptance:** _(record evidence here when met)_
+**Acceptance:** Fake-Drive tests green (17); the live integration tests green (3) against the real root folder `1_tUMelVG8trnjPmJWul0YXo23VgWgdSc`.
+
+### Drive folder ids (created 2026-09-10, folders only)
+
+Root: `1_tUMelVG8trnjPmJWul0YXo23VgWgdSc`
+
+| Path | Folder id |
+|---|---|
+| `Missoula Property Management` | `185uRadvslOjSoUoxSgYdICuSkRzaleOK` |
+| `Missoula Property Management/Fort Grounds/2026-09 September/inputs` | `15u50Mq7WRO0UcMNKcxeNBktYeeKN3u2k` |
+| `Missoula Property Management/Lolo Peak Village/2026-09 September/inputs` | `1l557KSfVsDg6576YhNfFmziJgBOVEQ9E` |
+| `Missoula Property Management/Mullan Crossing/2026-09 September/inputs` | `1H5ea-P7dqQonpIAtPTHjG8nUgkaAku1b` |
+| `Missoula Property Management/WayPointe/2026-09 September/inputs` | `1RjTXrLjthOWoGqHehGABrB1Q2WlO3hOi` |
+| `McCathren Management and Real Estate Services` | `1qZfzgkFiD32oT_tx8gYd89U_ZwWsUrgQ` |
+| `McCathren Management and Real Estate Services/Timber Place/2026-09 September/inputs` | `1RF73MvSaypeF9xmoYlU3FP6j4r_f7ciJ` |
+| `McCathren Management and Real Estate Services/River Falls/2026-09 September/inputs` | `102T5WgQsNLRolVJuxvIfK10QsVlGrcr2` |
+| `Cobalt Properties Group` | `13QftbvQOz3BNa-NjySa-UMzyeHli_vmf` |
+| `Cobalt Properties Group/Bridgewater/2026-09 September/inputs` | `1Czjxm0WDLmRoOMV1Vn3K-xOWDlziY6rb` |
+| `Cobalt Properties Group/Salmon Crossing/2026-09 September/inputs` | `1yVvGMmWkV1gzG2R1HBrn7SPKJ7BFRMVY` |
+
+**The service account must be shared into the root folder as Editor** for a build to publish.
+It reads and writes nothing outside that folder.
 
 ## Phase 7 — Container and GitHub Actions runner
 

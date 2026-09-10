@@ -99,6 +99,14 @@ refusal path and token accounting. `GoldenClassifier` drives the whole pipeline 
 Phases 4, 6, 7, 8 and 9 are unaffected. The moment the key is set, `uv run pytest -m api` and
 `uv run crr eval --classifier anthropic` are the two commands that close this out.
 
+**B-02 · GitHub Actions has not run CI on PR #1.**
+*Needed:* a runner. Five pushes over an hour left the `check` job queued and never started, so
+Phase 0's "CI green on the PR" cannot be evidenced from here. The workflow itself is exercised
+locally on every commit — `ruff check`, `ruff format --check`, `mypy src`, `pytest` with
+coverage, `crr validate-config`, `crr eval --classifier golden --gate` — and all pass.
+*What continues:* everything. If the queue is a runner-availability or billing setting rather
+than a workflow bug, nothing in the repository needs changing.
+
 ---
 
 ## Known unknowns the user may want to act on (not blocking)
