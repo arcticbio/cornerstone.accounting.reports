@@ -131,6 +131,21 @@ After merging PR #1:
 git tag -a v1.0.0 -m "Cornerstone Report Runner v1.0.0" && git push origin v1.0.0
 ```
 
+**B-06 · CI on this org's runners is intermittently very slow, and the final commit's run has
+not finished.**
+*What was seen:* run
+[34462978204](https://github.com/arcticbio/cornerstone.accounting.reports/actions/runs/34462978204)
+(commit `1beaf40`, Phase 8) went green on all three jobs in under four minutes. The run for the
+Phase 9 commits then sat for half an hour with the `Tests` step and the in-container golden
+build both started and neither progressing, while the 16-second Bicep job on the same run
+finished normally. Earlier in the session several runs queued without starting and were
+cancelled by the workflow's concurrency group.
+*What this does and does not mean:* the same tree passes the identical gate locally — ruff,
+`mypy src`, **375 passed / 5 skipped**, 94 % coverage, `crr validate-config`, `crr eval
+--classifier golden --gate` — and the previous commit's tree passed all three CI jobs including
+the in-container build and the GHCR push. So this reads as runner capacity, not a defect. It is
+recorded rather than assumed: **re-run the workflow and confirm it goes green before merging.**
+
 ---
 
 ## Known unknowns the user may want to act on (not blocking)
