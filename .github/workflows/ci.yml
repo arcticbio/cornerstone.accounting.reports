@@ -11,9 +11,10 @@ concurrency:
   cancel-in-progress: true
 
 env:
-  # The build branch. D-15: cloud sessions get a session-scoped branch, so this is the
-  # session branch rather than `build/v1`; both are treated as "the build branch".
-  BUILD_BRANCH: claude/gifted-lamport-wwgenm
+  # The branch whose pushes publish `:build-v1` to GHCR. It was the session branch while the
+  # v1 build was in flight (D-15); that branch is merged, so the release line is `main`. The
+  # `build/v1` alternative below is kept for a session that still works on its own branch.
+  BUILD_BRANCH: main
 
 jobs:
   check:

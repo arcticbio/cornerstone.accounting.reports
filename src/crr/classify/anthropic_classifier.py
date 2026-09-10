@@ -58,8 +58,21 @@ def build_tool(schema: SourceSchema) -> ToolParam:
                 "is_continuation": {"type": "boolean"},
                 "record_qualifier": {"type": ["string", "null"]},
                 "orientation": {"type": "string", "enum": [o.value for o in Orientation]},
-                "confidence": {"type": "number", "minimum": 0, "maximum": 1},
-                "evidence": {"type": "string", "maxLength": 300},
+                # No `minimum`/`maximum` here and no `maxLength` below: under `strict: true`
+                # the API rejects those keywords ("For 'number' type, properties maximum,
+                # minimum are not supported"), so the bounds are stated in the descriptions
+                # and enforced on the way in — `PageClassification.confidence` is
+                # `ge=0.0, le=1.0`, and evidence is truncated at 300 characters. A model that
+                # returns an out-of-range confidence fails the parse and the page goes to
+                # review, which is the behaviour the schema bound would have bought us.
+                "confidence": {
+                    "type": "number",
+                    "description": "Between 0 and 1 inclusive.",
+                },
+                "evidence": {
+                    "type": "string",
+                    "description": "One sentence, at most 300 characters.",
+                },
             },
             "required": [
                 "section_id",

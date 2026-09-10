@@ -98,6 +98,12 @@ December, so "the previous calendar month" is the period a scheduled run is for.
 *(format: `B-nn · <what is needed> · <what is blocked> · <what continues meanwhile>`)*
 
 **B-01 · `ANTHROPIC_API_KEY` does not reach the Claude Code session container.**
+*Status 2026-09-10 (later):* **the Actions half is closed.** The repository secret
+`ANTHROPIC_API_KEY` reaches the container and the classifier authenticates — run
+[34524350634](https://github.com/arcticbio/cornerstone.accounting.reports/actions/runs/34524350634)
+got a 400 on the tool schema (B-07), not a 401. What remains blocked is only the part that needs
+the key *in a session container*: `pytest -m api` and a local `crr eval --classifier anthropic`.
+Both run in Actions instead.
 *Status 2026-09-10:* the user has the key and is setting it for GitHub Actions (production).
 This session still reports `ANTHROPIC_API_KEY: not set`, and `GOOGLE_SERVICE_ACCOUNT_B64` /
 `CRR_GDRIVE_ROOT_FOLDER_ID` both arrive — so the variable is not on the environment this session
@@ -112,6 +118,28 @@ against a fake client, and `GoldenClassifier` drives the whole pipeline end to e
 uv run pytest -m api
 uv run crr eval --classifier anthropic --gate
 ```
+
+**B-07 · The forced tool's schema is rejected by the live API under `strict: true`.**
+*Found 2026-09-10* by the first keyed run — dispatch
+[34524350634](https://github.com/arcticbio/cornerstone.accounting.reports/actions/runs/34524350634),
+`2026-06` / `fort-grounds` / `local` / `anthropic`. Everything up to the first API call worked:
+the key arrived, the four sources were fetched, all 19 pages rendered, OCR correctly skipped.
+The first `POST /v1/messages` then returned **400** —
+`tools.0.custom: For 'number' type, properties maximum, minimum are not supported` — from
+`confidence: {"type": "number", "minimum": 0, "maximum": 1}` in `build_tool`. No fake client can
+see this: the schema is only validated by the API. *Fix:* the keywords are gone; the bounds live
+in the property descriptions and are enforced on parse, where `PageClassification.confidence` is
+already `ge=0.0, le=1.0` and evidence already truncates at 300 — an out-of-range value now fails
+the parse and sends the page to review, which is what the schema bound would have bought us.
+`maxLength` on `evidence` went with it as the same class of keyword, unverified against the API
+but redundant given the truncation. A unit test now walks the schema for the whole family.
+*Still to confirm:* whether `record_qualifier: {"type": ["string", "null"]}` is accepted under
+`strict: true`. The next dispatch settles it; a rejected request is not billed, so a second
+round trip costs time, not money.
+*Blocked on:* a rebuilt image. CI published to GHCR on the session branch or a `v*` tag only, so
+the merge to `main` did not republish and `:build-v1` carried the defect. `BUILD_BRANCH` is now
+`main` — the release line, the session branch having merged — so the merge that carries this fix
+also republishes the image.
 
 **B-02 · ~~GitHub Actions has not run CI on PR #1.~~ RESOLVED 2026-09-10.**
 Green on the final tree `943e664`: runs
