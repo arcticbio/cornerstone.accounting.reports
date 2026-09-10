@@ -4,7 +4,7 @@ Single source of truth for build state. Claude Code ticks tasks here after each 
 commits. Humans read this to see where things stand. Mirrors `docs/PLAN.md`; if they diverge,
 PLAN.md defines the work and this file records what has been done.
 
-**Branch:** `claude/gifted-lamport-wwgenm` (session-scoped branch; D-15 — every reference to `build/v1` in these documents means this branch) · **PR:** [#1](https://github.com/arcticbio/cornerstone.accounting.reports/pull/1) · **Current phase:** 7 · **Last session note:** _(none yet)_
+**Branch:** `claude/gifted-lamport-wwgenm` (session-scoped branch; D-15 — every reference to `build/v1` in these documents means this branch) · **PR:** [#1](https://github.com/arcticbio/cornerstone.accounting.reports/pull/1) · **Current phase:** 8 · **Last session note:** _(none yet)_
 
 ## Session log
 
@@ -19,6 +19,7 @@ PLAN.md defines the work and this file records what has been done.
 | 2026-09-10 | 4 | Composer, manifest, review gate, local repository, pipeline, `crr build`; 8/8 golden builds | Phase 5 |
 | 2026-09-10 | 5 | Eval harness, metrics, markdown report, gate; golden eval 100 % | Phase 6 (real-model eval blocked on B-01) |
 | 2026-09-10 | 6 | Drive repository, fake-Drive tests, live tests green, 2026-09 skeleton created | Phase 7 |
+| 2026-09-10 | 7 | Dockerfile, CI image job, GHCR publish, build-period workflow, runbook | Phase 8 (tasks 1-3) |
 
 ## Phase 0 — Repository hygiene and scaffold
 
@@ -145,13 +146,13 @@ It reads and writes nothing outside that folder.
 
 ## Phase 7 — Container and GitHub Actions runner
 
-- [ ] `Dockerfile` per SPEC §14; multi-stage; non-root user; `crr version` healthcheck.
-- [ ] CI job that builds the image and runs `crr build --classifier golden --repo local` inside it with the checkout mounted (`-v $PWD/data:/data -e CRR_BUNDLE_ROOT=/data/bundle/2026-06`) — proves tesseract/ocrmypdf/ghostscript are present and OCR works in-container. The image itself must not contain `data/bundle/` (SPEC §14, §16).
-- [ ] Publish image to GHCR: `:build-v1` and `:sha-<short>` on every push to `build/v1`; `:latest` and `:vX.Y.Z` on tags `v*`. Workflows that pull need `packages: read` and `docker login ghcr.io`.
-- [ ] `.github/workflows/build-period.yml`: `workflow_dispatch` with `period` (required), `property` (optional), `repo` (`gdrive` default, `local` for testing), `image_tag` (default `build-v1`); optional cron commented with the quarterly schedule; runs the GHCR image with secrets `ANTHROPIC_API_KEY`, `GOOGLE_SERVICE_ACCOUNT_B64`, vars `CRR_GDRIVE_ROOT_FOLDER_ID`; uploads `work/` manifests as an artifact; fails the job on exit 1, marks a warning annotation on exit 2.
-- [ ] `docs/RUNBOOK.md`: "Running a build from GitHub Actions" with screenshots-in-words.
+- [x] `Dockerfile`: multi-stage on `python:3.12-slim`, deps layer cached separately from source, OCR toolchain (including `tesseract-ocr-osd`, which `--rotate-pages` needs and whose absence only bites on the scanned documents that need it most), non-root `crr` user, `crr version` healthcheck, `/work` volume. `.dockerignore` keeps `data/`, `work/` and `eval/reports/` out of the build context.
+- [x] CI `image` job: builds the image, runs `crr version`, **asserts `/app/data` does not exist** in the image, checks all three OCR binaries inside it, then runs the golden build with the checkout mounted read-only. Not yet executed — see B-02/B-03.
+- [x] GHCR publishing with `packages: write` on the build branch (D-15: the session branch is treated as `build/v1`) and on `v*` tags; `build-period.yml` pulls with `packages: read` and `docker login`.
+- [x] `.github/workflows/build-period.yml`: all five dispatch inputs (`classifier` added alongside the four required, so a dry run against the bundle needs no code change), the quarterly cron present but commented, secrets and vars wired, manifests and `REVIEW.md` uploaded `if: always()`, and the SPEC §6.8 exit codes interpreted — 0 quiet, 2 a warning annotation, anything else fails the job.
+- [x] `docs/RUNBOOK.md` → "Running a build from GitHub Actions": where to click, what each input does, how to read a green/yellow/red result, where the manifests artifact is, how to work the review queue (including that a config fix — not a PDF edit — is the remedy), and which secrets and variables must exist.
 
-**Acceptance:** _(record evidence here when met)_
+**Acceptance:** Partially evidenced. The Dockerfile and both workflows are shipped and held in place by 17 structural tests (`tests/unit/test_workflows.py`), but **the image has not been built and the workflows have not run**: this container has no Docker daemon (B-03) and GitHub Actions has left every job queued (B-02). The in-container golden build is the CI job's first step once a runner picks it up.
 
 ## Phase 8 — Azure Container Apps Job (deploy step gated)
 

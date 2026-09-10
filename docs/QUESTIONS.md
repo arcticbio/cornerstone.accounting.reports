@@ -107,6 +107,14 @@ coverage, `crr validate-config`, `crr eval --classifier golden --gate` — and a
 *What continues:* everything. If the queue is a runner-availability or billing setting rather
 than a workflow bug, nothing in the repository needs changing.
 
+**B-03 · No container runtime in the build environment.**
+*Needed:* a Docker daemon (the `docker` client is installed; `/var/run/docker.sock` does not
+exist). *Blocked:* building the image locally, and therefore the in-container golden build that
+proves the OCR toolchain works inside it. *What continues:* the `Dockerfile` and both workflows
+are written and covered by structural tests; CI's `image` job builds the image, asserts the
+bundle is not baked in, checks all three OCR binaries inside the container and runs the golden
+build there — it just needs a runner (B-02).
+
 ---
 
 ## Known unknowns the user may want to act on (not blocking)

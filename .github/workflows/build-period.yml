@@ -1,0 +1,118 @@
+name: Build a period
+
+# Runs the published container against a period's inputs. This is the fallback host and the
+# first deployment surface (D-13): identical image, repo secrets, no infrastructure.
+
+on:
+  workflow_dispatch:
+    inputs:
+      period:
+        description: "Period id, e.g. 2026-09"
+        required: true
+        type: string
+      property:
+        description: "Property id (blank = every property)"
+        required: false
+        type: string
+      repo:
+        description: "Where inputs come from and outputs go"
+        required: true
+        default: gdrive
+        type: choice
+        options: [gdrive, local]
+      classifier:
+        description: "Classifier to use"
+        required: true
+        default: anthropic
+        type: choice
+        options: [anthropic, golden]
+      image_tag:
+        description: "GHCR image tag to run"
+        required: true
+        default: build-v1
+        type: string
+
+  # The quarterly schedule, twenty days after each quarter end at 06:00 UTC. Uncomment once a
+  # period has been run by hand and the review queue is understood.
+  # schedule:
+  #   - cron: "0 6 20 1,4,7,10 *"
+
+jobs:
+  build:
+    name: crr build
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    permissions:
+      contents: read
+      packages: read
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Log in to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Pull the image
+        run: |
+          image="ghcr.io/${GITHUB_REPOSITORY_OWNER,,}/crr:${{ inputs.image_tag }}"
+          docker pull "$image"
+          echo "IMAGE=$image" >> "$GITHUB_ENV"
+          docker run --rm "$image" version
+
+      - name: Run the build
+        id: build
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          GOOGLE_SERVICE_ACCOUNT_B64: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_B64 }}
+          CRR_GDRIVE_ROOT_FOLDER_ID: ${{ vars.CRR_GDRIVE_ROOT_FOLDER_ID }}
+        run: |
+          set +e
+          mkdir -p work && chmod 777 work
+          args=(build --period "${{ inputs.period }}" --repo "${{ inputs.repo }}" \
+                --classifier "${{ inputs.classifier }}")
+          if [ -n "${{ inputs.property }}" ]; then
+            args+=(--property "${{ inputs.property }}")
+          fi
+          docker run --rm \
+            -v "$PWD/data:/data:ro" \
+            -v "$PWD/work:/work" \
+            -e CRR_WORK_DIR=/work \
+            -e CRR_PUBLISH_ROOT=/work/published \
+            -e CRR_BUNDLE_ROOT=/data/bundle/2026-06 \
+            -e ANTHROPIC_API_KEY \
+            -e GOOGLE_SERVICE_ACCOUNT_B64 \
+            -e CRR_GDRIVE_ROOT_FOLDER_ID \
+            "$IMAGE" "${args[@]}"
+          echo "exit_code=$?" >> "$GITHUB_OUTPUT"
+
+      - name: Collect manifests and review notes
+        if: always()
+        run: |
+          mkdir -p artifacts
+          find work -name 'build-manifest.json' -o -name 'REVIEW.md' | while read -r f; do
+            target="artifacts/$(echo "${f#work/}" | tr '/' '_')"
+            cp "$f" "$target"
+          done
+          ls -la artifacts || true
+
+      - name: Upload manifests
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: manifests-${{ inputs.period }}
+          path: artifacts/
+          if-no-files-found: warn
+          retention-days: 90
+
+      # Exit codes are the contract (SPEC §6.8): 0 all built, 2 any needs review, 1 any failed.
+      - name: Interpret the exit code
+        run: |
+          code="${{ steps.build.outputs.exit_code }}"
+          case "$code" in
+            0) echo "All properties built." ;;
+            2) echo "::warning title=Review needed::One or more packages went to review/. Download the manifests artifact and read REVIEW.md." ;;
+            *) echo "::error title=Build failed::crr exited $code"; exit 1 ;;
+          esac

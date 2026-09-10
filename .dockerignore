@@ -1,0 +1,19 @@
+# Tenant data never enters the image (SPEC §14, §16).
+data/
+work/
+eval/reports/
+
+.git/
+.github/
+.venv/
+.mypy_cache/
+.pytest_cache/
+.ruff_cache/
+htmlcov/
+__pycache__/
+*.pyc
+tests/
+docs/
+infra/
+*.md
+!README.md
