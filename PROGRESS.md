@@ -248,7 +248,7 @@ Azure Container Apps Job in `infra/`.
 | Eval (golden classifier) | page accuracy **1.0000**, continuation **1.0000**, record **1.0000**, orientation **1.0000**, boundary F1 **1.0000** over 31 documents / 172 pages |
 | Eval (real model) | **not yet run** — no `ANTHROPIC_API_KEY` in this environment (B-01) |
 | Tests | **375 passed, 5 skipped** (the `api` tests), 94 % coverage on `src/crr` |
-| CI | green on all three jobs at `1beaf40` (Phase 8), image published to GHCR. The Phase 9 commits' run stalled on this org's runners without finishing — see B-06; **re-run before merging.** |
+| CI | green on all three jobs at `1beaf40`; on the final tree the `image` job completed every step (in-container golden build 101 s, GHCR push) before the run was cancelled by the next push. See B-06; **confirm the last run goes green before merging.** |
 | Invariants | all six of SPEC §9, over the eight real builds |
 
 ### Cost per run
