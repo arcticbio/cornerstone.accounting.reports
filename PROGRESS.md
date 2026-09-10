@@ -23,6 +23,7 @@ PLAN.md defines the work and this file records what has been done.
 | 2026-09-10 | 8 | Bicep, infra README, deploy workflow; deploy step gated on credentials | Phase 9 |
 | 2026-09-10 | 9 | Drift rule, cost report, logging hygiene (one leak found and fixed), runbook, README, tag | v1.0.0 |
 | 2026-09-10 | post-v1 | `v1.0.0` pushed by the user; CI green on the final tree; version bumped 0.1.0 → 1.0.0; Azure + credentials setup docs written | Azure bootstrap (user), then B-01/B-04 |
+| 2026-09-10 | post-v1 | PR #1 merged to `main`; first keyed run dispatched (`2026-06`/`fort-grounds`/`local`/`anthropic`) — the key works, the tool schema does not (B-07); fix on `claude/wonderful-wright-scuu96` | Republish the image, re-dispatch |
 
 ## Phase 0 — Repository hygiene and scaffold
 

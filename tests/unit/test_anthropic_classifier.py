@@ -113,6 +113,35 @@ def test_the_tool_enum_is_the_schema_vocabulary_plus_unknown() -> None:
     assert tool["input_schema"]["additionalProperties"] is False  # type: ignore[index]
 
 
+def test_the_tool_schema_carries_no_keyword_strict_mode_rejects() -> None:
+    """The API rejects `minimum`/`maximum` on a number under `strict: true` — a live 400 on the
+    first keyed run, invisible to the fake client. Range and length are enforced on parse
+    instead (`PageClassification.confidence` is bounded, evidence is truncated), so a schema
+    that reintroduces the keywords would only fail the request again."""
+    unsupported = {
+        "minimum",
+        "maximum",
+        "exclusiveMinimum",
+        "exclusiveMaximum",
+        "maxLength",
+        "minLength",
+        "pattern",
+        "multipleOf",
+        "format",
+    }
+
+    def walk(node: object) -> None:
+        if isinstance(node, dict):
+            assert not (unsupported & node.keys()), f"unsupported keyword in {node}"
+            for value in node.values():
+                walk(value)
+        elif isinstance(node, list):
+            for value in node:
+                walk(value)
+
+    walk(build_tool(SCHEMA)["input_schema"])
+
+
 def test_the_system_prefix_carries_a_one_hour_cache_breakpoint() -> None:
     blocks = build_system_blocks(SCHEMA, "v1")
     assert blocks[-1]["cache_control"] == {"type": "ephemeral", "ttl": "1h"}
