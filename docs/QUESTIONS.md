@@ -136,8 +136,10 @@ but redundant given the truncation. A unit test now walks the schema for the who
 *Still to confirm:* whether `record_qualifier: {"type": ["string", "null"]}` is accepted under
 `strict: true`. The next dispatch settles it; a rejected request is not billed, so a second
 round trip costs time, not money.
-*Blocked on:* a rebuilt image. CI publishes to GHCR on `build/v1` or a `v*` tag only — the merge
-to `main` does not republish, so `:build-v1` still carries the defect.
+*Blocked on:* a rebuilt image. CI published to GHCR on the session branch or a `v*` tag only, so
+the merge to `main` did not republish and `:build-v1` carried the defect. `BUILD_BRANCH` is now
+`main` — the release line, the session branch having merged — so the merge that carries this fix
+also republishes the image.
 
 **B-02 · ~~GitHub Actions has not run CI on PR #1.~~ RESOLVED 2026-09-10.**
 Green on the final tree `943e664`: runs
