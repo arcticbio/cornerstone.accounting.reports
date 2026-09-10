@@ -1,0 +1,22 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+.mypy_cache/
+.ruff_cache/
+.pytest_cache/
+htmlcov/
+.coverage
+dist/
+build/
+*.egg-info/
+
+# Runner artefacts — never commit
+work/
+.env
+*.env
+eval/reports/*.tmp
+
+# OS
+.DS_Store
+Thumbs.db

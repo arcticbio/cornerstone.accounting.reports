@@ -1,0 +1,159 @@
+{
+  "property_id": "lolo-peak-village",
+  "property": "Lolo Peak Village",
+  "property_manager": "Missoula Property Management",
+  "pm_id": "missoula",
+  "period": "2026-06",
+  "schema": "rentmanager-missoula",
+  "output_definition": "missoula-investor-report",
+  "records": [
+    {
+      "id": "default",
+      "pm_name": "Lolo Peak Village LP"
+    }
+  ],
+  "expected_output_page_count": 8,
+  "expected_output": null,
+  "documents": [
+    {
+      "role": "pm_source",
+      "schema": "rentmanager-missoula",
+      "file": "Missoula Property Management/Lolo Peak Village/2026-06 June/inputs/05 PM Source - Missoula PM Baseline.pdf",
+      "pages": [
+        {
+          "page": 1,
+          "section": "owner_statement",
+          "continuation": false,
+          "record": null
+        },
+        {
+          "page": 2,
+          "section": "owner_statement",
+          "continuation": true,
+          "record": null
+        },
+        {
+          "page": 3,
+          "section": "profit_loss_comparison",
+          "continuation": false,
+          "record": null
+        },
+        {
+          "page": 4,
+          "section": "unit_availability",
+          "continuation": false,
+          "record": null
+        },
+        {
+          "page": 5,
+          "section": "unit_availability",
+          "continuation": true,
+          "record": null
+        },
+        {
+          "page": 6,
+          "section": "financial_statement",
+          "continuation": false,
+          "record": null
+        },
+        {
+          "page": 7,
+          "section": "financial_statement",
+          "continuation": true,
+          "record": null
+        },
+        {
+          "page": 8,
+          "section": "rent_roll_analysis",
+          "continuation": false,
+          "record": null
+        },
+        {
+          "page": 9,
+          "section": "rent_roll_analysis",
+          "continuation": true,
+          "record": null
+        },
+        {
+          "page": 10,
+          "section": "general_ledger",
+          "continuation": false,
+          "record": null
+        },
+        {
+          "page": 11,
+          "section": "actual_budget_fy_analysis",
+          "continuation": false,
+          "record": null
+        },
+        {
+          "page": 12,
+          "section": "actual_budget_fy_analysis",
+          "continuation": true,
+          "record": null
+        },
+        {
+          "page": 13,
+          "section": "actual_budget_fy_analysis",
+          "continuation": true,
+          "record": null
+        },
+        {
+          "page": 14,
+          "section": "rent_roll_bank",
+          "continuation": false,
+          "record": null
+        },
+        {
+          "page": 15,
+          "section": "delinquency",
+          "continuation": false,
+          "record": null
+        }
+      ]
+    },
+    {
+      "role": "cornerstone_balance_sheet",
+      "schema": "cornerstone-qbo",
+      "file": "Missoula Property Management/Lolo Peak Village/2026-06 June/inputs/01 Cornerstone - Balance Sheet.pdf",
+      "pages": [
+        {
+          "page": 1,
+          "section": "balance_sheet",
+          "continuation": false,
+          "record": null
+        }
+      ]
+    },
+    {
+      "role": "cornerstone_profit_loss_ytd",
+      "schema": "cornerstone-qbo",
+      "file": "Missoula Property Management/Lolo Peak Village/2026-06 June/inputs/02 Cornerstone - Profit and Loss YTD Comparison.pdf",
+      "pages": [
+        {
+          "page": 1,
+          "section": "profit_loss_ytd_comparison",
+          "continuation": false,
+          "record": null
+        }
+      ]
+    },
+    {
+      "role": "cornerstone_distribution_schedule",
+      "schema": "cornerstone-qbo",
+      "file": "Missoula Property Management/Lolo Peak Village/2026-06 June/inputs/03 Cornerstone - Investor Distribution Schedule.pdf",
+      "pages": [
+        {
+          "page": 1,
+          "section": "investor_distribution_schedule",
+          "continuation": false,
+          "record": null
+        }
+      ]
+    }
+  ],
+  "notes": [
+    "Page 5 (unit_availability continuation) is nearly blank: footer only, no unit-type summary table. A classifier must still label it as a continuation."
+  ],
+  "_path_note": "Paths are relative to settings.bundle_root (default: data/bundle/2026-06)."
+}

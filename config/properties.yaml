@@ -1,0 +1,88 @@
+# Property registry. Folder names must match the bundle / Drive layout exactly.
+period_format: "YYYY-MM"                # canonical period id, e.g. 2026-06
+period_folder_template: "{yyyy}-{mm} {month_name}"   # e.g. "2026-06 June"
+
+property_managers:
+  - id: missoula
+    name: Missoula Property Management
+    folder: "Missoula Property Management"
+    schema: rentmanager-missoula
+    output_definition: missoula-investor-report
+    pm_source_filename: "05 PM Source - Missoula PM Baseline.pdf"
+  - id: mccathren
+    name: McCathren Management and Real Estate Services
+    folder: "McCathren Management and Real Estate Services"
+    schema: mccathren
+    output_definition: mccathren-investor-report
+    pm_source_filename: "05 PM Source - McCathren Baseline.pdf"
+  - id: cobalt
+    name: Cobalt Properties Group
+    folder: "Cobalt Properties Group"
+    schema: cobalt
+    output_definition: cobalt-investor-report
+    pm_source_filename: "05 PM Source - Cobalt Baseline.pdf"
+
+# Cornerstone component filenames are the same for every property.
+cornerstone_files:
+  cornerstone_balance_sheet:          "01 Cornerstone - Balance Sheet.pdf"
+  cornerstone_profit_loss_ytd:        "02 Cornerstone - Profit and Loss YTD Comparison.pdf"
+  cornerstone_distribution_schedule:  "03 Cornerstone - Investor Distribution Schedule.pdf"
+
+properties:
+  - id: fort-grounds
+    name: Fort Grounds
+    folder: "Fort Grounds"
+    property_manager: missoula
+    owning_entity: Fort Grounds Apartment Homes LP
+    records:
+      - {id: default, pm_name: "Fort Grounds Apartment Homes"}
+  - id: lolo-peak-village
+    name: Lolo Peak Village
+    folder: "Lolo Peak Village"
+    property_manager: missoula
+    owning_entity: Lolo Peak Village LP
+    records:
+      - {id: default, pm_name: "Lolo Peak Village LP"}
+  - id: mullan-crossing
+    name: Mullan Crossing
+    folder: "Mullan Crossing"
+    property_manager: missoula
+    owning_entity: Mullan Crossing Apartment Homes LP
+    records:
+      - {id: default, pm_name: "The Vantage 2370 Clark Fork Ln"}
+  - id: waypointe
+    name: WayPointe
+    folder: "WayPointe"
+    property_manager: missoula
+    owning_entity: WayPointe Apartment Homes LP
+    records:                       # order here = output order (D-07)
+      - {id: waypointe-ah-lp,        pm_name: "WayPointe Apartment Homes LP"}
+      - {id: 128-s-5th-street-west,  pm_name: "128 S. 5th Street West"}
+  - id: timber-place
+    name: Timber Place
+    folder: "Timber Place"
+    property_manager: mccathren
+    owning_entity: Timber Place Apartment Homes LP
+    records:
+      - {id: default, pm_name: "Timber Place by the Lake (1000)"}
+  - id: river-falls
+    name: River Falls
+    folder: "River Falls"
+    property_manager: mccathren
+    owning_entity: River Falls Opportunity Zone Fund LLC
+    records:
+      - {id: default, pm_name: "River Falls Apartments (0312)"}
+  - id: bridgewater
+    name: Bridgewater
+    folder: "Bridgewater"
+    property_manager: cobalt
+    owning_entity: Bridgewater Apartment Homes LP Et Al
+    records:
+      - {id: default, pm_name: "411 - Bridgewater - 61580 Brosterhous Rd Bend, OR 97702"}
+  - id: salmon-crossing
+    name: Salmon Crossing
+    folder: "Salmon Crossing"
+    property_manager: cobalt
+    owning_entity: Salmon Crossing Opportunity Zone LLC
+    records:
+      - {id: default, pm_name: "405 - Salmon Crossing - 2000 SW Salmon Ave Redmond, OR 97756"}
