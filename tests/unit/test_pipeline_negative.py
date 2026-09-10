@@ -299,3 +299,28 @@ def test_publishing_twice_never_overwrites(repo_root: Path, tmp_path: Path) -> N
     names = sorted(p.name for p in review.iterdir())
     assert "Test Property - Investor Report - June 2026 (build 2).pdf" in names
     assert "Test Property - Investor Report - June 2026.pdf" in names
+
+
+def test_page_count_drift_fires_when_the_export_changes_size(
+    repo_root: Path, tmp_path: Path, make_pdf: MakePdf
+) -> None:
+    """SPEC §6.8: a >50 % change against the last built period, only when one exists."""
+    from crr.repository.local_fs import previous_manifest_path
+
+    labels = StubClassifier(
+        [("owner_statement", False, 1.0), ("rent_roll", False, 1.0), ("ledger", False, 1.0)]
+    )
+    first = _build(repo_root, tmp_path, labels)
+    assert "page_count_drift" not in {r.code for r in first.reasons}  # no history yet
+
+    # Hand-place last quarter's manifest: 16 pages then, 3 pages now.
+    previous = tmp_path / "work" / "2026-03" / "testprop"
+    previous.mkdir(parents=True)
+    manifest = first.manifest.model_copy(update={"period": "2026-03"})
+    manifest.inputs[0] = manifest.inputs[0].model_copy(update={"pages": 16})
+    (previous / "build-manifest.json").write_text(manifest.model_dump_json(by_alias=True))
+    assert previous_manifest_path(tmp_path / "work", "testprop", "2026-06") is not None
+
+    second = _build(repo_root, tmp_path, labels)
+    drift = next(r for r in second.reasons if r.code == "page_count_drift")
+    assert "16 pages last period, 3 now" in drift.detail

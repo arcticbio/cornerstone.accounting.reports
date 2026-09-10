@@ -107,29 +107,17 @@ refusal path and token accounting. `GoldenClassifier` drives the whole pipeline 
 Phases 4, 6, 7, 8 and 9 are unaffected. The moment the key is set, `uv run pytest -m api` and
 `uv run crr eval --classifier anthropic` are the two commands that close this out.
 
-**B-02 · GitHub Actions has not run CI on PR #1.**
-*Needed:* a runner. Five pushes over an hour left the `check` job queued and never started, so
-Phase 0's "CI green on the PR" cannot be evidenced from here. The workflow itself is exercised
-locally on every commit — `ruff check`, `ruff format --check`, `mypy src`, `pytest` with
-coverage, `crr validate-config`, `crr eval --classifier golden --gate` — and all pass.
-*What continues:* everything. If the queue is a runner-availability or billing setting rather
-than a workflow bug, nothing in the repository needs changing.
+**B-02 · ~~GitHub Actions has not run CI on PR #1.~~ RESOLVED 2026-09-10.**
+Earlier runs were cancelled by the workflow's own concurrency group as commits landed in quick
+succession, not stalled for want of a runner. Run
+[34462978204](https://github.com/arcticbio/cornerstone.accounting.reports/actions/runs/34462978204)
+is green on all three jobs: lint/types/tests/validate-config/eval gate, the Bicep compile, and
+the image job.
 
-**B-03 · No container runtime in the build environment.**
-*Needed:* a Docker daemon (the `docker` client is installed; `/var/run/docker.sock` does not
-exist). *Blocked:* building the image locally, and therefore the in-container golden build that
-proves the OCR toolchain works inside it. *What continues:* the `Dockerfile` and both workflows
-are written and covered by structural tests; CI's `image` job builds the image, asserts the
-bundle is not baked in, checks all three OCR binaries inside the container and runs the golden
-build there — it just needs a runner (B-02).
-
-**B-04 · Azure deployment is gated on credentials — this is the Phase 7 checkpoint question.**
-*Needed:* either `AZURE_CREDENTIALS` (a service-principal JSON) plus a target subscription and
-resource group, **or** a note that GitHub Actions is sufficient for now, in which case Phase 8
-task 4 is skipped cleanly and nothing else changes. *Blocked:* only the deploy-and-smoke-run
-step. *What continues:* everything — the Bicep template, its README and the deploy workflow are
-written and structurally tested, and CI compiles the template on every push without credentials.
-GitHub Actions already runs the identical container (D-13), so the system is deployable today.
+**B-03 · ~~No container runtime in the build environment.~~ RESOLVED 2026-09-10 in CI.**
+Still true locally — `/var/run/docker.sock` does not exist here — but CI's `image` job now
+builds the image, runs `crr version`, proves `/app/data` is absent, checks all three OCR
+binaries inside the container, runs the golden build there, and pushes to GHCR. All green.
 
 ---
 

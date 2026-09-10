@@ -319,15 +319,31 @@ def build(
             detail = f"  {result.manifest.error}"
         typer.echo(f"{property_id:<20} {marker:<8} {pages:>3} pages{detail}")
 
-    cost = sum(r.manifest.cost.usd_estimate for r in results)
-    calls = sum(r.manifest.cost.api_calls for r in results)
-    if calls:
-        typer.echo(f"\n{calls} API call(s), estimated ${cost:.2f}")
+    _print_cost(results)
 
     if any(r.status is BuildStatus.FAILED for r in results):
         raise typer.Exit(code=1)
     if any(r.status is BuildStatus.NEEDS_REVIEW for r in results):
         raise typer.Exit(code=2)
+
+
+def _print_cost(results: list) -> None:  # type: ignore[type-arg]
+    """Tokens and the USD estimate for the run (PLAN Phase 9). The estimate comes from the
+    settings price table and is recorded in every manifest as `cost`."""
+    calls = sum(r.manifest.cost.api_calls for r in results)
+    if not calls:
+        return
+    tokens = {
+        "input": sum(r.manifest.cost.tokens.input for r in results),
+        "cache read": sum(r.manifest.cost.tokens.cache_read for r in results),
+        "cache write": sum(r.manifest.cost.tokens.cache_write for r in results),
+        "output": sum(r.manifest.cost.tokens.output for r in results),
+    }
+    usd = sum(r.manifest.cost.usd_estimate for r in results)
+    typer.echo("")
+    typer.echo(f"{calls} API call(s) over {len(results)} propert(ies)")
+    typer.echo("  " + "  ".join(f"{name}={count:,}" for name, count in tokens.items()))
+    typer.echo(f"  estimated ${usd:.2f} (${usd / max(len(results), 1):.2f} per property)")
 
 
 def _make_repository(kind: str, settings: Settings, bundle):  # type: ignore[no-untyped-def]

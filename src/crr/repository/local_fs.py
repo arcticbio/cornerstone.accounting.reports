@@ -8,6 +8,7 @@ repository's rule so the two behave alike (SPEC §6.1).
 
 from __future__ import annotations
 
+import json
 import re
 import shutil
 from collections.abc import Callable
@@ -23,12 +24,28 @@ log = get_logger(__name__)
 
 _PERIOD_DIR = re.compile(r"^(\d{4})-(\d{2})\b")
 
+
 PM_SOURCE_ROLE = "pm_source"
 CORNERSTONE_SCHEMA = "cornerstone-qbo"
 
 #: property, role -> schema id. The pipeline supplies one built from the output definition;
 #: the default covers the shape every manager in the registry uses today.
 SchemaResolver = Callable[[Property, str], str]
+
+
+def pm_pages_from_manifest(path: Path | None) -> int | None:
+    """PM source page count recorded in a manifest file, or None if unreadable."""
+    if path is None:
+        return None
+    try:
+        data = json.loads(path.read_text())
+    except (OSError, ValueError):
+        return None
+    for source in data.get("inputs", []):
+        if source.get("role") == PM_SOURCE_ROLE:
+            pages = source.get("pages")
+            return int(pages) if isinstance(pages, int) else None
+    return None
 
 
 class LocalFsRepository:
@@ -139,6 +156,11 @@ class LocalFsRepository:
         return documents
 
     # -- publish -----------------------------------------------------------------------
+    def previous_pm_pages(self, prop: Property, period: PeriodId, work_dir: Path) -> int | None:
+        """PM source page count from this property's last build, for the drift check."""
+        path = previous_manifest_path(work_dir, prop.id, period)
+        return pm_pages_from_manifest(path)
+
     def publish(
         self, prop: Property, period: PeriodId, files: list[Path], status: BuildStatus
     ) -> None:
@@ -152,7 +174,35 @@ class LocalFsRepository:
         for path in files:
             destination = _unique_name(target_dir, path.name)
             shutil.copy2(path, destination)
-            log.info("repository.published", property=prop.id, folder=folder, name=destination.name)
+            # The output filename carries the property's public name; log the shape of the
+            # artefact, not the name (SPEC §11, §16). The manifest records the filename.
+            log.info(
+                "repository.published",
+                property=prop.id,
+                folder=folder,
+                kind=destination.suffix.lstrip(".") or "file",
+                renamed=destination.name != path.name,
+            )
+
+
+def previous_manifest_path(work_dir: Path, property_id: str, period: PeriodId) -> Path | None:
+    """The newest manifest for this property from a period *before* `period`.
+
+    Local builds leave their manifests in `work/<period>/<property>/`, so the work directory
+    is the archive the drift check reads (PLAN Phase 9).
+    """
+    if not work_dir.is_dir():
+        return None
+    candidates: list[tuple[str, Path]] = []
+    for period_dir in work_dir.iterdir():
+        if not period_dir.is_dir() or period_dir.name >= period:
+            continue
+        manifest = period_dir / property_id / "build-manifest.json"
+        if manifest.is_file():
+            candidates.append((period_dir.name, manifest))
+    if not candidates:
+        return None
+    return max(candidates)[1]
 
 
 def _unique_name(directory: Path, name: str) -> Path:

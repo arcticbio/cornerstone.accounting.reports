@@ -4,6 +4,35 @@ How to run a quarterly build, what to do when one comes back for review, and how
 system when the inputs change. `docs/SPEC.md` says how the system works; this file says how to
 work it.
 
+## Contents
+
+- [The quarterly checklist](#the-quarterly-checklist)
+- [Preparing a period in Drive](#preparing-a-period-in-drive)
+- [Running a build from GitHub Actions](#running-a-build-from-github-actions)
+- [Failure modes and what to do about them](#failure-modes-and-what-to-do-about-them)
+- [Adding a property](#adding-a-property)
+- [Adding a property manager](#adding-a-property-manager)
+- [Changing a prompt](#changing-a-prompt)
+- [When a model is deprecated](#when-a-model-is-deprecated)
+
+---
+
+## The quarterly checklist
+
+1. **Collect the inputs.** Each manager sends their monthly export; Cornerstone produces the
+   three components per property. Drop them into each property's `inputs/` folder in Drive,
+   named exactly as [Preparing a period in Drive](#preparing-a-period-in-drive) lists.
+2. **Check the period is ready.** `uv run crr inspect --repo gdrive --period 2026-09`, or read
+   the folders. Every property should say `ready`.
+3. **Dispatch the build.** Actions → *Build a period* → **Run workflow**, with the period id.
+   See [Running a build from GitHub Actions](#running-a-build-from-github-actions).
+4. **Check the status.** Green with no annotation: done, packages are in `output/`. Green with
+   a *Review needed* annotation: work the review queue. Red: read the failure below.
+5. **Work the review queue.** For each package in `review/`, read `REVIEW.md`, look at the pages
+   it names, then either move the package to `output/` or fix the config and re-run.
+6. **Record what happened.** If a fix was needed, the config change goes through a PR with a
+   fresh `crr eval` result in it. That is how the next quarter gets easier.
+
 ---
 
 ## Preparing a period in Drive
@@ -175,3 +204,129 @@ Set them under **Settings → Secrets and variables → Actions**: the two secre
 UTC on the 20th of January, April, July and October. Uncomment it once a period has been run by
 hand and the review queue is understood. A scheduled run uses the workflow's default inputs, so
 it builds every property from Drive with the real classifier.
+
+---
+
+## Failure modes and what to do about them
+
+| What you see | What it means | What to do |
+|---|---|---|
+| `NOT READY` for a property in `crr inspect` | The PM source is not in `inputs/`, or its filename does not match | Check the filename against `config/properties.yaml` byte for byte — a renamed file is invisible to the runner. Otherwise chase the manager. |
+| Job red, manifest says `PM source … is missing` | Same, discovered during the build | As above. The other properties still built. |
+| Job red, `OcrError` | `ocrmypdf` or tesseract could not run in the container | Almost always the image, not the data. Re-run on a known-good `image_tag`; check the CI `image` job is green. Never "skip OCR to get it through" — a McCathren package without a text layer is not the product. |
+| Job red, `PdfReadError` / `unreadable` | A source PDF is corrupt or truncated | Ask for a fresh export. Do not repair the PDF by hand: the manifest's sha256 is the audit trail. |
+| Warning annotation, `unknown_page` | The classifier could not place a page | The manager probably added a report the schema does not know. Add a section to `config/schemas/<schema>.yaml`, or add the page's section to `drop` if it should not ship. |
+| Warning, `low_confidence` | A label was chosen but the model was unsure | Look at the page. If the label is right, sharpen that section's `visual_cues` so the next quarter is confident. If it is wrong, the same fix applies. |
+| Warning, `footer_disagrees` | The printed report name and the label disagree | One of them is wrong; look at the page. The footer never overrides the model (D-05), so this always comes to a human. |
+| Warning, `unmapped_section` | A section was found that is in neither `flow` nor `drop` | Decide which, and add it. The system will not guess. |
+| Warning, `missing_required` | A required flow item or source resolved to nothing | If the source is genuinely gone, mark that flow item `required: false`. If it should be there, chase it. |
+| Warning, `unresolved_record` | A `Property:` header matches no record | The manager renamed a property. Update `pm_name` in `config/properties.yaml`. |
+| Warning, `cardinality_violation` | A once-only section appeared twice | Look at the pages. If it is now legitimately two reports, change the section's `cardinality`, or address a specific instance with `#n` in the flow. |
+| Warning, `page_count_drift` | The export changed size by more than half | Usually a manager changing their export settings. Compare against the previous period's manifest before shipping. |
+
+**The general rule:** a review outcome is the system working (D-12). The remedy is almost always
+a config change — a schema cue, a `flow` entry, a `drop` entry — never an edit to a PDF and
+never a code change.
+
+---
+
+## Adding a property
+
+A new property under an *existing* manager is config only.
+
+1. Add it to `properties:` in `config/properties.yaml`:
+
+   ```yaml
+     - id: new-property                     # kebab-case, used everywhere
+       name: New Property                   # appears in the output filename and title
+       folder: "New Property"               # the Drive folder name, byte for byte
+       property_manager: missoula           # an existing manager id
+       owning_entity: New Property Homes LP
+       records:
+         - {id: default, pm_name: "New Property Apartments"}   # the PM system's name
+   ```
+
+   `pm_name` must match the `Property:` header the manager's reports print, after whitespace
+   normalisation. Get it from a real export, not from a contract.
+
+2. `uv run crr validate-config` — it will tell you if anything is inconsistent.
+3. Create the Drive folders for the period ([Preparing a period](#preparing-a-period-in-drive)).
+4. Build just that property first: dispatch with **property** set to `new-property`.
+5. Expect a review outcome on the first run, and read it carefully. That is the system telling
+   you what it does not yet know about this property.
+
+A property with **two records** (like WayPointe) lists both under `records:`, in the order they
+should appear in the output. Order there is output order (D-07).
+
+---
+
+## Adding a property manager
+
+A new manager is a new schema, a new output definition, golden labels and an eval — but still no
+code (D-02).
+
+1. **Get one real export** and look at every page.
+2. **Write `config/schemas/<schema_id>.yaml`.** One section per distinct report. The
+   `description`, `visual_cues` and `text_cues` are the classifier's entire definition of that
+   label — write them as you would describe the page to someone over the phone. Set
+   `cardinality: per_record` for reports run once per property record, `one` otherwise. If the
+   pages carry a footer naming the report, set `fingerprint.footer_regex` and a `footer_label`
+   per section: that gives you a free cross-check on every page forever.
+3. **Write `config/outputs/<output_id>.yaml`.** `sources` names the files; `flow` is the output
+   order; every section the source can contain must be in `flow` or `drop`.
+4. **Register the manager** in `property_managers:` in `config/properties.yaml`, with its folder
+   name and PM source filename.
+5. **Add a prompt directory:** `src/crr/classify/prompts/<schema_id>/v1.md` containing
+   `{% include "_shared/system_body.md" %}`. Diverge from the shared body only when this
+   manager needs something the others do not.
+6. **Label a period by hand** into `eval/golden/<pm>/<property>.json` — every page of every
+   document. This is the ground truth and the few-shot source; it is worth the hour.
+7. **Run the eval:** `uv run crr eval --classifier anthropic --pm <pm_id>`. Below 0.98? Read the
+   confusion pairs and sharpen the cues of the sections that get mixed up. Re-run.
+8. **Build it:** `uv run crr build --period <p> --property <id> --classifier anthropic`, and
+   compare the output against what the manager's package should look like.
+
+---
+
+## Changing a prompt
+
+Prompts are versioned per schema: `src/crr/classify/prompts/<schema_id>/v<N>.md`.
+
+1. Copy `v1.md` to `v2.md` and edit it.
+2. Run the eval on both, on the same documents:
+
+   ```bash
+   uv run crr eval --classifier anthropic --pm missoula --report eval/reports/before.md
+   # point the classifier at v2, then:
+   uv run crr eval --classifier anthropic --pm missoula --report eval/reports/after.md
+   ```
+
+3. **Both reports go in the PR.** A prompt change without an eval is a guess, and the manifest
+   records `prompt_version` for every page ever built — a change nobody measured is a change
+   nobody can explain later.
+4. Merge only if accuracy holds or improves for *every* manager the prompt touches.
+
+The same rule applies to changing a schema's `visual_cues` or `description`: those are prompt
+content, and `crr eval` is how you find out whether the change helped.
+
+---
+
+## When a model is deprecated
+
+Anthropic announces model deprecations with a retirement date. The runner pins its model in
+`CRR_MODEL` (default `claude-opus-5`), and every manifest records the exact model that produced
+its labels.
+
+1. **Set the new model in a branch:** `CRR_MODEL=<new-model>`.
+2. **Run the full eval on both models** over all 31 golden documents, and put both reports in
+   the PR. Page accuracy and boundary F1 per manager are the numbers that matter.
+3. **If accuracy holds,** merge, and re-run the last built period with the new model to compare
+   the manifests' page plans. They should be identical.
+4. **If accuracy drops,** the fix is the prompt or the cues, not the gate. Iterate as in
+   [Changing a prompt](#changing-a-prompt), and only lower a threshold with a written reason in
+   `docs/DECISIONS.md`.
+5. **Update the price table** if the new model prices differently — `CRR_PRICE_TABLE_JSON`
+   overrides the built-in estimate without a code change.
+
+Do this before the retirement date, not on it: a quarterly job that fails on a retired model
+fails at the worst possible moment, three months after anyone last looked at it.

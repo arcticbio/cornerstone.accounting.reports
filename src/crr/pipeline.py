@@ -119,6 +119,9 @@ def build_property(
         ),
     )
 
+    if previous_pm_pages is None:
+        previous_pm_pages = _previous_pm_pages(repository, prop, period, settings)
+
     try:
         started = time.monotonic()
         documents = repository.fetch_inputs(prop, period, work / "inputs")
@@ -234,6 +237,25 @@ def build_property(
         return BuildResult(
             prop.id, BuildStatus.FAILED, manifest, write_manifest(manifest, manifest_path)
         )
+
+
+def _previous_pm_pages(
+    repository: SourceRepository, prop: Property, period: PeriodId, settings: Settings
+) -> int | None:
+    """Ask the repository what the last built period looked like, if it can say.
+
+    Both repositories implement `previous_pm_pages`, but the protocol does not require it: a
+    repository that cannot look backwards simply never triggers the drift check.
+    """
+    lookup = getattr(repository, "previous_pm_pages", None)
+    if lookup is None:
+        return None
+    try:
+        pages = lookup(prop, period, settings.work_dir)
+    except Exception:  # a history lookup must never fail a build
+        log.warning("build.previous_manifest_unavailable", property=prop.id)
+        return None
+    return int(pages) if pages else None
 
 
 # -- stages ----------------------------------------------------------------------------

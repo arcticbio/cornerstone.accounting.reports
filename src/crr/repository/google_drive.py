@@ -23,7 +23,12 @@ from crr.log import get_logger
 from crr.models import BuildStatus, PeriodId, Property, SourceDocument
 from crr.preprocess.text import document_text_layer, page_count, sha256_file
 from crr.repository.drive_client import DriveApi, DriveFile
-from crr.repository.local_fs import CORNERSTONE_SCHEMA, PM_SOURCE_ROLE, SchemaResolver
+from crr.repository.local_fs import (
+    CORNERSTONE_SCHEMA,
+    PM_SOURCE_ROLE,
+    SchemaResolver,
+    pm_pages_from_manifest,
+)
 from crr.repository.protocol import RepositoryError
 
 log = get_logger(__name__)
@@ -184,7 +189,42 @@ class GoogleDriveRepository:
             self._api.upload(target.id, path, name=name)
             existing.add(name)
             self._children.pop(target.id, None)
-            log.info("repository.published", property=prop.id, folder=folder_name, name=name)
+            # As in the local repository: the shape of the artefact, never its name.
+            log.info(
+                "repository.published",
+                property=prop.id,
+                folder=folder_name,
+                kind=path.suffix.lstrip(".") or "file",
+                renamed=name != path.name,
+            )
+
+    def previous_pm_pages(self, prop: Property, period: PeriodId, work_dir: Path) -> int | None:
+        """PM source page count from the last period this property published (SPEC §6.8).
+
+        Drive is the archive here: the manifest sits beside the package it describes, so the
+        check reads the newest `output/build-manifest.json` from an earlier period.
+        """
+        earlier = [p for p in self.list_periods(prop) if p < period]
+        manager_folder, property_folder = self._property_path(prop)
+        for candidate in sorted(earlier, reverse=True):
+            output = self._path(
+                manager_folder,
+                property_folder,
+                self._registry.period_folder(candidate),
+                OUTPUT,
+            )
+            if output is None:
+                continue
+            manifest = self._child(output.id, "build-manifest.json")
+            if manifest is None:
+                continue
+            local = work_dir / "previous" / f"{prop.id}-{candidate}.json"
+            self._api.download(manifest.id, local)
+            pages = pm_pages_from_manifest(local)
+            if pages is not None:
+                log.info("gdrive.previous_manifest", property=prop.id, period=candidate)
+                return pages
+        return None
 
     # -- period preparation ------------------------------------------------------------
     def ensure_period_skeleton(self, prop: Property, period: PeriodId) -> dict[str, str]:

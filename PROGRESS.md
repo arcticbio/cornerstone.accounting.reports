@@ -33,9 +33,9 @@ PLAN.md defines the work and this file records what has been done.
 - [x] Confirmed present: `docs/` (SPEC, PLAN, DECISIONS, QUESTIONS, 2 × ANALYSIS), `config/` (`properties.yaml`, 4 schemas, 3 output definitions), `eval/golden/` (8 property label files + README). `crr validate-config` loads all 8 YAML files.
 - [x] PR opened: [#1 Cornerstone Report Runner v1](https://github.com/arcticbio/cornerstone.accounting.reports/pull/1) with the phase table in the description.
 
-**Acceptance:** `uv run crr version` → `crr 0.1.0`. Local gate green: `ruff check` + `ruff format
---check`, `mypy src` (4 files), `pytest -q` (7 passed), `crr validate-config` (8 YAML files),
-`crr eval --classifier golden` (stub). CI runs the same gate on PR #1.
+**Acceptance:** `uv run crr version` → `crr 0.1.0`. **CI green on PR #1** — run
+[34462978204](https://github.com/arcticbio/cornerstone.accounting.reports/actions/runs/34462978204),
+all three jobs.
 
 ### Environment notes (this container)
 
@@ -153,7 +153,11 @@ It reads and writes nothing outside that folder.
 - [x] `.github/workflows/build-period.yml`: all five dispatch inputs (`classifier` added alongside the four required, so a dry run against the bundle needs no code change), the quarterly cron present but commented, secrets and vars wired, manifests and `REVIEW.md` uploaded `if: always()`, and the SPEC §6.8 exit codes interpreted — 0 quiet, 2 a warning annotation, anything else fails the job.
 - [x] `docs/RUNBOOK.md` → "Running a build from GitHub Actions": where to click, what each input does, how to read a green/yellow/red result, where the manifests artifact is, how to work the review queue (including that a config fix — not a PDF edit — is the remedy), and which secrets and variables must exist.
 
-**Acceptance:** Partially evidenced. The Dockerfile and both workflows are shipped and held in place by 17 structural tests (`tests/unit/test_workflows.py`), but **the image has not been built and the workflows have not run**: this container has no Docker daemon (B-03) and GitHub Actions has left every job queued (B-02). The in-container golden build is the CI job's first step once a runner picks it up.
+**Acceptance:** **Met.** CI run [34462978204](https://github.com/arcticbio/cornerstone.accounting.reports/actions/runs/34462978204):
+the image builds (44 s), `crr version` runs, `/app/data` is proved absent, tesseract / ocrmypdf /
+ghostscript all answer *inside* the container, the golden build runs end to end in it (77 s,
+OCR included), and the image is pushed to GHCR as `:build-v1` and `:sha-<short>`.
+`build-period.yml` is dispatchable. Also held by 17 structural tests.
 
 ## Phase 8 — Azure Container Apps Job (deploy step gated)
 
@@ -162,7 +166,7 @@ It reads and writes nothing outside that folder.
 - [x] `.github/workflows/deploy.yml`: compiles the template *before* signing in, then what-if, then deploy — and **`what_if_only` defaults to true**, so a mis-click previews rather than deploys. CI compiles the template on every push in a credential-free `bicep` job.
 - [ ] **Gated (B-04):** needs `AZURE_CREDENTIALS` and a subscription / resource group, or an explicit "Actions is enough for now". This is the Phase 7 checkpoint question.
 
-**Acceptance:** The template, its README and the deploy workflow are shipped and held in place by 10 structural tests. `az bicep build` has **not** been run here — no Azure CLI in this container — but CI's `bicep` job runs it on every push with no credentials required. Deployment itself is gated (B-04).
+**Acceptance:** **Bicep compiles in CI** (`az bicep build`, credential-free `bicep` job, green in run 34462978204). The template, its README and the deploy workflow are also held by 10 structural tests. Deployment itself is gated (B-04).
 
 ## Phase 9 — Hardening, docs, second-period readiness
 
