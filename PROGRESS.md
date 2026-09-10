@@ -4,7 +4,7 @@ Single source of truth for build state. Claude Code ticks tasks here after each 
 commits. Humans read this to see where things stand. Mirrors `docs/PLAN.md`; if they diverge,
 PLAN.md defines the work and this file records what has been done.
 
-**Branch:** `claude/gifted-lamport-wwgenm` (session-scoped branch; D-15 — every reference to `build/v1` in these documents means this branch) · **PR:** [#1](https://github.com/arcticbio/cornerstone.accounting.reports/pull/1) · **Current phase:** 9 · **Last session note:** _(none yet)_
+**Branch:** `claude/gifted-lamport-wwgenm` (session-scoped branch; D-15 — every reference to `build/v1` in these documents means this branch) · **PR:** [#1](https://github.com/arcticbio/cornerstone.accounting.reports/pull/1) · **Current phase:** 9 (complete) · **Last session note:** _(none yet)_
 
 ## Session log
 
@@ -21,6 +21,7 @@ PLAN.md defines the work and this file records what has been done.
 | 2026-09-10 | 6 | Drive repository, fake-Drive tests, live tests green, 2026-09 skeleton created | Phase 7 |
 | 2026-09-10 | 7 | Dockerfile, CI image job, GHCR publish, build-period workflow, runbook | Phase 8 (tasks 1-3) |
 | 2026-09-10 | 8 | Bicep, infra README, deploy workflow; deploy step gated on credentials | Phase 9 |
+| 2026-09-10 | 9 | Drift rule, cost report, logging hygiene (one leak found and fixed), runbook, README, tag | v1.0.0 |
 
 ## Phase 0 — Repository hygiene and scaffold
 
@@ -170,15 +171,15 @@ OCR included), and the image is pushed to GHCR as `:build-v1` and `:sha-<short>`
 
 ## Phase 9 — Hardening, docs, second-period readiness
 
-- [ ] `docs/RUNBOOK.md` complete: quarterly checklist (place inputs → dispatch → check status → review queue handling → where outputs land), failure modes and fixes, how to add a property, how to add a manager (schema + output + golden labels + eval), how to change a prompt (eval before merge), model deprecation procedure.
-- [ ] `page_count_drift` review rule wired (needs "last manifest" lookup in the repository; local: scan `work/`; Drive: read previous period's manifest).
-- [ ] Cost report: `crr build` prints tokens and USD estimate; manifest carries it.
-- [ ] Structured logging review: no page text, no image bytes, no secrets in any log line (test with a log capture fixture).
-- [ ] README.md at repo root: what this is, 5-line quickstart, links to SPEC/PLAN/RUNBOOK.
-- [ ] Final `PROGRESS.md` summary: what was built, eval numbers, cost per run, open items.
+- [x] `docs/RUNBOOK.md` (332 lines): the quarterly checklist, preparing a period in Drive, running from Actions in screenshots-in-words, a failure-mode table covering all eight review codes plus every hard failure and what to do about each, adding a property, adding a manager, changing a prompt, and the model-deprecation procedure.
+- [x] `page_count_drift` wired end to end. `LocalFsRepository` scans `work/` for an earlier period's manifest; `GoogleDriveRepository` reads the newest published `build-manifest.json` from a prior period. The pipeline asks whichever repository it has, and a history lookup that fails never fails a build. Tested with a hand-placed prior manifest: 16 pages → 3 pages fires the rule, and no history fires nothing.
+- [x] `crr build` prints input / cache-read / cache-write / output tokens, API calls and the USD estimate, per run and per property; every manifest already carried `cost`.
+- [x] `tests/unit/test_logging_hygiene.py` runs a real build with structlog captured and asserts no page text, no tenant name, no path, no PDF or PNG bytes and no secret appears in any record — while confirming sha256s *are* logged. **It caught one leak:** `repository.published` logged the output filename, which carries the property's public name. Both repositories now log the artefact's shape, not its name.
+- [x] `README.md`: what the system is and why it is shaped this way, a five-line quickstart, the exit-code contract, and a map of the repository.
+- [x] See "v1.0.0 summary" at the foot of this file.
 - [ ] Tag `v1.0.0`.
 
-**Acceptance:** _(record evidence here when met)_
+**Acceptance:** `README.md` → `docs/RUNBOOK.md` takes someone who has never seen the repository from "the exports arrived" to "the packages are in Drive", including what to do with a review outcome. The `v1.0.0` tag is the last task.
 
 
 ## Eval results (append newest first)
@@ -211,3 +212,75 @@ Checked 2026-09-10 against `config/properties.yaml`.
 - Input filenames match `pm_source_filename` / `cornerstone_files` in `config/properties.yaml` exactly.
 - Bundle root retains `README.md`, `BUILD-RULES.md`, `index.json` from the earlier analysis, as instructed.
 - 5 `.DS_Store` files removed from the index and the working tree.
+
+
+---
+
+## v1.0.0 summary
+
+### What was built
+
+`crr` assembles the eight quarterly investor packages from two upstream sources. A vision model
+labels every page of every input — section, continuation, property record, orientation,
+confidence, one sentence of evidence — and nothing else in the system is a judgement call: the
+page plan is resolved from a per-manager output definition, composed with `pypdf`, and recorded
+in a manifest that names every source sha256, every label, every dropped page and the exact
+config version that produced it (D-01).
+
+| Layer | What it is |
+|---|---|
+| `config/` | 4 source schemas, 3 output definitions, the property registry. **A new property or a new manager is a config change, not a code change** (D-02). |
+| `preprocess/` | text-layer probe, `ocrmypdf` (cached by content hash), `pypdfium2` rendering capped at 1568 px |
+| `classify/` | the Anthropic classifier (forced tool, closed enum, two 1-hour cached prefixes), the golden classifier, and the footer check that cross-examines both |
+| `segment/` · `resolve/` | run-length segmentation, the address grammar, flow resolution, and the `unaccounted_pages` set that proves no page was silently lost (D-11) |
+| `compose/` · `manifest/` · `review/` | deterministic composition, the audit record, and the gate that sends an ambiguous package to review rather than to investors (D-12) |
+| `repository/` | local disk and Google Drive, neither of which ever deletes or overwrites |
+| `evaluate/` | page, continuation, record, orientation and boundary-F1 scoring with a committed markdown report and a CI gate |
+
+Hosting: one container image, published to GHCR, run today by GitHub Actions and ready for the
+Azure Container Apps Job in `infra/`.
+
+### Numbers
+
+| | |
+|---|---|
+| Golden builds | **8/8 `BUILT`**, page-for-page equal to the frozen `expected_output` |
+| Eval (golden classifier) | page accuracy **1.0000**, continuation **1.0000**, record **1.0000**, orientation **1.0000**, boundary F1 **1.0000** over 31 documents / 172 pages |
+| Eval (real model) | **not yet run** — no `ANTHROPIC_API_KEY` in this environment (B-01) |
+| Tests | **375 passed, 5 skipped** (the `api` tests), 94 % coverage on `src/crr` |
+| CI | green on all three jobs, image published to GHCR |
+| Invariants | all six of SPEC §9, over the eight real builds |
+
+### Cost per run
+
+**Not yet measured** — that needs one keyed run (B-01), after which every manifest records it
+exactly. The modelled estimate, from the token shapes the code actually sends and the built-in
+price table:
+
+| | |
+|---|---|
+| API calls | 172 (one per page of every input document) |
+| Input tokens | ~0.55 M uncached (page image + page text) |
+| Cache reads | ~4.4 M (the per-document prefix, read on every page after the first) |
+| Cache writes | ~0.49 M (the prefix, written once per document) |
+| Output tokens | ~0.016 M |
+| **Estimate** | **~$10 per full 8-property run**, ~$1.30 per property, on `claude-opus-5` at list price |
+
+Higher than the ~$5 D-09 anticipated, and the reason is the exemplar images: up to two per
+section per document is a large cached prefix. If the real number matters, the first lever is
+`MAX_EXEMPLARS_PER_SECTION`, and `crr eval` will say what accuracy it costs.
+
+### Open items
+
+| | |
+|---|---|
+| **B-01** | `ANTHROPIC_API_KEY` unset → the real-model smoke run, eval and build are unrun. Everything else is built and tested against a fake client. |
+| **B-04** | Azure deployment gated on `AZURE_CREDENTIALS`, or on a decision that Actions is enough. This is the Phase 7 checkpoint. |
+| A-01 … A-07 | Seven assumptions taken where the spec was silent or wrong, each recorded in `QUESTIONS.md` and amended into `SPEC.md` in the same commit. The three worth a second look: `temperature` cannot be sent to this model family (A-02), exemplar images cannot live in the system prompt (A-03), and the local repository publishes under `work/published` so a build never writes into the read-only bundle (A-06). |
+
+### What the second period will test
+
+The June bundle is one period of evidence. Three things are rules on one observation and could
+turn out to be habits: the Missoula drop list, WayPointe's two-record shape, and Timber Place's
+missing distribution schedule. All three are config, and all three surface as review reasons
+rather than silent behaviour if they change.
