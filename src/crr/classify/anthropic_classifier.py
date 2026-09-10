@@ -58,8 +58,21 @@ def build_tool(schema: SourceSchema) -> ToolParam:
                 "is_continuation": {"type": "boolean"},
                 "record_qualifier": {"type": ["string", "null"]},
                 "orientation": {"type": "string", "enum": [o.value for o in Orientation]},
-                "confidence": {"type": "number", "minimum": 0, "maximum": 1},
-                "evidence": {"type": "string", "maxLength": 300},
+                # No `minimum`/`maximum` here, and no `maxLength` on the string: the API
+                # rejects JSON Schema range and length keywords in a tool's input_schema
+                # ("For 'number' type, properties maximum, minimum are not supported").
+                # The bounds live in the descriptions for the model, and are enforced for
+                # real in `_parse` — PageClassification.confidence is Field(ge=0, le=1), and
+                # evidence is truncated. An out-of-range value fails validation, which makes
+                # the page `unknown` and sends the build to review (D-12).
+                "confidence": {
+                    "type": "number",
+                    "description": "How certain this label is, from 0.0 to 1.0 inclusive.",
+                },
+                "evidence": {
+                    "type": "string",
+                    "description": "What on the page decided it. At most 300 characters.",
+                },
             },
             "required": [
                 "section_id",

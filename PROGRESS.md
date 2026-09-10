@@ -4,7 +4,7 @@ Single source of truth for build state. Claude Code ticks tasks here after each 
 commits. Humans read this to see where things stand. Mirrors `docs/PLAN.md`; if they diverge,
 PLAN.md defines the work and this file records what has been done.
 
-**Branch:** `claude/gifted-lamport-wwgenm` (session-scoped branch; D-15 — every reference to `build/v1` in these documents means this branch) · **PR:** [#1](https://github.com/arcticbio/cornerstone.accounting.reports/pull/1) · **Current phase:** 9 (complete) · **Tag:** `v1.0.0` pushed · **Last session note:** _(none yet)_
+**Branch:** `claude/ecstatic-goodall-ji7yur` (session-scoped branch; D-15 — every reference to `build/v1` in these documents means this branch) · **PR:** [#2](https://github.com/arcticbio/cornerstone.accounting.reports/pull/2) (v1 landed via [#1](https://github.com/arcticbio/cornerstone.accounting.reports/pull/1)) · **Current phase:** 9 (complete) · **Tag:** `v1.0.0` pushed · **Last session note:** _(none yet)_
 
 ## Session log
 
@@ -23,6 +23,7 @@ PLAN.md defines the work and this file records what has been done.
 | 2026-09-10 | 8 | Bicep, infra README, deploy workflow; deploy step gated on credentials | Phase 9 |
 | 2026-09-10 | 9 | Drift rule, cost report, logging hygiene (one leak found and fixed), runbook, README, tag | v1.0.0 |
 | 2026-09-10 | post-v1 | `v1.0.0` pushed by the user; CI green on the final tree; version bumped 0.1.0 → 1.0.0; Azure + credentials setup docs written | Azure bootstrap (user), then B-01/B-04 |
+| 2026-09-10 | post-v1 | B-01 root-caused: Claude Code on the web **reserves** `ANTHROPIC_API_KEY` and strips it — not an injection delay. Key now arrives as `CRR_ANTHROPIC_API_KEY`; `pytest -m api` green (5/5), which exposed and fixed a tool-schema bug that would have failed every real-model run | `crr eval --classifier anthropic --gate` (~$10, needs the user's go-ahead), then B-04 |
 
 ## Phase 0 — Repository hygiene and scaffold
 

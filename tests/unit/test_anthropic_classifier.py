@@ -290,3 +290,40 @@ class _HttpResponse:
         self.status_code = status_code
         self.headers: dict[str, str] = {}
         self.request = None
+
+
+def test_tool_schema_avoids_keywords_the_api_rejects() -> None:
+    """The Messages API rejects JSON Schema range/length keywords in a tool's input_schema.
+
+    This is invisible to every other test in this file, which drives a fake client: the
+    schema is only validated server-side. It cost a full round of `pytest -m api` to find
+    ("tools.0.custom: For 'number' type, properties maximum, minimum are not supported"),
+    so it is pinned here. The bounds are enforced in `_parse` via PageClassification.
+    """
+    tool = build_tool(SCHEMA)
+    banned = {
+        "minimum",
+        "maximum",
+        "exclusiveMinimum",
+        "exclusiveMaximum",
+        "maxLength",
+        "minLength",
+        "multipleOf",
+        "pattern",
+        "minItems",
+        "maxItems",
+    }
+
+    def walk(node: object, path: str = "") -> list[str]:
+        found: list[str] = []
+        if isinstance(node, dict):
+            for key, value in node.items():
+                if key in banned:
+                    found.append(f"{path}.{key}")
+                found.extend(walk(value, f"{path}.{key}"))
+        elif isinstance(node, list):
+            for i, item in enumerate(node):
+                found.extend(walk(item, f"{path}[{i}]"))
+        return found
+
+    assert walk(tool["input_schema"]) == []

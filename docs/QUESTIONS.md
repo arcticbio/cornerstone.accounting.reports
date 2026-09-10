@@ -98,20 +98,45 @@ December, so "the previous calendar month" is the period a scheduled run is for.
 *(format: `B-nn · <what is needed> · <what is blocked> · <what continues meanwhile>`)*
 
 **B-01 · `ANTHROPIC_API_KEY` does not reach the Claude Code session container.**
-*Status 2026-09-10:* the user has the key and is setting it for GitHub Actions (production).
-This session still reports `ANTHROPIC_API_KEY: not set`, and `GOOGLE_SERVICE_ACCOUNT_B64` /
-`CRR_GDRIVE_ROOT_FOLDER_ID` both arrive — so the variable is not on the environment this session
-uses, or was added after the container started. Environment variables are injected at container
-start, so a **new session** is what picks it up. See `docs/SETUP-CREDENTIALS.md`.
-*Blocked:* the Phase 3 real-model smoke run, the `api`-marked integration tests, and the Phase 5
-real-model eval and build. *What continues:* everything else — the classifier is unit-tested
-against a fake client, and `GoldenClassifier` drives the whole pipeline end to end.
-*Two commands close it out* in a session that can see the key:
+*Status 2026-09-10 (second session): root-caused, fixed, and half closed.*
+The cause was not injection timing. **Claude Code on the web reserves the name
+`ANTHROPIC_API_KEY`** — sessions authenticate their own model calls through the user's Anthropic
+account, so the platform strips that variable before the container starts. The cloud-environment
+editor states it under the variables box. Evidence that separates it from a timing problem:
+`CRR_MODEL`, `CRR_GDRIVE_ROOT_FOLDER_ID` and `GOOGLE_SERVICE_ACCOUNT_B64` all arrive from the same
+environment in the same session while `ANTHROPIC_API_KEY` is empty. The earlier advice — set it
+again and start a new session — could never have worked.
+*Fix:* `settings.py` reads `AliasChoices("CRR_ANTHROPIC_API_KEY", "ANTHROPIC_API_KEY")`. The user
+renamed the variable and the key is now live in-session. GitHub Actions and Azure are unaffected
+and keep the conventional name; `build-period.yml` is unchanged.
+
+*First command — done, and it found a production bug:*
 
 ```
-uv run pytest -m api
+uv run pytest -m api        # 5 passed
+```
+
+The first real API call of the project's life returned
+`400 tools.0.custom: For 'number' type, properties maximum, minimum are not supported`. The
+forced tool's `input_schema` carried `minimum`/`maximum` on `confidence` and `maxLength` on
+`evidence`; the Messages API rejects those keywords. Every unit test drives a fake client, so
+nothing caught it — **`--classifier anthropic` had never actually run, and would have failed on
+its first production build.** Removed; the bounds now live in the field descriptions and are
+enforced where they always were, in `_parse` (`PageClassification.confidence` is
+`Field(ge=0, le=1)`), so an out-of-range value still makes the page `unknown` and sends the build
+to review (D-12). `tests/unit/test_anthropic_classifier.py` now asserts the schema carries no
+keyword the API rejects. The cache test passes, so the 1-hour prefix cache reads back as designed.
+
+*Second command — not run, needs a decision:*
+
+```
 uv run crr eval --classifier anthropic --gate
 ```
+
+~172 API calls over all 31 golden documents, estimated ~$10. Left for the user to authorise; it is
+the only thing between here and a measured (rather than modelled) accuracy and cost-per-run
+figure. *Blocked meanwhile:* the Phase 5 real-model eval and build, and the measured cost.
+*What continues:* everything else — golden-classifier builds are unaffected.
 
 **B-02 · ~~GitHub Actions has not run CI on PR #1.~~ RESOLVED 2026-09-10.**
 Green on the final tree `943e664`: runs
