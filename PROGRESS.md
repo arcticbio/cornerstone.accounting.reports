@@ -4,7 +4,7 @@ Single source of truth for build state. Claude Code ticks tasks here after each 
 commits. Humans read this to see where things stand. Mirrors `docs/PLAN.md`; if they diverge,
 PLAN.md defines the work and this file records what has been done.
 
-**Branch:** `claude/gifted-lamport-wwgenm` (session-scoped branch; D-15 — every reference to `build/v1` in these documents means this branch) · **PR:** [#1](https://github.com/arcticbio/cornerstone.accounting.reports/pull/1) · **Current phase:** 9 (complete) · **Tag:** `v1.0.0` pushed · **Last session note:** _(none yet)_
+**Branch:** `main` — v1 landed there via [#1](https://github.com/arcticbio/cornerstone.accounting.reports/pull/1) (built on the session branch `claude/gifted-lamport-wwgenm`; D-15 — every reference to `build/v1` in these documents means the release line, now `main`) · **Current phase:** 9 (complete) · **Tag:** `v1.0.0` pushed · **Last session note:** first keyed run green; B-07 fixed in [#3](https://github.com/arcticbio/cornerstone.accounting.reports/pull/3)
 
 ## Session log
 
