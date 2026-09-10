@@ -13,7 +13,183 @@
     }
   ],
   "expected_output_page_count": 25,
-  "expected_output": null,
+  "expected_output": [
+    {
+      "output_page": 1,
+      "doc_role": "cornerstone_balance_sheet",
+      "section": "balance_sheet",
+      "record": null,
+      "source_page": 1
+    },
+    {
+      "output_page": 2,
+      "doc_role": "cornerstone_profit_loss_ytd",
+      "section": "profit_loss_ytd_comparison",
+      "record": null,
+      "source_page": 1
+    },
+    {
+      "output_page": 3,
+      "doc_role": "pm_source",
+      "section": "cover_letter",
+      "record": null,
+      "source_page": 1
+    },
+    {
+      "output_page": 4,
+      "doc_role": "pm_source",
+      "section": "managers_report",
+      "record": null,
+      "source_page": 2
+    },
+    {
+      "output_page": 5,
+      "doc_role": "pm_source",
+      "section": "aged_receivable",
+      "record": null,
+      "source_page": 3
+    },
+    {
+      "output_page": 6,
+      "doc_role": "pm_source",
+      "section": "rent_roll_lease_charges",
+      "record": null,
+      "source_page": 4
+    },
+    {
+      "output_page": 7,
+      "doc_role": "pm_source",
+      "section": "rent_roll_lease_charges",
+      "record": null,
+      "source_page": 5
+    },
+    {
+      "output_page": 8,
+      "doc_role": "pm_source",
+      "section": "budget_variance_report",
+      "record": null,
+      "source_page": 6
+    },
+    {
+      "output_page": 9,
+      "doc_role": "pm_source",
+      "section": "budget_comparison_cash_flow",
+      "record": null,
+      "source_page": 7
+    },
+    {
+      "output_page": 10,
+      "doc_role": "pm_source",
+      "section": "budget_comparison_cash_flow",
+      "record": null,
+      "source_page": 8
+    },
+    {
+      "output_page": 11,
+      "doc_role": "pm_source",
+      "section": "operating_statement_summary",
+      "record": null,
+      "source_page": 9
+    },
+    {
+      "output_page": 12,
+      "doc_role": "pm_source",
+      "section": "cash_flow_statement",
+      "record": null,
+      "source_page": 10
+    },
+    {
+      "output_page": 13,
+      "doc_role": "pm_source",
+      "section": "cash_flow_statement",
+      "record": null,
+      "source_page": 11
+    },
+    {
+      "output_page": 14,
+      "doc_role": "pm_source",
+      "section": "cash_flow_statement",
+      "record": null,
+      "source_page": 12
+    },
+    {
+      "output_page": 15,
+      "doc_role": "pm_source",
+      "section": "balance_sheet",
+      "record": null,
+      "source_page": 13
+    },
+    {
+      "output_page": 16,
+      "doc_role": "pm_source",
+      "section": "balance_sheet",
+      "record": null,
+      "source_page": 14
+    },
+    {
+      "output_page": 17,
+      "doc_role": "pm_source",
+      "section": "trial_balance",
+      "record": null,
+      "source_page": 15
+    },
+    {
+      "output_page": 18,
+      "doc_role": "pm_source",
+      "section": "trial_balance",
+      "record": null,
+      "source_page": 16
+    },
+    {
+      "output_page": 19,
+      "doc_role": "pm_source",
+      "section": "general_ledger",
+      "record": null,
+      "source_page": 17
+    },
+    {
+      "output_page": 20,
+      "doc_role": "pm_source",
+      "section": "general_ledger",
+      "record": null,
+      "source_page": 18
+    },
+    {
+      "output_page": 21,
+      "doc_role": "pm_source",
+      "section": "general_ledger",
+      "record": null,
+      "source_page": 19
+    },
+    {
+      "output_page": 22,
+      "doc_role": "pm_source",
+      "section": "general_ledger",
+      "record": null,
+      "source_page": 20
+    },
+    {
+      "output_page": 23,
+      "doc_role": "pm_source",
+      "section": "general_ledger",
+      "record": null,
+      "source_page": 21
+    },
+    {
+      "output_page": 24,
+      "doc_role": "pm_source",
+      "section": "general_ledger",
+      "record": null,
+      "source_page": 22
+    },
+    {
+      "output_page": 25,
+      "doc_role": "pm_source",
+      "section": "general_ledger",
+      "record": null,
+      "source_page": 23
+    }
+  ],
   "documents": [
     {
       "role": "pm_source",

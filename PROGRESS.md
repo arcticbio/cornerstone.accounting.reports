@@ -4,7 +4,7 @@ Single source of truth for build state. Claude Code ticks tasks here after each 
 commits. Humans read this to see where things stand. Mirrors `docs/PLAN.md`; if they diverge,
 PLAN.md defines the work and this file records what has been done.
 
-**Branch:** `claude/gifted-lamport-wwgenm` (session-scoped branch; D-15 — every reference to `build/v1` in these documents means this branch) · **PR:** [#1](https://github.com/arcticbio/cornerstone.accounting.reports/pull/1) · **Current phase:** 2 · **Last session note:** _(none yet)_
+**Branch:** `claude/gifted-lamport-wwgenm` (session-scoped branch; D-15 — every reference to `build/v1` in these documents means this branch) · **PR:** [#1](https://github.com/arcticbio/cornerstone.accounting.reports/pull/1) · **Current phase:** 3 · **Last session note:** _(none yet)_
 
 ## Session log
 
@@ -14,6 +14,7 @@ PLAN.md defines the work and this file records what has been done.
 | 2026-09-10 | 0 | Bundle moved to `data/bundle/2026-06`, `.DS_Store` purged, bundle verified | Phase 0, scaffold |
 | 2026-09-10 | 0 | Scaffold, settings, CLI, CI, PR #1 opened | Phase 1 |
 | 2026-09-10 | 1 | Models, render/text/OCR/inspect, 31-document sweep, McCathren labels visually verified | Phase 2 |
+| 2026-09-10 | 2 | Config validation, address grammar, segmenter, resolver; `expected_output` frozen for all 8 | Phase 3 |
 
 ## Phase 0 — Repository hygiene and scaffold
 
@@ -57,13 +58,21 @@ PLAN.md defines the work and this file records what has been done.
 
 ## Phase 2 — Config loading, validation, address grammar, resolver
 
-- [ ] `config/` loaders for schemas, outputs, properties with full validation per SPEC §4. `crr validate-config` real.
-- [ ] `resolve/address.py`: parser for the grammar in SPEC §5 with tests for every production and every error.
-- [ ] `resolve/resolver.py`: `ResolvedSection[] + OutputDefinition + Property → PlanItem[]`, including `for_each_record`, `pm:*` expansion, `drop`, optional handling, bookmark rendering.
-- [ ] `segment/`: run-length grouping + cardinality validation per SPEC §6.4, with tests for: continuation break, record change, back-to-back same section, `unknown` isolation, blank continuation page.
-- [ ] Tests that build `ResolvedSection`s straight from `eval/golden/*.json` and assert the resolved plan matches the golden `expected_output` for all 8 properties (this tests resolver + output definitions without any PDF I/O). **Note:** `expected_output` is not yet in the golden files — generate it here from the output definitions, review it by hand against SPEC §1 / DECISIONS D-03/D-06/D-07, then commit it into the golden JSON as the fixed expectation.
+- [x] `config/` loaders with full SPEC §4 validation. `crr validate-config` is real: it collects *every* problem across all three formats into one report rather than stopping at the first. Two shipped-config fields were absent from the SPEC §4.1 table (`fingerprint.ocr_quality_note`, integer `typical_pages`) — both documentation; SPEC amended to match the config as shipped.
+- [x] `resolve/address.py`: hand-written parser; 28 tests covering every production and 15 distinct error messages, each naming the production that failed.
+- [x] `resolve/resolver.py`: `for_each_record`, `pm:*` in source order minus drops, `#n` occurrence, per-record expansion in `properties.yaml` order, optional flow items and optional sources, bookmark rendering (with the single-record ` - {record_name}` suffix dropped), autorotate transforms, and `unaccounted_pages` — the D-11 evidence that no page is silently lost.
+- [x] `segment/`: run-length grouping with qualifier inheritance on continuation pages, `unknown` isolation, cardinality checks, and `record_qualifier` → record id mapping (SPEC §5 rule 3). All five required cases tested, plus the mapping rules.
+- [x] `expected_output` generated for all 8 properties, reviewed by hand against SPEC §1 and D-03/D-06/D-07, and frozen into the golden files. Every property resolves to exactly its `expected_output_page_count` with **zero review reasons and zero unaccounted pages**. `tests/eval/test_golden_plans.py` (37 tests) now pins it, including the D-06 front-matter rule (WayPointe included — the published package put its block last, we do not), D-07 record order, the Missoula drop list, and the Timber Place `rotate:90`.
 
-**Acceptance:** _(record evidence here when met)_
+**Acceptance:** `crr validate-config` passes on the shipped config and fails on each of the six SPEC §9.6 bad cases (`tests/unit/fixtures/bad-config/`, one broken thing per tree). Resolver test green for all 8 properties. Gate: ruff, `mypy src`, 170 tests.
+
+**Hand review of `expected_output` (the record worth keeping):** Missoula properties emit front
+matter + P&L Comparison + Unit Availability + Owner Statement and drop the other six reports,
+matching `ANALYSIS-assembly-rules` and D-03 — the unsourced Rent Manager Balance Sheet is not
+recreated. WayPointe emits WayPointe AH LP before 128 S. 5th (D-07, the reverse of the published
+package) and its Cornerstone block leads (D-06, also the reverse of the published package).
+Timber Place has two front-matter pages, its absent distribution schedule handled as an optional
+source rather than an exception. Cobalt and McCathren pass through every PM page in source order.
 
 ## Phase 3 — Classifier
 
