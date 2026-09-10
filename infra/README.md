@@ -24,20 +24,20 @@ secret in a template is a secret in source control and in every deployment log.
 Prerequisites: an Azure subscription, a resource group, and a Key Vault holding two secrets.
 
 ```bash
-az group create --name crr-rg --location westus2
+az group create --name rg-cust-cornerstone --location westus2
 
-az keyvault create --name crr-kv --resource-group crr-rg --location westus2 \
+az keyvault create --name crr-kv-accounting --resource-group rg-cust-cornerstone --location westus2 \
   --enable-rbac-authorization true
 
-az keyvault secret set --vault-name crr-kv --name anthropic-api-key        --value "sk-ant-..."
-az keyvault secret set --vault-name crr-kv --name google-service-account-b64 --value "$(base64 -w0 service-account.json)"
+az keyvault secret set --vault-name crr-kv-accounting --name anthropic-api-key        --value "sk-ant-..."
+az keyvault secret set --vault-name crr-kv-accounting --name google-service-account-b64 --value "$(base64 -w0 service-account.json)"
 
 az deployment group create \
-  --resource-group crr-rg \
+  --resource-group rg-cust-cornerstone \
   --template-file infra/main.bicep \
   --parameters \
       namePrefix=crr \
-      keyVaultName=crr-kv \
+      keyVaultName=crr-kv-accounting \
       gdriveRootFolderId=1_tUMelVG8trnjPmJWul0YXo23VgWgdSc \
       image=ghcr.io/arcticbio/crr:build-v1
 ```
@@ -48,8 +48,8 @@ The job authenticates to Key Vault with a system-assigned identity, which does n
 the job does. Grant it read access once:
 
 ```bash
-principal=$(az deployment group show -g crr-rg -n main --query properties.outputs.principalId.value -o tsv)
-vault=$(az keyvault show -n crr-kv --query id -o tsv)
+principal=$(az deployment group show -g rg-cust-cornerstone -n main --query properties.outputs.principalId.value -o tsv)
+vault=$(az keyvault show -n crr-kv-accounting --query id -o tsv)
 
 az role assignment create \
   --assignee-object-id "$principal" \
@@ -66,22 +66,22 @@ The schedule fires quarterly. To run one now:
 
 ```bash
 # The period just ended — same thing the schedule does.
-az containerapp job start --name crr-quarterly --resource-group crr-rg
+az containerapp job start --name crr-quarterly --resource-group rg-cust-cornerstone
 
 # A specific period, or one property.
-az containerapp job start --name crr-quarterly --resource-group crr-rg \
+az containerapp job start --name crr-quarterly --resource-group rg-cust-cornerstone \
   --args "build --period 2026-09 --repo gdrive --classifier anthropic --property fort-grounds"
 
 # A smoke test that needs neither Drive nor the bundle.
-az containerapp job start --name crr-quarterly --resource-group crr-rg --args "version"
-az containerapp job start --name crr-quarterly --resource-group crr-rg --args "validate-config"
+az containerapp job start --name crr-quarterly --resource-group rg-cust-cornerstone --args "version"
+az containerapp job start --name crr-quarterly --resource-group rg-cust-cornerstone --args "validate-config"
 ```
 
 Watch it:
 
 ```bash
-az containerapp job execution list --name crr-quarterly --resource-group crr-rg -o table
-az containerapp job logs show --name crr-quarterly --resource-group crr-rg --follow
+az containerapp job execution list --name crr-quarterly --resource-group rg-cust-cornerstone -o table
+az containerapp job logs show --name crr-quarterly --resource-group rg-cust-cornerstone --follow
 ```
 
 ## Exit codes
@@ -97,15 +97,15 @@ The job pins a tag, not a digest. Pushing a new `:build-v1` is enough; the next 
 it. To pin a release instead:
 
 ```bash
-az deployment group create -g crr-rg --template-file infra/main.bicep \
-  --parameters keyVaultName=crr-kv gdriveRootFolderId=<id> image=ghcr.io/arcticbio/crr:v1.0.0
+az deployment group create -g rg-cust-cornerstone --template-file infra/main.bicep \
+  --parameters keyVaultName=crr-kv-accounting gdriveRootFolderId=<id> image=ghcr.io/arcticbio/crr:v1.0.0
 ```
 
 ## Turning the schedule off
 
 ```bash
-az deployment group create -g crr-rg --template-file infra/main.bicep \
-  --parameters keyVaultName=crr-kv gdriveRootFolderId=<id> scheduleEnabled=false
+az deployment group create -g rg-cust-cornerstone --template-file infra/main.bicep \
+  --parameters keyVaultName=crr-kv-accounting gdriveRootFolderId=<id> scheduleEnabled=false
 ```
 
 `scheduleEnabled=false` parks the cron on 31 February, which never comes. Manual starts still

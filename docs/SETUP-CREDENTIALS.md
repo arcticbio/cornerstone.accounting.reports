@@ -24,7 +24,7 @@ work, and they are independent:
 | 3 | **Claude Code cloud environment variable** — must be named `CRR_ANTHROPIC_API_KEY` | Claude running `crr eval --classifier anthropic` in a session | No — development only |
 | 4 | Your own shell / `.env` | running `crr` on your laptop | No — optional |
 
-Do **1** now. Do **2** when you deploy Azure (`docs/SETUP-AZURE.md` step 4 covers it). **3** is
+Do **1** now. Do **2** when you deploy Azure (`docs/SETUP-AZURE.md` step 2, or `docs/SETUP-AZURE-PORTAL.md` §1.6, covers it). **3** is
 only so Claude can measure real-model accuracy for you; nothing in production depends on it.
 
 ### 1. GitHub Actions repository secret — do this one

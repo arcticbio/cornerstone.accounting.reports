@@ -58,18 +58,20 @@ deployment fails with `MissingSubscriptionRegistration` if you skip this.
 
 1. Top search box → **Resource groups** → open it.
 2. Click **+ Create**.
-3. **Subscription:** yours. **Resource group:** `crr-rg`. **Region:** pick one near you —
-   `West US 2` matches the CLI document's default. Container Apps is not available in every
-   region; if yours is missing from the list in 3.x below, come back and use a region that is.
+3. **Subscription:** yours. **Resource group:** `rg-cust-cornerstone`. **Region:** `West US 2`.
+   Container Apps is not available in every region; `West US 2` is, which is why it is the one
+   used throughout. Everything else inherits this region, so pick it here and never again.
 4. **Review + create** → **Create**.
 
 ## 1.4 Create the Key Vault
 
 1. Top search box → **Key vaults** → **+ Create**.
 2. **Basics** tab:
-   - **Resource group:** `crr-rg`
-   - **Key vault name:** must be globally unique — try `crr-kv-<something-short>`. Note it down.
-   - **Region:** same as the resource group.
+   - **Resource group:** `rg-cust-cornerstone`
+   - **Key vault name:** `crr-kv-accounting`. Vault names are globally unique across all of
+     Azure, so if you are rebuilding this from scratch and the name is taken, add a suffix and
+     use your name everywhere this document says `crr-kv-accounting`.
+   - **Region:** `West US 2`, same as the resource group.
    - **Pricing tier:** Standard.
    - **Days to retain deleted vaults:** leave the default. **Purge protection:** leave disabled
      unless your policy requires it — with it on, a vault of this name cannot be recreated for
@@ -121,7 +123,7 @@ something the portal will do for you.
    ```bash
    base64 -w0 service-account.json > sa.b64
    az keyvault secret set \
-     --vault-name crr-kv-<yours> \
+     --vault-name crr-kv-accounting \
      --name google-service-account-b64 \
      --file sa.b64 \
      --output none
@@ -161,14 +163,39 @@ This is the portal equivalent of `az ad sp create-for-rbac`.
 7. **Description:** `github-actions`. **Expires:** 12 or 24 months — put a calendar reminder,
    because deploys fail the day it expires.
 8. **Add**.
-9. **Copy the `Value` column now.** It is shown once and never again. (The *Secret ID* is not
-   the password — you want **Value**.)
+9. **Copy the `Value` column now.** It is shown in full exactly once — the moment the page
+   reloads after **Add**. Navigate away and it is masked forever.
+
+> ### The single most common mistake in this whole document
+>
+> The **Client secrets** table has two columns that both look like the answer:
+>
+> | Column | What it is | Looks like |
+> |---|---|---|
+> | **Value** | ✅ the password — **this is what you want** | ~40 characters, mixed case, usually containing `~`, `.` or `-`, e.g. `Xy8Q~aB3...` |
+> | **Secret ID** | ❌ an internal identifier, useless for signing in | a GUID: `xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx` |
+>
+> Copying the Secret ID gets you this at the sign-in step, and nothing else in the run explains
+> it:
+>
+> ```
+> AADSTS7000215: Invalid client secret provided. Ensure the secret being sent in the
+> request is the client secret value, not the client secret ID.
+> ```
+>
+> **The check that catches it:** three of the four values in 1.9 *are* GUIDs, so a GUID in the
+> `clientSecret` slot looks perfectly plausible. It is not. If your `clientSecret` matches the
+> 8-4-4-4-12 hex shape, it is the Secret ID and the deploy will fail.
+>
+> **If you already navigated away and the Value is masked, it is gone** — it cannot be
+> recovered. Delete that secret with the wastebasket icon, do steps 6–9 again, and copy the
+> **Value** this time.
 
 ## 1.8 Give the app permission to deploy
 
 ### Contributor on the resource group
 
-1. Top search box → **Resource groups** → `crr-rg`.
+1. Top search box → **Resource groups** → `rg-cust-cornerstone`.
 2. Left menu → **Access control (IAM)** → **+ Add** → **Add role assignment**.
 3. **Role:** **Contributor** → **Next**.
 4. **Members:** *User, group, or service principal* → **+ Select members** → search
@@ -199,8 +226,21 @@ GitHub needs these four values as one JSON blob. Build it in a text editor:
 }
 ```
 
-Keep the braces. Do not add trailing commas. Nothing else is needed — the longer JSON that the
-CLI prints contains endpoint URLs that the login action fills in itself.
+Where each one comes from, and what a correct value looks like:
+
+| Field | Where in the portal | Shape |
+|---|---|---|
+| `clientId` | 1.7 → app **Overview** → *Application (client) ID* | GUID |
+| `clientSecret` | 1.7 → **Certificates & secrets** → the **Value** column | **not a GUID** — ~40 mixed characters |
+| `subscriptionId` | 1.1 → **Subscriptions** | GUID |
+| `tenantId` | 1.7 → app **Overview** → *Directory (tenant) ID* | GUID |
+
+**Three GUIDs and one that is not.** If all four of your values are GUIDs, you have pasted the
+Secret ID into `clientSecret` — go back to 1.7.
+
+Keep the braces. Do not add trailing commas. Do not wrap the values in extra quotes or leave a
+trailing newline inside one. Nothing else is needed — the longer JSON that the CLI prints
+contains endpoint URLs that the login action fills in itself.
 
 ---
 
@@ -224,8 +264,8 @@ Go to **<https://github.com/arcticbio/cornerstone.accounting.reports/settings/se
 
 | Name | Value |
 |---|---|
-| `AZURE_RESOURCE_GROUP` | `crr-rg` |
-| `AZURE_KEY_VAULT_NAME` | your vault name from 1.4 |
+| `AZURE_RESOURCE_GROUP` | `rg-cust-cornerstone` |
+| `AZURE_KEY_VAULT_NAME` | `crr-kv-accounting` |
 | `CRR_GDRIVE_ROOT_FOLDER_ID` | `1_tUMelVG8trnjPmJWul0YXo23VgWgdSc` |
 
 Variables, not Secrets — the workflow reads them as `vars.*`, and a resource group name you
@@ -271,8 +311,12 @@ Apps Environment, a Container Apps Job, and the job's identity. Nothing has chan
 If it fails here:
 
 - *Missing repository variables* — the error names which; go back to 2.2.
-- *Sign-in failure* — `AZURE_CREDENTIALS` is malformed or the client secret was mistyped.
-- *AuthorizationFailed* — the Contributor assignment in 1.8 did not apply to `crr-rg`.
+- *`AADSTS7000215: Invalid client secret`* — the `clientSecret` in `AZURE_CREDENTIALS` is
+  wrong, and nine times in ten it is the **Secret ID** pasted instead of the **Value**.
+  See the boxed warning in 1.7. A secret past its expiry date gives `AADSTS7000222`.
+- *Sign-in failure with no AADSTS code* — `AZURE_CREDENTIALS` is not valid JSON: a missing
+  brace, a smart quote from a word processor, or a trailing comma.
+- *AuthorizationFailed* — the Contributor assignment in 1.8 did not apply to `rg-cust-cornerstone`.
 
 5. When the preview looks right, **Run workflow** again with **Preview** **unticked**.
 
@@ -315,14 +359,14 @@ commands you need to override the arguments, and that needs Cloud Shell.
 Click **`>_`** in the top bar and run:
 
 ```bash
-az containerapp job start --name crr-quarterly --resource-group crr-rg --args "version"
-az containerapp job start --name crr-quarterly --resource-group crr-rg --args "validate-config"
+az containerapp job start --name crr-quarterly --resource-group rg-cust-cornerstone --args "version"
+az containerapp job start --name crr-quarterly --resource-group rg-cust-cornerstone --args "validate-config"
 ```
 
 Then watch:
 
 ```bash
-az containerapp job execution list --name crr-quarterly --resource-group crr-rg --output table
+az containerapp job execution list --name crr-quarterly --resource-group rg-cust-cornerstone --output table
 ```
 
 `version` should print `crr 1.0.0`. `validate-config` should list 4 schemas, 3 output
@@ -374,7 +418,7 @@ alternative: Container App Job → **Job settings** → change the cron expressi
 April, July and October — closing December, March, June and September. Edit `cronExpression` in
 `infra/main.bicep` and redeploy, so the repository stays the source of truth.
 
-**Delete everything.** Resource groups → `crr-rg` → **Delete resource group**. Nothing in Drive
+**Delete everything.** Resource groups → `rg-cust-cornerstone` → **Delete resource group**. Nothing in Drive
 or GitHub is touched.
 
 ---
@@ -406,7 +450,7 @@ JSON**, not Bicep, so you need the compiled template.
 3. Portal top search box → **Deploy a custom template**.
 4. **Build your own template in the editor** → **Load file** → choose `main.json` → **Save**.
 5. Fill the parameters:
-   - **Resource group:** `crr-rg`
+   - **Resource group:** `rg-cust-cornerstone`
    - **Key Vault Name:** your vault
    - **Gdrive Root Folder Id:** `1_tUMelVG8trnjPmJWul0YXo23VgWgdSc`
    - **Image:** `ghcr.io/arcticbio/crr:build-v1`
@@ -426,8 +470,11 @@ repository — so if you take this path, note which CI run the artifact came fro
 | *MissingSubscriptionRegistration* | resource provider off | 1.2 |
 | *Forbidden* when adding a secret | RBAC data-plane role not effective yet | 1.5, wait a minute, retry |
 | The vault shows no Secrets blade content | you have management-plane but not data-plane access | 1.5 |
-| Deploy: *AuthorizationFailed* | app is not Contributor on `crr-rg` | 1.8 |
-| Deploy: sign-in fails | `AZURE_CREDENTIALS` malformed, or the client secret expired | 1.7, 1.9 |
+| Deploy: *AuthorizationFailed* | app is not Contributor on `rg-cust-cornerstone` | 1.8 |
+| Deploy: *AADSTS7000215: Invalid client secret* | the **Secret ID** was pasted instead of the **Value** | 1.7 — delete the secret, make a new one, copy **Value** |
+| Deploy: *AADSTS7000222* | the client secret has expired | 1.7 — new client secret, then update `AZURE_CREDENTIALS` |
+| Deploy: *AADSTS700016* / app not found | wrong `clientId`, or wrong `tenantId` | 1.9 |
+| Deploy: sign-in fails with no AADSTS code | `AZURE_CREDENTIALS` is not valid JSON | 1.9 |
 | Job execution fails instantly, logs mention a secret | the job's identity cannot read the vault | Part 4, then redeploy |
 | Job execution fails: *UNAUTHORIZED* / manifest unknown | private GHCR image, no pull credentials | 2.3 |
 | Execution *Failed*, logs end with review reasons | **exit code 2 — packages need review** | normal; work the queue per `RUNBOOK.md` |

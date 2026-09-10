@@ -101,7 +101,7 @@ jobs:
             "image=${{ steps.settings.outputs.image }}"
             "scheduleEnabled=${{ inputs.schedule_enabled }}"
           )
-          # Only needed when the GHCR package is private (docs/SETUP-AZURE.md, step 6).
+          # Only needed when the GHCR package is private (docs/SETUP-AZURE.md, step 4).
           if [ -n "${GHCR_USER}" ]; then
             params+=("registryUsername=${GHCR_USER}" "registryPassword=${GHCR_TOKEN}")
             echo "GHCR pull credentials: supplied"
@@ -164,6 +164,6 @@ jobs:
         if: ${{ !inputs.what_if_only }}
         run: |
           if [ "${{ steps.grant.outcome }}" != "success" ]; then
-            echo "::warning title=Grant Key Vault access by hand::Run: az role assignment create --assignee-object-id ${{ steps.deploy.outputs.principal_id }} --assignee-principal-type ServicePrincipal --role 'Key Vault Secrets User' --scope \$(az keyvault show -n ${{ steps.settings.outputs.key_vault_name }} --query id -o tsv) — then re-run this workflow. See docs/SETUP-AZURE.md step 8."
+            echo "::warning title=Grant Key Vault access by hand::Run: az role assignment create --assignee-object-id ${{ steps.deploy.outputs.principal_id }} --assignee-principal-type ServicePrincipal --role 'Key Vault Secrets User' --scope \$(az keyvault show -n ${{ steps.settings.outputs.key_vault_name }} --query id -o tsv) — then re-run this workflow. See docs/SETUP-AZURE.md step 6."
           fi
           echo "::notice title=Smoke test the job::az containerapp job start --name ${{ steps.deploy.outputs.job_name }} --resource-group ${{ steps.settings.outputs.resource_group }} --args version"
