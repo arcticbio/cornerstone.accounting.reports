@@ -1,0 +1,107 @@
+[
+  {
+    "property": "Fort Grounds",
+    "property_manager": "Missoula Property Management",
+    "period": "2026-06",
+    "pattern": "missoula-subset",
+    "target_pages": 9,
+    "pm_source_pages": 16,
+    "pm_pages_used": 5,
+    "pm_pages_dropped": 11,
+    "unsourced_target_pages": [
+      9
+    ],
+    "path": "Missoula Property Management/Fort Grounds/2026-06 June"
+  },
+  {
+    "property": "Lolo Peak Village",
+    "property_manager": "Missoula Property Management",
+    "period": "2026-06",
+    "pattern": "missoula-subset",
+    "target_pages": 9,
+    "pm_source_pages": 15,
+    "pm_pages_used": 5,
+    "pm_pages_dropped": 10,
+    "unsourced_target_pages": [
+      9
+    ],
+    "path": "Missoula Property Management/Lolo Peak Village/2026-06 June"
+  },
+  {
+    "property": "Mullan Crossing",
+    "property_manager": "Missoula Property Management",
+    "period": "2026-06",
+    "pattern": "missoula-subset",
+    "target_pages": 9,
+    "pm_source_pages": 17,
+    "pm_pages_used": 5,
+    "pm_pages_dropped": 12,
+    "unsourced_target_pages": [
+      9
+    ],
+    "path": "Missoula Property Management/Mullan Crossing/2026-06 June"
+  },
+  {
+    "property": "WayPointe",
+    "property_manager": "Missoula Property Management",
+    "period": "2026-06",
+    "pattern": "missoula-subset",
+    "target_pages": 12,
+    "pm_source_pages": 16,
+    "pm_pages_used": 7,
+    "pm_pages_dropped": 9,
+    "unsourced_target_pages": [
+      8,
+      9
+    ],
+    "path": "Missoula Property Management/WayPointe/2026-06 June"
+  },
+  {
+    "property": "Timber Place",
+    "property_manager": "McCathren Management and Real Estate Services",
+    "period": "2026-06",
+    "pattern": "passthrough-ocr",
+    "target_pages": 25,
+    "pm_source_pages": 23,
+    "pm_pages_used": 23,
+    "pm_pages_dropped": 0,
+    "unsourced_target_pages": [],
+    "path": "McCathren Management and Real Estate Services/Timber Place/2026-06 June"
+  },
+  {
+    "property": "River Falls",
+    "property_manager": "McCathren Management and Real Estate Services",
+    "period": "2026-06",
+    "pattern": "passthrough-ocr",
+    "target_pages": 29,
+    "pm_source_pages": 26,
+    "pm_pages_used": 26,
+    "pm_pages_dropped": 0,
+    "unsourced_target_pages": [],
+    "path": "McCathren Management and Real Estate Services/River Falls/2026-06 June"
+  },
+  {
+    "property": "Bridgewater",
+    "property_manager": "Cobalt Properties Group",
+    "period": "2026-06",
+    "pattern": "passthrough",
+    "target_pages": 24,
+    "pm_source_pages": 21,
+    "pm_pages_used": 21,
+    "pm_pages_dropped": 0,
+    "unsourced_target_pages": [],
+    "path": "Cobalt Properties Group/Bridgewater/2026-06 June"
+  },
+  {
+    "property": "Salmon Crossing",
+    "property_manager": "Cobalt Properties Group",
+    "period": "2026-06",
+    "pattern": "passthrough",
+    "target_pages": 18,
+    "pm_source_pages": 15,
+    "pm_pages_used": 15,
+    "pm_pages_dropped": 0,
+    "unsourced_target_pages": [],
+    "path": "Cobalt Properties Group/Salmon Crossing/2026-06 June"
+  }
+]

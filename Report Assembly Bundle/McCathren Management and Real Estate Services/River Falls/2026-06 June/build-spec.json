@@ -1,0 +1,231 @@
+{
+  "property": "River Falls",
+  "property_manager": "McCathren Management and Real Estate Services",
+  "period": "2026-06",
+  "owning_entity": "River Falls Opportunity Zone Fund LLC",
+  "pm_system_property_name": "River Falls Apartments (0312)",
+  "assembly_pattern": "passthrough-ocr",
+  "files": {
+    "target": "TARGET - 06 June 2026 - River Falls - Investor Reports.pdf",
+    "pm_source": "05 PM Source - McCathren Baseline.pdf",
+    "cornerstone_inputs": [
+      "01 Cornerstone - Balance Sheet.pdf",
+      "02 Cornerstone - Profit and Loss YTD Comparison.pdf",
+      "03 Cornerstone - Investor Distribution Schedule.pdf"
+    ],
+    "reference_pm_section": "04 Target PM Section (as published).pdf"
+  },
+  "page_counts": {
+    "target": 29,
+    "pm_source": 26,
+    "pm_section_in_target": 26,
+    "pm_source_pages_dropped": 0
+  },
+  "page_plan": [
+    {
+      "target_page": 1,
+      "source_file": "inputs/01 Cornerstone - Balance Sheet.pdf",
+      "source_page": 1,
+      "transform": "copy",
+      "report": "rnerstone - Balance Sheet"
+    },
+    {
+      "target_page": 2,
+      "source_file": "inputs/02 Cornerstone - Profit and Loss YTD Comparison.pdf",
+      "source_page": 1,
+      "transform": "copy",
+      "report": "rnerstone - Profit and Loss YTD Comparison"
+    },
+    {
+      "target_page": 3,
+      "source_file": "inputs/03 Cornerstone - Investor Distribution Schedule.pdf",
+      "source_page": 1,
+      "transform": "copy",
+      "report": "rnerstone - Investor Distribution Schedule"
+    },
+    {
+      "target_page": 4,
+      "source_file": "inputs/05 PM Source - McCathren Baseline.pdf",
+      "source_page": 1,
+      "transform": "ocr + re-encode (Acrobat)",
+      "report": null
+    },
+    {
+      "target_page": 5,
+      "source_file": "inputs/05 PM Source - McCathren Baseline.pdf",
+      "source_page": 2,
+      "transform": "ocr + re-encode (Acrobat)",
+      "report": null
+    },
+    {
+      "target_page": 6,
+      "source_file": "inputs/05 PM Source - McCathren Baseline.pdf",
+      "source_page": 3,
+      "transform": "ocr + re-encode (Acrobat)",
+      "report": null
+    },
+    {
+      "target_page": 7,
+      "source_file": "inputs/05 PM Source - McCathren Baseline.pdf",
+      "source_page": 4,
+      "transform": "ocr + re-encode (Acrobat)",
+      "report": null
+    },
+    {
+      "target_page": 8,
+      "source_file": "inputs/05 PM Source - McCathren Baseline.pdf",
+      "source_page": 5,
+      "transform": "ocr + re-encode (Acrobat)",
+      "report": null
+    },
+    {
+      "target_page": 9,
+      "source_file": "inputs/05 PM Source - McCathren Baseline.pdf",
+      "source_page": 6,
+      "transform": "ocr + re-encode (Acrobat)",
+      "report": null
+    },
+    {
+      "target_page": 10,
+      "source_file": "inputs/05 PM Source - McCathren Baseline.pdf",
+      "source_page": 7,
+      "transform": "ocr + re-encode (Acrobat)",
+      "report": null
+    },
+    {
+      "target_page": 11,
+      "source_file": "inputs/05 PM Source - McCathren Baseline.pdf",
+      "source_page": 8,
+      "transform": "ocr + re-encode (Acrobat)",
+      "report": null
+    },
+    {
+      "target_page": 12,
+      "source_file": "inputs/05 PM Source - McCathren Baseline.pdf",
+      "source_page": 9,
+      "transform": "ocr + re-encode (Acrobat)",
+      "report": null
+    },
+    {
+      "target_page": 13,
+      "source_file": "inputs/05 PM Source - McCathren Baseline.pdf",
+      "source_page": 10,
+      "transform": "ocr + re-encode (Acrobat)",
+      "report": null
+    },
+    {
+      "target_page": 14,
+      "source_file": "inputs/05 PM Source - McCathren Baseline.pdf",
+      "source_page": 11,
+      "transform": "ocr + re-encode (Acrobat)",
+      "report": null
+    },
+    {
+      "target_page": 15,
+      "source_file": "inputs/05 PM Source - McCathren Baseline.pdf",
+      "source_page": 12,
+      "transform": "ocr + re-encode (Acrobat)",
+      "report": null
+    },
+    {
+      "target_page": 16,
+      "source_file": "inputs/05 PM Source - McCathren Baseline.pdf",
+      "source_page": 13,
+      "transform": "ocr + re-encode (Acrobat)",
+      "report": null
+    },
+    {
+      "target_page": 17,
+      "source_file": "inputs/05 PM Source - McCathren Baseline.pdf",
+      "source_page": 14,
+      "transform": "ocr + re-encode (Acrobat)",
+      "report": null
+    },
+    {
+      "target_page": 18,
+      "source_file": "inputs/05 PM Source - McCathren Baseline.pdf",
+      "source_page": 15,
+      "transform": "ocr + re-encode (Acrobat)",
+      "report": null
+    },
+    {
+      "target_page": 19,
+      "source_file": "inputs/05 PM Source - McCathren Baseline.pdf",
+      "source_page": 16,
+      "transform": "ocr + re-encode (Acrobat)",
+      "report": null
+    },
+    {
+      "target_page": 20,
+      "source_file": "inputs/05 PM Source - McCathren Baseline.pdf",
+      "source_page": 17,
+      "transform": "ocr + re-encode (Acrobat)",
+      "report": null
+    },
+    {
+      "target_page": 21,
+      "source_file": "inputs/05 PM Source - McCathren Baseline.pdf",
+      "source_page": 18,
+      "transform": "ocr + re-encode (Acrobat)",
+      "report": null
+    },
+    {
+      "target_page": 22,
+      "source_file": "inputs/05 PM Source - McCathren Baseline.pdf",
+      "source_page": 19,
+      "transform": "ocr + re-encode (Acrobat)",
+      "report": null
+    },
+    {
+      "target_page": 23,
+      "source_file": "inputs/05 PM Source - McCathren Baseline.pdf",
+      "source_page": 20,
+      "transform": "ocr + re-encode (Acrobat)",
+      "report": null
+    },
+    {
+      "target_page": 24,
+      "source_file": "inputs/05 PM Source - McCathren Baseline.pdf",
+      "source_page": 21,
+      "transform": "ocr + re-encode (Acrobat)",
+      "report": null
+    },
+    {
+      "target_page": 25,
+      "source_file": "inputs/05 PM Source - McCathren Baseline.pdf",
+      "source_page": 22,
+      "transform": "ocr + re-encode (Acrobat)",
+      "report": null
+    },
+    {
+      "target_page": 26,
+      "source_file": "inputs/05 PM Source - McCathren Baseline.pdf",
+      "source_page": 23,
+      "transform": "ocr + re-encode (Acrobat)",
+      "report": null
+    },
+    {
+      "target_page": 27,
+      "source_file": "inputs/05 PM Source - McCathren Baseline.pdf",
+      "source_page": 24,
+      "transform": "ocr + re-encode (Acrobat)",
+      "report": null
+    },
+    {
+      "target_page": 28,
+      "source_file": "inputs/05 PM Source - McCathren Baseline.pdf",
+      "source_page": 25,
+      "transform": "ocr + re-encode (Acrobat)",
+      "report": null
+    },
+    {
+      "target_page": 29,
+      "source_file": "inputs/05 PM Source - McCathren Baseline.pdf",
+      "source_page": 26,
+      "transform": "ocr + re-encode (Acrobat)",
+      "report": null
+    }
+  ],
+  "dropped_from_pm_source": [],
+  "unsourced_target_pages": []
+}

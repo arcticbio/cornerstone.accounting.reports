@@ -1,0 +1,154 @@
+{
+  "property": "Salmon Crossing",
+  "property_manager": "Cobalt Properties Group",
+  "period": "2026-06",
+  "owning_entity": "Salmon Crossing Opportunity Zone LLC",
+  "pm_system_property_name": "405 - Salmon Crossing, 2000 SW Salmon Ave, Redmond OR",
+  "assembly_pattern": "passthrough",
+  "files": {
+    "target": "TARGET - 06 June 2026 - Salmon Crossing - Investor Reports.pdf",
+    "pm_source": "05 PM Source - Cobalt Baseline.pdf",
+    "cornerstone_inputs": [
+      "01 Cornerstone - Balance Sheet.pdf",
+      "02 Cornerstone - Profit and Loss YTD Comparison.pdf",
+      "03 Cornerstone - Investor Distribution Schedule.pdf"
+    ],
+    "reference_pm_section": "04 Target PM Section (as published).pdf"
+  },
+  "page_counts": {
+    "target": 18,
+    "pm_source": 15,
+    "pm_section_in_target": 15,
+    "pm_source_pages_dropped": 0
+  },
+  "page_plan": [
+    {
+      "target_page": 1,
+      "source_file": "inputs/01 Cornerstone - Balance Sheet.pdf",
+      "source_page": 1,
+      "transform": "copy",
+      "report": "rnerstone - Balance Sheet"
+    },
+    {
+      "target_page": 2,
+      "source_file": "inputs/02 Cornerstone - Profit and Loss YTD Comparison.pdf",
+      "source_page": 1,
+      "transform": "copy",
+      "report": "rnerstone - Profit and Loss YTD Comparison"
+    },
+    {
+      "target_page": 3,
+      "source_file": "inputs/03 Cornerstone - Investor Distribution Schedule.pdf",
+      "source_page": 1,
+      "transform": "copy",
+      "report": "rnerstone - Investor Distribution Schedule"
+    },
+    {
+      "target_page": 4,
+      "source_file": "inputs/05 PM Source - Cobalt Baseline.pdf",
+      "source_page": 1,
+      "transform": "copy",
+      "report": null
+    },
+    {
+      "target_page": 5,
+      "source_file": "inputs/05 PM Source - Cobalt Baseline.pdf",
+      "source_page": 2,
+      "transform": "copy",
+      "report": null
+    },
+    {
+      "target_page": 6,
+      "source_file": "inputs/05 PM Source - Cobalt Baseline.pdf",
+      "source_page": 3,
+      "transform": "copy",
+      "report": null
+    },
+    {
+      "target_page": 7,
+      "source_file": "inputs/05 PM Source - Cobalt Baseline.pdf",
+      "source_page": 4,
+      "transform": "copy",
+      "report": null
+    },
+    {
+      "target_page": 8,
+      "source_file": "inputs/05 PM Source - Cobalt Baseline.pdf",
+      "source_page": 5,
+      "transform": "copy",
+      "report": null
+    },
+    {
+      "target_page": 9,
+      "source_file": "inputs/05 PM Source - Cobalt Baseline.pdf",
+      "source_page": 6,
+      "transform": "copy",
+      "report": null
+    },
+    {
+      "target_page": 10,
+      "source_file": "inputs/05 PM Source - Cobalt Baseline.pdf",
+      "source_page": 7,
+      "transform": "copy",
+      "report": null
+    },
+    {
+      "target_page": 11,
+      "source_file": "inputs/05 PM Source - Cobalt Baseline.pdf",
+      "source_page": 8,
+      "transform": "copy",
+      "report": null
+    },
+    {
+      "target_page": 12,
+      "source_file": "inputs/05 PM Source - Cobalt Baseline.pdf",
+      "source_page": 9,
+      "transform": "copy",
+      "report": null
+    },
+    {
+      "target_page": 13,
+      "source_file": "inputs/05 PM Source - Cobalt Baseline.pdf",
+      "source_page": 10,
+      "transform": "copy",
+      "report": null
+    },
+    {
+      "target_page": 14,
+      "source_file": "inputs/05 PM Source - Cobalt Baseline.pdf",
+      "source_page": 11,
+      "transform": "copy",
+      "report": null
+    },
+    {
+      "target_page": 15,
+      "source_file": "inputs/05 PM Source - Cobalt Baseline.pdf",
+      "source_page": 12,
+      "transform": "copy",
+      "report": null
+    },
+    {
+      "target_page": 16,
+      "source_file": "inputs/05 PM Source - Cobalt Baseline.pdf",
+      "source_page": 13,
+      "transform": "copy",
+      "report": null
+    },
+    {
+      "target_page": 17,
+      "source_file": "inputs/05 PM Source - Cobalt Baseline.pdf",
+      "source_page": 14,
+      "transform": "copy",
+      "report": null
+    },
+    {
+      "target_page": 18,
+      "source_file": "inputs/05 PM Source - Cobalt Baseline.pdf",
+      "source_page": 15,
+      "transform": "copy",
+      "report": null
+    }
+  ],
+  "dropped_from_pm_source": [],
+  "unsourced_target_pages": []
+}

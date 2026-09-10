@@ -1,0 +1,134 @@
+{
+  "property": "Lolo Peak Village",
+  "property_manager": "Missoula Property Management",
+  "period": "2026-06",
+  "owning_entity": "Lolo Peak Village LP",
+  "pm_system_property_name": "Lolo Peak Village LP",
+  "assembly_pattern": "missoula-subset",
+  "files": {
+    "target": "TARGET - 06 June 2026 - Lolo Peak Village LP - Investor Reports.pdf",
+    "pm_source": "05 PM Source - Missoula PM Baseline.pdf",
+    "cornerstone_inputs": [
+      "01 Cornerstone - Balance Sheet.pdf",
+      "02 Cornerstone - Profit and Loss YTD Comparison.pdf",
+      "03 Cornerstone - Investor Distribution Schedule.pdf"
+    ],
+    "reference_pm_section": "04 Target PM Section (as published).pdf"
+  },
+  "page_counts": {
+    "target": 9,
+    "pm_source": 15,
+    "pm_section_in_target": 6,
+    "pm_source_pages_dropped": 10
+  },
+  "page_plan": [
+    {
+      "target_page": 1,
+      "source_file": "inputs/01 Cornerstone - Balance Sheet.pdf",
+      "source_page": 1,
+      "transform": "copy",
+      "report": "rnerstone - Balance Sheet"
+    },
+    {
+      "target_page": 2,
+      "source_file": "inputs/02 Cornerstone - Profit and Loss YTD Comparison.pdf",
+      "source_page": 1,
+      "transform": "copy",
+      "report": "rnerstone - Profit and Loss YTD Comparison"
+    },
+    {
+      "target_page": 3,
+      "source_file": "inputs/03 Cornerstone - Investor Distribution Schedule.pdf",
+      "source_page": 1,
+      "transform": "copy",
+      "report": "rnerstone - Investor Distribution Schedule"
+    },
+    {
+      "target_page": 4,
+      "source_file": "inputs/05 PM Source - Missoula PM Baseline.pdf",
+      "source_page": 3,
+      "transform": "copy",
+      "report": "Profit & Loss Comparison"
+    },
+    {
+      "target_page": 5,
+      "source_file": "inputs/05 PM Source - Missoula PM Baseline.pdf",
+      "source_page": 4,
+      "transform": "copy",
+      "report": "Unit Availability Listing"
+    },
+    {
+      "target_page": 6,
+      "source_file": "inputs/05 PM Source - Missoula PM Baseline.pdf",
+      "source_page": 5,
+      "transform": "copy",
+      "report": "Unit Availability Listing"
+    },
+    {
+      "target_page": 7,
+      "source_file": "inputs/05 PM Source - Missoula PM Baseline.pdf",
+      "source_page": 1,
+      "transform": "copy",
+      "report": "Owner Statement"
+    },
+    {
+      "target_page": 8,
+      "source_file": "inputs/05 PM Source - Missoula PM Baseline.pdf",
+      "source_page": 2,
+      "transform": "copy",
+      "report": "Owner Statement"
+    },
+    {
+      "target_page": 9,
+      "source_file": null,
+      "source_page": null,
+      "transform": "UNSOURCED",
+      "report": "Balance Sheet"
+    }
+  ],
+  "dropped_from_pm_source": [
+    {
+      "pm_source_page": 6,
+      "report": "Financial Statement"
+    },
+    {
+      "pm_source_page": 7,
+      "report": "Financial Statement"
+    },
+    {
+      "pm_source_page": 8,
+      "report": "Rent Roll Analysis"
+    },
+    {
+      "pm_source_page": 9,
+      "report": "Rent Roll Analysis"
+    },
+    {
+      "pm_source_page": 10,
+      "report": "General Ledger"
+    },
+    {
+      "pm_source_page": 11,
+      "report": "Actual/Budget Fiscal Year Analysis"
+    },
+    {
+      "pm_source_page": 12,
+      "report": "Actual/Budget Fiscal Year Analysis"
+    },
+    {
+      "pm_source_page": 13,
+      "report": "Actual/Budget Fiscal Year Analysis"
+    },
+    {
+      "pm_source_page": 14,
+      "report": "Rent Roll - Bank"
+    },
+    {
+      "pm_source_page": 15,
+      "report": "Delinquency"
+    }
+  ],
+  "unsourced_target_pages": [
+    9
+  ]
+}
