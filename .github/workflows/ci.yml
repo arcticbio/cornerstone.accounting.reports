@@ -1,0 +1,152 @@
+name: CI
+
+on:
+  push:
+    branches: ["**"]
+    tags: ["v*"]
+  pull_request:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  # The build branch. D-15: cloud sessions get a session-scoped branch, so this is the
+  # session branch rather than `build/v1`; both are treated as "the build branch".
+  BUILD_BRANCH: claude/gifted-lamport-wwgenm
+
+jobs:
+  check:
+    name: Lint, types, tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install OCR toolchain
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y --no-install-recommends \
+            tesseract-ocr tesseract-ocr-eng tesseract-ocr-osd ocrmypdf ghostscript
+          tesseract --version | head -1
+          ocrmypdf --version
+          gs --version
+
+      - uses: astral-sh/setup-uv@v4
+        with:
+          enable-cache: true
+
+      - name: Sync dependencies
+        run: uv sync --frozen
+
+      - name: Lint
+        run: |
+          uv run ruff check .
+          uv run ruff format --check .
+
+      - name: Type-check
+        run: uv run mypy src
+
+      - name: Tests
+        run: uv run pytest -q --cov=src/crr --cov-report=term-missing
+
+      - name: Validate config
+        run: uv run crr validate-config
+
+      - name: Offline eval gate
+        run: uv run crr eval --classifier golden --gate
+
+  bicep:
+    name: Bicep compiles
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      # No credentials needed: `az bicep build` is a local compiler.
+      - name: Compile infra/main.bicep
+        run: az bicep build --file infra/main.bicep --stdout > /dev/null
+
+  image:
+    name: Image build and in-container golden build
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: docker/setup-buildx-action@v3
+
+      - name: Build the image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          load: true
+          tags: crr:ci
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: crr version (healthcheck command)
+        run: docker run --rm crr:ci version
+
+      - name: The image must not carry the bundle
+        run: |
+          if docker run --rm --entrypoint sh crr:ci -c '[ -e /app/data ]'; then
+            echo "::error::the image contains data/ — tenant data must never be baked in (SPEC §14, §16)"
+            exit 1
+          fi
+
+      - name: The OCR toolchain is present in the image
+        run: |
+          docker run --rm --entrypoint sh crr:ci -c 'tesseract --version | head -1'
+          docker run --rm --entrypoint sh crr:ci -c 'ocrmypdf --version'
+          docker run --rm --entrypoint sh crr:ci -c 'gs --version'
+
+      - name: Golden build inside the container
+        run: |
+          mkdir -p work
+          chmod 777 work
+          docker run --rm \
+            -v "$PWD/data:/data:ro" \
+            -v "$PWD/work:/work" \
+            -e CRR_BUNDLE_ROOT=/data/bundle/2026-06 \
+            -e CRR_WORK_DIR=/work \
+            -e CRR_PUBLISH_ROOT=/work/published \
+            crr:ci build --period 2026-06 --classifier golden --repo local
+
+      - name: The McCathren packages came out searchable
+        run: |
+          uv_out=$(find work -name '*Timber Place*.pdf' | head -1)
+          test -n "$uv_out" || { echo "::error::no Timber Place output"; exit 1; }
+          echo "built $uv_out"
+
+      - name: Log in to GHCR
+        if: github.event_name == 'push' && (github.ref_name == env.BUILD_BRANCH || github.ref_name == 'build/v1' || startsWith(github.ref, 'refs/tags/v'))
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Image tags
+        id: tags
+        run: |
+          repo="ghcr.io/${GITHUB_REPOSITORY_OWNER,,}/crr"
+          short="sha-$(echo "${GITHUB_SHA}" | cut -c1-7)"
+          if [[ "${GITHUB_REF}" == refs/tags/v* ]]; then
+            version="${GITHUB_REF#refs/tags/}"
+            echo "tags=${repo}:latest,${repo}:${version},${repo}:${short}" >> "$GITHUB_OUTPUT"
+          else
+            echo "tags=${repo}:build-v1,${repo}:${short}" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Push to GHCR
+        if: github.event_name == 'push' && (github.ref_name == env.BUILD_BRANCH || github.ref_name == 'build/v1' || startsWith(github.ref, 'refs/tags/v'))
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          push: true
+          tags: ${{ steps.tags.outputs.tags }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max

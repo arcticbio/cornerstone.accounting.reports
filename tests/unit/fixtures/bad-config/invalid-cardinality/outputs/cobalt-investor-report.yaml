@@ -1,0 +1,25 @@
+# Output definition: investor report package for properties managed by Cobalt Properties Group
+output_id: cobalt-investor-report
+version: 1
+property_manager: cobalt
+title_template: "{property} - Investor Report - {period_label}"
+
+sources:
+  pm:       {schema: cobalt, role: pm_source}
+  cs_bs:    {schema: cornerstone-qbo, role: cornerstone_balance_sheet}
+  cs_pl:    {schema: cornerstone-qbo, role: cornerstone_profit_loss_ytd}
+  cs_dist:  {schema: cornerstone-qbo, role: cornerstone_distribution_schedule, required: false}
+
+flow:
+  - {address: "cs_bs:balance_sheet",                    bookmark: "Balance Sheet (Cornerstone)"}
+  - {address: "cs_pl:profit_loss_ytd_comparison",       bookmark: "Profit & Loss YTD Comparison (Cornerstone)"}
+  - {address: "cs_dist:investor_distribution_schedule", bookmark: "Investor Distributions", required: false}
+  - {address: "pm:*", order: source, bookmark: "{section_title}"}
+
+unmapped_policy: explicit_drop
+drop: []
+
+transforms:
+  ocr_if_no_text: true
+  autorotate: true
+  add_bookmarks: true

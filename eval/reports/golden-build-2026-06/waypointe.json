@@ -1,0 +1,660 @@
+{
+  "manifest_version": 1,
+  "runner_version": "0.1.0",
+  "built_at": "2026-09-10T09:15:32.932918Z",
+  "status": "built",
+  "review_reasons": [],
+  "property": {
+    "id": "waypointe",
+    "name": "WayPointe",
+    "property_manager": "missoula",
+    "owning_entity": "WayPointe Apartment Homes LP"
+  },
+  "period": "2026-06",
+  "config": {
+    "schema": {
+      "id": "rentmanager-missoula",
+      "version": 1,
+      "sha256": "34be19dfd9838ac5a848e6eb32c92cd547dded6d2e7297208ecc4332e9c20918"
+    },
+    "output": {
+      "id": "missoula-investor-report",
+      "version": 1,
+      "sha256": "8bbcea6630a99703ea05f92526b47bae35137ac3ecdb9f6b9d88c811bc90cc04"
+    },
+    "properties_sha256": "defec2a7afe160120bd727dbb8fa5c15c611126e18299b9a2a5b5eebdaa394b2"
+  },
+  "classifier": {
+    "name": "golden",
+    "model": null,
+    "prompt_version": null,
+    "effort": null
+  },
+  "inputs": [
+    {
+      "role": "pm_source",
+      "file": "05 PM Source - Missoula PM Baseline.pdf",
+      "sha256": "571d7b05cb639da2c2ffdc162ff50b02fea158b177c06b108871b0a729c49d31",
+      "pages": 16,
+      "has_text_layer": true,
+      "ocr_applied": false,
+      "ocr_version": null,
+      "ocr_rotated_pages": null
+    },
+    {
+      "role": "cornerstone_balance_sheet",
+      "file": "01 Cornerstone - Balance Sheet.pdf",
+      "sha256": "77d9024312324277d2cd4a03239659fee08192c3b4c7f2c16cf4f2d39b52bc7f",
+      "pages": 1,
+      "has_text_layer": true,
+      "ocr_applied": false,
+      "ocr_version": null,
+      "ocr_rotated_pages": null
+    },
+    {
+      "role": "cornerstone_profit_loss_ytd",
+      "file": "02 Cornerstone - Profit and Loss YTD Comparison.pdf",
+      "sha256": "2eaf691f845c5b396aae781eec4fe995983a45a4690f20351d47ac2983c09f63",
+      "pages": 1,
+      "has_text_layer": true,
+      "ocr_applied": false,
+      "ocr_version": null,
+      "ocr_rotated_pages": null
+    },
+    {
+      "role": "cornerstone_distribution_schedule",
+      "file": "03 Cornerstone - Investor Distribution Schedule.pdf",
+      "sha256": "2323f714536368569d83d7242013e45b169c33982d9378ccd33336b759acb977",
+      "pages": 1,
+      "has_text_layer": true,
+      "ocr_applied": false,
+      "ocr_version": null,
+      "ocr_rotated_pages": null
+    }
+  ],
+  "classifications": [
+    {
+      "doc_role": "pm_source",
+      "page": 1,
+      "section_id": "owner_statement",
+      "is_continuation": false,
+      "record_qualifier": null,
+      "orientation": "upright",
+      "confidence": 1.0,
+      "evidence": "golden label",
+      "footer_label": "Owner Statement",
+      "footer_agrees": true,
+      "classifier": "golden"
+    },
+    {
+      "doc_role": "pm_source",
+      "page": 2,
+      "section_id": "profit_loss_comparison",
+      "is_continuation": false,
+      "record_qualifier": "WayPointe Apartment Homes LP",
+      "orientation": "upright",
+      "confidence": 1.0,
+      "evidence": "golden label",
+      "footer_label": "Profit & Loss Comparison",
+      "footer_agrees": true,
+      "classifier": "golden"
+    },
+    {
+      "doc_role": "pm_source",
+      "page": 3,
+      "section_id": "unit_availability",
+      "is_continuation": false,
+      "record_qualifier": "WayPointe Apartment Homes LP",
+      "orientation": "upright",
+      "confidence": 1.0,
+      "evidence": "golden label",
+      "footer_label": "Unit Availability Listing",
+      "footer_agrees": true,
+      "classifier": "golden"
+    },
+    {
+      "doc_role": "pm_source",
+      "page": 4,
+      "section_id": "unit_availability",
+      "is_continuation": true,
+      "record_qualifier": "WayPointe Apartment Homes LP",
+      "orientation": "upright",
+      "confidence": 1.0,
+      "evidence": "golden label",
+      "footer_label": "Unit Availability Listing",
+      "footer_agrees": true,
+      "classifier": "golden"
+    },
+    {
+      "doc_role": "pm_source",
+      "page": 5,
+      "section_id": "profit_loss_comparison",
+      "is_continuation": false,
+      "record_qualifier": "128 S. 5th Street West",
+      "orientation": "upright",
+      "confidence": 1.0,
+      "evidence": "golden label",
+      "footer_label": "Profit & Loss Comparison",
+      "footer_agrees": true,
+      "classifier": "golden"
+    },
+    {
+      "doc_role": "pm_source",
+      "page": 6,
+      "section_id": "unit_availability",
+      "is_continuation": false,
+      "record_qualifier": "128 S. 5th Street West",
+      "orientation": "upright",
+      "confidence": 1.0,
+      "evidence": "golden label",
+      "footer_label": "Unit Availability Listing",
+      "footer_agrees": true,
+      "classifier": "golden"
+    },
+    {
+      "doc_role": "pm_source",
+      "page": 7,
+      "section_id": "unit_availability",
+      "is_continuation": true,
+      "record_qualifier": "128 S. 5th Street West",
+      "orientation": "upright",
+      "confidence": 1.0,
+      "evidence": "golden label",
+      "footer_label": "Unit Availability Listing",
+      "footer_agrees": true,
+      "classifier": "golden"
+    },
+    {
+      "doc_role": "pm_source",
+      "page": 8,
+      "section_id": "financial_statement",
+      "is_continuation": false,
+      "record_qualifier": null,
+      "orientation": "upright",
+      "confidence": 1.0,
+      "evidence": "golden label",
+      "footer_label": "Financial Statement",
+      "footer_agrees": true,
+      "classifier": "golden"
+    },
+    {
+      "doc_role": "pm_source",
+      "page": 9,
+      "section_id": "financial_statement",
+      "is_continuation": true,
+      "record_qualifier": null,
+      "orientation": "upright",
+      "confidence": 1.0,
+      "evidence": "golden label",
+      "footer_label": "Financial Statement",
+      "footer_agrees": true,
+      "classifier": "golden"
+    },
+    {
+      "doc_role": "pm_source",
+      "page": 10,
+      "section_id": "rent_roll_analysis",
+      "is_continuation": false,
+      "record_qualifier": null,
+      "orientation": "upright",
+      "confidence": 1.0,
+      "evidence": "golden label",
+      "footer_label": "Rent Roll Analysis",
+      "footer_agrees": true,
+      "classifier": "golden"
+    },
+    {
+      "doc_role": "pm_source",
+      "page": 11,
+      "section_id": "general_ledger",
+      "is_continuation": false,
+      "record_qualifier": null,
+      "orientation": "upright",
+      "confidence": 1.0,
+      "evidence": "golden label",
+      "footer_label": "General Ledger",
+      "footer_agrees": true,
+      "classifier": "golden"
+    },
+    {
+      "doc_role": "pm_source",
+      "page": 12,
+      "section_id": "actual_budget_fy_analysis",
+      "is_continuation": false,
+      "record_qualifier": null,
+      "orientation": "upright",
+      "confidence": 1.0,
+      "evidence": "golden label",
+      "footer_label": "Actual/Budget Fiscal Year Analysis",
+      "footer_agrees": true,
+      "classifier": "golden"
+    },
+    {
+      "doc_role": "pm_source",
+      "page": 13,
+      "section_id": "actual_budget_fy_analysis",
+      "is_continuation": true,
+      "record_qualifier": null,
+      "orientation": "upright",
+      "confidence": 1.0,
+      "evidence": "golden label",
+      "footer_label": "Actual/Budget Fiscal Year Analysis",
+      "footer_agrees": true,
+      "classifier": "golden"
+    },
+    {
+      "doc_role": "pm_source",
+      "page": 14,
+      "section_id": "rent_roll_bank",
+      "is_continuation": false,
+      "record_qualifier": "WayPointe Apartment Homes LP",
+      "orientation": "upright",
+      "confidence": 1.0,
+      "evidence": "golden label",
+      "footer_label": "Rent Roll - Bank",
+      "footer_agrees": true,
+      "classifier": "golden"
+    },
+    {
+      "doc_role": "pm_source",
+      "page": 15,
+      "section_id": "delinquency",
+      "is_continuation": false,
+      "record_qualifier": "128 S. 5th Street West",
+      "orientation": "upright",
+      "confidence": 1.0,
+      "evidence": "golden label",
+      "footer_label": "Delinquency",
+      "footer_agrees": true,
+      "classifier": "golden"
+    },
+    {
+      "doc_role": "pm_source",
+      "page": 16,
+      "section_id": "delinquency",
+      "is_continuation": false,
+      "record_qualifier": "WayPointe Apartment Homes LP",
+      "orientation": "upright",
+      "confidence": 1.0,
+      "evidence": "golden label",
+      "footer_label": "Delinquency",
+      "footer_agrees": true,
+      "classifier": "golden"
+    },
+    {
+      "doc_role": "cornerstone_balance_sheet",
+      "page": 1,
+      "section_id": "balance_sheet",
+      "is_continuation": false,
+      "record_qualifier": null,
+      "orientation": "upright",
+      "confidence": 1.0,
+      "evidence": "golden label",
+      "footer_label": null,
+      "footer_agrees": null,
+      "classifier": "golden"
+    },
+    {
+      "doc_role": "cornerstone_profit_loss_ytd",
+      "page": 1,
+      "section_id": "profit_loss_ytd_comparison",
+      "is_continuation": false,
+      "record_qualifier": null,
+      "orientation": "upright",
+      "confidence": 1.0,
+      "evidence": "golden label",
+      "footer_label": null,
+      "footer_agrees": null,
+      "classifier": "golden"
+    },
+    {
+      "doc_role": "cornerstone_distribution_schedule",
+      "page": 1,
+      "section_id": "investor_distribution_schedule",
+      "is_continuation": false,
+      "record_qualifier": null,
+      "orientation": "upright",
+      "confidence": 1.0,
+      "evidence": "golden label",
+      "footer_label": null,
+      "footer_agrees": null,
+      "classifier": "golden"
+    }
+  ],
+  "sections": [
+    {
+      "doc_role": "pm_source",
+      "section_id": "owner_statement",
+      "record_id": null,
+      "pages": [
+        1
+      ],
+      "orientation_fixes": {}
+    },
+    {
+      "doc_role": "pm_source",
+      "section_id": "profit_loss_comparison",
+      "record_id": "waypointe-ah-lp",
+      "pages": [
+        2
+      ],
+      "orientation_fixes": {}
+    },
+    {
+      "doc_role": "pm_source",
+      "section_id": "unit_availability",
+      "record_id": "waypointe-ah-lp",
+      "pages": [
+        3,
+        4
+      ],
+      "orientation_fixes": {}
+    },
+    {
+      "doc_role": "pm_source",
+      "section_id": "profit_loss_comparison",
+      "record_id": "128-s-5th-street-west",
+      "pages": [
+        5
+      ],
+      "orientation_fixes": {}
+    },
+    {
+      "doc_role": "pm_source",
+      "section_id": "unit_availability",
+      "record_id": "128-s-5th-street-west",
+      "pages": [
+        6,
+        7
+      ],
+      "orientation_fixes": {}
+    },
+    {
+      "doc_role": "pm_source",
+      "section_id": "financial_statement",
+      "record_id": null,
+      "pages": [
+        8,
+        9
+      ],
+      "orientation_fixes": {}
+    },
+    {
+      "doc_role": "pm_source",
+      "section_id": "rent_roll_analysis",
+      "record_id": null,
+      "pages": [
+        10
+      ],
+      "orientation_fixes": {}
+    },
+    {
+      "doc_role": "pm_source",
+      "section_id": "general_ledger",
+      "record_id": null,
+      "pages": [
+        11
+      ],
+      "orientation_fixes": {}
+    },
+    {
+      "doc_role": "pm_source",
+      "section_id": "actual_budget_fy_analysis",
+      "record_id": null,
+      "pages": [
+        12,
+        13
+      ],
+      "orientation_fixes": {}
+    },
+    {
+      "doc_role": "pm_source",
+      "section_id": "rent_roll_bank",
+      "record_id": "waypointe-ah-lp",
+      "pages": [
+        14
+      ],
+      "orientation_fixes": {}
+    },
+    {
+      "doc_role": "pm_source",
+      "section_id": "delinquency",
+      "record_id": "128-s-5th-street-west",
+      "pages": [
+        15
+      ],
+      "orientation_fixes": {}
+    },
+    {
+      "doc_role": "pm_source",
+      "section_id": "delinquency",
+      "record_id": "waypointe-ah-lp",
+      "pages": [
+        16
+      ],
+      "orientation_fixes": {}
+    },
+    {
+      "doc_role": "cornerstone_balance_sheet",
+      "section_id": "balance_sheet",
+      "record_id": null,
+      "pages": [
+        1
+      ],
+      "orientation_fixes": {}
+    },
+    {
+      "doc_role": "cornerstone_profit_loss_ytd",
+      "section_id": "profit_loss_ytd_comparison",
+      "record_id": null,
+      "pages": [
+        1
+      ],
+      "orientation_fixes": {}
+    },
+    {
+      "doc_role": "cornerstone_distribution_schedule",
+      "section_id": "investor_distribution_schedule",
+      "record_id": null,
+      "pages": [
+        1
+      ],
+      "orientation_fixes": {}
+    }
+  ],
+  "dropped": [
+    {
+      "section_id": "financial_statement",
+      "doc_role": "pm_source",
+      "record_id": null,
+      "pages": [
+        8,
+        9
+      ]
+    },
+    {
+      "section_id": "rent_roll_analysis",
+      "doc_role": "pm_source",
+      "record_id": null,
+      "pages": [
+        10
+      ]
+    },
+    {
+      "section_id": "general_ledger",
+      "doc_role": "pm_source",
+      "record_id": null,
+      "pages": [
+        11
+      ]
+    },
+    {
+      "section_id": "actual_budget_fy_analysis",
+      "doc_role": "pm_source",
+      "record_id": null,
+      "pages": [
+        12,
+        13
+      ]
+    },
+    {
+      "section_id": "rent_roll_bank",
+      "doc_role": "pm_source",
+      "record_id": "waypointe-ah-lp",
+      "pages": [
+        14
+      ]
+    },
+    {
+      "section_id": "delinquency",
+      "doc_role": "pm_source",
+      "record_id": "128-s-5th-street-west",
+      "pages": [
+        15
+      ]
+    },
+    {
+      "section_id": "delinquency",
+      "doc_role": "pm_source",
+      "record_id": "waypointe-ah-lp",
+      "pages": [
+        16
+      ]
+    }
+  ],
+  "plan": [
+    {
+      "output_page": 1,
+      "doc_role": "cornerstone_balance_sheet",
+      "source_page": 1,
+      "section_id": "balance_sheet",
+      "record_id": null,
+      "transforms": [
+        "copy"
+      ],
+      "bookmark": "Balance Sheet (Cornerstone)"
+    },
+    {
+      "output_page": 2,
+      "doc_role": "cornerstone_profit_loss_ytd",
+      "source_page": 1,
+      "section_id": "profit_loss_ytd_comparison",
+      "record_id": null,
+      "transforms": [
+        "copy"
+      ],
+      "bookmark": "Profit & Loss YTD Comparison (Cornerstone)"
+    },
+    {
+      "output_page": 3,
+      "doc_role": "cornerstone_distribution_schedule",
+      "source_page": 1,
+      "section_id": "investor_distribution_schedule",
+      "record_id": null,
+      "transforms": [
+        "copy"
+      ],
+      "bookmark": "Investor Distributions"
+    },
+    {
+      "output_page": 4,
+      "doc_role": "pm_source",
+      "source_page": 2,
+      "section_id": "profit_loss_comparison",
+      "record_id": "waypointe-ah-lp",
+      "transforms": [
+        "copy"
+      ],
+      "bookmark": "Profit & Loss Comparison - WayPointe Apartment Homes LP"
+    },
+    {
+      "output_page": 5,
+      "doc_role": "pm_source",
+      "source_page": 3,
+      "section_id": "unit_availability",
+      "record_id": "waypointe-ah-lp",
+      "transforms": [
+        "copy"
+      ],
+      "bookmark": "Unit Availability - WayPointe Apartment Homes LP"
+    },
+    {
+      "output_page": 6,
+      "doc_role": "pm_source",
+      "source_page": 4,
+      "section_id": "unit_availability",
+      "record_id": "waypointe-ah-lp",
+      "transforms": [
+        "copy"
+      ],
+      "bookmark": null
+    },
+    {
+      "output_page": 7,
+      "doc_role": "pm_source",
+      "source_page": 5,
+      "section_id": "profit_loss_comparison",
+      "record_id": "128-s-5th-street-west",
+      "transforms": [
+        "copy"
+      ],
+      "bookmark": "Profit & Loss Comparison - 128 S. 5th Street West"
+    },
+    {
+      "output_page": 8,
+      "doc_role": "pm_source",
+      "source_page": 6,
+      "section_id": "unit_availability",
+      "record_id": "128-s-5th-street-west",
+      "transforms": [
+        "copy"
+      ],
+      "bookmark": "Unit Availability - 128 S. 5th Street West"
+    },
+    {
+      "output_page": 9,
+      "doc_role": "pm_source",
+      "source_page": 7,
+      "section_id": "unit_availability",
+      "record_id": "128-s-5th-street-west",
+      "transforms": [
+        "copy"
+      ],
+      "bookmark": null
+    },
+    {
+      "output_page": 10,
+      "doc_role": "pm_source",
+      "source_page": 1,
+      "section_id": "owner_statement",
+      "record_id": null,
+      "transforms": [
+        "copy"
+      ],
+      "bookmark": "Owner Statement"
+    }
+  ],
+  "output": {
+    "file": "WayPointe - Investor Report - June 2026.pdf",
+    "sha256": "79ed23fd9c49262e657cd6d5865ce8351cc7c387def1eb0433a20cd4e4fff057",
+    "pages": 10
+  },
+  "cost": {
+    "tokens": {
+      "input": 0,
+      "cache_read": 0,
+      "cache_write": 0,
+      "output": 0
+    },
+    "usd_estimate": 0.0,
+    "api_calls": 0
+  },
+  "timings_ms": {
+    "fetch": 541,
+    "preprocess": 1678,
+    "classify": 0,
+    "compose": 54,
+    "publish": 0
+  },
+  "error": null
+}

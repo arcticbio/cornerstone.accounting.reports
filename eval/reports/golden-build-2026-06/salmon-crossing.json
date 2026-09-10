@@ -1,0 +1,619 @@
+{
+  "manifest_version": 1,
+  "runner_version": "0.1.0",
+  "built_at": "2026-09-10T09:17:15.378870Z",
+  "status": "built",
+  "review_reasons": [],
+  "property": {
+    "id": "salmon-crossing",
+    "name": "Salmon Crossing",
+    "property_manager": "cobalt",
+    "owning_entity": "Salmon Crossing Opportunity Zone LLC"
+  },
+  "period": "2026-06",
+  "config": {
+    "schema": {
+      "id": "cobalt",
+      "version": 1,
+      "sha256": "de98c9c136011c58b21554b20c3a8f752b30114943506a5d323324d2d439a5df"
+    },
+    "output": {
+      "id": "cobalt-investor-report",
+      "version": 1,
+      "sha256": "cc0bce9bb751d42af906e57d0bfddbe1f79325ac74e1226a1192a3ce3c719799"
+    },
+    "properties_sha256": "defec2a7afe160120bd727dbb8fa5c15c611126e18299b9a2a5b5eebdaa394b2"
+  },
+  "classifier": {
+    "name": "golden",
+    "model": null,
+    "prompt_version": null,
+    "effort": null
+  },
+  "inputs": [
+    {
+      "role": "pm_source",
+      "file": "05 PM Source - Cobalt Baseline.pdf",
+      "sha256": "440801a23cf9f0512fdf8daafdd32df2eb99e045c42652d69f23b4a97916a5a7",
+      "pages": 15,
+      "has_text_layer": true,
+      "ocr_applied": false,
+      "ocr_version": null,
+      "ocr_rotated_pages": null
+    },
+    {
+      "role": "cornerstone_balance_sheet",
+      "file": "01 Cornerstone - Balance Sheet.pdf",
+      "sha256": "3791edf7cf5e6ade215a2053f09ef9f833248739710505265a4b836f2508c8f6",
+      "pages": 1,
+      "has_text_layer": true,
+      "ocr_applied": false,
+      "ocr_version": null,
+      "ocr_rotated_pages": null
+    },
+    {
+      "role": "cornerstone_profit_loss_ytd",
+      "file": "02 Cornerstone - Profit and Loss YTD Comparison.pdf",
+      "sha256": "ac71a8ae95ce09a951fa914ea68fde5480966df7abf5fa9f8d4e544de3ce840b",
+      "pages": 1,
+      "has_text_layer": true,
+      "ocr_applied": false,
+      "ocr_version": null,
+      "ocr_rotated_pages": null
+    },
+    {
+      "role": "cornerstone_distribution_schedule",
+      "file": "03 Cornerstone - Investor Distribution Schedule.pdf",
+      "sha256": "1e8e0f26dbdb7b3447c29be5b24d55137d5ee64bdbbb3199364188fe838e51c0",
+      "pages": 1,
+      "has_text_layer": true,
+      "ocr_applied": false,
+      "ocr_version": null,
+      "ocr_rotated_pages": null
+    }
+  ],
+  "classifications": [
+    {
+      "doc_role": "pm_source",
+      "page": 1,
+      "section_id": "owner_statement",
+      "is_continuation": false,
+      "record_qualifier": null,
+      "orientation": "upright",
+      "confidence": 1.0,
+      "evidence": "golden label",
+      "footer_label": null,
+      "footer_agrees": null,
+      "classifier": "golden"
+    },
+    {
+      "doc_role": "pm_source",
+      "page": 2,
+      "section_id": "owner_statement",
+      "is_continuation": true,
+      "record_qualifier": null,
+      "orientation": "upright",
+      "confidence": 1.0,
+      "evidence": "golden label",
+      "footer_label": null,
+      "footer_agrees": null,
+      "classifier": "golden"
+    },
+    {
+      "doc_role": "pm_source",
+      "page": 3,
+      "section_id": "owner_statement",
+      "is_continuation": true,
+      "record_qualifier": null,
+      "orientation": "upright",
+      "confidence": 1.0,
+      "evidence": "golden label",
+      "footer_label": null,
+      "footer_agrees": null,
+      "classifier": "golden"
+    },
+    {
+      "doc_role": "pm_source",
+      "page": 4,
+      "section_id": "owner_statement",
+      "is_continuation": true,
+      "record_qualifier": null,
+      "orientation": "upright",
+      "confidence": 1.0,
+      "evidence": "golden label",
+      "footer_label": null,
+      "footer_agrees": null,
+      "classifier": "golden"
+    },
+    {
+      "doc_role": "pm_source",
+      "page": 5,
+      "section_id": "owner_statement",
+      "is_continuation": true,
+      "record_qualifier": null,
+      "orientation": "upright",
+      "confidence": 1.0,
+      "evidence": "golden label",
+      "footer_label": null,
+      "footer_agrees": null,
+      "classifier": "golden"
+    },
+    {
+      "doc_role": "pm_source",
+      "page": 6,
+      "section_id": "cash_flow_12_month",
+      "is_continuation": false,
+      "record_qualifier": null,
+      "orientation": "upright",
+      "confidence": 1.0,
+      "evidence": "golden label",
+      "footer_label": "Cash Flow - 12 Month",
+      "footer_agrees": true,
+      "classifier": "golden"
+    },
+    {
+      "doc_role": "pm_source",
+      "page": 7,
+      "section_id": "cash_flow_12_month",
+      "is_continuation": true,
+      "record_qualifier": null,
+      "orientation": "upright",
+      "confidence": 1.0,
+      "evidence": "golden label",
+      "footer_label": "Cash Flow - 12 Month",
+      "footer_agrees": true,
+      "classifier": "golden"
+    },
+    {
+      "doc_role": "pm_source",
+      "page": 8,
+      "section_id": "cash_flow_12_month",
+      "is_continuation": true,
+      "record_qualifier": null,
+      "orientation": "upright",
+      "confidence": 1.0,
+      "evidence": "golden label",
+      "footer_label": "Cash Flow - 12 Month",
+      "footer_agrees": true,
+      "classifier": "golden"
+    },
+    {
+      "doc_role": "pm_source",
+      "page": 9,
+      "section_id": "cash_flow_12_month",
+      "is_continuation": true,
+      "record_qualifier": null,
+      "orientation": "upright",
+      "confidence": 1.0,
+      "evidence": "golden label",
+      "footer_label": "Cash Flow - 12 Month",
+      "footer_agrees": true,
+      "classifier": "golden"
+    },
+    {
+      "doc_role": "pm_source",
+      "page": 10,
+      "section_id": "rent_roll",
+      "is_continuation": false,
+      "record_qualifier": null,
+      "orientation": "upright",
+      "confidence": 1.0,
+      "evidence": "golden label",
+      "footer_label": "Rent Roll (Itemized w/Pet Rent and Deposit Included)",
+      "footer_agrees": true,
+      "classifier": "golden"
+    },
+    {
+      "doc_role": "pm_source",
+      "page": 11,
+      "section_id": "balance_sheet",
+      "is_continuation": false,
+      "record_qualifier": null,
+      "orientation": "upright",
+      "confidence": 1.0,
+      "evidence": "golden label",
+      "footer_label": "Balance Sheet",
+      "footer_agrees": true,
+      "classifier": "golden"
+    },
+    {
+      "doc_role": "pm_source",
+      "page": 12,
+      "section_id": "annual_budget_comparative",
+      "is_continuation": false,
+      "record_qualifier": null,
+      "orientation": "upright",
+      "confidence": 1.0,
+      "evidence": "golden label",
+      "footer_label": "Annual Budget - Comparative",
+      "footer_agrees": true,
+      "classifier": "golden"
+    },
+    {
+      "doc_role": "pm_source",
+      "page": 13,
+      "section_id": "annual_budget_comparative",
+      "is_continuation": true,
+      "record_qualifier": null,
+      "orientation": "upright",
+      "confidence": 1.0,
+      "evidence": "golden label",
+      "footer_label": "Annual Budget - Comparative",
+      "footer_agrees": true,
+      "classifier": "golden"
+    },
+    {
+      "doc_role": "pm_source",
+      "page": 14,
+      "section_id": "annual_budget_comparative",
+      "is_continuation": true,
+      "record_qualifier": null,
+      "orientation": "upright",
+      "confidence": 1.0,
+      "evidence": "golden label",
+      "footer_label": "Annual Budget - Comparative",
+      "footer_agrees": true,
+      "classifier": "golden"
+    },
+    {
+      "doc_role": "pm_source",
+      "page": 15,
+      "section_id": "annual_budget_comparative",
+      "is_continuation": true,
+      "record_qualifier": null,
+      "orientation": "upright",
+      "confidence": 1.0,
+      "evidence": "golden label",
+      "footer_label": "Annual Budget - Comparative",
+      "footer_agrees": true,
+      "classifier": "golden"
+    },
+    {
+      "doc_role": "cornerstone_balance_sheet",
+      "page": 1,
+      "section_id": "balance_sheet",
+      "is_continuation": false,
+      "record_qualifier": null,
+      "orientation": "upright",
+      "confidence": 1.0,
+      "evidence": "golden label",
+      "footer_label": null,
+      "footer_agrees": null,
+      "classifier": "golden"
+    },
+    {
+      "doc_role": "cornerstone_profit_loss_ytd",
+      "page": 1,
+      "section_id": "profit_loss_ytd_comparison",
+      "is_continuation": false,
+      "record_qualifier": null,
+      "orientation": "upright",
+      "confidence": 1.0,
+      "evidence": "golden label",
+      "footer_label": null,
+      "footer_agrees": null,
+      "classifier": "golden"
+    },
+    {
+      "doc_role": "cornerstone_distribution_schedule",
+      "page": 1,
+      "section_id": "investor_distribution_schedule",
+      "is_continuation": false,
+      "record_qualifier": null,
+      "orientation": "upright",
+      "confidence": 1.0,
+      "evidence": "golden label",
+      "footer_label": null,
+      "footer_agrees": null,
+      "classifier": "golden"
+    }
+  ],
+  "sections": [
+    {
+      "doc_role": "pm_source",
+      "section_id": "owner_statement",
+      "record_id": null,
+      "pages": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "orientation_fixes": {}
+    },
+    {
+      "doc_role": "pm_source",
+      "section_id": "cash_flow_12_month",
+      "record_id": null,
+      "pages": [
+        6,
+        7,
+        8,
+        9
+      ],
+      "orientation_fixes": {}
+    },
+    {
+      "doc_role": "pm_source",
+      "section_id": "rent_roll",
+      "record_id": null,
+      "pages": [
+        10
+      ],
+      "orientation_fixes": {}
+    },
+    {
+      "doc_role": "pm_source",
+      "section_id": "balance_sheet",
+      "record_id": null,
+      "pages": [
+        11
+      ],
+      "orientation_fixes": {}
+    },
+    {
+      "doc_role": "pm_source",
+      "section_id": "annual_budget_comparative",
+      "record_id": null,
+      "pages": [
+        12,
+        13,
+        14,
+        15
+      ],
+      "orientation_fixes": {}
+    },
+    {
+      "doc_role": "cornerstone_balance_sheet",
+      "section_id": "balance_sheet",
+      "record_id": null,
+      "pages": [
+        1
+      ],
+      "orientation_fixes": {}
+    },
+    {
+      "doc_role": "cornerstone_profit_loss_ytd",
+      "section_id": "profit_loss_ytd_comparison",
+      "record_id": null,
+      "pages": [
+        1
+      ],
+      "orientation_fixes": {}
+    },
+    {
+      "doc_role": "cornerstone_distribution_schedule",
+      "section_id": "investor_distribution_schedule",
+      "record_id": null,
+      "pages": [
+        1
+      ],
+      "orientation_fixes": {}
+    }
+  ],
+  "dropped": [],
+  "plan": [
+    {
+      "output_page": 1,
+      "doc_role": "cornerstone_balance_sheet",
+      "source_page": 1,
+      "section_id": "balance_sheet",
+      "record_id": null,
+      "transforms": [
+        "copy"
+      ],
+      "bookmark": "Balance Sheet (Cornerstone)"
+    },
+    {
+      "output_page": 2,
+      "doc_role": "cornerstone_profit_loss_ytd",
+      "source_page": 1,
+      "section_id": "profit_loss_ytd_comparison",
+      "record_id": null,
+      "transforms": [
+        "copy"
+      ],
+      "bookmark": "Profit & Loss YTD Comparison (Cornerstone)"
+    },
+    {
+      "output_page": 3,
+      "doc_role": "cornerstone_distribution_schedule",
+      "source_page": 1,
+      "section_id": "investor_distribution_schedule",
+      "record_id": null,
+      "transforms": [
+        "copy"
+      ],
+      "bookmark": "Investor Distributions"
+    },
+    {
+      "output_page": 4,
+      "doc_role": "pm_source",
+      "source_page": 1,
+      "section_id": "owner_statement",
+      "record_id": null,
+      "transforms": [
+        "copy"
+      ],
+      "bookmark": "Owner Statement"
+    },
+    {
+      "output_page": 5,
+      "doc_role": "pm_source",
+      "source_page": 2,
+      "section_id": "owner_statement",
+      "record_id": null,
+      "transforms": [
+        "copy"
+      ],
+      "bookmark": null
+    },
+    {
+      "output_page": 6,
+      "doc_role": "pm_source",
+      "source_page": 3,
+      "section_id": "owner_statement",
+      "record_id": null,
+      "transforms": [
+        "copy"
+      ],
+      "bookmark": null
+    },
+    {
+      "output_page": 7,
+      "doc_role": "pm_source",
+      "source_page": 4,
+      "section_id": "owner_statement",
+      "record_id": null,
+      "transforms": [
+        "copy"
+      ],
+      "bookmark": null
+    },
+    {
+      "output_page": 8,
+      "doc_role": "pm_source",
+      "source_page": 5,
+      "section_id": "owner_statement",
+      "record_id": null,
+      "transforms": [
+        "copy"
+      ],
+      "bookmark": null
+    },
+    {
+      "output_page": 9,
+      "doc_role": "pm_source",
+      "source_page": 6,
+      "section_id": "cash_flow_12_month",
+      "record_id": null,
+      "transforms": [
+        "copy"
+      ],
+      "bookmark": "Cash Flow 12 Month"
+    },
+    {
+      "output_page": 10,
+      "doc_role": "pm_source",
+      "source_page": 7,
+      "section_id": "cash_flow_12_month",
+      "record_id": null,
+      "transforms": [
+        "copy"
+      ],
+      "bookmark": null
+    },
+    {
+      "output_page": 11,
+      "doc_role": "pm_source",
+      "source_page": 8,
+      "section_id": "cash_flow_12_month",
+      "record_id": null,
+      "transforms": [
+        "copy"
+      ],
+      "bookmark": null
+    },
+    {
+      "output_page": 12,
+      "doc_role": "pm_source",
+      "source_page": 9,
+      "section_id": "cash_flow_12_month",
+      "record_id": null,
+      "transforms": [
+        "copy"
+      ],
+      "bookmark": null
+    },
+    {
+      "output_page": 13,
+      "doc_role": "pm_source",
+      "source_page": 10,
+      "section_id": "rent_roll",
+      "record_id": null,
+      "transforms": [
+        "copy"
+      ],
+      "bookmark": "Rent Roll"
+    },
+    {
+      "output_page": 14,
+      "doc_role": "pm_source",
+      "source_page": 11,
+      "section_id": "balance_sheet",
+      "record_id": null,
+      "transforms": [
+        "copy"
+      ],
+      "bookmark": "Balance Sheet"
+    },
+    {
+      "output_page": 15,
+      "doc_role": "pm_source",
+      "source_page": 12,
+      "section_id": "annual_budget_comparative",
+      "record_id": null,
+      "transforms": [
+        "copy"
+      ],
+      "bookmark": "Annual Budget Comparative"
+    },
+    {
+      "output_page": 16,
+      "doc_role": "pm_source",
+      "source_page": 13,
+      "section_id": "annual_budget_comparative",
+      "record_id": null,
+      "transforms": [
+        "copy"
+      ],
+      "bookmark": null
+    },
+    {
+      "output_page": 17,
+      "doc_role": "pm_source",
+      "source_page": 14,
+      "section_id": "annual_budget_comparative",
+      "record_id": null,
+      "transforms": [
+        "copy"
+      ],
+      "bookmark": null
+    },
+    {
+      "output_page": 18,
+      "doc_role": "pm_source",
+      "source_page": 15,
+      "section_id": "annual_budget_comparative",
+      "record_id": null,
+      "transforms": [
+        "copy"
+      ],
+      "bookmark": null
+    }
+  ],
+  "output": {
+    "file": "Salmon Crossing - Investor Report - June 2026.pdf",
+    "sha256": "287698bffdd38c038fbc258860d9c566f361307556b2df86766ff0403bb69bc8",
+    "pages": 18
+  },
+  "cost": {
+    "tokens": {
+      "input": 0,
+      "cache_read": 0,
+      "cache_write": 0,
+      "output": 0
+    },
+    "usd_estimate": 0.0,
+    "api_calls": 0
+  },
+  "timings_ms": {
+    "fetch": 333,
+    "preprocess": 1655,
+    "classify": 0,
+    "compose": 66,
+    "publish": 1
+  },
+  "error": null
+}

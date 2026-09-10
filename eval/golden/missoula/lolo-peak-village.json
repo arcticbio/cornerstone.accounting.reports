@@ -13,7 +13,64 @@
     }
   ],
   "expected_output_page_count": 8,
-  "expected_output": null,
+  "expected_output": [
+    {
+      "output_page": 1,
+      "doc_role": "cornerstone_balance_sheet",
+      "section": "balance_sheet",
+      "record": null,
+      "source_page": 1
+    },
+    {
+      "output_page": 2,
+      "doc_role": "cornerstone_profit_loss_ytd",
+      "section": "profit_loss_ytd_comparison",
+      "record": null,
+      "source_page": 1
+    },
+    {
+      "output_page": 3,
+      "doc_role": "cornerstone_distribution_schedule",
+      "section": "investor_distribution_schedule",
+      "record": null,
+      "source_page": 1
+    },
+    {
+      "output_page": 4,
+      "doc_role": "pm_source",
+      "section": "profit_loss_comparison",
+      "record": "default",
+      "source_page": 3
+    },
+    {
+      "output_page": 5,
+      "doc_role": "pm_source",
+      "section": "unit_availability",
+      "record": "default",
+      "source_page": 4
+    },
+    {
+      "output_page": 6,
+      "doc_role": "pm_source",
+      "section": "unit_availability",
+      "record": "default",
+      "source_page": 5
+    },
+    {
+      "output_page": 7,
+      "doc_role": "pm_source",
+      "section": "owner_statement",
+      "record": null,
+      "source_page": 1
+    },
+    {
+      "output_page": 8,
+      "doc_role": "pm_source",
+      "section": "owner_statement",
+      "record": null,
+      "source_page": 2
+    }
+  ],
   "documents": [
     {
       "role": "pm_source",

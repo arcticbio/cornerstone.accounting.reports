@@ -1,0 +1,67 @@
+# Classifier eval
+
+- **Classifier:** `golden`
+- **Model:** `—`
+- **Prompt version:** `—`
+- **Run at:** 2026-09-10T19:29:00+00:00
+- **Documents:** 31 · **Pages:** 172 · **Duration:** 4.8s
+- **Thresholds:** page accuracy ≥ 0.98, boundary F1 ≥ 0.98
+
+## Per manager
+
+| Manager | Pages | Page accuracy | Continuation | Record | Orientation | Boundary F1 |
+|---|---:|---|---|---|---|---|
+| cobalt | 42 | 100.00% (42/42) | 100.00% (42/42) | — | — | 1.0000 |
+| mccathren | 54 | 100.00% (54/54) | 100.00% (54/54) | — | 100.00% (1/1) | 1.0000 |
+| missoula | 76 | 100.00% (76/76) | 100.00% (76/76) | 100.00% (64/64) | — | 1.0000 |
+| **overall** | 172 | 100.00% (172/172) | 100.00% (172/172) | 100.00% (64/64) | 100.00% (1/1) | 1.0000 |
+
+## Per document
+
+| Property | Role | Pages | Page accuracy | Boundary F1 |
+|---|---|---:|---|---|
+| bridgewater | pm_source | 21 | 100.00% (21/21) | 1.0000 |
+| bridgewater | cornerstone_balance_sheet | 1 | 100.00% (1/1) | 1.0000 |
+| bridgewater | cornerstone_profit_loss_ytd | 1 | 100.00% (1/1) | 1.0000 |
+| bridgewater | cornerstone_distribution_schedule | 1 | 100.00% (1/1) | 1.0000 |
+| fort-grounds | pm_source | 16 | 100.00% (16/16) | 1.0000 |
+| fort-grounds | cornerstone_balance_sheet | 1 | 100.00% (1/1) | 1.0000 |
+| fort-grounds | cornerstone_profit_loss_ytd | 1 | 100.00% (1/1) | 1.0000 |
+| fort-grounds | cornerstone_distribution_schedule | 1 | 100.00% (1/1) | 1.0000 |
+| lolo-peak-village | pm_source | 15 | 100.00% (15/15) | 1.0000 |
+| lolo-peak-village | cornerstone_balance_sheet | 1 | 100.00% (1/1) | 1.0000 |
+| lolo-peak-village | cornerstone_profit_loss_ytd | 1 | 100.00% (1/1) | 1.0000 |
+| lolo-peak-village | cornerstone_distribution_schedule | 1 | 100.00% (1/1) | 1.0000 |
+| mullan-crossing | pm_source | 17 | 100.00% (17/17) | 1.0000 |
+| mullan-crossing | cornerstone_balance_sheet | 1 | 100.00% (1/1) | 1.0000 |
+| mullan-crossing | cornerstone_profit_loss_ytd | 1 | 100.00% (1/1) | 1.0000 |
+| mullan-crossing | cornerstone_distribution_schedule | 1 | 100.00% (1/1) | 1.0000 |
+| river-falls | pm_source | 26 | 100.00% (26/26) | 1.0000 |
+| river-falls | cornerstone_balance_sheet | 1 | 100.00% (1/1) | 1.0000 |
+| river-falls | cornerstone_profit_loss_ytd | 1 | 100.00% (1/1) | 1.0000 |
+| river-falls | cornerstone_distribution_schedule | 1 | 100.00% (1/1) | 1.0000 |
+| salmon-crossing | pm_source | 15 | 100.00% (15/15) | 1.0000 |
+| salmon-crossing | cornerstone_balance_sheet | 1 | 100.00% (1/1) | 1.0000 |
+| salmon-crossing | cornerstone_profit_loss_ytd | 1 | 100.00% (1/1) | 1.0000 |
+| salmon-crossing | cornerstone_distribution_schedule | 1 | 100.00% (1/1) | 1.0000 |
+| timber-place | pm_source | 23 | 100.00% (23/23) | 1.0000 |
+| timber-place | cornerstone_balance_sheet | 1 | 100.00% (1/1) | 1.0000 |
+| timber-place | cornerstone_profit_loss_ytd | 1 | 100.00% (1/1) | 1.0000 |
+| waypointe | pm_source | 16 | 100.00% (16/16) | 1.0000 |
+| waypointe | cornerstone_balance_sheet | 1 | 100.00% (1/1) | 1.0000 |
+| waypointe | cornerstone_profit_loss_ytd | 1 | 100.00% (1/1) | 1.0000 |
+| waypointe | cornerstone_distribution_schedule | 1 | 100.00% (1/1) | 1.0000 |
+
+## Confusion pairs
+
+None — every page was labelled as the golden file has it.
+
+## Cost
+
+| Input | Cache read | Cache write | Output | API calls | USD estimate |
+|---:|---:|---:|---:|---:|---:|
+| 0 | 0 | 0 | 0 | 0 | $0.00 |
+
+## Gate
+
+All managers meet both thresholds.

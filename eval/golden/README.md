@@ -23,5 +23,12 @@ orientation only on pages that carry the key.
 `expected_output` shape (frozen in Phase 2): a list with one entry per output page, in order —
 `{"output_page": n, "doc_role": ..., "section": ..., "record": <record id or null>, "source_page": n}`.
 
+**A note on `record` in the two places it appears.** Inside `documents[].pages[]` it is the label
+of a *page*, and for a single-record property it is `null` (SPEC §5 rule 3: the source prints no
+`Property:` header, so there is no qualifier to record). Inside `expected_output` it is the
+*resolved* record id the resolver assigned, so the same page shows `"default"` there whenever the
+section's cardinality is `per_record`. A `cardinality: one` section belongs to no single record and
+stays `null` in both places — WayPointe's combined Owner Statement is the case that matters.
+
 These files are the few-shot exemplar source for the classifier (SPEC §7.2) and the ground
 truth for `crr eval` (SPEC §8). Treat them as code: changes go through PR review.

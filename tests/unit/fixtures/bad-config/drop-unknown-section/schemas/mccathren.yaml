@@ -1,0 +1,152 @@
+# Source schema: McCathren Management & Real Estate Services - monthly owner packet
+# Covers: Timber Place, River Falls
+schema_id: mccathren
+version: 1
+producer: McCathren Management and Real Estate Services
+system: >
+  Property-accounting suite (GL codes 4110-000 style, "Book = Cash", "Period = Jun 2026") printed
+  and then SCANNED on a Canon iR-ADV multifunction. The baseline PDFs have NO text layer at all.
+text_layer: never             # OCR is mandatory before the text channel exists
+fingerprint:
+  description: >
+    Flat 612x792 scans, JPEG+PNG layered, producer "Adobe PSL 1.3e for Canon". Report pages carry a
+    timestamp top-left (e.g. "7/9/2026 11:39 AM"), the property name with its code in parentheses
+    ("Timber Place by the Lake (1000)", "River Falls Apartments (0312)"), the report title, then
+    "Period = Jun 2026" and "Book = Cash". Multi-page reports print "Page N of M" at the bottom.
+    Some pages are scanned sideways; the classifier reports orientation and the composer rotates.
+  page_size_hint: "612x792 portrait scans; content may be rotated on the page"
+  ocr_quality_note: >
+    OCR of these scans is degraded ("limber Place by the Lake", "Net Chanae=S00.00"). Use OCR text
+    as supporting evidence only; the image is the primary signal.
+record_scope:
+  description: One property record per package. record_qualifier is always null.
+
+sections:
+  - id: cover_letter
+    semantic: narrative
+    cardinality: one
+    typical_pages: 1
+    description: >
+      Typed letter on plain paper: "<Property> / June 2026 STATEMENT", then Income / Electric /
+      Painting / Repair & Maintenance budget-vs-actual paragraphs with one-line explanations,
+      a note addressed "John," summarising expenses paid, owner distribution and ending cash balance,
+      a handwritten signature over "Property Manager" and a handwritten date.
+    visual_cues: ["Bold centered title 'June 2026 STATEMENT'", "Handwritten signature and date at the bottom", "Lots of white space; no table grid"]
+    text_cues: ["STATEMENT", "Budget:", "Actual:", "Variance:", "Property Manager"]
+
+  - id: managers_report
+    semantic: owner_statement
+    cardinality: one
+    typical_pages: 1
+    description: >
+      "Manager's Report - Market Property" with the property code and name and "June 30, 2026".
+      A six-column MTD/YTD Actual-Budget-Variance table (Total Income Collected, Less Total Operating
+      Expenses, NET OPERATING INCOME, reserves, CASH FLOW), then two side-by-side blocks:
+      CASH & CASH REQUIREMENTS / NON OPERATING RECEIPTS on the left, CAPITAL EXPENSES / NON OPERATING
+      DISBURSEMENTS on the right, then reserve balances and DELINQUENCIES.
+    visual_cues: ["Title 'Manager's Report - Market Property'", "Boxed two-column lower half", "'CASH & CASH REQUIREMENTS' heading"]
+    text_cues: ["Manager's Report", "CASH & CASH REQUIREMENTS", "NON OPERATING RECEIPTS", "DELINQUENCIES"]
+
+  - id: aged_receivable
+    semantic: delinquency
+    cardinality: one
+    typical_pages: 1
+    optional: true
+    description: >
+      "Financial Aged Receivable": Property / Unit / Resident / Name rows with Total Unpaid Charges,
+      0-30 / 31-60 / 61-90 / Over 90 days, Prepays, Balance, and a Grand Total. Printed landscape;
+      in 2026-06 Timber Place it was scanned sideways on a portrait page.
+    visual_cues: ["Title 'Financial Aged Receivable'", "Aging-bucket column headers", "Often rotated 90 degrees on the scan"]
+    text_cues: ["Financial Aged Receivable", "0-30", "31-60", "Over 90", "Prepays"]
+
+  - id: rent_roll_lease_charges
+    semantic: rent_roll
+    cardinality: one
+    typical_pages: 2-4
+    description: >
+      "Rent Roll with Lease Charges" - Property = <name>, As of = 06/30/2026, Month = 06/2026.
+      Columns: Unit, Unit Type, Sq Ft, Resident, Name, Market Rent, Charge Code, Amount, Resident
+      Deposit, Other Deposit, Move In, Lease Expiration, Move Out, Balance. Each unit has several
+      charge-code sub-rows (Rent, wsg, rll, petrent, car) and a Total. The final page(s) carry the
+      occupancy totals table and "Summary of Charges by Charge Code".
+    visual_cues: ["Dense multi-row-per-unit table with charge codes", "Header 'Rent Roll with Lease Charges'", "Last page: totals and a short 'Summary of Charges' table"]
+    text_cues: ["Rent Roll with Lease Charges", "Current/Notice/Vacant Residents", "Summary of Charges by Charge Code"]
+
+  - id: budget_variance_report
+    semantic: budget_variance
+    cardinality: one
+    typical_pages: 1
+    description: >
+      "BUDGET VARIANCE REPORT" dated June 30, 2026 with the property name. Six columns: MTD Actual /
+      Budget / Variance, YTD Actual / Budget / Variance. INCOME, OPERATING EXPENSES, NET OPERATING
+      INCOME, debt-service lines, NET INCOME, ADJUSTMENTS, CASH FLOW, Beginning/Ending Cash Balance.
+    visual_cues: ["Centered title 'BUDGET VARIANCE REPORT'", "Six numeric columns; no GL codes", "Ends with Beginning/Ending Cash Balance"]
+    text_cues: ["BUDGET VARIANCE REPORT", "MTD", "YTD", "ADJUSTMENTS"]
+
+  - id: budget_comparison_cash_flow
+    semantic: budget_variance
+    cardinality: one
+    typical_pages: 2
+    description: >
+      "Budget Comparison Cash Flow - Period = Jun 2026 - Book = Cash". GL-coded rows (4110-000 Rental
+      Income ...) with PTD Actual / PTD Budget / Variance / %Var / YTD Actual / YTD Budget / Variance /
+      %Var / Annual. Ends at 9900-000 NET EARNINGS. Distinguished from budget_variance_report by the
+      GL codes and the Annual column; from cash_flow_statement by having budget columns.
+    visual_cues: ["Title 'Budget Comparison Cash Flow'", "GL codes like 4110-000 on every row", "Nine numeric columns incl. 'Annual'"]
+    text_cues: ["Budget Comparison Cash Flow", "PTD Actual", "PTD Budget", "Annual"]
+
+  - id: operating_statement_summary
+    semantic: income_statement
+    cardinality: one
+    typical_pages: 1
+    description: >
+      "OPERATING STATEMENT--SUMMARY" dated June 30, 2026. Four columns: Current Period, % of Gross
+      Income, Year to Date Balance, % of Gross Income. INCOME, OPERATING EXPENSES, NET OPERATING
+      INCOME, adjustments, CASH FLOW, Beginning/Ending Cash Balance. No GL codes.
+    visual_cues: ["Title 'OPERATING STATEMENT--SUMMARY'", "Percent-of-gross columns"]
+    text_cues: ["OPERATING STATEMENT", "SUMMARY", "% of", "Gross Inc"]
+
+  - id: cash_flow_statement
+    semantic: income_statement
+    cardinality: one
+    typical_pages: 3
+    description: >
+      "Cash Flow Statement - Period = Jun 2026 - Book = Cash", "Page N of 3". GL-coded rows with
+      Period to Date / % / Year to Date / % (four numeric columns, no budget). Page 3 ends with
+      NET EARNINGS, Adjustments, and a Total Cash reconciliation table.
+    visual_cues: ["Title 'Cash Flow Statement'", "GL codes; only four numeric columns", "'Page N of 3' at bottom"]
+    text_cues: ["Cash Flow Statement", "Period to Date", "Year to Date", "NET EARNINGS"]
+
+  - id: balance_sheet
+    semantic: balance_sheet
+    cardinality: one
+    typical_pages: 2
+    description: >
+      "Balance Sheet - Period = Jun 2026 - Book = Cash", "Page N of 2". 1000-000 ASSETS (cash and
+      reserve trust accounts, fixed assets), 2000-000 LIABILITIES, 3000-000 EQUITY with OWNER
+      CONTRIBUTIONS and OWNER DISBURSEMENTS (Cornerstone Mgmt Consulting 2% line), Retained Earnings,
+      TOTAL LIABILITIES & CAPITAL.
+    visual_cues: ["Title 'Balance Sheet'", "Single 'Current Balance' column", "OWNER DISBURSEMENTS block on page 2"]
+    text_cues: ["Balance Sheet", "Current Balance", "OWNER DISBURSEMENTS", "TOTAL LIABILITIES & CAPITAL"]
+
+  - id: trial_balance
+    semantic: trial_balance
+    cardinality: one
+    typical_pages: 2
+    description: >
+      "Trial Balance - Period = Jun 2026 - Book = Cash", "Page N of 2". Columns: Balance Forward,
+      Debit, Credit, Ending balance; every GL account; final "Total" row where Debit equals Credit.
+    visual_cues: ["Title 'Trial Balance'", "Four columns headed Balance Forward / Debit / Credit / Ending balance"]
+    text_cues: ["Trial Balance", "Balance Forward", "Ending balance"]
+
+  - id: general_ledger
+    semantic: general_ledger
+    cardinality: one
+    typical_pages: 7-9
+    description: >
+      "General Ledger - Period = Jun 2026 - Book = Cash - Sort On=", "Page N of M" (7 or 9).
+      Per account: "= Beginning Balance =", transaction rows (property code, date, period,
+      person/description, control, reference, debit, credit, balance, remarks), "Net Change=",
+      "= Ending Balance =". Very dense; the last page ends with grand totals.
+    visual_cues: ["Title 'General Ledger'", "'= Beginning Balance =' / '= Ending Balance =' markers", "Tiny dense rows"]
+    text_cues: ["General Ledger", "Beginning Balance", "Ending Balance", "Net Change"]

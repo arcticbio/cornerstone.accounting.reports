@@ -1,0 +1,135 @@
+schema_id: cobalt
+version: 1
+producer: Cobalt Properties Group
+system: 'Property-management platform export (report footers read "Created on MM/DD/YYYY
+  Page N" with the report name to the left; owner statement pages read "Page N of
+  M"). Born-digital, full text layer.
+
+  '
+text_layer: always
+fingerprint:
+  description: 'Report pages carry a "Properties: 411 - Bridgewater - 61580 Brosterhous
+    Rd Bend, OR 97702" style header block with report parameters (Period Range, Accounting
+    Basis: Cash, Level of Detail). Footers: "<Report Name>  Created on 07/15/2026
+    Page N". Owner statement pages use Cobalt letterhead on page 1 and "Page N of
+    M" footers. Landscape 792x612 for most reports; owner statement and balance sheet
+    are 612x792 portrait.
+
+    '
+  footer_regex: Created on \d{2}/\d{2}/\d{4} Page \d+|Page \d+ of \d+
+  page_size_hint: 612x792 portrait (owner statement, balance sheet) | 792x612 landscape
+    (others)
+record_scope:
+  description: One property record per package. record_qualifier is always null.
+sections:
+- id: owner_statement
+  semantic: owner_statement
+  cardinality: many
+  typical_pages: 5-9
+  description: '"Owner Statement Jun 01, 2026 - Jun 30, 2026". Page 1: owning-entity
+    address block top-left, Cobalt Properties Group letterhead (376 SW Bluff Drive,
+    Bend OR, www.cobaltpropertiesgroup.com) top-right, then "Notes" - the month-end
+    narrative (leasing %, notice units, routine expenses, ending cash balance) signed
+    with travis@ / jenna@ emails. Page 2: "Property Manager: Travis Babcock", Property
+    Cash Summary (Beginning Balance, Cash In, Cash Out, Owner Disbursements, Ending
+    Cash Balance, Property Reserve, Prepayments, Net Owner Funds), then the Transactions
+    register begins. Pages 3-N: continuation of the Date / Payee-Payer / Type / Reference
+    / Description / Cash In / Cash Out / Balance register, ending with "Ending Cash
+    Balance" and "Total". Footer "Page N of M".
+
+    '
+  visual_cues:
+  - Letterhead on page 1
+  - Running transaction register with Cash In / Cash Out / Balance
+  - '''Page N of M'' footer'
+  text_cues:
+  - Owner Statement
+  - Property Cash Summary
+  - Cash In
+  - Cash Out
+  - Page
+  - of
+  continuation_note: Register pages have no title; the column header row 'Date Payee
+    / Payer Type Reference Description Cash In Cash Out Balance' identifies them.
+- id: cash_flow_12_month
+  semantic: income_statement
+  cardinality: one
+  typical_pages: 4
+  description: 'Landscape "Cash Flow - 12 Month": header block (Properties, Owned
+    By, Period Range Jan 2026 to Jun 2026, Accounting Basis: Cash, Level of Detail),
+    then Account Name with Jan 2026 ... Jun 2026 and Total columns. Operating Income
+    & Expense, then Other Items (Impound Cash, Security Deposit Cash, Prepaid Liabilities),
+    ending with Beginning Cash / Cash Flow / Actual Ending Cash. Footer "Cash Flow
+    - 12 Month  Created on ... Page N".
+
+    '
+  visual_cues:
+  - Landscape; six month columns plus Total
+  - Wrapped account names in a narrow first column
+  text_cues:
+  - Cash Flow - 12 Month
+  - Period Range
+  - Jan 2026
+  - Jun 2026
+  - Actual Ending Cash
+  footer_label: Cash Flow - 12 Month
+- id: rent_roll
+  semantic: rent_roll
+  cardinality: one
+  typical_pages: 1-3
+  description: 'Landscape "Rent Roll (Itemized w/Pet Rent and Deposit Included)":
+    parameter block (Units: Active, Include Advertised Rent, GL Accounts: 4100 Rent
+    Income and 4135 Pet Rent, As of 06/30/2026), then Tenant / Unit / Rent Income
+    / Pet Rent / Total / BD/BA / Status / Deposit / Lease To / Past Due rows, ending
+    with "N Units ... % Occupied" totals.
+
+    '
+  visual_cues:
+  - Landscape tenant table with BD/BA and Status columns
+  - Totals row with unit count and occupancy %
+  text_cues:
+  - Rent Roll
+  - Pet Rent
+  - Lease To
+  - Past Due
+  - Occupied
+  footer_label: Rent Roll (Itemized w/Pet Rent and Deposit Included)
+- id: balance_sheet
+  semantic: balance_sheet
+  cardinality: one
+  typical_pages: 1
+  description: 'Portrait "Balance Sheet" as of 06/30/2026, cash basis: ASSETS (Operating
+    Cash Account, Impound Cash Account, Security Deposit Cash Account, Total Cash,
+    TOTAL ASSETS), LIABILITIES & CAPITAL (Security Deposits, Prepaid Liabilities,
+    Owner Equity), one Balance column.
+
+    '
+  visual_cues:
+  - Portrait; short; single 'Balance' column
+  - Footer 'Balance Sheet  Created on ...'
+  text_cues:
+  - Balance Sheet
+  - Operating Cash Account
+  - TOTAL ASSETS
+  - LIABILITIES & CAPITAL
+  footer_label: Balance Sheet
+- id: annual_budget_comparative
+  semantic: budget_variance
+  cardinality: one
+  typical_pages: 4
+  description: 'Landscape "Annual Budget - Comparative" as of Jun 2026: Account Name
+    with MTD Actual / MTD Budget / MTD $ Var / MTD % Var / YTD Actual / YTD Budget
+    / YTD $ Var / YTD % Var / Annual Budget. Income, Utility Services, Building Service
+    & Repairs, Property Maintenance Contracts, G&A, NOI, ending with Total Income
+    / Total Expense / Net Income.
+
+    '
+  visual_cues:
+  - Landscape; nine numeric columns with MTD and YTD groups
+  - Footer 'Annual Budget - Comparative'
+  text_cues:
+  - Annual Budget - Comparative
+  - MTD Actual
+  - YTD Budget
+  - Annual Budget
+  footer_label: Annual Budget - Comparative
