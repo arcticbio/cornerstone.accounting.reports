@@ -4,18 +4,19 @@ Single source of truth for build state. Claude Code ticks tasks here after each 
 commits. Humans read this to see where things stand. Mirrors `docs/PLAN.md`; if they diverge,
 PLAN.md defines the work and this file records what has been done.
 
-**Branch:** `build/v1` (or the session branch — see D-15) · **PR:** _(link after Phase 0)_ · **Current phase:** 0 · **Last session note:** _(none yet)_
+**Branch:** `claude/gifted-lamport-wwgenm` (session-scoped branch; D-15 — every reference to `build/v1` in these documents means this branch) · **PR:** _(link after Phase 0)_ · **Current phase:** 0 · **Last session note:** _(none yet)_
 
 ## Session log
 
 | Date (UTC) | Phase | What happened | Next |
 |---|---|---|---|
 | — | — | Handoff package committed; build not started | Phase 0, task 1 |
+| 2026-09-10 | 0 | Bundle moved to `data/bundle/2026-06`, `.DS_Store` purged, bundle verified | Phase 0, scaffold |
 
 ## Phase 0 — Repository hygiene and scaffold
 
-- [ ] `git mv "Report Assembly Bundle" data/bundle/2026-06`. Remove every `.DS_Store` from git. Verify the shipped `.gitignore` covers Python, `work/`, `.env`, `.DS_Store`.
-- [ ] Verify the bundle: the three PM folder names are byte-equal to `folder` in `config/properties.yaml`; 8 property folders, each with `inputs/` (4 files, 3 for Timber Place), `target/`, `reference/`, `build-spec.json`. The bundle root also carries its own `README.md`, `BUILD-RULES.md`, `index.json` from the earlier analysis — leave them. Record counts in `PROGRESS.md`.
+- [x] `git mv "Report Assembly Bundle" data/bundle/2026-06`. Removed 5 `.DS_Store` files from git and disk; shipped `.gitignore` already covers Python, `work/`, `.env`, `.DS_Store` — unchanged.
+- [x] Bundle verified — see "Bundle verification" at the foot of this file. All checks pass.
 - [ ] `pyproject.toml` (`crr` package, Python 3.12, deps: pydantic, pydantic-settings, typer, structlog, pyyaml, pypdf, pypdfium2, pillow, anthropic, jinja2, google-api-python-client, google-auth; dev: pytest, pytest-cov, ruff, mypy, reportlab, types-PyYAML). `uv lock`.
 - [ ] `src/crr/__init__.py`, `cli.py` with `crr version`, `settings.py` per SPEC §12.
 - [ ] Verify the shipped `.claude/settings.json` SessionStart hook and `scripts/session_start.sh` work once `pyproject.toml` exists (run the script by hand; it must exit 0).
@@ -132,4 +133,25 @@ PLAN.md defines the work and this file records what has been done.
 
 ## Bundle verification (Phase 0)
 
-_(counts go here)_
+Checked 2026-09-10 against `config/properties.yaml`.
+
+- PM folder names on disk are byte-equal to the three `folder` values in `config/properties.yaml`:
+  `Cobalt Properties Group`, `McCathren Management and Real Estate Services`,
+  `Missoula Property Management`.
+- 8 property folders, each with exactly one `2026-06 June/` period folder containing
+  `inputs/`, `target/` (1 file), `reference/` (1 file) and `build-spec.json`.
+
+| Property | Manager | `inputs/` files |
+|---|---|---|
+| fort-grounds | missoula | 4 |
+| lolo-peak-village | missoula | 4 |
+| mullan-crossing | missoula | 4 |
+| waypointe | missoula | 4 |
+| timber-place | mccathren | 3 (no `03 Cornerstone - Investor Distribution Schedule.pdf`) |
+| river-falls | mccathren | 4 |
+| bridgewater | cobalt | 4 |
+| salmon-crossing | cobalt | 4 |
+
+- Input filenames match `pm_source_filename` / `cornerstone_files` in `config/properties.yaml` exactly.
+- Bundle root retains `README.md`, `BUILD-RULES.md`, `index.json` from the earlier analysis, as instructed.
+- 5 `.DS_Store` files removed from the index and the working tree.
