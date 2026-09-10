@@ -60,6 +60,7 @@ ignore_missing_imports = true
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
+pythonpath = ["."]
 markers = [
     "api: needs ANTHROPIC_API_KEY; hits the real model",
     "gdrive: needs Google service-account credentials",

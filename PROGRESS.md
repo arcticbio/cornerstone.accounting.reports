@@ -4,7 +4,7 @@ Single source of truth for build state. Claude Code ticks tasks here after each 
 commits. Humans read this to see where things stand. Mirrors `docs/PLAN.md`; if they diverge,
 PLAN.md defines the work and this file records what has been done.
 
-**Branch:** `claude/gifted-lamport-wwgenm` (session-scoped branch; D-15 — every reference to `build/v1` in these documents means this branch) · **PR:** [#1](https://github.com/arcticbio/cornerstone.accounting.reports/pull/1) · **Current phase:** 0 · **Last session note:** _(none yet)_
+**Branch:** `claude/gifted-lamport-wwgenm` (session-scoped branch; D-15 — every reference to `build/v1` in these documents means this branch) · **PR:** [#1](https://github.com/arcticbio/cornerstone.accounting.reports/pull/1) · **Current phase:** 2 · **Last session note:** _(none yet)_
 
 ## Session log
 
@@ -12,6 +12,8 @@ PLAN.md defines the work and this file records what has been done.
 |---|---|---|---|
 | — | — | Handoff package committed; build not started | Phase 0, task 1 |
 | 2026-09-10 | 0 | Bundle moved to `data/bundle/2026-06`, `.DS_Store` purged, bundle verified | Phase 0, scaffold |
+| 2026-09-10 | 0 | Scaffold, settings, CLI, CI, PR #1 opened | Phase 1 |
+| 2026-09-10 | 1 | Models, render/text/OCR/inspect, 31-document sweep, McCathren labels visually verified | Phase 2 |
 
 ## Phase 0 — Repository hygiene and scaffold
 
@@ -42,16 +44,16 @@ PLAN.md defines the work and this file records what has been done.
 ## Phase 1 — Document model, rendering, text, OCR
 
 - [x] `models/domain.py` per SPEC §3 — frozen, `extra="forbid"`; `Orientation.correcting_rotation` encodes the SPEC §6.5 rotation table; `ResolvedSection` validates page contiguity and that `orientation_fixes` stay inside the section.
-- [ ] `preprocess/render.py`: pypdfium2 → PNG per page, 150 DPI, long edge ≤ 1568. Cache by (sha256, page, dpi).
-- [ ] `preprocess/text.py`: pypdf text per page, normalised; text-layer probe per SPEC §6.2.
-- [ ] `preprocess/ocr.py`: ocrmypdf wrapper (subprocess), `--skip-text --rotate-pages --optimize 1`; version capture; graceful error if tesseract absent.
-- [ ] `crr inspect <pdf>` command.
-- [ ] Run `crr inspect` over all 8 PM sources + 23 Cornerstone files; assert page counts equal the golden files; assert `has_text_layer` is false for both McCathren sources and true for all others. Record in `PROGRESS.md`.
-- [ ] OCR both McCathren sources into `work/`; confirm text now extracts on every page; note Timber Place page 3 orientation after `--rotate-pages`.
-- [ ] **Visual verification of golden labels for McCathren**: render contact sheets (`work/contact-sheets/<property>.png`, 6 pages per row with page numbers) and check each page's golden label against what the image shows. Correct `eval/golden/mccathren/*.json` if anything is wrong and note the correction. (The labels were derived by page offset from the published packages; two spot checks passed. This is the full check.)
-- [ ] Unit tests with reportlab-generated fixtures: rendering size cap, text probe threshold, OCR skip when text exists (mock subprocess).
+- [x] `preprocess/render.py`: pypdfium2 → RGB PNG, 150 DPI, long edge capped at 1568 px, cached by (sha256, page, dpi, max_edge); a re-run reuses the cache without re-rasterising.
+- [x] `preprocess/text.py`: pypdf text per page, capped at 6 000 chars. Normalisation collapses *horizontal* whitespace and drops blank lines but keeps line breaks — the footer check (SPEC §7.4) reads the report name off the last line, so flattening newlines would cost it its anchor. Probe: ≥ 40 non-whitespace chars on ≥ 90 % of pages.
+- [x] `preprocess/ocr.py`: subprocess wrapper with the spec'd argv, version capture, `/Rotate` diffing to report whether `--rotate-pages` changed anything, `OcrError` with the apt install hint when the binary is missing, and stderr path-redaction so property names never reach a log. `ocr_if_needed()` skips when the document already has text or the output definition disables OCR.
+- [x] `crr inspect <pdf>` (`--json` for machine output): sha256, page count, text-layer verdict, per-page size / `/Rotate` / effective size / char count / footer line.
+- [x] All 31 documents inspected: page counts equal the golden labels for every one, `has_text_layer` false for exactly the two McCathren PM baselines and true for the other 29. Locked in as `tests/eval/test_bundle_documents.py` (32 tests, 4.3 s).
+- [x] Both McCathren sources OCR'd with ocrmypdf 15.2.0 into `work/2026-06/<property>/ocr/` (~45 s each). Text layer now true for both, and **no page falls below the 40-character bar** (Timber Place 23/23, River Falls 26/26). **`--rotate-pages` changed nothing on either document** — including Timber Place page 3, the sideways Financial Aged Receivable. So the first-pass rotation is a no-op here and the classifier's orientation label is the only thing that will land that page upright (SPEC §6.2, §6.5).
+- [x] Contact sheets rendered to `work/contact-sheets/{timber-place,river-falls}.png` (6 per row, numbered) and every page checked against its golden label. **All 49 section / continuation / record labels are correct** — no section was mislabelled. One addition: Timber Place p3 now carries `"orientation": "rotated_90_ccw"` (content reads bottom-to-top up the left edge; tesseract OSD independently reports `Rotate: 90`). Verification notes written into both golden files' `notes`.
+- [x] Unit tests on reportlab fixtures: long-edge cap (and that a small page is *not* upscaled), aspect-ratio preservation, render cache hits and DPI-keyed misses, probe threshold at exactly 90 % of pages and 40 non-whitespace chars, OCR argv, rotation detection, missing-binary and failure paths incl. path redaction, and both OCR-skip conditions.
 
-**Acceptance:** _(record evidence here when met)_
+**Acceptance:** `crr inspect` matches golden page counts for all 31 documents (`tests/eval/test_bundle_documents.py`, 32 passed). McCathren golden labels visually verified against contact sheets; the single correction (Timber Place p3 orientation) is recorded in the golden file's `notes`. Gate green: ruff, `mypy src`, 62 tests.
 
 ## Phase 2 — Config loading, validation, address grammar, resolver
 

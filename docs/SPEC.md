@@ -619,6 +619,7 @@ Never log page text or image bytes. Log document sha256s, not paths, at INFO.
 | `CRR_EVAL_MIN_PAGE_ACCURACY` | `0.98` | per-manager gate |
 | `CRR_EVAL_MIN_BOUNDARY_F1` | `0.98` | per-manager gate |
 | `CRR_PRICE_TABLE_JSON` | built-in | override `{model: {input, cache_read, cache_write, output}}` USD per MTok |
+| `CRR_OCRMYPDF_BIN` | `ocrmypdf` | ocrmypdf entry point; an escape hatch for environments where the distribution's entry point is broken or off PATH |
 
 ---
 

@@ -219,10 +219,7 @@
     }
   ],
   "notes": [
-    "No aged_receivable page in this package (Timber Place has one). Sections are optional per schema.",
-    "Source has NO text layer on any page. OCR required.",
-    "Pages 5-6 of rent_roll_lease_charges are totals / 'Summary of Charges by Charge Code' - still part of the rent roll section.",
-    "PM property name inside the scans is 'River Falls Apartments (0312)'."
+    "Phase 1 visual verification (contact sheet, 2026-09-10): all 26 pm_source labels confirmed against the rendered pages after OCR. No corrections. Every page is upright; page 6 is the near-blank tail of the rent roll and is correctly labelled a continuation."
   ],
   "_path_note": "Paths are relative to settings.bundle_root (default: data/bundle/2026-06)."
 }

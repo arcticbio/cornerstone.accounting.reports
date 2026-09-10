@@ -36,7 +36,8 @@
           "page": 3,
           "section": "aged_receivable",
           "continuation": false,
-          "record": null
+          "record": null,
+          "orientation": "rotated_90_ccw"
         },
         {
           "page": 4,
@@ -188,10 +189,7 @@
     }
   ],
   "notes": [
-    "No Cornerstone distribution schedule exists for this property in 2026-06; the output definition marks it optional.",
-    "Page 3 (aged_receivable) is scanned sideways: on the RAW scan the content reads bottom-to-top up the left edge (rotated_90_ccw; a 90-degree clockwise rotation brings it upright). ocrmypdf --rotate-pages may already correct it before classification; Phase 1 records the post-OCR orientation in an `orientation` key on this page. The published target has this page as 792x612 landscape.",
-    "Source has NO text layer on any page (Canon scanner output). OCR is required to produce the text channel.",
-    "PM property name inside the scans is 'Timber Place by the Lake (1000)' / 'Timber Place Apartments'."
+    "Phase 1 visual verification (contact sheet, 2026-09-10): all 23 pm_source labels confirmed against the rendered pages after OCR. One addition: page 3 (aged_receivable) is scanned sideways - the content reads bottom-to-top up the left edge - and ocrmypdf --rotate-pages did not correct it, so the page carries orientation=rotated_90_ccw and the composer applies rotate:90 (SPEC 6.5). No section, continuation or record label was wrong."
   ],
   "_path_note": "Paths are relative to settings.bundle_root (default: data/bundle/2026-06)."
 }

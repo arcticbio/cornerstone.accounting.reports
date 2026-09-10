@@ -2,6 +2,9 @@
 
 from __future__ import annotations
 
+from pathlib import Path
+from typing import Annotated
+
 import typer
 
 from crr import __version__
@@ -27,6 +30,31 @@ def main(
 def version() -> None:
     """Print the runner version."""
     typer.echo(f"crr {__version__}")
+
+
+@app.command()
+def inspect(
+    pdf: Annotated[Path, typer.Argument(help="PDF to inspect", exists=True, dir_okay=False)],
+    as_json: Annotated[bool, typer.Option("--json", help="Emit JSON instead of a table")] = False,
+) -> None:
+    """Page sizes, the text-layer probe and footer lines for one PDF."""
+    from crr.preprocess.inspect import inspect_pdf
+
+    facts = inspect_pdf(pdf)
+    if as_json:
+        typer.echo(facts.model_dump_json(indent=2))
+        return
+    typer.echo(f"{pdf.name}")
+    typer.echo(f"  sha256        {facts.sha256}")
+    typer.echo(f"  pages         {facts.page_count}")
+    typer.echo(f"  text layer    {facts.has_text_layer}")
+    typer.echo(f"  {'page':>4}  {'size (pt)':>13}  {'rot':>3}  {'chars':>6}  footer")
+    for page in facts.pages:
+        size = f"{page.width_pt:.0f}x{page.height_pt:.0f}"
+        footer = (page.footer_line or "")[:64]
+        typer.echo(
+            f"  {page.page:>4}  {size:>13}  {page.rotate:>3}  {page.text_chars:>6}  {footer}"
+        )
 
 
 @app.command("validate-config")

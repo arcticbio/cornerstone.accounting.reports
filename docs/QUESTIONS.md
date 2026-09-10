@@ -42,6 +42,13 @@ it up from here.
 
 *(format: `A-nn · <assumption> · <why> · <where it can be changed>`)*
 
+**A-01 · `ocrmypdf` is located via `CRR_OCRMYPDF_BIN`, defaulting to `ocrmypdf` on PATH.**
+*Why:* the build container ships a Debian `ocrmypdf` built for python3.12 while `/usr/bin/python3`
+is a locally built 3.11, so the stock entry point cannot import PIL. Rather than special-case that
+in pipeline code, the entry point is one setting with the spec'd default; the session uses a
+git-ignored shim in `.venv/bin/`. CI and the Docker image use the stock apt entry point unchanged.
+*Where:* `src/crr/preprocess/ocr.py`, `SPEC.md` §12 (amended in the same commit).
+
 ---
 
 ## Blocked (Claude Code appends here)
