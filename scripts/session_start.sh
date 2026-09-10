@@ -10,6 +10,17 @@ else
   echo "uv sync: skipped (no pyproject.toml yet — Phase 0 creates it)"
 fi
 
+# The cloud image installs ocrmypdf and its Python deps from apt, built for CPython 3.12, while
+# /usr/bin/python3 is 3.11 — so `ocrmypdf` dies on `from PIL import _imaging`. Repoint its shebang
+# at the interpreter its modules were built for. Idempotent; no-op where ocrmypdf already works.
+if command -v ocrmypdf >/dev/null 2>&1 && ! ocrmypdf --version >/dev/null 2>&1; then
+  if command -v python3.12 >/dev/null 2>&1 && python3.12 "$(command -v ocrmypdf)" --version >/dev/null 2>&1; then
+    sed -i '1s|^#!.*|#!/usr/bin/python3.12|' "$(command -v ocrmypdf)" 2>/dev/null \
+      && echo "ocrmypdf: repaired shebang -> /usr/bin/python3.12" \
+      || echo "ocrmypdf: BROKEN and not repairable (needs python3.12 shebang) — OCR tasks will fail"
+  fi
+fi
+
 for tool in tesseract ocrmypdf gs; do
   if command -v "$tool" >/dev/null 2>&1; then
     echo "$tool: $($tool --version 2>&1 | head -1)"

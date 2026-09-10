@@ -4,7 +4,7 @@ Single source of truth for build state. Claude Code ticks tasks here after each 
 commits. Humans read this to see where things stand. Mirrors `docs/PLAN.md`; if they diverge,
 PLAN.md defines the work and this file records what has been done.
 
-**Branch:** `claude/ecstatic-goodall-ji7yur` (session-scoped branch per D-15; every `build/v1` reference means this branch) · **PR:** _(link after Phase 0)_ · **Current phase:** 0 · **Last session note:** _(none yet)_
+**Branch:** `claude/ecstatic-goodall-ji7yur` (session-scoped branch per D-15; every `build/v1` reference means this branch) · **PR:** [#2](https://github.com/arcticbio/cornerstone.accounting.reports/pull/2) · **Current phase:** 0 · **Last session note:** _(none yet)_
 
 ## Session log
 
@@ -19,14 +19,32 @@ PLAN.md defines the work and this file records what has been done.
       → Moved. 5 tracked `.DS_Store` files untracked and deleted from the tree. Shipped `.gitignore` already covered all four categories; unchanged.
 - [x] Verify the bundle: the three PM folder names are byte-equal to `folder` in `config/properties.yaml`; 8 property folders, each with `inputs/` (4 files, 3 for Timber Place), `target/`, `reference/`, `build-spec.json`. The bundle root also carries its own `README.md`, `BUILD-RULES.md`, `index.json` from the earlier analysis — leave them. Record counts in `PROGRESS.md`.
       → All checks pass. Counts below.
-- [ ] `pyproject.toml` (`crr` package, Python 3.12, deps: pydantic, pydantic-settings, typer, structlog, pyyaml, pypdf, pypdfium2, pillow, anthropic, jinja2, google-api-python-client, google-auth; dev: pytest, pytest-cov, ruff, mypy, reportlab, types-PyYAML). `uv lock`.
-- [ ] `src/crr/__init__.py`, `cli.py` with `crr version`, `settings.py` per SPEC §12.
-- [ ] Verify the shipped `.claude/settings.json` SessionStart hook and `scripts/session_start.sh` work once `pyproject.toml` exists (run the script by hand; it must exit 0).
-- [ ] `.github/workflows/ci.yml`: ruff, mypy, pytest with coverage, `crr validate-config`, `crr eval --classifier golden --gate`. Python 3.12, `uv`. Until Phase 5, `crr eval` may be a stub that exits 0 and prints "eval not implemented"; `validate-config` may be a stub that only loads the YAML.
-- [ ] Copy `docs/ANALYSIS-*.md` from the handoff (already present). Confirm `docs/`, `config/`, `eval/golden/` are in place and `crr validate-config` is wired (may be a stub that loads YAML).
+- [x] `pyproject.toml` (`crr` package, Python 3.12, deps: pydantic, pydantic-settings, typer, structlog, pyyaml, pypdf, pypdfium2, pillow, anthropic, jinja2, google-api-python-client, google-auth; dev: pytest, pytest-cov, ruff, mypy, reportlab, types-PyYAML). `uv lock`.
+- [x] `src/crr/__init__.py`, `cli.py` with `crr version`, `settings.py` per SPEC §12.
+      → Also `log.py` (structlog JSON to stderr). `uv run crr version` prints `crr 0.1.0`.
+- [x] Verify the shipped `.claude/settings.json` SessionStart hook and `scripts/session_start.sh` work once `pyproject.toml` exists (run the script by hand; it must exit 0).
+      → Exits 0, `uv sync: ok`. Two hook fixes, see notes below.
+- [x] `.github/workflows/ci.yml`: ruff, mypy, pytest with coverage, `crr validate-config`, `crr eval --classifier golden --gate`. Python 3.12, `uv`. Until Phase 5, `crr eval` may be a stub that exits 0 and prints "eval not implemented"; `validate-config` may be a stub that only loads the YAML.
+- [x] Copy `docs/ANALYSIS-*.md` from the handoff (already present). Confirm `docs/`, `config/`, `eval/golden/` are in place and `crr validate-config` is wired (may be a stub that loads YAML).
+      → Present: 2 ANALYSIS docs, `config/properties.yaml` + 4 schemas + 3 outputs, 8 golden label files + README.
 - [ ] Open PR `build/v1 → main` titled "Cornerstone Report Runner v1" with a phase table in the description.
 
 **Acceptance:** _(record evidence here when met)_
+
+### Environment notes (Phase 0)
+
+- **`ocrmypdf` was broken in the cloud image.** Its apt-installed Python modules are built for
+  CPython 3.12 (`PIL/_imaging.cpython-312-*.so`) while `/usr/bin/python3` is 3.11, so every
+  invocation died on `ImportError: cannot import name '_imaging' from 'PIL'`. `python3.12
+  /usr/bin/ocrmypdf` worked. `scripts/session_start.sh` now repoints the shebang at
+  `/usr/bin/python3.12` when — and only when — it finds this exact breakage; idempotent, and a
+  no-op anywhere ocrmypdf already runs. tesseract 5.3.4 and gs 10.02.1 were fine. Phase 1's OCR
+  tasks are unblocked; the Phase 7 Dockerfile pins its own base and will not inherit this.
+- **`ruff format` rewrites Python code blocks inside Markdown.** It reformatted `docs/SPEC.md`
+  on first run. Reverted, and `docs`, `data` and `eval` are now in `extend-exclude` — SPEC.md is
+  the authoritative contract and must not churn under a formatter.
+- Classifier key arrives as `CRR_ANTHROPIC_API_KEY` (see `docs/SETUP-CREDENTIALS.md`); Drive
+  credentials both present.
 
 ### Bundle counts (verified 2026-09-10)
 
