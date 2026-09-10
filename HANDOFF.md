@@ -1,5 +1,10 @@
 # Handoff — launching the autonomous build
 
+> **Historical.** This document launched the v1 build, which is finished, merged and tagged
+> `v1.0.0`. Its `build/v1` branch names and "what to expect while you are away" timings describe
+> that first run; they are not instructions for picking the work up now. For the current state
+> and what is open, read the "Pick up here" block at the top of `PROGRESS.md`.
+
 This is the human runbook. It gets the build started in Claude Code on the web and tells you
 what to expect while you are away. Everything Claude Code needs is in this repository; the only
 things it cannot produce itself are the two API keys.

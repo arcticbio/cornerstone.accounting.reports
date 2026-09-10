@@ -4,7 +4,50 @@ Single source of truth for build state. Claude Code ticks tasks here after each 
 commits. Humans read this to see where things stand. Mirrors `docs/PLAN.md`; if they diverge,
 PLAN.md defines the work and this file records what has been done.
 
-**Branch:** `main` — v1 landed there via [#1](https://github.com/arcticbio/cornerstone.accounting.reports/pull/1) (built on the session branch `claude/gifted-lamport-wwgenm`; D-15 — every reference to `build/v1` in these documents means the release line, now `main`) · **Current phase:** 9 (complete) · **Tag:** `v1.0.0` pushed · **Last session note:** first keyed run green; B-07 fixed in [#3](https://github.com/arcticbio/cornerstone.accounting.reports/pull/3)
+**Branch:** `main` — v1 landed there via [#1](https://github.com/arcticbio/cornerstone.accounting.reports/pull/1) (built on the session branch `claude/gifted-lamport-wwgenm`; D-15 — every reference to `build/v1` in these documents means the release line, now `main`) · **Current phase:** 9 (complete) · **Tag:** `v1.0.0` pushed · **Last session note:** all eight properties built against the real model — 6 built, 2 to review, $4.72/run. See "Pick up here" below.
+
+## Pick up here
+
+_Last updated 2026-09-10 by a side session; the effort moves back to the primary thread from
+here. Everything below this block is the historical build record._
+
+**State.** v1 is complete, merged to `main`, tagged `v1.0.0`. CI is green. The container is on
+GHCR as `:build-v1`, republished by every push to `main`. The real model has built all eight
+properties end to end.
+
+**What the keyed runs established.**
+
+| | |
+|---|---|
+| Full run | [34527782436](https://github.com/arcticbio/cornerstone.accounting.reports/actions/runs/34527782436) — 6 built, 2 to review, exit 2, 11m30s |
+| Cost | **$4.72 per 8-property run, $0.59 per property** (172 calls) — the modelled ~$10 was over 2× high |
+| Accuracy | every property resolved to its exact golden page count, the two review cases included; no `unknown`, no repair round, no retry, no refusal; confidence 0.95–0.98 across all 172 pages |
+| Fixed on the way | **B-07** — the forced tool's schema carried `minimum`/`maximum`, which the live API rejects under `strict: true`. Invisible to every test, because a tool schema is only validated by the API. |
+| Also fixed | CI's `BUILD_BRANCH` still named the pre-merge session branch, so merges to `main` rebuilt the image and silently did not push it |
+
+**Open, in the order it is worth doing.**
+
+1. **B-08 — the two McCathren packages go to review on `cardinality_violation`.** Both scanned,
+   both OCR'd, both correct on page count. One `cardinality: one` section is split into two runs,
+   i.e. a continuation read as a section start. **Which page is not knowable from the run log** —
+   `is_continuation` is not in the `classify.page` line. It is in each package's `REVIEW.md`
+   inside the run's manifests artifact. Start there. The golden classifier builds both cleanly,
+   so this is a real model-vs-golden difference, not config.
+2. **`crr eval --classifier anthropic`** — the one measurement still missing, and what would
+   quantify B-08's continuation accuracy across all 31 documents. It needs the key, so it has to
+   run in Actions; there is no dispatchable workflow for it yet (CI runs only the golden eval).
+   Adding a `command` input to `build-period.yml`, or a small `eval.yml`, is the cheap way in.
+3. **Log `is_continuation` on `classify.page`** so a run log can answer (1) without the artifact.
+4. **B-04 — Azure.** Untouched and still gated on `AZURE_CREDENTIALS`; `docs/SETUP-AZURE.md` and
+   `infra/bootstrap.sh` are written and waiting. Actions is a working host in the meantime (D-13),
+   so this is a choice, not a blocker.
+5. **B-01's remaining half** — `pytest -m api` and a local keyed eval still cannot run in a
+   Claude Code session container, which strips `ANTHROPIC_API_KEY`. The GitHub Actions secret
+   works; that half is closed.
+
+**Two traps worth knowing.** `ocrmypdf` is broken in the Claude Code container, so 10 OCR
+invariant tests fail locally and pass in CI — check a failure against `main` before believing it.
+And the `2026-09` Drive skeleton already exists (folders only); a real September run writes into it.
 
 ## Session log
 
