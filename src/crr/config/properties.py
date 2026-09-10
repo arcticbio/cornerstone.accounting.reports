@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import calendar
+from datetime import date
 
 from pydantic import BaseModel, ConfigDict, model_validator
 
@@ -105,6 +106,25 @@ class PropertyRegistry(BaseModel):
         return self.period_folder_template.format(
             yyyy=yyyy, mm=mm, month_name=calendar.month_name[month]
         )
+
+    @staticmethod
+    def previous_period(today: date | None = None) -> str:
+        """The period a run started today would be closing: the previous calendar month.
+
+        A quarterly job fires on the 20th of January, April, July and October and closes
+        December, March, June and September respectively, so "the month before this one" is
+        the right default for an unattended run (SPEC §11).
+        """
+        current = today or date.today()
+        year, month = (
+            (current.year, current.month - 1)
+            if current.month > 1
+            else (
+                current.year - 1,
+                12,
+            )
+        )
+        return f"{year:04d}-{month:02d}"
 
     def period_label(self, period: str) -> str:
         """`2026-06` → `June 2026`, the label used in titles and filenames."""

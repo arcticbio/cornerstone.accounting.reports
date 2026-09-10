@@ -1,0 +1,75 @@
+name: Deploy to Azure
+
+# Gated on AZURE_CREDENTIALS (SPEC §14, D-13). Without it, the template is still compiled on
+# every push by the `bicep` job in ci.yml — a template that does not compile is a bug whether
+# or not anyone can deploy it.
+
+on:
+  workflow_dispatch:
+    inputs:
+      resource_group:
+        description: "Resource group to deploy into"
+        required: true
+        type: string
+      key_vault_name:
+        description: "Existing Key Vault holding the two secrets"
+        required: true
+        type: string
+      gdrive_root_folder_id:
+        description: "Drive folder id holding the manager folders"
+        required: true
+        type: string
+      image:
+        description: "Container image to run"
+        required: true
+        default: ghcr.io/arcticbio/crr:build-v1
+        type: string
+      what_if_only:
+        description: "Preview the changes without applying them"
+        required: true
+        default: true
+        type: boolean
+
+jobs:
+  deploy:
+    name: az deployment group create
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Compile the template
+        run: az bicep build --file infra/main.bicep --stdout > /dev/null
+
+      - name: Sign in to Azure
+        uses: azure/login@v2
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: What-if
+        run: |
+          az deployment group what-if \
+            --resource-group "${{ inputs.resource_group }}" \
+            --template-file infra/main.bicep \
+            --parameters \
+              keyVaultName="${{ inputs.key_vault_name }}" \
+              gdriveRootFolderId="${{ inputs.gdrive_root_folder_id }}" \
+              image="${{ inputs.image }}"
+
+      - name: Deploy
+        if: ${{ !inputs.what_if_only }}
+        id: deploy
+        run: |
+          az deployment group create \
+            --resource-group "${{ inputs.resource_group }}" \
+            --name crr-$(date +%Y%m%d%H%M%S) \
+            --template-file infra/main.bicep \
+            --parameters \
+              keyVaultName="${{ inputs.key_vault_name }}" \
+              gdriveRootFolderId="${{ inputs.gdrive_root_folder_id }}" \
+              image="${{ inputs.image }}"
+
+      - name: Next step
+        if: ${{ !inputs.what_if_only }}
+        run: |
+          echo "::notice title=Grant the job access to Key Vault::The job's system-assigned identity needs the 'Key Vault Secrets User' role on the vault before it can read its secrets. infra/README.md has the two commands."

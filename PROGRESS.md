@@ -4,7 +4,7 @@ Single source of truth for build state. Claude Code ticks tasks here after each 
 commits. Humans read this to see where things stand. Mirrors `docs/PLAN.md`; if they diverge,
 PLAN.md defines the work and this file records what has been done.
 
-**Branch:** `claude/gifted-lamport-wwgenm` (session-scoped branch; D-15 — every reference to `build/v1` in these documents means this branch) · **PR:** [#1](https://github.com/arcticbio/cornerstone.accounting.reports/pull/1) · **Current phase:** 8 · **Last session note:** _(none yet)_
+**Branch:** `claude/gifted-lamport-wwgenm` (session-scoped branch; D-15 — every reference to `build/v1` in these documents means this branch) · **PR:** [#1](https://github.com/arcticbio/cornerstone.accounting.reports/pull/1) · **Current phase:** 9 · **Last session note:** _(none yet)_
 
 ## Session log
 
@@ -20,6 +20,7 @@ PLAN.md defines the work and this file records what has been done.
 | 2026-09-10 | 5 | Eval harness, metrics, markdown report, gate; golden eval 100 % | Phase 6 (real-model eval blocked on B-01) |
 | 2026-09-10 | 6 | Drive repository, fake-Drive tests, live tests green, 2026-09 skeleton created | Phase 7 |
 | 2026-09-10 | 7 | Dockerfile, CI image job, GHCR publish, build-period workflow, runbook | Phase 8 (tasks 1-3) |
+| 2026-09-10 | 8 | Bicep, infra README, deploy workflow; deploy step gated on credentials | Phase 9 |
 
 ## Phase 0 — Repository hygiene and scaffold
 
@@ -156,12 +157,12 @@ It reads and writes nothing outside that folder.
 
 ## Phase 8 — Azure Container Apps Job (deploy step gated)
 
-- [ ] `infra/main.bicep`: resource group-scoped: Log Analytics, Container Apps Environment, Key Vault (secrets referenced, not created), Container Apps Job (schedule trigger `0 6 20 1,4,7,10 *` UTC, manual trigger allowed, image from GHCR, env from Key Vault refs, 2 vCPU / 4 GiB, replica timeout 3600, retry 1).
-- [ ] `infra/README.md`: one-command deploy with `az deployment group create`; how to set the two Key Vault secrets; how to `az containerapp job start`.
-- [ ] `.github/workflows/deploy.yml`: `workflow_dispatch`, uses `AZURE_CREDENTIALS`, `az bicep build`, what-if, deploy.
-- [ ] **Gated on `AZURE_CREDENTIALS` + subscription/resource group:** deploy, then start the job once with args `version` then `validate-config` (a smoke run that needs neither Drive nor the bundle), capture logs to `PROGRESS.md`.
+- [x] `infra/main.bicep`: Log Analytics (90-day retention), Container Apps Environment, and a Container Apps Job with the quarterly cron, 2 vCPU / 4 GiB, `replicaTimeout: 3600`, `replicaRetryLimit: 1`, a system-assigned identity, and both secrets **referenced** from an existing Key Vault — the template creates no vault and holds no secret value. `scheduleEnabled=false` parks the cron on 31 February when you want the job without the schedule.
+- [x] `infra/README.md`: what gets deployed, the vault-and-secrets prerequisites, the one deploy command, the **role assignment the job's identity needs after the first deploy** (it cannot exist before the job does), manual starts including the credential-free `version` / `validate-config` smoke runs, log commands, how exit code 2 shows up as a failed execution in Azure, and how to update or park the schedule.
+- [x] `.github/workflows/deploy.yml`: compiles the template *before* signing in, then what-if, then deploy — and **`what_if_only` defaults to true**, so a mis-click previews rather than deploys. CI compiles the template on every push in a credential-free `bicep` job.
+- [ ] **Gated (B-04):** needs `AZURE_CREDENTIALS` and a subscription / resource group, or an explicit "Actions is enough for now". This is the Phase 7 checkpoint question.
 
-**Acceptance:** _(record evidence here when met)_
+**Acceptance:** The template, its README and the deploy workflow are shipped and held in place by 10 structural tests. `az bicep build` has **not** been run here — no Azure CLI in this container — but CI's `bicep` job runs it on every push with no credentials required. Deployment itself is gated (B-04).
 
 ## Phase 9 — Hardening, docs, second-period readiness
 

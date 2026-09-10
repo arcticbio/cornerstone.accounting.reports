@@ -83,6 +83,14 @@ eight `output/` directories into the fixture. Publishing mirrors the same layout
 publishes in place, as production should. *Where:* `src/crr/settings.py`,
 `src/crr/repository/local_fs.py`, `SPEC.md` §6.1/§12 (amended in the same commit).
 
+**A-07 · `crr build --period` is optional, defaulting to the month just ended.**
+*Why:* the Azure job and the Actions cron both fire on a schedule, and a required `--period`
+would mean either editing the template every quarter or baking a fixed period into a recurring
+job — which would silently rebuild the same period forever. A run on the 20th of January closes
+December, so "the previous calendar month" is the period a scheduled run is for. Passing
+`--period` explicitly is unchanged. *Where:* `src/crr/cli.py`,
+`src/crr/config/properties.py`, `SPEC.md` §11 (amended in the same commit).
+
 ---
 
 ## Blocked (Claude Code appends here)
@@ -114,6 +122,14 @@ proves the OCR toolchain works inside it. *What continues:* the `Dockerfile` and
 are written and covered by structural tests; CI's `image` job builds the image, asserts the
 bundle is not baked in, checks all three OCR binaries inside the container and runs the golden
 build there — it just needs a runner (B-02).
+
+**B-04 · Azure deployment is gated on credentials — this is the Phase 7 checkpoint question.**
+*Needed:* either `AZURE_CREDENTIALS` (a service-principal JSON) plus a target subscription and
+resource group, **or** a note that GitHub Actions is sufficient for now, in which case Phase 8
+task 4 is skipped cleanly and nothing else changes. *Blocked:* only the deploy-and-smoke-run
+step. *What continues:* everything — the Bicep template, its README and the deploy workflow are
+written and structurally tested, and CI compiles the template on every push without credentials.
+GitHub Actions already runs the identical container (D-13), so the system is deployable today.
 
 ---
 

@@ -251,7 +251,10 @@ def validate_config() -> None:
 
 @app.command()
 def build(
-    period: Annotated[str, typer.Option("--period", help="Period id, e.g. 2026-06")],
+    period: Annotated[
+        str | None,
+        typer.Option("--period", help="Period id, e.g. 2026-06 (default: the month just ended)"),
+    ] = None,
     property_ids: Annotated[
         list[str] | None, typer.Option("--property", help="Property id; repeatable")
     ] = None,
@@ -277,6 +280,10 @@ def build(
     except ConfigError as exc:
         typer.echo(f"config invalid:\n{exc}", err=True)
         raise typer.Exit(code=1) from None
+
+    if period is None:
+        period = bundle.properties.previous_period()
+        typer.echo(f"no --period given; building {period} (the month just ended)")
 
     wanted = property_ids or [p.id for p in bundle.properties.properties]
     unknown = [p for p in wanted if p not in {e.id for e in bundle.properties.properties}]

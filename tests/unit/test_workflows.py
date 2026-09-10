@@ -138,3 +138,65 @@ class TestBuildPeriodWorkflow:
 
     def test_pulling_from_ghcr_needs_packages_read(self) -> None:
         assert self.workflow["jobs"]["build"]["permissions"]["packages"] == "read"
+
+
+class TestInfrastructure:
+    def setup_method(self) -> None:
+        self.bicep = Path("infra/main.bicep").read_text()
+        self.deploy = _workflow("deploy.yml")
+
+    def test_the_job_matches_the_spec_shape(self) -> None:
+        """SPEC §14: quarterly schedule, manual start, 2 vCPU / 4 GiB, 3600 s, 1 retry."""
+        assert "'0 6 20 1,4,7,10 *'" in self.bicep
+        assert "triggerType: 'Schedule'" in self.bicep
+        assert "replicaTimeout: 3600" in self.bicep
+        assert "replicaRetryLimit: 1" in self.bicep
+        assert "cpu: json('2.0')" in self.bicep
+        assert "memory: '4Gi'" in self.bicep
+
+    def test_it_deploys_log_analytics_an_environment_and_a_job(self) -> None:
+        for resource in (
+            "Microsoft.OperationalInsights/workspaces",
+            "Microsoft.App/managedEnvironments",
+            "Microsoft.App/jobs",
+        ):
+            assert resource in self.bicep, resource
+
+    def test_key_vault_is_referenced_never_created(self) -> None:
+        """A secret in a template is a secret in every deployment log."""
+        assert "Microsoft.KeyVault/vaults@2023-07-01' existing" in self.bicep
+        assert "keyVaultUrl:" in self.bicep
+        assert "Microsoft.KeyVault/vaults/secrets" not in self.bicep
+
+    def test_secrets_reach_the_container_by_reference(self) -> None:
+        assert "secretRef: 'anthropic-api-key'" in self.bicep
+        assert "secretRef: 'google-service-account-b64'" in self.bicep
+        assert "sk-ant" not in self.bicep
+
+    def test_the_scheduled_run_needs_no_period_argument(self) -> None:
+        """A-07: the runner defaults to the month just ended."""
+        assert "'--period'" not in self.bicep
+
+    def test_deploy_compiles_the_template_before_touching_azure(self) -> None:
+        steps = self.deploy["jobs"]["deploy"]["steps"]
+        names = [str(s.get("name", "")) for s in steps]
+        assert names.index("Compile the template") < names.index("Sign in to Azure")
+
+    def test_deploy_previews_by_default(self) -> None:
+        inputs = self.deploy[True]["workflow_dispatch"]["inputs"]
+        assert inputs["what_if_only"]["default"] is True
+        steps = self.deploy["jobs"]["deploy"]["steps"]
+        what_if = next(s for s in steps if s.get("name") == "What-if")
+        assert "what-if" in what_if["run"]
+        apply_step = next(s for s in steps if s.get("id") == "deploy")
+        assert apply_step["if"] == "${{ !inputs.what_if_only }}"
+
+    def test_deploy_uses_the_azure_credentials_secret(self) -> None:
+        steps = self.deploy["jobs"]["deploy"]["steps"]
+        login = next(s for s in steps if "azure/login" in str(s.get("uses", "")))
+        assert "secrets.AZURE_CREDENTIALS" in login["with"]["creds"]
+
+    def test_ci_compiles_the_template_without_credentials(self) -> None:
+        ci = _workflow("ci.yml")
+        steps = " ".join(str(s.get("run", "")) for s in ci["jobs"]["bicep"]["steps"])
+        assert "az bicep build" in steps

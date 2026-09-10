@@ -609,9 +609,12 @@ A JSON Schema for this file is generated from the pydantic model and committed a
 ```
 crr validate-config                       # schemas, outputs, properties; exit 1 on error
 crr inspect <pdf>                         # page sizes, text-layer probe, footer lines
+crr inspect --repo local|gdrive --period X  # what each property has, and whether it is ready
 crr classify <pdf> --schema <id> [--classifier anthropic|golden] [--out json]
-crr build --period 2026-06 [--property <id>]... [--classifier anthropic|golden]
+crr build [--period 2026-06] [--property <id>]... [--classifier anthropic|golden]
           [--repo local|gdrive] [--dry-run] [--work-dir work/]
+          # --period defaults to the month just ended, so an unattended quarterly run
+          # (the 20th of Jan/Apr/Jul/Oct closes Dec/Mar/Jun/Sep) needs no argument.
 crr eval [--classifier anthropic|golden] [--pm <id>] [--gate]
 crr version
 ```

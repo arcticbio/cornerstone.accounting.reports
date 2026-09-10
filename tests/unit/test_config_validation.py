@@ -82,3 +82,15 @@ def test_input_filenames_are_per_manager() -> None:
     assert registry.input_filenames("timber-place")["pm_source"] == (
         "05 PM Source - McCathren Baseline.pdf"
     )
+
+
+def test_the_default_period_is_the_month_just_ended() -> None:
+    """A quarterly run on the 20th closes the previous month (A-07)."""
+    from datetime import date
+
+    from crr.config.properties import PropertyRegistry
+
+    assert PropertyRegistry.previous_period(date(2027, 1, 20)) == "2026-12"
+    assert PropertyRegistry.previous_period(date(2026, 4, 20)) == "2026-03"
+    assert PropertyRegistry.previous_period(date(2026, 7, 20)) == "2026-06"
+    assert PropertyRegistry.previous_period(date(2026, 10, 20)) == "2026-09"
