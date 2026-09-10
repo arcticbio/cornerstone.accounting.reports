@@ -119,7 +119,7 @@ uv run pytest -m api
 uv run crr eval --classifier anthropic --gate
 ```
 
-**B-07 · The forced tool's schema is rejected by the live API under `strict: true`.**
+**B-07 · ~~The forced tool's schema is rejected by the live API under `strict: true`.~~ RESOLVED 2026-09-10.**
 *Found 2026-09-10* by the first keyed run — dispatch
 [34524350634](https://github.com/arcticbio/cornerstone.accounting.reports/actions/runs/34524350634),
 `2026-06` / `fort-grounds` / `local` / `anthropic`. Everything up to the first API call worked:
@@ -133,13 +133,15 @@ already `ge=0.0, le=1.0` and evidence already truncates at 300 — an out-of-ran
 the parse and sends the page to review, which is what the schema bound would have bought us.
 `maxLength` on `evidence` went with it as the same class of keyword, unverified against the API
 but redundant given the truncation. A unit test now walks the schema for the whole family.
-*Still to confirm:* whether `record_qualifier: {"type": ["string", "null"]}` is accepted under
-`strict: true`. The next dispatch settles it; a rejected request is not billed, so a second
-round trip costs time, not money.
-*Blocked on:* a rebuilt image. CI published to GHCR on the session branch or a `v*` tag only, so
-the merge to `main` did not republish and `:build-v1` carried the defect. `BUILD_BRANCH` is now
-`main` — the release line, the session branch having merged — so the merge that carries this fix
-also republishes the image.
+*Confirmed:* `record_qualifier: {"type": ["string", "null"]}` **is** accepted under
+`strict: true` — the re-run classified all 19 pages with no further schema error, so the union
+type stays.
+*Was blocked on* a rebuilt image: CI published to GHCR on the session branch or a `v*` tag only,
+so the merge to `main` did not republish and `:build-v1` carried the defect. `BUILD_BRANCH` is
+now `main`, so the merge carrying the fix republished the image (PR #3).
+*Verified* by dispatch
+[34526230410](https://github.com/arcticbio/cornerstone.accounting.reports/actions/runs/34526230410):
+exit 0, `fort-grounds ok 8 pages`, no review. See "First keyed run" below.
 
 **B-02 · ~~GitHub Actions has not run CI on PR #1.~~ RESOLVED 2026-09-10.**
 Green on the final tree `943e664`: runs

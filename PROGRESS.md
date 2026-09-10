@@ -4,7 +4,7 @@ Single source of truth for build state. Claude Code ticks tasks here after each 
 commits. Humans read this to see where things stand. Mirrors `docs/PLAN.md`; if they diverge,
 PLAN.md defines the work and this file records what has been done.
 
-**Branch:** `claude/gifted-lamport-wwgenm` (session-scoped branch; D-15 — every reference to `build/v1` in these documents means this branch) · **PR:** [#1](https://github.com/arcticbio/cornerstone.accounting.reports/pull/1) · **Current phase:** 9 (complete) · **Tag:** `v1.0.0` pushed · **Last session note:** _(none yet)_
+**Branch:** `main` — v1 landed there via [#1](https://github.com/arcticbio/cornerstone.accounting.reports/pull/1) (built on the session branch `claude/gifted-lamport-wwgenm`; D-15 — every reference to `build/v1` in these documents means the release line, now `main`) · **Current phase:** 9 (complete) · **Tag:** `v1.0.0` pushed · **Last session note:** first keyed run green; B-07 fixed in [#3](https://github.com/arcticbio/cornerstone.accounting.reports/pull/3)
 
 ## Session log
 
@@ -24,6 +24,7 @@ PLAN.md defines the work and this file records what has been done.
 | 2026-09-10 | 9 | Drift rule, cost report, logging hygiene (one leak found and fixed), runbook, README, tag | v1.0.0 |
 | 2026-09-10 | post-v1 | `v1.0.0` pushed by the user; CI green on the final tree; version bumped 0.1.0 → 1.0.0; Azure + credentials setup docs written | Azure bootstrap (user), then B-01/B-04 |
 | 2026-09-10 | post-v1 | PR #1 merged to `main`; first keyed run dispatched (`2026-06`/`fort-grounds`/`local`/`anthropic`) — the key works, the tool schema does not (B-07); fix on `claude/wonderful-wright-scuu96` | Republish the image, re-dispatch |
+| 2026-09-10 | post-v1 | B-07 fixed and merged (PR #3); CI now publishes the image from `main`; re-run green — `fort-grounds` built, 8/8 pages match golden, **$0.56** | Full 8-property keyed run; `crr eval --classifier anthropic` |
 
 ## Phase 0 — Repository hygiene and scaffold
 
@@ -188,6 +189,7 @@ OCR included), and the image is pushed to GHCR as `:build-v1` and `:sha-<short>`
 
 | Date | Classifier | Model | Prompt | Overall | Missoula | McCathren | Cobalt | Cost/run | Report |
 |---|---|---|---|---|---|---|---|---|---|
+| 2026-09-10 | anthropic | `claude-opus-5` | v1 | — | fort-grounds only: 8/8 output pages, 19/19 pages 0.96–0.98 | — | — | $0.56 (1 property) | [run 34526230410](https://github.com/arcticbio/cornerstone.accounting.reports/actions/runs/34526230410) |
 | 2026-09-10 | golden | — | — | 1.0000 | 1.0000 | 1.0000 | 1.0000 | $0.00 | [LATEST](eval/reports/LATEST.md) |
 
 ## Bundle verification (Phase 0)
@@ -255,9 +257,24 @@ Azure Container Apps Job in `infra/`.
 
 ### Cost per run
 
-**Not yet measured** — that needs one keyed run (B-01), after which every manifest records it
-exactly. The modelled estimate, from the token shapes the code actually sends and the built-in
-price table:
+**Measured 2026-09-10, one property.** Dispatch
+[34526230410](https://github.com/arcticbio/cornerstone.accounting.reports/actions/runs/34526230410)
+— `2026-06` / `fort-grounds` / `local` / `anthropic`, against `:build-v1` on `claude-opus-5`:
+
+| | |
+|---|---|
+| API calls | 19 (16 PM pages + 3 Cornerstone pages) |
+| Tokens | input 74,791 · cache read 62,089 · cache write 5,857 · output 3,887 |
+| **Measured** | **$0.56 for Fort Grounds** |
+| Outcome | `built`, 8 pages, 6 bookmarks, 6 sections dropped, nothing sent to review |
+| Accuracy | all 8 composed pages match `eval/golden/missoula/fort-grounds.json`; 19/19 pages classified at confidence 0.96–0.98 |
+
+Fort Grounds is one of the smaller properties (19 pages against 172 across all eight), and it
+paid its own cache writes with nothing to read them back, so **$0.56 × 8 is the wrong
+extrapolation in both directions**. What it does settle is that the modelled ~$1.30 per property
+below was roughly 2× high. A full eight-property run measures the real number.
+
+The superseded model, from the token shapes the code sends and the built-in price table:
 
 | | |
 |---|---|
