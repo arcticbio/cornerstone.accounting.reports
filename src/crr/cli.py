@@ -291,11 +291,73 @@ def _make_repository(kind: str, settings: Settings, bundle):  # type: ignore[no-
 
 @app.command("eval")
 def eval_cmd(
-    classifier: str = typer.Option("golden", "--classifier", help="golden|anthropic"),
-    gate: bool = typer.Option(False, "--gate", help="Exit non-zero below the accuracy thresholds"),
+    classifier: Annotated[str, typer.Option("--classifier", help="golden|anthropic")] = "golden",
+    pm: Annotated[str | None, typer.Option("--pm", help="Score one property manager only")] = None,
+    property_ids: Annotated[
+        list[str] | None, typer.Option("--property", help="Property id; repeatable")
+    ] = None,
+    gate: Annotated[
+        bool, typer.Option("--gate", help="Exit non-zero below the accuracy thresholds")
+    ] = False,
+    report: Annotated[
+        Path | None, typer.Option("--report", help="Write the markdown report here")
+    ] = None,
 ) -> None:
-    """Score a classifier against the golden labels (Phase 0 stub)."""
-    typer.echo(f"eval not implemented (classifier={classifier}, gate={gate})")
+    """Score a classifier against the golden labels (SPEC §8)."""
+    from crr.config import ConfigError, load_config
+    from crr.evaluate import evaluate, gate_failures, render_report, report_filename
+    from crr.golden import load_all_golden
+    from crr.settings import Settings
+
+    settings = Settings()
+    try:
+        bundle = load_config(settings.config_dir)
+    except ConfigError as exc:
+        typer.echo(f"config invalid:\n{exc}", err=True)
+        raise typer.Exit(code=1) from None
+
+    golden = load_all_golden(settings.golden_dir)
+    result = evaluate(
+        golden,
+        bundle,
+        settings,
+        lambda property_id: _make_classifier(classifier, settings, property_id),
+        property_ids=property_ids,
+        pm_id=pm,
+    )
+    if not result.documents:
+        typer.echo("no golden documents in scope", err=True)
+        raise typer.Exit(code=1)
+
+    failures = gate_failures(result, settings)
+    text = render_report(result, settings, failures)
+
+    destination = report or (Path("eval/reports") / report_filename(result))
+    destination.parent.mkdir(parents=True, exist_ok=True)
+    destination.write_text(text)
+    (destination.parent / "LATEST.md").write_text(text)
+
+    overall = result.overall()
+    for manager, scores in sorted(result.by_manager().items()):
+        accuracy = scores.page.accuracy
+        f1 = scores.boundary.f1
+        typer.echo(
+            f"{manager:<12} pages={scores.page.scored:>4} "
+            f"accuracy={'—' if accuracy is None else f'{accuracy:.4f}'} "
+            f"boundary_f1={'—' if f1 is None else f'{f1:.4f}'}"
+        )
+    typer.echo(
+        f"{'overall':<12} pages={overall.page.scored:>4} "
+        f"accuracy={'—' if overall.page.accuracy is None else f'{overall.page.accuracy:.4f}'} "
+        f"boundary_f1={'—' if overall.boundary.f1 is None else f'{overall.boundary.f1:.4f}'}"
+    )
+    typer.echo(f"report: {destination}")
+
+    if failures:
+        for failure in failures:
+            typer.echo(f"below threshold: {failure}", err=True)
+        if gate:
+            raise typer.Exit(code=1)
 
 
 if __name__ == "__main__":  # pragma: no cover

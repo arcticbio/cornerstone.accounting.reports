@@ -4,7 +4,7 @@ Single source of truth for build state. Claude Code ticks tasks here after each 
 commits. Humans read this to see where things stand. Mirrors `docs/PLAN.md`; if they diverge,
 PLAN.md defines the work and this file records what has been done.
 
-**Branch:** `claude/gifted-lamport-wwgenm` (session-scoped branch; D-15 — every reference to `build/v1` in these documents means this branch) · **PR:** [#1](https://github.com/arcticbio/cornerstone.accounting.reports/pull/1) · **Current phase:** 5 · **Last session note:** _(none yet)_
+**Branch:** `claude/gifted-lamport-wwgenm` (session-scoped branch; D-15 — every reference to `build/v1` in these documents means this branch) · **PR:** [#1](https://github.com/arcticbio/cornerstone.accounting.reports/pull/1) · **Current phase:** 6 · **Last session note:** _(none yet)_
 
 ## Session log
 
@@ -17,6 +17,7 @@ PLAN.md defines the work and this file records what has been done.
 | 2026-09-10 | 2 | Config validation, address grammar, segmenter, resolver; `expected_output` frozen for all 8 | Phase 3 |
 | 2026-09-10 | 3 | Classifier protocol, golden classifier, footer check, prompts, Anthropic classifier, `crr classify` | Phase 4 |
 | 2026-09-10 | 4 | Composer, manifest, review gate, local repository, pipeline, `crr build`; 8/8 golden builds | Phase 5 |
+| 2026-09-10 | 5 | Eval harness, metrics, markdown report, gate; golden eval 100 % | Phase 6 (real-model eval blocked on B-01) |
 
 ## Phase 0 — Repository hygiene and scaffold
 
@@ -103,12 +104,12 @@ source rather than an exception. Cobalt and McCathren pass through every PM page
 
 ## Phase 5 — Eval harness and the real model
 
-- [ ] `crr eval` per SPEC §8 with golden and anthropic classifiers; markdown report; `--gate`.
-- [ ] CI runs `crr eval --classifier golden --gate`.
-- [ ] Run `crr eval --classifier anthropic` over all 31 golden documents. Commit the report. If any manager is below threshold: analyse the confusion pairs, revise that schema's `visual_cues`/`description` or the prompt (bump `prompt_version`), re-run, commit both. Up to three iterations; then record the residual and continue.
-- [ ] Run `crr build --period 2026-06 --classifier anthropic` for all 8. Compare each manifest's plan to the golden build's plan; assert identical page sequences. Commit manifests to `eval/reports/anthropic-build-2026-06/`.
+- [x] `crr eval [--classifier golden|anthropic] [--pm <id>] [--property <id>] [--gate] [--report <path>]`. Scores page accuracy, continuation, `record_qualifier` (Missoula only), orientation (only where a golden page carries the key), section-boundary F1 after segmentation, confusion pairs, tokens and USD. Writes a timestamped markdown report plus `eval/reports/LATEST.md`.
+- [x] CI runs `crr eval --classifier golden --gate` (wired in Phase 0, real since this commit). The golden run skips OCR and rasterising — the golden classifier opens neither — so the self-consistency check takes **5 s** instead of 92.
+- [ ] **Blocked (B-01):** needs `ANTHROPIC_API_KEY`. Command is ready: `uv run crr eval --classifier anthropic --gate`.
+- [ ] **Blocked (B-01):** needs `ANTHROPIC_API_KEY`. The golden-build manifests in `eval/reports/golden-build-2026-06/` are the comparison baseline, and `tests/eval/test_invariants.py` already pins the expected page sequences.
 
-**Acceptance:** _(record evidence here when met)_
+**Acceptance:** Golden eval report committed (`eval/reports/LATEST.md`): **100 % page accuracy, 100 % continuation, 100 % record, 100 % orientation, boundary F1 1.0000** over all 31 documents / 172 pages, every manager above both thresholds. The real-model eval and build are blocked on B-01.
 
 ## Phase 6 — Google Drive repository
 
@@ -156,6 +157,7 @@ source rather than an exception. Cobalt and McCathren pass through every PM page
 
 | Date | Classifier | Model | Prompt | Overall | Missoula | McCathren | Cobalt | Cost/run | Report |
 |---|---|---|---|---|---|---|---|---|---|
+| 2026-09-10 | golden | — | — | 1.0000 | 1.0000 | 1.0000 | 1.0000 | $0.00 | [LATEST](eval/reports/LATEST.md) |
 
 ## Bundle verification (Phase 0)
 
