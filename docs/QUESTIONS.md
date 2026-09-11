@@ -229,9 +229,12 @@ never reach `--args`. The restore is a *call* to `deploy.yml` as a reusable work
 cannot drift from the deploy, and a third job then re-reads the job and compares it against the
 template. Anything else — another period, one property — goes through `Build a period`, which
 runs the identical image and mutates nothing.
-*Also fixed:* the flag that selects an execution on `az containerapp job logs show` is
-**`--execution`**. It was guessed as `--job-execution-name`, which cost the first run's logs;
-the step now dumps `--help` if the call ever fails again rather than leaving a silent gap.
+*Also fixed:* reading an execution's logs took three attempts, and the fix that mattered was
+making the failure *say something*. `az containerapp job logs show` selects an execution with
+**`--execution`** (guessed as `--job-execution-name` — cost run 1's logs) and **caps `--tail` at
+300** (`ERROR: --tail must be between 0 and 300` — cost run 2's logs). Both were found by the
+`--help` dump the step now performs when the call fails, which is the only reason the second one
+took one run rather than another guess. `--format text` as well: the default is JSON-wrapped.
 *The lesson:* "set X, do work, set X back" is only safe when both directions are known to work.
 The first run proved the setting direction and assumed the restoring one.
 *Where:* `.github/workflows/azure-job.yml`, `.github/workflows/deploy.yml` (`workflow_call`),
