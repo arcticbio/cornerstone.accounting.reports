@@ -6,8 +6,9 @@ PLAN.md defines the work and this file records what has been done.
 
 **Branch:** `main` — v1 landed there via [#1](https://github.com/arcticbio/cornerstone.accounting.reports/pull/1) (built on the session branch `claude/gifted-lamport-wwgenm`; D-15 — every reference to `build/v1` in these documents means the release line, now `main`) · **Current phase:** 9 (complete) · **Tag:** `v1.0.0` pushed · **Last session note:** B-08 fixed; real-model eval run over all 172 pages and now **100 % on every metric**; the orientation defect it surfaced fixed — a page was shipping upside down — and the 59 % record score it reported traced to the metric, not the classifier. #7 merged to `main`; this branch merged it back cleanly. **B-09 is resolved: the production publish path works end to end.** **B-04 is resolved: Azure is
 deployed, audited and armed**, a rehearsal period (`2026-08`) is seeded in Drive, and
-`Actions → Run the Azure job` can start the job and put its arguments back. See "Pick up here"
-below.
+`Actions → Run the Azure job` can start the job and put its arguments back. **B-11 is resolved
+and PLAN Phase 8 is complete: the job ran on Azure and its logs show `crr 1.0.0`.** See "Pick up
+here" below.
 
 ## Pick up here
 
@@ -140,12 +141,23 @@ properties end to end.
     so anyone following them would have rebuilt B-09 exactly. All four now give the shared-drive
     id and say why it has to be a shared drive. The old root folder itself is left in place,
     empty.
-13. **The Azure job has run. `crr version` → execution `crr-quarterly-8gkaig4`, status
-    `Succeeded`** (2026-09-11 06:19 UTC, [run 34569379705](https://github.com/arcticbio/cornerstone.accounting.reports/actions/runs/34569379705)).
-    That is the first execution this deployment has ever had, and it closes the live half of
-    PLAN Phase 8's acceptance — *job exists, manual start succeeds*. The remaining clause,
-    *logs show `crr version`*, is still unproven: the log step used a flag that does not exist.
-    Two defects, both in the workflow, both mine, both fixed (**A-13**):
+13. **PLAN Phase 8's acceptance is met in full — *job exists, manual start succeeds, logs show
+    `crr version`*.** Third run, 2026-09-11 07:27 UTC
+    ([34574240440](https://github.com/arcticbio/cornerstone.accounting.reports/actions/runs/34574240440)),
+    execution `crr-quarterly-94admd0`, replica `…-2zqvz`:
+
+    ```
+    Successfully Connected to container: 'crr'
+    2026-09-11T07:25:32.278441982Z crr 1.0.0
+    ```
+
+    The whole cycle is proven end to end: set the arguments → start → wait → read the container's
+    logs → restore by re-deploying the template → **re-read the job and confirm** (`The job is
+    holding: crr build --repo gdrive --classifier anthropic`). The first execution was
+    `crr-quarterly-8gkaig4` at 06:19 UTC
+    ([34569379705](https://github.com/arcticbio/cornerstone.accounting.reports/actions/runs/34569379705)),
+    and it took three runs to get here because of three defects, all in the workflow, all mine,
+    all fixed (**A-13**):
     - `az containerapp job logs show --job-execution-name` is not a flag. It is `--execution` —
       and `--tail` is capped at 300, which cost a second run's logs. Both were found by the
       `--help` dump the step now performs on failure; the second took one run rather than
@@ -190,6 +202,7 @@ Drive skeleton already exists (folders only), so a real September run writes int
 | 2026-09-10 | post-v1 | B-07 fixed and merged (PR #3); CI now publishes the image from `main`; re-run green — `fort-grounds` built, 8/8 pages match golden, **$0.56** | Full 8-property keyed run; `crr eval --classifier anthropic` |
 | 2026-09-10 | post-v1 | Full 8-property keyed run: 6 built, 2 to review (`cardinality_violation`, both McCathren); every property hit its golden page count; **$4.72/run, $0.59/property** | Work the two review cases; `crr eval --classifier anthropic` |
 | 2026-09-11 | post-v1 | Full audit of plan, documents and live environment. **B-04 closed** — Azure deployed, identity reads the vault, GHCR pull credentials present, shared-drive folder id taken, cron armed. Rehearsal period `2026-08` seeded in Drive (31 files, 8/8 ready). `azure-job.yml` added so a session can start the job and the arguments always get restored (B-11). | Dispatch `Run the Azure job` with `version`, then `validate-config`, then the no-argument build |
+| 2026-09-11 | post-v1 | **Phase 8 complete.** `crr version` ran on Azure and its logs say `crr 1.0.0` (`crr-quarterly-94admd0`). Took three runs: `--job-execution-name` is not a flag, `--args` cannot set a multi-token list (the restore left the cron on `version` — repaired), `--tail` is capped at 300. The restore is now a call to `deploy.yml` with a verification job after it (A-13). | `validate-config`, then the `build` option against the seeded `2026-08` data (~$4.72) |
 
 ## Phase 0 — Repository hygiene and scaffold
 
@@ -333,10 +346,10 @@ OCR included), and the image is pushed to GHCR as `:build-v1` and `:sha-<short>`
 - [x] `infra/main.bicep`: Log Analytics (90-day retention), Container Apps Environment, and a Container Apps Job with the quarterly cron, 2 vCPU / 4 GiB, `replicaTimeout: 3600`, `replicaRetryLimit: 1`, a system-assigned identity, and both secrets **referenced** from an existing Key Vault — the template creates no vault and holds no secret value. `scheduleEnabled=false` parks the cron on 31 February when you want the job without the schedule.
 - [x] `infra/README.md`: what gets deployed, the vault-and-secrets prerequisites, the one deploy command, the **role assignment the job's identity needs after the first deploy** (it cannot exist before the job does), manual starts including the credential-free `version` / `validate-config` smoke runs, log commands, how exit code 2 shows up as a failed execution in Azure, and how to update or park the schedule.
 - [x] `.github/workflows/deploy.yml`: compiles the template *before* signing in, then what-if, then deploy — and **`what_if_only` defaults to true**, so a mis-click previews rather than deploys. CI compiles the template on every push in a credential-free `bicep` job.
-- [x] ~~**Gated (B-04):** needs `AZURE_CREDENTIALS` and a subscription / resource group.~~ **Deployed 2026-09-11.** The operator ran the bootstrap and the deploy workflow; *Deploy to Azure* runs 3–7 succeeded, the latest from `main`@`020fc7d`. `crr-quarterly` is live in `rg-cust-cornerstone`, its identity reads `crr-kv-accounting`, GHCR pull credentials are supplied, the shared-drive root folder id is in place, and the quarterly cron is armed (next fire 20 Oct 06:00 UTC). See B-04 in `QUESTIONS.md` for the audited details.
+- [x] ~~**Gated (B-04):** needs `AZURE_CREDENTIALS` and a subscription / resource group.~~ **Deployed 2026-09-11.** The operator ran the bootstrap and the deploy workflow; *Deploy to Azure* runs 3–7 succeeded, the latest from `main`@`020fc7d`. `crr-quarterly` is live in `rg-cust-cornerstone`, its identity reads `crr-kv-accounting`, GHCR pull credentials are supplied, the shared-drive root folder id is in place, and the quarterly cron is armed (next fire 20 Oct 06:00 UTC). See B-04 in `QUESTIONS.md` for the audited details. **Smoke-run 2026-09-11:** `crr version` → execution `crr-quarterly-94admd0`, `Succeeded`, logs show `crr 1.0.0`.
 - [x] `.github/workflows/azure-job.yml` (`Actions → Run the Azure job`): sets `--args` on the job, starts it, waits, prints the execution's logs, and **restores the scheduled arguments in an `always()` step** — because `--args` cannot be passed to `job start`, so a manual run has to mutate the definition the quarterly cron reads, and a cancelled run would otherwise leave the schedule pointed at `version`. Restores from `infra/main.bicep`, not from the live job, so an already-mutated job is corrected rather than preserved (B-11).
 
-**Acceptance:** **Bicep compiles in CI** (`az bicep build`, credential-free `bicep` job, green in run 34462978204). The template, its README and the deploy workflow are also held by 10 structural tests. ~~Deployment itself is gated (B-04).~~ **Deployed 2026-09-11** — B-04 resolved. What remains is a first execution, which only a workflow run can start (B-11).
+**Acceptance:** **Bicep compiles in CI** (`az bicep build`, credential-free `bicep` job, green in run 34462978204). The template, its README and the deploy workflow are also held by 10 structural tests. ~~Deployment itself is gated (B-04).~~ **Met in full 2026-09-11** — B-04 and B-11 both resolved. The job exists, a manual start succeeds, and the logs show `crr 1.0.0` (execution `crr-quarterly-94admd0`, [run 34574240440](https://github.com/arcticbio/cornerstone.accounting.reports/actions/runs/34574240440)). **Phase 8 is complete.**
 
 ## Phase 9 — Hardening, docs, second-period readiness
 
