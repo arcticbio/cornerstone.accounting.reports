@@ -294,7 +294,7 @@ def test_a_client_error_is_not_retried(page_images: list[PageInput]) -> None:
 
 def test_missing_api_key_is_refused_at_construction() -> None:
     settings = Settings(_env_file=None, anthropic_api_key=None)  # type: ignore[call-arg]
-    with pytest.raises(RuntimeError, match="ANTHROPIC_API_KEY"):
+    with pytest.raises(RuntimeError, match="CRR_ANTHROPIC_API_KEY"):
         AnthropicClassifier(settings)
 
 

@@ -10,6 +10,17 @@ else
   echo "uv sync: skipped (no pyproject.toml yet — Phase 0 creates it)"
 fi
 
+# The cloud image installs ocrmypdf and its Python deps from apt, built for CPython 3.12, while
+# /usr/bin/python3 is 3.11 — so `ocrmypdf` dies on `from PIL import _imaging`. Repoint its shebang
+# at the interpreter its modules were built for. Idempotent; no-op where ocrmypdf already works.
+if command -v ocrmypdf >/dev/null 2>&1 && ! ocrmypdf --version >/dev/null 2>&1; then
+  if command -v python3.12 >/dev/null 2>&1 && python3.12 "$(command -v ocrmypdf)" --version >/dev/null 2>&1; then
+    sed -i '1s|^#!.*|#!/usr/bin/python3.12|' "$(command -v ocrmypdf)" 2>/dev/null \
+      && echo "ocrmypdf: repaired shebang -> /usr/bin/python3.12" \
+      || echo "ocrmypdf: BROKEN and not repairable (needs python3.12 shebang) — OCR tasks will fail"
+  fi
+fi
+
 for tool in tesseract ocrmypdf gs; do
   if command -v "$tool" >/dev/null 2>&1; then
     echo "$tool: $($tool --version 2>&1 | head -1)"
@@ -18,7 +29,16 @@ for tool in tesseract ocrmypdf gs; do
   fi
 done
 
-[ -n "${ANTHROPIC_API_KEY:-}" ] && echo "ANTHROPIC_API_KEY: set" || echo "ANTHROPIC_API_KEY: not set (classifier phases degrade to golden)"
+# Claude Code on the web reserves ANTHROPIC_API_KEY and strips it from the container
+# (the cloud-environment editor says so). CRR_ANTHROPIC_API_KEY is the name that survives.
+# ANTHROPIC_API_KEY is still honoured for local shells and GitHub Actions. See docs/SETUP-CREDENTIALS.md.
+if [ -n "${CRR_ANTHROPIC_API_KEY:-}" ]; then
+  echo "CRR_ANTHROPIC_API_KEY: set (classifier live)"
+elif [ -n "${ANTHROPIC_API_KEY:-}" ]; then
+  echo "ANTHROPIC_API_KEY: set (classifier live)"
+else
+  echo "CRR_ANTHROPIC_API_KEY: not set (classifier phases degrade to golden) — see docs/SETUP-CREDENTIALS.md"
+fi
 [ -n "${GOOGLE_SERVICE_ACCOUNT_B64:-}" ] && echo "GOOGLE_SERVICE_ACCOUNT_B64: set" || echo "GOOGLE_SERVICE_ACCOUNT_B64: not set (Drive phase uses fake)"
 [ -n "${CRR_GDRIVE_ROOT_FOLDER_ID:-}" ] && echo "CRR_GDRIVE_ROOT_FOLDER_ID: set" || echo "CRR_GDRIVE_ROOT_FOLDER_ID: not set"
 

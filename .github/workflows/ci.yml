@@ -63,9 +63,21 @@ jobs:
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
+
       # No credentials needed: `az bicep build` is a local compiler.
       - name: Compile infra/main.bicep
-        run: az bicep build --file infra/main.bicep --stdout > /dev/null
+        run: az bicep build --file infra/main.bicep --outfile infra/main.json
+
+      # The Azure portal's "Deploy a custom template" takes ARM JSON, not Bicep. Publishing
+      # the compiled template as an artifact means the portal-only path in
+      # docs/SETUP-AZURE-PORTAL.md can use a template that provably compiles, rather than one
+      # transcribed by hand.
+      - name: Publish the compiled ARM template
+        uses: actions/upload-artifact@v4
+        with:
+          name: arm-template
+          path: infra/main.json
+          retention-days: 90
 
   image:
     name: Image build and in-container golden build

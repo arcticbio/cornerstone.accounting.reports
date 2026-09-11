@@ -6,7 +6,7 @@ work it.
 
 ## Contents
 
-- One-time setup: [credentials](SETUP-CREDENTIALS.md) · [Azure](SETUP-AZURE.md)
+- One-time setup: [credentials](SETUP-CREDENTIALS.md) · Azure [by CLI](SETUP-AZURE.md) or [in the portal](SETUP-AZURE-PORTAL.md)
 - [The quarterly checklist](#the-quarterly-checklist)
 - [Preparing a period in Drive](#preparing-a-period-in-drive)
 - [Running a build from GitHub Actions](#running-a-build-from-github-actions)
@@ -124,9 +124,26 @@ period 2026-09 via gdrive
 
 The runner authenticates as a Google service account (`GOOGLE_SERVICE_ACCOUNT_B64`) and only
 sees what has been shared with it. **Share the root folder with the service account's email
-address** — Editor, so it can write `output/` and `review/` — and nothing else. The account
-needs no other access, and the runner never deletes or overwrites: a second publish of the same
-name lands beside the first as `… (build 2).pdf`.
+address** — Editor — and nothing else. The account needs no other access, and the runner never
+deletes or overwrites: a second publish of the same name lands beside the first as
+`… (build 2).pdf`.
+
+> **Sharing alone is not enough to publish. The root folder must live in a shared drive.**
+> A service account has no storage quota of its own, and a file written into someone's *My
+> Drive* has to be owned by whoever uploaded it. So an Editor-shared My Drive folder lets the
+> runner read inputs and create `inputs/`, `output/` and `review/` — folders cost no quota — and
+> then fails the moment it writes a PDF:
+>
+> ```
+> 403 storageQuotaExceeded: Service Accounts do not have storage quota.
+> Leverage shared drives, or use OAuth delegation instead.
+> ```
+>
+> Because folder creation succeeds, the setup looks correct until the first publish. Move the
+> root folder into a **shared drive** and add the service account as **Content manager**: files
+> there are owned by the drive rather than the uploader. No code change is needed — the client
+> already sets `supportsAllDrives`. The alternative, domain-wide delegation, does need one. See
+> `docs/QUESTIONS.md` → **B-09**.
 
 ---
 

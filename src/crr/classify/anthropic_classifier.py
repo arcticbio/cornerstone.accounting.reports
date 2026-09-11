@@ -159,7 +159,8 @@ class AnthropicClassifier:
     ) -> None:
         if client is None and not settings.anthropic_api_key:
             raise RuntimeError(
-                "ANTHROPIC_API_KEY is not set; use --classifier golden or set the key"
+                "No classifier key: set CRR_ANTHROPIC_API_KEY (or ANTHROPIC_API_KEY); "
+                "use --classifier golden to run without one"
             )
         self._settings = settings
         self._exemplars = exemplars or []
@@ -307,6 +308,10 @@ class AnthropicClassifier:
                 doc_role=doc.role,
                 page=page.page,
                 section_id=label.section_id,
+                # A cardinality_violation is a continuation read as a section start, so the
+                # run log has to carry the flag that decides it — otherwise diagnosing one
+                # means digging the manifest out of a CI artifact.
+                is_continuation=label.is_continuation,
                 confidence=round(label.confidence, 3),
                 cache_read_tokens=result.usage.cache_read_tokens,
             )

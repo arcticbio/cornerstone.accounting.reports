@@ -117,9 +117,19 @@ def segment(
             continue
         if current:
             previous = current[-1]
+            # A record qualifier only distinguishes instances of a `per_record` section. For a
+            # `cardinality: one` section it is not part of the section's identity — `map_qualifier`
+            # discards it either way — so a qualifier appearing part-way through a run must not
+            # split it. Left unguarded, a model that transcribes the property header on some pages
+            # of a long report and not others turns one section into two, and a correct package is
+            # held back on a `cardinality_violation` (SPEC §6.4, as amended).
+            splits_on_record = (
+                schema.section(page.section_id).cardinality == "per_record"
+                and qualifier != current_qualifier
+            )
             starts_new = (
                 page.section_id != previous.section_id
-                or qualifier != current_qualifier
+                or splits_on_record
                 or not page.is_continuation
             )
             if starts_new:

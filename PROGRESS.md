@@ -27,12 +27,16 @@ properties end to end.
 
 **Open, in the order it is worth doing.**
 
-1. **B-08 — the two McCathren packages go to review on `cardinality_violation`.** Both scanned,
-   both OCR'd, both correct on page count. One `cardinality: one` section is split into two runs,
-   i.e. a continuation read as a section start. **Which page is not knowable from the run log** —
-   `is_continuation` is not in the `classify.page` line. It is in each package's `REVIEW.md`
-   inside the run's manifests artifact. Start there. The golden classifier builds both cleanly,
-   so this is a real model-vs-golden difference, not config.
+1. ~~**B-08 — the two McCathren packages go to review on `cardinality_violation`.**~~
+   **Fixed 2026-09-11, root-caused with a real-model run.** Not a labelling error: a re-run of
+   Timber Place returned **23/23 correct labels**, continuations included. The split was the
+   segmenter's. The model transcribed the `Property:` header on pages 20–23 of the seven-page
+   General Ledger and not on 17–19, and SPEC §6.4 broke a run on any `record_qualifier` change —
+   so `general_ledger` (`cardinality: one`) appeared twice. A qualifier only distinguishes
+   instances of a `per_record` section; on a one-cardinality section §5 rule 1 discards it
+   anyway. The break condition is now qualified, SPEC §6.4 amended, three tests pin both
+   directions. **Both properties rebuilt against the real model: `ok`, 25 and 29 pages, exit 0**
+   ($1.63 for the pair).
 2. **`crr eval --classifier anthropic`** — the one measurement still missing, and what would
    quantify B-08's continuation accuracy across all 31 documents. It needs the key, so it has to
    run in Actions; there is no dispatchable workflow for it yet (CI runs only the golden eval).
@@ -41,13 +45,17 @@ properties end to end.
 4. **B-04 — Azure.** Untouched and still gated on `AZURE_CREDENTIALS`; `docs/SETUP-AZURE.md` and
    `infra/bootstrap.sh` are written and waiting. Actions is a working host in the meantime (D-13),
    so this is a choice, not a blocker.
-5. **B-01's remaining half** — `pytest -m api` and a local keyed eval still cannot run in a
-   Claude Code session container, which strips `ANTHROPIC_API_KEY`. The GitHub Actions secret
-   works; that half is closed.
+5. ~~**B-01's remaining half**~~ — **closed 2026-09-11.** The session container strips
+   `ANTHROPIC_API_KEY`, but not `CRR_ANTHROPIC_API_KEY`; `settings.py` now reads either name.
+   The fix existed on the abandoned branch `claude/ecstatic-goodall-ji7yur` (PR #2) and had never
+   reached `main`, which is why this was recorded as impossible. `pytest -m api` runs in-session:
+   **5 passed**. A local `crr eval --classifier anthropic` is now possible too.
 
-**Two traps worth knowing.** `ocrmypdf` is broken in the Claude Code container, so 10 OCR
-invariant tests fail locally and pass in CI — check a failure against `main` before believing it.
-And the `2026-09` Drive skeleton already exists (folders only); a real September run writes into it.
+**Traps worth knowing.** ~~`ocrmypdf` is broken in the Claude Code container, so 10 OCR invariant
+tests fail locally and pass in CI.~~ **Fixed 2026-09-11:** apt installs `ocrmypdf` for CPython 3.12
+while `/usr/bin/python3` is 3.11, so it died importing PIL; `scripts/session_start.sh` now repoints
+its shebang, and the full invariant suite passes locally — **60 passed**. Still true: the `2026-09`
+Drive skeleton already exists (folders only), so a real September run writes into it.
 
 ## Session log
 

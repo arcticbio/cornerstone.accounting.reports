@@ -101,7 +101,7 @@ jobs:
             "image=${{ steps.settings.outputs.image }}"
             "scheduleEnabled=${{ inputs.schedule_enabled }}"
           )
-          # Only needed when the GHCR package is private (docs/SETUP-AZURE.md, step 6).
+          # Only needed when the GHCR package is private (docs/SETUP-AZURE.md, step 4).
           if [ -n "${GHCR_USER}" ]; then
             params+=("registryUsername=${GHCR_USER}" "registryPassword=${GHCR_TOKEN}")
             echo "GHCR pull credentials: supplied"
@@ -149,21 +149,45 @@ jobs:
         if: ${{ !inputs.what_if_only && inputs.grant_key_vault_access }}
         continue-on-error: true
         id: grant
+        env:
+          KV: ${{ steps.settings.outputs.key_vault_name }}
+          PRINCIPAL: ${{ steps.deploy.outputs.principal_id }}
         run: |
-          set -euo pipefail
-          vault=$(az keyvault show -n "${{ steps.settings.outputs.key_vault_name }}" --query id -o tsv)
-          az role assignment create \
-            --assignee-object-id "${{ steps.deploy.outputs.principal_id }}" \
-            --assignee-principal-type ServicePrincipal \
-            --role "Key Vault Secrets User" \
-            --scope "$vault" \
-            --output none
-          echo "Granted 'Key Vault Secrets User' on $vault"
+          set -uo pipefail
+          vault=$(az keyvault show -n "$KV" --query id -o tsv)
+
+          # Contributor can read role assignments even though it cannot write them, so ask
+          # before telling: whoever granted this by hand should not be nagged to do it again.
+          # --include-inherited because a grant at the group or subscription scope works too.
+          reads_secrets() {
+            az role assignment list --scope "$vault" --include-inherited \
+              --query "[?principalId=='$PRINCIPAL' && contains(['Key Vault Secrets User','Key Vault Secrets Officer','Key Vault Administrator'], roleDefinitionName)] | length(@)" \
+              -o tsv 2>/dev/null || echo 0
+          }
+
+          if [ "$(reads_secrets)" != "0" ]; then
+            echo "granted=true" >> "$GITHUB_OUTPUT"
+            echo "The job's identity can already read $KV — nothing to do."
+            exit 0
+          fi
+
+          if az role assignment create \
+               --assignee-object-id "$PRINCIPAL" \
+               --assignee-principal-type ServicePrincipal \
+               --role "Key Vault Secrets User" \
+               --scope "$vault" \
+               --output none; then
+            echo "granted=true" >> "$GITHUB_OUTPUT"
+            echo "Granted 'Key Vault Secrets User' on $vault"
+          else
+            echo "granted=false" >> "$GITHUB_OUTPUT"
+            echo "Could not hand out the role — this service principal is not a User Access Administrator."
+          fi
 
       - name: What to do next
         if: ${{ !inputs.what_if_only }}
         run: |
-          if [ "${{ steps.grant.outcome }}" != "success" ]; then
-            echo "::warning title=Grant Key Vault access by hand::Run: az role assignment create --assignee-object-id ${{ steps.deploy.outputs.principal_id }} --assignee-principal-type ServicePrincipal --role 'Key Vault Secrets User' --scope \$(az keyvault show -n ${{ steps.settings.outputs.key_vault_name }} --query id -o tsv) — then re-run this workflow. See docs/SETUP-AZURE.md step 8."
+          if [ "${{ steps.grant.outputs.granted }}" != "true" ]; then
+            echo "::warning title=Grant Key Vault access by hand::The job's identity cannot read ${{ steps.settings.outputs.key_vault_name }} yet. Run: az role assignment create --assignee-object-id ${{ steps.deploy.outputs.principal_id }} --assignee-principal-type ServicePrincipal --role 'Key Vault Secrets User' --scope \$(az keyvault show -n ${{ steps.settings.outputs.key_vault_name }} --query id -o tsv) — or do it in the portal (docs/SETUP-AZURE-PORTAL.md part 4), then re-run this workflow so the job picks up the secrets it can now read. See docs/SETUP-AZURE.md step 6."
           fi
           echo "::notice title=Smoke test the job::az containerapp job start --name ${{ steps.deploy.outputs.job_name }} --resource-group ${{ steps.settings.outputs.resource_group }} --args version"

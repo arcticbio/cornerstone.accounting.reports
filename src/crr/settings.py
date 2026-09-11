@@ -6,7 +6,7 @@ import json
 from pathlib import Path
 from typing import Annotated, Literal
 
-from pydantic import BaseModel, ConfigDict, Field, field_validator
+from pydantic import AliasChoices, BaseModel, ConfigDict, Field, field_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 RepoKind = Literal["local", "gdrive"]
@@ -47,7 +47,14 @@ class Settings(BaseSettings):
     )
 
     # -- classifier ------------------------------------------------------------------
-    anthropic_api_key: Annotated[str | None, Field(validation_alias="ANTHROPIC_API_KEY")] = None
+    #: Read from CRR_ANTHROPIC_API_KEY first. Claude Code on the web reserves the unprefixed
+    #: ANTHROPIC_API_KEY for its own account auth and strips it from the session container, so a
+    #: key set only under that name never reaches the runner. The unprefixed name stays as a
+    #: fallback for local shells, GitHub Actions and Azure. See docs/SETUP-CREDENTIALS.md.
+    anthropic_api_key: Annotated[
+        str | None,
+        Field(validation_alias=AliasChoices("CRR_ANTHROPIC_API_KEY", "ANTHROPIC_API_KEY")),
+    ] = None
     model: str = "claude-opus-5"
     min_confidence: float = 0.85
     max_parallel_docs: int = 2
