@@ -364,16 +364,17 @@ its secrets and the warning is stale.
 
 Two runs that touch neither Drive nor the model.
 
-## 5.1 In the portal
+> ### Do not use "Run now" for this
+>
+> The portal's **Run now** button takes no arguments — it runs the job exactly as configured,
+> which is `build --repo gdrive --classifier anthropic`: **a full production build**, not a
+> smoke test. Against a period whose inputs are not yet staged in Drive it fails within about
+> twenty seconds, retries once, and ends as `BackoffLimitExceeded`. That failure says nothing
+> about your setup.
+>
+> A smoke test has to override the arguments, and only the command line can do that. Use 5.1.
 
-1. Top search box → `crr-quarterly` → open the Container App Job.
-2. **Overview** → **Run now** → confirm.
-3. Left menu → **Execution history**. The execution should reach **Succeeded**.
-
-**Run now** uses the arguments the job is configured with — a full build. For the two smoke
-commands you need to override the arguments, and that needs Cloud Shell.
-
-## 5.2 In Cloud Shell
+## 5.1 In Cloud Shell
 
 Click **`>_`** in the top bar and run:
 
@@ -392,7 +393,7 @@ az containerapp job execution list --name crr-quarterly --resource-group rg-cust
 definitions and 8 properties. If `version` works and `validate-config` does not, the image is
 fine and the config copy is not — worth reporting as a bug.
 
-## 5.3 Reading the result
+## 5.2 Reading the result
 
 **The runner's exit codes are 0 built, 2 needs review, 1 failed — and Azure marks any non-zero
 exit as a Failed execution.** So an execution showing **Failed** is very often exit code 2,
@@ -412,6 +413,22 @@ ContainerAppConsoleLogs_CL
 | where ContainerJobName_s == "crr-quarterly"
 | order by TimeGenerated desc
 | take 200
+```
+
+**`ContainerAppConsoleLogs_CL` is the table you want — what the runner printed.** Its neighbour
+`ContainerAppSystemLogs_CL` holds the platform's own events (`PullingImage`, `ContainerStarted`,
+`BackoffLimitExceeded`) and carries a `Reason_s` column. Those tell you whether Azure could
+start the container, never why the program inside it stopped. If a `Reason_s` column is on
+screen, you are reading the wrong table.
+
+If the column names do not match — they differ between workspace schemas — drop the filter and
+go by time instead; this job is probably the only thing writing to the workspace:
+
+```kusto
+ContainerAppConsoleLogs_CL
+| where TimeGenerated > ago(2h)
+| project TimeGenerated, Log_s
+| order by TimeGenerated asc
 ```
 
 Every line is JSON. Page text, tenant names, file paths and secrets are never logged — only
@@ -449,7 +466,7 @@ Three things have no portal equivalent. All three run in **Cloud Shell** (`>_` i
 | What | Why | Where |
 |---|---|---|
 | Base64-encoding the service-account JSON | the portal will not encode a file for you | 1.6b |
-| Starting the job with custom `--args` | **Run now** uses the configured arguments only | 5.2 |
+| Starting the job with custom `--args` | **Run now** uses the configured arguments only | 5.1 |
 | Granting a role when the portal IAM blade is restricted by policy | some tenants lock it down | equivalent commands in `SETUP-AZURE.md` |
 
 Cloud Shell is a real Bash session in the browser with `az` already signed in as you. It has its
@@ -498,5 +515,6 @@ repository — so if you take this path, note which CI run the artifact came fro
 | Deploy is green but warns *Grant Key Vault access by hand* | the service principal cannot hand out roles — it says nothing about whether the grant exists | expected if you skipped 1.8; confirm the **Key Vault Secrets User** row for `crr-quarterly` in the vault's IAM and ignore it |
 | Job execution fails: *UNAUTHORIZED* / manifest unknown | private GHCR image, no pull credentials | 2.3 |
 | Execution *Failed*, logs end with review reasons | **exit code 2 — packages need review** | normal; work the queue per `RUNBOOK.md` |
+| Execution ends `BackoffLimitExceeded` seconds after starting, system logs show the image pulled and the container started | the platform is fine — the runner exited non-zero almost immediately. Most often **Run now** was used, which starts a full build against a period with no inputs in Drive | read `ContainerAppConsoleLogs_CL` (Part 6) for the real error; smoke-test with explicit `--args` per 5.1 |
 | Region missing from the Container Apps dropdown | Container Apps is not in that region | recreate the resource group in a supported one |
 | `crr version` works, a real build fails at the classifier | vault's Anthropic key is wrong or expired | Part 7, rotate |
