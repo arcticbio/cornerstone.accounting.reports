@@ -265,37 +265,31 @@ those folders and to read; it is not sufficient to put a file in them.
 
 ---
 
-**B-09 · Two open PRs carry the same three changes, and neither is redundant.** *Needs: which
-one to merge first.* *Blocks: nothing — both branches are pushed and green.* *Meanwhile:* work
-continues on `claude/gifted-lamport-wwgenm`.
+**B-10 · ~~PR #6 and PR #7 overlap and neither is redundant.~~ RESOLVED 2026-09-11 — and the
+prediction in it was wrong.** (Recorded here as B-10: this was filed as B-09 before the Drive
+blocker above merged to `main` and took that number.)
 
-[#6](https://github.com/arcticbio/cornerstone.accounting.reports/pull/6) (this session) and
-[#7](https://github.com/arcticbio/cornerstone.accounting.reports/pull/7) (session
-`01CtcCcoPJupMQeiJkZzbbnX`, opened 2026-09-10 23:13) both branch off the same `main` and both
-carry the B-08 segmenter fix, the `CRR_ANTHROPIC_API_KEY` alias and `docs/SETUP-AZURE-PORTAL.md`.
-They were written independently, so the shared files differ textually and **merging one will
-conflict the other** in `SPEC.md`, `PROGRESS.md`, `QUESTIONS.md`, `segmenter.py` and
-`settings.py`.
+*What was recorded:* that #6 and #7 carried the same B-08 fix, key alias and portal guide
+"written independently", so merging either would conflict the other in `SPEC.md`,
+`PROGRESS.md`, `QUESTIONS.md`, `segmenter.py` and `settings.py`. The recommendation — merge #7
+first, because its Azure content was the guide in live use — was right, and the operator merged
+it at 01:33.
 
-Each has something the other does not, so neither should simply be closed:
+*What was wrong:* the two were **not** written independently. #7 branched off
+`claude/gifted-lamport-wwgenm` at `a3deab3`, so the B-08 fix, the key alias and the A-08 note
+were literally the same commits, shared history rather than parallel reimplementations. Merging
+`main` back produced **no conflicts at all** — eight files, all fast-forward. The diff that
+prompted the warning (`segmenter.py | 4 +-`, `SPEC.md | 63 +---`) was mostly *this* branch's
+later commits that #7 lacked, read as if it were divergence in the shared files.
 
-- **#7 only:** the portal guide rewritten against the *live* Azure environment —
-  `rg-cust-cornerstone`, `crr-kv-accounting`, `West US 2` pinned throughout instead of
-  placeholders — plus a troubleshooting block on `AADSTS7000215` (copying the Client **Secret
-  ID** instead of the **Value**), step renumbering in `SETUP-AZURE.md`, and matching defaults in
-  `infra/bootstrap.sh` and `deploy.yml`. This reads as written while someone was actually
-  following it, and it is the guide the user is working from.
-- **#6 only:** the orientation cross-check (A-09) and the record metric fix (A-10), plus the
-  real-model eval reports.
+*The lesson worth keeping:* `git diff A B` answers "how do these differ", not "were these
+written independently" — `git merge-base` answers that, and it was one command away. A cheap
+check would have replaced a paragraph of confident speculation with a fact.
 
-*Recommended order:* merge **#7** first, since it is the smaller, self-contained one and its
-Azure content is what is being used right now; then `main` merges into this branch, the
-conflicts get resolved here (they are all "keep both" — different sections of the same files),
-and #6 reduces to the orientation and metric work. Doing it the other way round leaves the
-conflict resolution on a branch nobody is sitting on.
-
-*Not done unilaterally:* #7 belongs to another session, and its Azure edits are not mine to
-discard.
+*What was right and worth keeping:* #7 was not redundant and should not have been closed on
+that assumption; its Azure content was written against the live subscription and carries the
+`AADSTS7000215` trap, the `Run now`-is-a-production-build correction, and the Drive blocker now
+recorded as B-09 above.
 
 ---
 ## Known unknowns the user may want to act on (not blocking)

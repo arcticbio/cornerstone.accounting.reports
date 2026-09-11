@@ -4,7 +4,7 @@ Single source of truth for build state. Claude Code ticks tasks here after each 
 commits. Humans read this to see where things stand. Mirrors `docs/PLAN.md`; if they diverge,
 PLAN.md defines the work and this file records what has been done.
 
-**Branch:** `main` — v1 landed there via [#1](https://github.com/arcticbio/cornerstone.accounting.reports/pull/1) (built on the session branch `claude/gifted-lamport-wwgenm`; D-15 — every reference to `build/v1` in these documents means the release line, now `main`) · **Current phase:** 9 (complete) · **Tag:** `v1.0.0` pushed · **Last session note:** B-08 fixed; real-model eval run over all 172 pages and now **100 % on every metric**; the orientation defect it surfaced fixed — a page was shipping upside down — and the 59 % record score it reported traced to the metric, not the classifier. See "Pick up here" below.
+**Branch:** `main` — v1 landed there via [#1](https://github.com/arcticbio/cornerstone.accounting.reports/pull/1) (built on the session branch `claude/gifted-lamport-wwgenm`; D-15 — every reference to `build/v1` in these documents means the release line, now `main`) · **Current phase:** 9 (complete) · **Tag:** `v1.0.0` pushed · **Last session note:** B-08 fixed; real-model eval run over all 172 pages and now **100 % on every metric**; the orientation defect it surfaced fixed — a page was shipping upside down — and the 59 % record score it reported traced to the metric, not the classifier. #7 merged to `main`; this branch merged it back cleanly. **Top blocker is now B-09: no package can reach Drive.** See "Pick up here" below.
 
 ## Pick up here
 
@@ -77,17 +77,22 @@ properties end to end.
    `build-period.yml`, or a small `eval.yml`, is the cheap way in.
 5. ~~**Log `is_continuation` on `classify.page`**~~ — done; a run log now answers the B-08
    question without the artifact.
-6. **B-09 — two open PRs, neither redundant.** [#6](https://github.com/arcticbio/cornerstone.accounting.reports/pull/6)
-   (this branch) and [#7](https://github.com/arcticbio/cornerstone.accounting.reports/pull/7)
-   (another session, opened 23:13 tonight) both carry B-08, the key alias and the portal guide,
-   written independently — so merging one conflicts the other. #7 additionally has the portal
-   guide pinned to the *live* Azure names and an `AADSTS7000215` troubleshooting block; #6
-   additionally has the orientation and record-metric work. **Merge #7 first**, then resolve
-   here. Needs a decision; see B-09 in `QUESTIONS.md`.
-7. **B-04 — Azure.** Untouched and still gated on `AZURE_CREDENTIALS`; `docs/SETUP-AZURE.md` and
+6. **B-09 — no package can reach Drive.** *(Not this branch's work; it arrived with #7, and it
+   is the top production blocker.)* The service account has no storage quota, so every
+   `--repo gdrive` upload fails `403 storageQuotaExceeded` — including `publish`, which means a
+   gdrive build classifies, composes, and then fails at the last step. Folders are exempt, so
+   the setup looks healthy right up until the first byte. Needs an account change, not a code
+   change: move the Drive root into a **shared drive** with the runner as **Content manager**.
+   `--repo local` is unaffected. See B-09 in `QUESTIONS.md`.
+7. ~~**Two open PRs, neither redundant.**~~ **Settled 2026-09-11.** The operator merged
+   [#7](https://github.com/arcticbio/cornerstone.accounting.reports/pull/7) at 01:33 and `main`
+   merged back into this branch **with no conflicts** — the two had shared history (#7 branched
+   off this branch at `a3deab3`), not the independent implementations this file predicted. The
+   mis-call, and the one-command check that would have caught it, are recorded as B-10.
+8. **B-04 — Azure.** Untouched and still gated on `AZURE_CREDENTIALS`; `docs/SETUP-AZURE.md` and
    `infra/bootstrap.sh` are written and waiting. Actions is a working host in the meantime (D-13),
    so this is a choice, not a blocker.
-8. ~~**B-01's remaining half**~~ — **closed 2026-09-11.** The session container strips
+9. ~~**B-01's remaining half**~~ — **closed 2026-09-11.** The session container strips
    `ANTHROPIC_API_KEY`, but not `CRR_ANTHROPIC_API_KEY`; `settings.py` now reads either name.
    The fix existed on the abandoned branch `claude/ecstatic-goodall-ji7yur` (PR #2) and had never
    reached `main`, which is why this was recorded as impossible. `pytest -m api` runs in-session:
