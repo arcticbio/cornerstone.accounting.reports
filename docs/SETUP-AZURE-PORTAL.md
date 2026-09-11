@@ -376,33 +376,51 @@ Two runs that touch neither Drive nor the model.
 
 ## 5.1 In Cloud Shell
 
-Click **`>_`** in the top bar and run:
+Click **`>_`** in the top bar.
 
-```bash
-az containerapp job start --name crr-quarterly --resource-group rg-cust-cornerstone --args "version"
-az containerapp job start --name crr-quarterly --resource-group rg-cust-cornerstone --args "validate-config"
-```
+> ### `--args` does not work on `job start`
+>
+> The obvious command — `az containerapp job start --args "version"` — fails, and the reasons
+> are Azure's, not yours. Three of them, stacked:
+>
+> - `--args` on its own returns `(ContainerAppImageRequired) Container with name
+>   'crr-quarterly' must have an 'Image' property specified`. Passing any override makes the
+>   CLI build a fresh container spec for that execution, and a spec needs its own image.
+> - Adding `--image` clears that error but drops the job's environment variables for that
+>   execution ([azure-cli#27521](https://github.com/Azure/azure-cli/issues/27521), open), so the
+>   run loses its Key Vault secrets and the Drive folder id — it would fail for a new reason.
+> - Independently, `--command` and `--args` are reported as ignored by `job start`
+>   ([azure-container-apps#1360](https://github.com/microsoft/azure-container-apps/issues/1360),
+>   open): the configured arguments run instead of yours.
+>
+> **To run the job with different arguments, change them on the job, start it, then put them
+> back:**
+>
+> ```bash
+> az containerapp job update --name crr-quarterly --resource-group rg-cust-cornerstone \
+>   --args "version"
+> az containerapp job start  --name crr-quarterly --resource-group rg-cust-cornerstone
+> ```
+>
+> **Put them back.** The quarterly schedule runs whatever is configured, so a job left on
+> `version` quietly does nothing in October. Re-running the deploy workflow restores the
+> arguments from `infra/main.bicep`, which is the source of truth — that is the safest undo.
 
-Then watch:
+`version` should print `crr 1.0.0`. `validate-config` should list 4 schemas, 3 output
+definitions and 8 properties. If `version` works and `validate-config` does not, the image is
+fine and the config copy is not — worth reporting as a bug. Watch either with:
 
 ```bash
 az containerapp job execution list --name crr-quarterly --resource-group rg-cust-cornerstone --output table
 ```
 
-`version` should print `crr 1.0.0`. `validate-config` should list 4 schemas, 3 output
-definitions and 8 properties. If `version` works and `validate-config` does not, the image is
-fine and the config copy is not — worth reporting as a bug.
+### Checking a period without touching the job
 
-Neither touches Drive. To prove the Drive credential end to end — and to see whether a period is
-actually buildable — ask the job what it can see:
-
-```bash
-az containerapp job start --name crr-quarterly --resource-group rg-cust-cornerstone \
-  --args "inspect --repo gdrive --period 2026-09"
-```
-
-It lists each property as `ready` or `NOT READY` and writes nothing. Run it before any real
-build: `NOT READY` everywhere means the period was never staged, not that anything is broken.
+Neither command above touches Drive, and mutating the job to run `inspect` is a lot of ceremony
+for a read-only question. **Actions → Build a period** takes a period id as an input and runs
+the same image with the same secrets, leaving the job definition alone. It is also the right way
+to build one specific period on demand — the Container Apps Job exists for the quarterly
+schedule, which needs no arguments at all.
 
 ## 5.2 Reading the result
 
@@ -477,7 +495,7 @@ Three things have no portal equivalent. All three run in **Cloud Shell** (`>_` i
 | What | Why | Where |
 |---|---|---|
 | Base64-encoding the service-account JSON | the portal will not encode a file for you | 1.6b |
-| Starting the job with custom `--args` | **Run now** uses the configured arguments only | 5.1 |
+| Running the job with different arguments | **Run now** passes none, and `--args` is broken on `job start` | `job update --args`, start, then restore — 5.1 |
 | Granting a role when the portal IAM blade is restricted by policy | some tenants lock it down | equivalent commands in `SETUP-AZURE.md` |
 
 Cloud Shell is a real Bash session in the browser with `az` already signed in as you. It has its
@@ -529,4 +547,5 @@ repository — so if you take this path, note which CI run the artifact came fro
 | Execution ends `BackoffLimitExceeded` seconds after starting, system logs show the image pulled and the container started | the platform is fine — the runner exited non-zero almost immediately. Most often **Run now** was used, which starts a full build against a period with no inputs in Drive | read `ContainerAppConsoleLogs_CL` (Part 6) for the real error; smoke-test with explicit `--args` per 5.1 |
 | Console logs: `RepositoryError: <property>: no PM source in Drive for period YYYY-MM` for every property | the deployment is working — Drive was read and the expected filename reported. That period simply has no inputs staged | `docs/RUNBOOK.md` → *Preparing a period in Drive*; check with `inspect --repo gdrive --period <id>` before building |
 | Region missing from the Container Apps dropdown | Container Apps is not in that region | recreate the resource group in a supported one |
+| `(ContainerAppImageRequired) Container with name 'crr-quarterly' must have an 'Image' property specified` | you passed `--args` to `az containerapp job start`; any override needs its own image, and supplying one drops the env vars | 5.1 — set the arguments with `job update` instead |
 | `crr version` works, a real build fails at the classifier | vault's Anthropic key is wrong or expired | Part 7, rotate |

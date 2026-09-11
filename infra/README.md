@@ -68,13 +68,14 @@ The schedule fires quarterly. To run one now:
 # The period just ended — same thing the schedule does.
 az containerapp job start --name crr-quarterly --resource-group rg-cust-cornerstone
 
-# A specific period, or one property.
-az containerapp job start --name crr-quarterly --resource-group rg-cust-cornerstone \
-  --args "build --period 2026-09 --repo gdrive --classifier anthropic --property fort-grounds"
+# A specific period, or one property: use Actions -> "Build a period" instead. `--args` on
+# `job start` fails with ContainerAppImageRequired, and --image drops the env vars
+# (Azure/azure-cli#27521); --args is also reported ignored there (microsoft/azure-container-apps#1360).
 
-# A smoke test that needs neither Drive nor the bundle.
-az containerapp job start --name crr-quarterly --resource-group rg-cust-cornerstone --args "version"
-az containerapp job start --name crr-quarterly --resource-group rg-cust-cornerstone --args "validate-config"
+# A smoke test that needs neither Drive nor the bundle. Set the args, run, then restore them —
+# the schedule runs whatever is configured.
+az containerapp job update --name crr-quarterly --resource-group rg-cust-cornerstone --args "version"
+az containerapp job start  --name crr-quarterly --resource-group rg-cust-cornerstone
 ```
 
 Watch it:

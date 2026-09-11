@@ -167,12 +167,23 @@ Why it cannot be part of the template: the job's identity does not exist until t
 
 ## Step 7 — Smoke test
 
-Two runs that touch neither Drive nor the model:
+Two runs that touch neither Drive nor the model. **`--args` does not work on `job start`** —
+it fails with `ContainerAppImageRequired`, and adding `--image` drops the job's environment
+variables ([azure-cli#27521](https://github.com/Azure/azure-cli/issues/27521)); `--args` is also
+reported as ignored there
+([azure-container-apps#1360](https://github.com/microsoft/azure-container-apps/issues/1360)).
+Set the arguments on the job instead, run it, then put them back:
 
 ```bash
-az containerapp job start --name crr-quarterly --resource-group rg-cust-cornerstone --args "version"
-az containerapp job start --name crr-quarterly --resource-group rg-cust-cornerstone --args "validate-config"
+az containerapp job update --name crr-quarterly --resource-group rg-cust-cornerstone --args "version"
+az containerapp job start  --name crr-quarterly --resource-group rg-cust-cornerstone
+
+az containerapp job update --name crr-quarterly --resource-group rg-cust-cornerstone --args "validate-config"
+az containerapp job start  --name crr-quarterly --resource-group rg-cust-cornerstone
 ```
+
+**Restore the arguments when you are done** — the quarterly schedule runs whatever is
+configured. Re-running the deploy workflow resets them from `infra/main.bicep`.
 
 Watch them:
 
@@ -190,13 +201,13 @@ image is fine and the config copy is not — which would be a bug worth reportin
 Only once a period's inputs are in Drive (`docs/RUNBOOK.md` → *Preparing a period in Drive*):
 
 ```bash
-# The period just ended — what the schedule does.
+# The period just ended — what the schedule does, and the only form needing no arguments.
 az containerapp job start --name crr-quarterly --resource-group rg-cust-cornerstone
-
-# Or one specific property.
-az containerapp job start --name crr-quarterly --resource-group rg-cust-cornerstone \
-  --args "build --period 2026-09 --repo gdrive --classifier anthropic --property fort-grounds"
 ```
+
+For any *other* period or a single property, use **Actions → Build a period**: it takes the
+period, property, repo and classifier as inputs, runs the same image with the same secrets, and
+does not require mutating the job definition the schedule depends on.
 
 **Read the exit code carefully.** The runner's contract (SPEC §6.8) is 0 built, 2 needs review,
 1 failed — and Azure marks any non-zero exit as a *failed execution*. **An execution showing
