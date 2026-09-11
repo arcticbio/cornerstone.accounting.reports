@@ -173,6 +173,23 @@ report would make metric changes free to re-measure.
 *Where:* `src/crr/evaluate/metrics.py`, `src/crr/evaluate/harness.py`, SPEC §8,
 `tests/unit/test_record_metric.py`.
 
+**A-11 · A rehearsal period `2026-08` was seeded into Drive so the job can be started with no
+arguments.**
+*Why:* `infra/main.bicep` bakes `build --repo gdrive --classifier anthropic` with **no
+`--period`**, because a quarterly run on the 20th is closing the month just ended (A-07). That
+makes the no-argument start the only faithful rehearsal of what the cron actually does — and
+today the month just ended is `2026-08`, which had no inputs. A start against an empty period
+proves nothing except that the period is empty.
+*What was seeded:* 31 files across all eight properties under `inputs/2026-08`, copied from
+`data/bundle/2026-06`. **The content is June's, under an August label.** It is a rehearsal
+dataset. Any package it produces is labelled August and contains June figures, so it must not be
+mistaken for a deliverable and the `2026-08` tree should be removed once the rehearsal is done.
+*The alternative, and why not:* start the job with `--args build --period 2026-06 …` against the
+real June inputs. That exercises the image, the vault and Drive equally well but not the
+defaulting, which is the one piece of the schedule's behaviour that has never run. Both are
+available from `Actions → Run the Azure job`.
+*Where:* Drive `inputs/2026-08` (delete it there); nothing in the repository depends on it.
+
 ---
 
 ## Blocked (Claude Code appends here)
@@ -212,8 +229,18 @@ Still true locally — `/var/run/docker.sock` does not exist here — but CI's `
 the image, runs `crr version`, proves `/app/data` is absent, checks all three OCR binaries
 inside the container, runs the golden build there, and pushes to GHCR. All green.
 
-**B-04 · Azure deployment — the user has chosen to proceed; instructions written.**
-*Status 2026-09-10:* the user wants Azure and has a subscription, and is working through setup
+**B-04 · ~~Azure deployment.~~ RESOLVED 2026-09-11 — deployed, audited and armed.**
+*What is live,* read out of the *Deploy to Azure* run logs rather than assumed: runs 3–7
+succeeded, the latest at 03:48 UTC from `main`@`020fc7d`. Subscription `e7eadf09…`, resource
+group `rg-cust-cornerstone`, job `crr-quarterly`, environment `crr-env`, workspace `crr-logs`,
+vault `crr-kv-accounting`. The job's system-assigned identity `e3de70d7…` already reads the
+vault — the grant step reported "nothing to do", so step 6's warning path is not outstanding.
+GHCR pull credentials are supplied, so the private package is reachable. `scheduleEnabled=true`,
+cron `0 6 20 1,4,7,10 *`.
+*The line that mattered in the what-if diff:* `~ value: "1_tUMelVG8…" => "1SQUgfGiw1…"` — Azure
+took the **shared-drive** root folder id, which is what carries B-09's fix into the job.
+*What is still only the user's to do:* see **B-11** — this session cannot start the job.
+*Superseded status 2026-09-10:* the user wants Azure and has a subscription, and is working through setup
 in the portal. Two walkthroughs: `docs/SETUP-AZURE.md` (CLI, with `infra/bootstrap.sh` doing the
 credential-bearing parts in one guided run) and `docs/SETUP-AZURE-PORTAL.md` (click by click,
 with the three unavoidable commands run in Cloud Shell). `deploy.yml` reads its settings from
@@ -326,6 +353,29 @@ check would have replaced a paragraph of confident speculation with a fact.
 that assumption; its Azure content was written against the live subscription and carries the
 `AADSTS7000215` trap, the `Run now`-is-a-production-build correction, and the Drive blocker now
 recorded as B-09 above.
+
+**B-11 · This session cannot start the Azure job or read its executions.**
+*What is needed:* nothing from the user, as it turns out — but it is worth recording why, because
+it was the one gap the audit could not close directly. The session container has no `az` CLI and
+no Azure credential (`env | grep AZURE` is empty; `AZURE_CREDENTIALS` is a *repository* secret,
+readable only by a workflow run). So `az containerapp job start`, `job execution list` and
+`job logs show` are all out of reach from here, and so is any direct read of the deployment's
+current state — the Azure facts in B-04 come from the *Deploy to Azure* run logs, which are
+readable through the GitHub API.
+*What was blocked:* pressing the button on a smoke test and reading back its logs.
+*What was done instead:* `.github/workflows/azure-job.yml` — `Actions → Run the Azure job`. It
+runs inside Actions, where `AZURE_CREDENTIALS` exists, and does the `SETUP-AZURE.md` step 7
+sequence: set `--args` on the job, start it, poll the execution, print the container logs, and
+**restore the scheduled arguments in an `always()` step**. That last part is the reason it is a
+workflow and not a note in a document: `--args` cannot be passed to `job start`
+([azure-cli#27521](https://github.com/Azure/azure-cli/issues/27521),
+[azure-container-apps#1360](https://github.com/microsoft/azure-container-apps/issues/1360)), so a
+manual run must mutate the definition the quarterly cron reads, and a run that is cancelled
+before its restore leaves the schedule pointed at `version` until someone notices. It restores
+from `infra/main.bicep`, not from whatever the live job was holding, so a job already left
+mutated gets corrected rather than preserved.
+*What the user still has to do:* dispatch it, and read the result. A session can trigger a
+workflow and read its logs, so once it is on `main` this is closed both ways.
 
 ---
 ## Known unknowns the user may want to act on (not blocking)

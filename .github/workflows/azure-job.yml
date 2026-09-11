@@ -1,0 +1,208 @@
+name: Run the Azure job
+
+# Starts the deployed Container Apps Job on demand, waits for it, prints its logs, and puts
+# the job's arguments back the way the quarterly schedule needs them (docs/SETUP-AZURE.md
+# step 7).
+#
+# Why a workflow rather than two commands in a terminal: `--args` does not work on
+# `az containerapp job start` (it fails ContainerAppImageRequired, and adding --image drops the
+# job's environment variables — azure-cli#27521, azure-container-apps#1360). The arguments have
+# to be set *on the job* first, which mutates the definition the quarterly cron runs. Doing that
+# by hand means remembering to undo it; here the restore is an `always()` step, so a cancelled
+# or failed run still leaves the schedule armed correctly.
+
+on:
+  workflow_dispatch:
+    inputs:
+      args:
+        description: "Arguments to run, space separated (version | validate-config | build --period 2026-08)"
+        required: true
+        default: version
+        type: string
+      wait_minutes:
+        description: "How long to wait for the execution before giving up on it"
+        required: true
+        default: "20"
+        type: string
+      restore_args:
+        description: "Put the scheduled arguments back afterwards (untick only if you know why)"
+        required: true
+        default: true
+        type: boolean
+
+# Two runs mutating the same job definition at once would restore each other's arguments.
+# Queue them instead of cancelling: a cancelled run is a run whose restore never happened.
+concurrency:
+  group: azure-job
+  cancel-in-progress: false
+
+jobs:
+  run:
+    name: az containerapp job start
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Resolve settings
+        id: settings
+        env:
+          VAR_RG: ${{ vars.AZURE_RESOURCE_GROUP }}
+          VAR_JOB: ${{ vars.AZURE_JOB_NAME }}
+        run: |
+          set -euo pipefail
+          rg="$VAR_RG"
+          job="${VAR_JOB:-crr-quarterly}"
+          if [ -z "$rg" ]; then
+            echo "::error title=Missing repository variable::Set AZURE_RESOURCE_GROUP under Settings → Secrets and variables → Actions → Variables. See docs/SETUP-AZURE.md step 3."
+            exit 1
+          fi
+          echo "resource_group=$rg" >> "$GITHUB_OUTPUT"
+          echo "job_name=$job" >> "$GITHUB_OUTPUT"
+
+      - name: Sign in to Azure
+        uses: azure/login@v2
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      # The arguments the schedule must be left holding. Read from the template rather than
+      # from the live job: if an earlier run died before its restore, the live job is wrong and
+      # copying it would make that permanent.
+      - name: Read the scheduled arguments from the template
+        id: scheduled
+        run: |
+          set -euo pipefail
+          scheduled=$(az bicep build --file infra/main.bicep --stdout \
+            | jq -r '[.. | objects | select(.name? == "crr" and (.args? | type) == "array") | .args | join(" ")] | first // ""')
+          if [ -z "$scheduled" ]; then
+            echo "::error title=Could not read the scheduled arguments::infra/main.bicep no longer has a container named crr with an args list; this workflow cannot guarantee a correct restore."
+            exit 1
+          fi
+          echo "args=$scheduled" >> "$GITHUB_OUTPUT"
+          echo "The schedule runs: crr $scheduled"
+
+      - name: Note the arguments the job is holding now
+        id: before
+        run: |
+          set -euo pipefail
+          current=$(az containerapp job show \
+            --name "${{ steps.settings.outputs.job_name }}" \
+            --resource-group "${{ steps.settings.outputs.resource_group }}" \
+            --query "properties.template.containers[0].args" -o tsv | paste -sd' ')
+          echo "args=$current" >> "$GITHUB_OUTPUT"
+          echo "The job is currently holding: crr $current"
+          if [ "$current" != "${{ steps.scheduled.outputs.args }}" ]; then
+            echo "::warning title=The job was left mutated::The job's arguments are '$current', not the scheduled '${{ steps.scheduled.outputs.args }}'. A previous manual start did not restore them. This run will restore the scheduled arguments."
+          fi
+
+      - name: Set the arguments for this run
+        env:
+          RUN_ARGS: ${{ inputs.args }}
+        run: |
+          set -euo pipefail
+          read -ra args <<< "$RUN_ARGS"
+          az containerapp job update \
+            --name "${{ steps.settings.outputs.job_name }}" \
+            --resource-group "${{ steps.settings.outputs.resource_group }}" \
+            --args "${args[@]}" \
+            --output none
+          echo "Job will run: crr $RUN_ARGS"
+
+      - name: Start it
+        id: start
+        run: |
+          set -euo pipefail
+          exec_name=$(az containerapp job start \
+            --name "${{ steps.settings.outputs.job_name }}" \
+            --resource-group "${{ steps.settings.outputs.resource_group }}" \
+            --query name -o tsv)
+          echo "execution=$exec_name" >> "$GITHUB_OUTPUT"
+          echo "Started execution $exec_name"
+
+      - name: Wait for it
+        id: wait
+        env:
+          WAIT_MINUTES: ${{ inputs.wait_minutes }}
+        run: |
+          set -euo pipefail
+          deadline=$(( $(date +%s) + WAIT_MINUTES * 60 ))
+          status=Running
+          while [ "$(date +%s)" -lt "$deadline" ]; do
+            status=$(az containerapp job execution list \
+              --name "${{ steps.settings.outputs.job_name }}" \
+              --resource-group "${{ steps.settings.outputs.resource_group }}" \
+              --query "[?name=='${{ steps.start.outputs.execution }}'].properties.status | [0]" \
+              -o tsv)
+            case "$status" in
+              Succeeded|Failed|Degraded|Stopped) break ;;
+            esac
+            echo "  $(date -u +%H:%M:%S) $status"
+            sleep 20
+          done
+          echo "status=$status" >> "$GITHUB_OUTPUT"
+          echo "Execution finished with status: $status"
+
+      # Log Analytics ingests on a delay, so an execution that just ended may have no rows yet.
+      - name: Logs
+        if: always()
+        continue-on-error: true
+        run: |
+          set -uo pipefail
+          echo "Waiting 60s for Log Analytics to ingest…"
+          sleep 60
+          az containerapp job logs show \
+            --name "${{ steps.settings.outputs.job_name }}" \
+            --resource-group "${{ steps.settings.outputs.resource_group }}" \
+            --container crr \
+            --job-execution-name "${{ steps.start.outputs.execution }}" \
+            --tail 400 \
+          || echo "::warning title=No logs yet::Log Analytics had nothing for this execution. Try again in a few minutes, or read them in the portal under the resource group → crr-logs → Logs."
+
+      # Unconditional: the quarterly schedule runs whatever the job is holding, so a run that
+      # ends any other way — failed, cancelled, timed out — must still put it back.
+      - name: Restore the scheduled arguments
+        if: ${{ always() && inputs.restore_args }}
+        env:
+          SCHEDULED: ${{ steps.scheduled.outputs.args }}
+        run: |
+          set -euo pipefail
+          read -ra args <<< "$SCHEDULED"
+          az containerapp job update \
+            --name "${{ steps.settings.outputs.job_name }}" \
+            --resource-group "${{ steps.settings.outputs.resource_group }}" \
+            --args "${args[@]}" \
+            --output none
+          now=$(az containerapp job show \
+            --name "${{ steps.settings.outputs.job_name }}" \
+            --resource-group "${{ steps.settings.outputs.resource_group }}" \
+            --query "properties.template.containers[0].args" -o tsv | paste -sd' ')
+          echo "The job is holding: crr $now"
+          [ "$now" = "$SCHEDULED" ] \
+            || { echo "::error title=Restore did not take::The job is holding '$now'. Re-run the deploy workflow to reset it from infra/main.bicep."; exit 1; }
+
+      - name: Not restored
+        if: ${{ always() && !inputs.restore_args }}
+        run: |
+          echo "::warning title=Arguments left in place::The job is still holding 'crr ${{ inputs.args }}'. The quarterly cron runs whatever is configured — run this workflow again, or re-run the deploy workflow, before the next scheduled fire."
+
+      # Azure reports any non-zero exit as a failed execution, and the runner's contract
+      # (SPEC §6.8) is 0 built, 2 needs review, 1 failed. So "Failed" here is very often exit 2:
+      # the packages built and one or more went to review/ for a human. Read the logs.
+      - name: What happened
+        if: always()
+        env:
+          RUN_ARGS: ${{ inputs.args }}
+          STATUS: ${{ steps.wait.outputs.status }}
+        run: |
+          {
+            echo "### \`crr $RUN_ARGS\`"
+            echo
+            echo "| | |"
+            echo "|---|---|"
+            echo "| Job | \`${{ steps.settings.outputs.job_name }}\` in \`${{ steps.settings.outputs.resource_group }}\` |"
+            echo "| Execution | \`${{ steps.start.outputs.execution }}\` |"
+            echo "| Status | **$STATUS** |"
+            echo
+            echo "Azure marks any non-zero exit as \`Failed\`. The runner exits 0 built, 2 needs review, 1 failed (SPEC §6.8) — so a \`Failed\` build execution is very often exit 2, meaning packages built and went to \`review/\`. Read the logs above before treating it as an incident."
+          } >> "$GITHUB_STEP_SUMMARY"
+          [ "$STATUS" = "Succeeded" ] || exit 1

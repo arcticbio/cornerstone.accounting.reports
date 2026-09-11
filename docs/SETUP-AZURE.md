@@ -167,7 +167,17 @@ Why it cannot be part of the template: the job's identity does not exist until t
 
 ## Step 7 — Smoke test
 
-Two runs that touch neither Drive nor the model. **`--args` does not work on `job start`** —
+Two runs that touch neither Drive nor the model: `version` and `validate-config`.
+
+**The easy way — Actions → Run the Azure job.** Enter `version` (then `validate-config`), run it,
+and read the summary. It does the whole dance below, waits for the execution, prints its logs,
+and **restores the scheduled arguments even if it fails or is cancelled** — which is the part
+that is easy to forget by hand. It also warns if it finds the job already holding the wrong
+arguments from an earlier manual start.
+
+### Or by hand
+
+**`--args` does not work on `job start`** —
 it fails with `ContainerAppImageRequired`, and adding `--image` drops the job's environment
 variables ([azure-cli#27521](https://github.com/Azure/azure-cli/issues/27521)); `--args` is also
 reported as ignored there
@@ -204,6 +214,11 @@ Only once a period's inputs are in Drive (`docs/RUNBOOK.md` → *Preparing a per
 # The period just ended — what the schedule does, and the only form needing no arguments.
 az containerapp job start --name crr-quarterly --resource-group rg-cust-cornerstone
 ```
+
+**Actions → Run the Azure job** with the arguments left at `build --repo gdrive --classifier
+anthropic` does the same thing through the same job, and reports the execution status and logs
+back into the run summary. Use it when you want the run recorded somewhere other than a
+terminal.
 
 For any *other* period or a single property, use **Actions → Build a period**: it takes the
 period, property, repo and classifier as inputs, runs the same image with the same secrets, and

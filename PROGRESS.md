@@ -4,12 +4,15 @@ Single source of truth for build state. Claude Code ticks tasks here after each 
 commits. Humans read this to see where things stand. Mirrors `docs/PLAN.md`; if they diverge,
 PLAN.md defines the work and this file records what has been done.
 
-**Branch:** `main` — v1 landed there via [#1](https://github.com/arcticbio/cornerstone.accounting.reports/pull/1) (built on the session branch `claude/gifted-lamport-wwgenm`; D-15 — every reference to `build/v1` in these documents means the release line, now `main`) · **Current phase:** 9 (complete) · **Tag:** `v1.0.0` pushed · **Last session note:** B-08 fixed; real-model eval run over all 172 pages and now **100 % on every metric**; the orientation defect it surfaced fixed — a page was shipping upside down — and the 59 % record score it reported traced to the metric, not the classifier. #7 merged to `main`; this branch merged it back cleanly. **B-09 is resolved: the production publish path works end to end.** See "Pick up here" below.
+**Branch:** `main` — v1 landed there via [#1](https://github.com/arcticbio/cornerstone.accounting.reports/pull/1) (built on the session branch `claude/gifted-lamport-wwgenm`; D-15 — every reference to `build/v1` in these documents means the release line, now `main`) · **Current phase:** 9 (complete) · **Tag:** `v1.0.0` pushed · **Last session note:** B-08 fixed; real-model eval run over all 172 pages and now **100 % on every metric**; the orientation defect it surfaced fixed — a page was shipping upside down — and the 59 % record score it reported traced to the metric, not the classifier. #7 merged to `main`; this branch merged it back cleanly. **B-09 is resolved: the production publish path works end to end.** **B-04 is resolved: Azure is
+deployed, audited and armed**, a rehearsal period (`2026-08`) is seeded in Drive, and
+`Actions → Run the Azure job` can start the job and put its arguments back. See "Pick up here"
+below.
 
 ## Pick up here
 
-_Last updated 2026-09-10 by a side session; the effort moves back to the primary thread from
-here. Everything below this block is the historical build record._
+_Last updated 2026-09-11 after a full audit of the plan, the documents and the live environment.
+Everything below this block is the historical build record._
 
 **State.** v1 is complete, merged to `main`, tagged `v1.0.0`. CI is green. The container is on
 GHCR as `:build-v1`, republished by every push to `main`. The real model has built all eight
@@ -98,14 +101,39 @@ properties end to end.
    merged back into this branch **with no conflicts** — the two had shared history (#7 branched
    off this branch at `a3deab3`), not the independent implementations this file predicted. The
    mis-call, and the one-command check that would have caught it, are recorded as B-10.
-8. **B-04 — Azure.** Untouched and still gated on `AZURE_CREDENTIALS`; `docs/SETUP-AZURE.md` and
-   `infra/bootstrap.sh` are written and waiting. Actions is a working host in the meantime (D-13),
-   so this is a choice, not a blocker.
-9. ~~**B-01's remaining half**~~ — **closed 2026-09-11.** The session container strips
-   `ANTHROPIC_API_KEY`, but not `CRR_ANTHROPIC_API_KEY`; `settings.py` now reads either name.
-   The fix existed on the abandoned branch `claude/ecstatic-goodall-ji7yur` (PR #2) and had never
-   reached `main`, which is why this was recorded as impossible. `pytest -m api` runs in-session:
-   **5 passed**. A local `crr eval --classifier anthropic` is now possible too.
+8. ~~**B-04 — Azure.**~~ **Deployed and audited 2026-09-11.** The operator ran the bootstrap and
+   the deploy workflow; runs 3–7 of *Deploy to Azure* succeeded, the latest at 03:48 from
+   `main`@`020fc7d`. Confirmed from the run logs, not assumed:
+   - subscription `e7eadf09…`, resource group `rg-cust-cornerstone`, job `crr-quarterly`,
+     environment `crr-env`, workspace `crr-logs`, vault `crr-kv-accounting`;
+   - the job's identity (`e3de70d7…`) already reads the vault — the grant step reported
+     "nothing to do", so step 6's warning path is not outstanding;
+   - GHCR pull credentials are supplied, so the private package is reachable;
+   - `scheduleEnabled=true`; cron `0 6 20 1,4,7,10 *`; **next unattended fire 20 Oct 06:00 UTC**;
+   - the what-if diff for run 7 shows `~ value: "1_tUMelVG8…" => "1SQUgfGiw1…"` — Azure took the
+     new **shared-drive** root folder id, which is what makes B-09's fix reach the job.
+   `:build-v1` was republished by the merges of #8 and #9, so the tag the job pulls now contains
+   the publish preflight.
+9. **A rehearsal period is seeded in Drive: `2026-08`, 31 files, all eight properties.** The
+   job's baked arguments are `build --repo gdrive --classifier anthropic` with **no `--period`**,
+   and the runner defaults to the month just ended — which is `2026-08` today. Without inputs
+   under that label a no-argument start (the schedule's exact shape) would have found nothing.
+   The files are the June bundle placed under an August label: **a rehearsal dataset, not a
+   deliverable.** Delete the `2026-08` tree before anyone could mistake its output for a real
+   quarter.
+10. **`Actions → Run the Azure job` (`.github/workflows/azure-job.yml`) starts the job from
+    GitHub.** This session cannot: there is no `az` CLI in the container and no `AZURE_*`
+    credential, so the one thing it could not do was press the button. The workflow does the
+    `job update --args` → `job start` → wait → logs → **restore** sequence from `SETUP-AZURE.md`
+    step 7, with the restore as an `always()` step so a cancelled or failed run still leaves the
+    quarterly cron armed with the right arguments. It reads the arguments to restore out of
+    `infra/main.bicep` rather than off the live job, so a job left mutated by an earlier manual
+    start gets corrected instead of preserved.
+11. ~~**B-01's remaining half**~~ — **closed 2026-09-11.** The session container strips
+    `ANTHROPIC_API_KEY`, but not `CRR_ANTHROPIC_API_KEY`; `settings.py` now reads either name.
+    The fix existed on the abandoned branch `claude/ecstatic-goodall-ji7yur` (PR #2) and had never
+    reached `main`, which is why this was recorded as impossible. `pytest -m api` runs in-session:
+    **5 passed**. A local `crr eval --classifier anthropic` is now possible too.
 
 **Traps worth knowing.** ~~`ocrmypdf` is broken in the Claude Code container, so 10 OCR invariant
 tests fail locally and pass in CI.~~ **Fixed 2026-09-11:** apt installs `ocrmypdf` for CPython 3.12
@@ -133,6 +161,7 @@ Drive skeleton already exists (folders only), so a real September run writes int
 | 2026-09-10 | post-v1 | PR #1 merged to `main`; first keyed run dispatched (`2026-06`/`fort-grounds`/`local`/`anthropic`) — the key works, the tool schema does not (B-07); fix on `claude/wonderful-wright-scuu96` | Republish the image, re-dispatch |
 | 2026-09-10 | post-v1 | B-07 fixed and merged (PR #3); CI now publishes the image from `main`; re-run green — `fort-grounds` built, 8/8 pages match golden, **$0.56** | Full 8-property keyed run; `crr eval --classifier anthropic` |
 | 2026-09-10 | post-v1 | Full 8-property keyed run: 6 built, 2 to review (`cardinality_violation`, both McCathren); every property hit its golden page count; **$4.72/run, $0.59/property** | Work the two review cases; `crr eval --classifier anthropic` |
+| 2026-09-11 | post-v1 | Full audit of plan, documents and live environment. **B-04 closed** — Azure deployed, identity reads the vault, GHCR pull credentials present, shared-drive folder id taken, cron armed. Rehearsal period `2026-08` seeded in Drive (31 files, 8/8 ready). `azure-job.yml` added so a session can start the job and the arguments always get restored (B-11). | Dispatch `Run the Azure job` with `version`, then `validate-config`, then the no-argument build |
 
 ## Phase 0 — Repository hygiene and scaffold
 
@@ -200,9 +229,9 @@ source rather than an exception. Cobalt and McCathren pass through every PM page
 - [x] `classify/anthropic_classifier.py`. Three corrections to SPEC §7.2, all recorded in `QUESTIONS.md` and amended in the spec: `temperature` is rejected on this model family (A-02 — determinism now comes from the forced tool's closed enum plus `strict: true`, with `output_config.effort=low`); the API's `system` field takes text blocks only, so exemplar images lead the *user* turn with their own 1-hour cache breakpoint (A-03); and a `stop_reason: "refusal"` is handled as `unknown` → review rather than retried into a guess (A-04). 16 unit tests against a fake client cover argv, both cached prefixes, previous-page carry-over, the repair round, retries and cost.
 - [x] `crr classify <pdf> --schema <id> [--classifier golden --property <id>] [--out json]`. Prints section, continuation, confidence, the footer verdict and its agreement marker, and the record qualifier.
 - [x] `tests/integration/test_classify_api.py` (marker `api`): page 1 of Fort Grounds, WayPointe, Timber Place and Bridgewater, plus a cache-read assertion on page 2. Skipped in this environment — no `ANTHROPIC_API_KEY` (B-01).
-- [ ] **Blocked (B-01):** smoke run needs `ANTHROPIC_API_KEY`. Run `uv run crr classify "data/bundle/2026-06/Missoula Property Management/Fort Grounds/2026-06 June/inputs/05 PM Source - Missoula PM Baseline.pdf" --schema rentmanager-missoula` once the key is set.
+- [x] ~~**Blocked (B-01):** smoke run needs `ANTHROPIC_API_KEY`.~~ **Unblocked and done 2026-09-11.** B-01 is closed, so `pytest -m api` runs in-session (**5 passed**), and the real model has since classified the whole corpus rather than one document: 172 pages across all 31 documents at confidence 0.95–0.98, no `unknown`, no repair round, no retry, no refusal. Fort Grounds' PM source specifically is committed as a real-model fixture (`tests/data/fort-grounds-real-model-labels.json`).
 
-**Acceptance:** Golden classifier round-trips 100 % of golden pages (`tests/eval/test_golden_plans.py` builds every plan from it). The real-model smoke run and the ≥ 95 % / cache-read assertions are blocked on B-01. Gate: ruff, `mypy src`, 206 passed + 5 skipped (the `api` tests).
+**Acceptance:** Golden classifier round-trips 100 % of golden pages (`tests/eval/test_golden_plans.py` builds every plan from it). ~~The real-model smoke run and the ≥ 95 % / cache-read assertions are blocked on B-01.~~ **Met 2026-09-11** once B-01 closed: the `api` tests run (5 passed, cache read included) and the real model scores 100 % page accuracy over all 172 pages, well above the 95 % threshold. Gate: ruff, `mypy src`, 206 passed + 5 skipped (the `api` tests) at the time; **447 passed** today.
 
 ## Phase 4 — Composer, manifest, review gate, end-to-end with golden labels
 
@@ -221,10 +250,10 @@ source rather than an exception. Cobalt and McCathren pass through every PM page
 
 - [x] `crr eval [--classifier golden|anthropic] [--pm <id>] [--property <id>] [--gate] [--report <path>]`. Scores page accuracy, continuation, `record_qualifier` (Missoula only), orientation (only where a golden page carries the key), section-boundary F1 after segmentation, confusion pairs, tokens and USD. Writes a timestamped markdown report plus `eval/reports/LATEST.md`.
 - [x] CI runs `crr eval --classifier golden --gate` (wired in Phase 0, real since this commit). The golden run skips OCR and rasterising — the golden classifier opens neither — so the self-consistency check takes **5 s** instead of 92.
-- [ ] **Blocked (B-01):** needs `ANTHROPIC_API_KEY`. Command is ready: `uv run crr eval --classifier anthropic --gate`.
-- [ ] **Blocked (B-01):** needs `ANTHROPIC_API_KEY`. The golden-build manifests in `eval/reports/golden-build-2026-06/` are the comparison baseline, and `tests/eval/test_invariants.py` already pins the expected page sequences.
+- [x] ~~**Blocked (B-01):** needs `ANTHROPIC_API_KEY`.~~ **Run 2026-09-11.** `crr eval --classifier anthropic` over all 31 documents / 172 pages: page accuracy 1.0000, continuation 1.0000, boundary F1 1.0000, gate passed, **$4.66**. The two sub-100 % metrics it first reported are both closed — one a real defect (A-09, a page shipping upside down), one a reporting defect (A-10) — and every metric now reads 100 %.
+- [x] ~~**Blocked (B-01):** the golden-build manifests are the comparison baseline.~~ **Compared 2026-09-11.** The full 8-property keyed build ([run 34527782436](https://github.com/arcticbio/cornerstone.accounting.reports/actions/runs/34527782436)) resolved **every property to its exact golden page count**, the two review cases included; both McCathren properties then rebuilt to `ok` at 25 and 29 pages after B-08.
 
-**Acceptance:** Golden eval report committed (`eval/reports/LATEST.md`): **100 % page accuracy, 100 % continuation, 100 % record, 100 % orientation, boundary F1 1.0000** over all 31 documents / 172 pages, every manager above both thresholds. The real-model eval and build are blocked on B-01.
+**Acceptance:** Golden eval report committed (`eval/reports/LATEST.md`): **100 % page accuracy, 100 % continuation, 100 % record, 100 % orientation, boundary F1 1.0000** over all 31 documents / 172 pages, every manager above both thresholds. ~~The real-model eval and build are blocked on B-01.~~ **Both run 2026-09-11:** the keyed eval reads 100 % on every metric ($4.66) and the keyed build produced all eight packages ($4.72, $0.59/property).
 
 ## Phase 6 — Google Drive repository
 
@@ -276,9 +305,10 @@ OCR included), and the image is pushed to GHCR as `:build-v1` and `:sha-<short>`
 - [x] `infra/main.bicep`: Log Analytics (90-day retention), Container Apps Environment, and a Container Apps Job with the quarterly cron, 2 vCPU / 4 GiB, `replicaTimeout: 3600`, `replicaRetryLimit: 1`, a system-assigned identity, and both secrets **referenced** from an existing Key Vault — the template creates no vault and holds no secret value. `scheduleEnabled=false` parks the cron on 31 February when you want the job without the schedule.
 - [x] `infra/README.md`: what gets deployed, the vault-and-secrets prerequisites, the one deploy command, the **role assignment the job's identity needs after the first deploy** (it cannot exist before the job does), manual starts including the credential-free `version` / `validate-config` smoke runs, log commands, how exit code 2 shows up as a failed execution in Azure, and how to update or park the schedule.
 - [x] `.github/workflows/deploy.yml`: compiles the template *before* signing in, then what-if, then deploy — and **`what_if_only` defaults to true**, so a mis-click previews rather than deploys. CI compiles the template on every push in a credential-free `bicep` job.
-- [ ] **Gated (B-04):** needs `AZURE_CREDENTIALS` and a subscription / resource group, or an explicit "Actions is enough for now". This is the Phase 7 checkpoint question.
+- [x] ~~**Gated (B-04):** needs `AZURE_CREDENTIALS` and a subscription / resource group.~~ **Deployed 2026-09-11.** The operator ran the bootstrap and the deploy workflow; *Deploy to Azure* runs 3–7 succeeded, the latest from `main`@`020fc7d`. `crr-quarterly` is live in `rg-cust-cornerstone`, its identity reads `crr-kv-accounting`, GHCR pull credentials are supplied, the shared-drive root folder id is in place, and the quarterly cron is armed (next fire 20 Oct 06:00 UTC). See B-04 in `QUESTIONS.md` for the audited details.
+- [x] `.github/workflows/azure-job.yml` (`Actions → Run the Azure job`): sets `--args` on the job, starts it, waits, prints the execution's logs, and **restores the scheduled arguments in an `always()` step** — because `--args` cannot be passed to `job start`, so a manual run has to mutate the definition the quarterly cron reads, and a cancelled run would otherwise leave the schedule pointed at `version`. Restores from `infra/main.bicep`, not from the live job, so an already-mutated job is corrected rather than preserved (B-11).
 
-**Acceptance:** **Bicep compiles in CI** (`az bicep build`, credential-free `bicep` job, green in run 34462978204). The template, its README and the deploy workflow are also held by 10 structural tests. Deployment itself is gated (B-04).
+**Acceptance:** **Bicep compiles in CI** (`az bicep build`, credential-free `bicep` job, green in run 34462978204). The template, its README and the deploy workflow are also held by 10 structural tests. ~~Deployment itself is gated (B-04).~~ **Deployed 2026-09-11** — B-04 resolved. What remains is a first execution, which only a workflow run can start (B-11).
 
 ## Phase 9 — Hardening, docs, second-period readiness
 
