@@ -10,10 +10,12 @@ from __future__ import annotations
 import time
 from collections import Counter
 from dataclasses import dataclass, field
+from functools import partial
 
 from crr.classify.orientation_check import OrientationArbiter, apply_orientation_check
 from crr.classify.protocol import Classifier, PageInput, Usage
 from crr.config.loader import ConfigBundle
+from crr.config.models import SourceSchema
 from crr.evaluate.metrics import Scores, score_boundaries, score_document
 from crr.golden import GoldenProperty
 from crr.log import get_logger
@@ -21,7 +23,8 @@ from crr.models import PageClassification, Property, SourceDocument
 from crr.preprocess.ocr import ocr_if_needed
 from crr.preprocess.render import render_pages
 from crr.preprocess.text import page_texts, sha256_file
-from crr.segment.segmenter import segment
+from crr.segment.records import map_qualifier
+from crr.segment.segmenter import effective_qualifiers, segment
 from crr.settings import Settings
 
 log = get_logger(__name__)
@@ -99,6 +102,19 @@ def evaluate(
         log.info("eval.property_done", property=property_id)
     result.duration_s = time.monotonic() - started
     return result
+
+
+def _effective_by_page(predictions: list[PageClassification]) -> dict[int, str | None]:
+    """Each page's qualifier after §6.4 continuation inheritance, as the segmenter sees it."""
+    ordered = sorted(predictions, key=lambda p: p.page)
+    return dict(zip((p.page for p in ordered), effective_qualifiers(ordered), strict=True))
+
+
+def _resolve_record(
+    prop: Property, schema: SourceSchema, section_id: str, qualifier: str | None
+) -> str | None:
+    """Where the pipeline would file a page carrying `qualifier`, for the record metric."""
+    return map_qualifier(prop, schema.section(section_id), qualifier)
 
 
 def _evaluate_property(
@@ -183,6 +199,8 @@ def _evaluate_property(
             predictions,
             score_record=golden_doc.schema_id in RECORD_SCORED_SCHEMAS,
             golden_record_names={r.id: r.pm_name for r in golden.records} | {None: None},
+            resolve_record=partial(_resolve_record, prop, schema),
+            effective_qualifiers=_effective_by_page(predictions),
         )
         golden_labels = golden.classifications(golden_doc.role)
         scores.boundary = score_boundaries(

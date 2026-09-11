@@ -32,7 +32,7 @@ class Segmentation:
         return frozenset(s.section_id for s in self.sections)
 
 
-def _effective_qualifiers(pages: list[PageClassification]) -> list[str | None]:
+def effective_qualifiers(pages: list[PageClassification]) -> list[str | None]:
     """A continuation page with no `Property:` header inherits the previous page's qualifier
     (SPEC §6.4). An `unknown` page inherits nothing and passes nothing on."""
     out: list[str | None] = []
@@ -58,7 +58,7 @@ def segment(
 ) -> Segmentation:
     """Group consecutive page labels into `ResolvedSection`s and report structural problems."""
     ordered = sorted(pages, key=lambda p: p.page)
-    qualifiers = _effective_qualifiers(ordered)
+    qualifiers = effective_qualifiers(ordered)
     reasons: list[ReviewReason] = []
     sections: list[ResolvedSection] = []
 

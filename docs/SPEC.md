@@ -585,7 +585,15 @@ never` schemas, so the classifier sees the same page images a build would), run 
 
 - per-manager and overall **page accuracy** (section_id exact match)
 - **continuation accuracy**
-- **record_qualifier accuracy** (Missoula only)
+- **record_qualifier accuracy** (Missoula only) — scored on the *record the page lands in*,
+  not the string the model printed: both the prediction and the golden expectation go through
+  `map_qualifier` before they are compared. Rent Manager prints the `Property:` header on every
+  section-head page and the model transcribes it, while the golden files carry `null` on a
+  single-record property because null and the matching `pm_name` map to the same record.
+  The qualifier compared is the *effective* one, after the §6.4 continuation inheritance: a
+  continuation page carrying no header must return null, and on a multi-record property a bare
+  null resolves nowhere. Comparing raw strings page-by-page scored a correct package at
+  59.38 %; resolving without inheritance, 96.88 %; both together, 100 % (A-10).
 - **orientation accuracy** on pages where golden carries an `orientation` key (optional per
   page; refers to the page *as the classifier sees it*, i.e. after OCR's `--rotate-pages`)
 - **section-boundary F1** after segmentation

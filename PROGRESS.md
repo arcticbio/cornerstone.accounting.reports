@@ -4,7 +4,7 @@ Single source of truth for build state. Claude Code ticks tasks here after each 
 commits. Humans read this to see where things stand. Mirrors `docs/PLAN.md`; if they diverge,
 PLAN.md defines the work and this file records what has been done.
 
-**Branch:** `main` — v1 landed there via [#1](https://github.com/arcticbio/cornerstone.accounting.reports/pull/1) (built on the session branch `claude/gifted-lamport-wwgenm`; D-15 — every reference to `build/v1` in these documents means the release line, now `main`) · **Current phase:** 9 (complete) · **Tag:** `v1.0.0` pushed · **Last session note:** B-08 fixed, real-model eval run (172 pages, 1.0000 across page/continuation/boundary, $4.66), and the orientation defect it surfaced fixed — a page was shipping upside down. See "Pick up here" below.
+**Branch:** `main` — v1 landed there via [#1](https://github.com/arcticbio/cornerstone.accounting.reports/pull/1) (built on the session branch `claude/gifted-lamport-wwgenm`; D-15 — every reference to `build/v1` in these documents means the release line, now `main`) · **Current phase:** 9 (complete) · **Tag:** `v1.0.0` pushed · **Last session note:** B-08 fixed; real-model eval run over all 172 pages and now **100 % on every metric**; the orientation defect it surfaced fixed — a page was shipping upside down — and the 59 % record score it reported traced to the metric, not the classifier. See "Pick up here" below.
 
 ## Pick up here
 
@@ -39,8 +39,8 @@ properties end to end.
    ($1.63 for the pair).
 2. ~~**`crr eval --classifier anthropic`**~~ — **run 2026-09-11, locally, now that B-01 is
    closed.** All 31 documents, 172 pages: **page accuracy 1.0000, continuation 1.0000, boundary
-   F1 1.0000**, gate passed, **$4.66**. Report in `eval/reports/`. It found one real defect and
-   one open question:
+   F1 1.0000**, gate passed, **$4.66** (`20260910T233821Z`). It found one real defect and one
+   false alarm, and both are now closed — **every metric reads 100 %**:
    - ~~**orientation 0.00 % (0/1)**~~ — **fixed 2026-09-11.** Not a metric artefact: the
      classifier named Timber Place p3 `rotated_90_cw` where the truth is `rotated_90_ccw`, the
      composer applied 270° instead of 90°, and **the page shipped to investors upside down**.
@@ -49,22 +49,34 @@ properties end to end.
      Orientation is now a cross-check of two independent signals with a discrimination arbiter
      on disagreement (SPEC §7.6, A-09). Timber Place rebuilt clean, page verified right-side-up,
      eval orientation now **100 % (1/1)**.
-   - **Missoula `record_qualifier` 59.38 % (38/64)** — still unexplained. The hypothesis is that
-     it is benign: the model transcribes the `Property:` header on single-record properties where
-     golden carries `null`, and `map_qualifier` maps null *or* a matching `pm_name` to the same
-     single record, so resolution is unaffected. Every Missoula property resolved to its exact
-     golden page count, which is consistent with that. Worth confirming before trusting the
-     number either way — it is the same "the model transcribes the header anyway" behaviour that
-     caused B-08.
-3. **A dispatchable eval workflow.** The eval now runs locally, but CI still runs only the
+   - ~~**Missoula `record_qualifier` 59.38 % (38/64)**~~ — **a reporting defect, not a
+     classifier one; fixed 2026-09-11 and now 100.00 % (64/64)** (`20260910T235640Z`, $1.97).
+     Nothing in the pipeline changed — no label, no plan, no output page. The metric compared
+     the string the model printed instead of the record the page lands in, and it did it
+     twice over. Run down with real labels rather than inferred:
+     - Rent Manager prints the `Property:` header on every section-head page and the model
+       transcribes it, while golden carries `null` on a single-record property because
+       `map_qualifier` maps null *and* the matching `pm_name` to the same record. Checked page
+       by page on Fort Grounds: **0 of 16 pages resolve differently**. That was 38 → 62.
+     - The last 2 were WayPointe pages 4 and 7 — `unit_availability` *continuations* where the
+       model correctly returned `null`, exactly as the prompt requires, and the metric scored
+       each page in isolation without the §6.4 inheritance the segmenter applies. Scoring the
+       effective qualifier makes it 64/64.
+     Both real-model label sets are committed as fixtures under `tests/data/`, so the metric is
+     pinned against actual model output rather than a hand-written stub (A-10).
+3. **`crr eval` does not persist per-page predictions.** Both metric defects above had to be
+   re-measured with fresh keyed runs ($4.66 + $1.97) because the predictions are thrown away
+   with the process. Dumping them beside the report would make any future metric change free to
+   re-score. Cheap, and it would have paid for itself twice today.
+4. **A dispatchable eval workflow.** The eval now runs locally, but CI still runs only the
    golden one; there is no way to trigger a keyed eval from Actions. A `command` input on
    `build-period.yml`, or a small `eval.yml`, is the cheap way in.
-4. ~~**Log `is_continuation` on `classify.page`**~~ — done; a run log now answers the B-08
+5. ~~**Log `is_continuation` on `classify.page`**~~ — done; a run log now answers the B-08
    question without the artifact.
-5. **B-04 — Azure.** Untouched and still gated on `AZURE_CREDENTIALS`; `docs/SETUP-AZURE.md` and
+6. **B-04 — Azure.** Untouched and still gated on `AZURE_CREDENTIALS`; `docs/SETUP-AZURE.md` and
    `infra/bootstrap.sh` are written and waiting. Actions is a working host in the meantime (D-13),
    so this is a choice, not a blocker.
-6. ~~**B-01's remaining half**~~ — **closed 2026-09-11.** The session container strips
+7. ~~**B-01's remaining half**~~ — **closed 2026-09-11.** The session container strips
    `ANTHROPIC_API_KEY`, but not `CRR_ANTHROPIC_API_KEY`; `settings.py` now reads either name.
    The fix existed on the abandoned branch `claude/ecstatic-goodall-ji7yur` (PR #2) and had never
    reached `main`, which is why this was recorded as impossible. `pytest -m api` runs in-session:

@@ -139,6 +139,40 @@ exists to test with.
 *Where:* `src/crr/preprocess/orientation.py`, `src/crr/classify/orientation_check.py`,
 `src/crr/classify/orientation_arbiter.py`, SPEC §6.2/§6.5/§6.8/§7.6/§12.
 
+**A-10 · The `record_qualifier` metric scores the resolved record, not the printed string.**
+*What the eval found:* Missoula record accuracy **59.38 % (38/64)** on a run where page
+accuracy, continuation and boundary F1 were all 1.0000, every Missoula property resolved to its
+exact golden page count, and no build raised `unresolved_record`. Those cannot all be true of a
+classifier that is wrong about records 40 % of the time.
+*Root cause, measured not inferred:* a real-model run over Fort Grounds' PM source (16 pages)
+shows the model transcribing `Fort Grounds Apartment Homes` on each of the 8 section-head pages
+— Rent Manager prints a `Property:` header there — and `null` on the continuation pages. The
+golden file carries `null` on all 16, because `map_qualifier` maps null *and* an exactly
+matching `pm_name` to the same record on a single-record property. Comparing the raw strings
+therefore marked all 8 head pages wrong. Checked page by page: **0 of 16 pages resolve
+differently** with the transcription than with null. The metric was measuring transcription,
+not correctness.
+*What changed:* both sides of the comparison now go through `map_qualifier`, so the metric
+scores the record a page lands in. Fort Grounds goes 8/16 → 16/16 with no change to any label.
+*And a second cause behind the first:* that took Missoula to 96.88 % (62/64), not 100 %. The
+remaining two were WayPointe pages 4 and 7 — `unit_availability` **continuations** where the
+model correctly returned `null`, exactly as the prompt instructs, and where a bare null on a
+multi-record property resolves nowhere. The metric was scoring each page in isolation, without
+the §6.4 continuation inheritance the segmenter applies before it maps anything. Scoring the
+*effective* qualifier closes it: **100.00 % (64/64)**. Boundary F1 was 1.0000 throughout, which
+was the standing clue that no section was ever filed under the wrong record.
+The metric does not become vacuous — a qualifier matching no record still scores wrong, and so
+does a non-continuation page that inherits nothing, both pinned by tests over the real labels.
+*What did not change:* nothing in the pipeline. No label, no plan, no output page. This was a
+reporting defect, and worth contrasting with A-09, which looked similar in the report and was a
+real page shipping upside down. A number that disagrees with the rest of the report is worth
+running down either way.
+*Recommendation for next time:* `crr eval` does not persist per-page predictions, so re-scoring
+under a corrected metric costs a full keyed run ($4.66). Dumping the predictions beside the
+report would make metric changes free to re-measure.
+*Where:* `src/crr/evaluate/metrics.py`, `src/crr/evaluate/harness.py`, SPEC §8,
+`tests/unit/test_record_metric.py`.
+
 ---
 
 ## Blocked (Claude Code appends here)
