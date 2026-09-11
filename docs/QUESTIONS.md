@@ -261,6 +261,16 @@ would classify, compose, and fail at the last step.
 *Meanwhile:* `--repo local` is unaffected, and reads from Drive are unaffected.
 *How to fix it:* **[`SETUP-GOOGLE-DRIVE.md`](SETUP-GOOGLE-DRIVE.md)** — a 20-minute click-through
 in the Drive UI, written 2026-09-11. Verify with `crr preflight --repo gdrive`.
+*A second-order trap, found 2026-09-11 while following that document:* **you cannot move the
+existing root into a shared drive.** The same quota rule that blocks uploads is why the runner
+was able to create folders — they cost no quota — so `ensure_period_skeleton` made the whole
+`<manager>/<property>/<period>/inputs/` tree and the **service account owns every folder in it**.
+Drive will not let a person move items they do not own, and ownership cannot be transferred from
+a service account to a user in another domain. Measured on the live Drive: **29 folders, 0 files,
+0 bytes, 29 of 29 owned by `crr-runner@…`**, confirmed independently by
+`crr inspect --repo gdrive --period 2026-09` reporting 0/8 properties ready. So there is nothing
+in the tree to preserve: create a fresh root *inside* the shared drive and re-point
+`CRR_GDRIVE_ROOT_FOLDER_ID`, which is what the document now says.
 *What changed in code 2026-09-11:* nothing that fixes it — only that it now fails in a second
 instead of at the end. `publish` is the last stage, so a gdrive run used to classify and compose
 all eight properties (~$4.72) before the first byte was refused, every time.

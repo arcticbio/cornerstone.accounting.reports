@@ -40,7 +40,7 @@ the robot's lack of storage stops mattering.
 | **You need** | Google **Workspace** (Business Standard or above). Shared drives do not exist on free/personal Google accounts. |
 | **You need to be** | able to create a shared drive. If your admin has restricted this, see [If you cannot create a shared drive](#if-you-cannot-create-a-shared-drive). |
 | **The robot's address** | `crr-runner@cornerstone-reports-508208.iam.gserviceaccount.com` — copy it now, you will paste it in Part 2. |
-| **What it is called today** | A **My Drive** folder named **Cornerstone Reports**, owned by a person. Its id is in `CRR_GDRIVE_ROOT_FOLDER_ID`. |
+| **What exists today** | A **My Drive** folder named **Cornerstone Reports** (id in `CRR_GDRIVE_ROOT_FOLDER_ID`) containing 29 empty folders — all of them created by, and owned by, the runner. No input files are staged in Drive yet. |
 
 > **A note on the robot's address.** It is long and ends in
 > `.iam.gserviceaccount.com`. That is correct — it is not an email you can send mail to, but
@@ -54,8 +54,8 @@ the robot's lack of storage stops mattering.
 |---|---|---|
 | 1 | Google Drive | Create a shared drive | 3 min |
 | 2 | Google Drive | Add the runner to it as **Content manager** | 3 min |
-| 3 | Google Drive | Move `Cornerstone Reports` into the shared drive | 5 min |
-| 4 | Anywhere | Confirm the folder id did not change | 2 min |
+| 3 | Google Drive | Create a fresh `Cornerstone Reports` root inside it | 3 min |
+| 4 | Wherever it is configured | Update `CRR_GDRIVE_ROOT_FOLDER_ID` | 5 min |
 | 5 | A terminal | Verify with `crr preflight` | 2 min |
 
 ---
@@ -107,51 +107,60 @@ Check the member list now shows the `crr-runner@…` address with **Content mana
 
 ---
 
-# Part 3 — Move the reports folder in
+# Part 3 — Give the runner a root inside the shared drive
 
-> **Read this box before you drag anything.**
+> ### Don't try to move the existing folder. You can't, and you don't need to.
 >
-> Moving a folder into a shared drive **transfers ownership of everything inside it** to the
-> shared drive. That is the point, and it is not reversible by dragging it back out — getting
-> the files back into a person's My Drive afterwards is a manual, file-by-file job.
+> The obvious move — drag `Cornerstone Reports` from My Drive into the shared drive — **fails**,
+> and the reason is worth understanding because it is the same trap as the quota itself.
 >
-> It is a safe operation for this data: the contents are report inputs and outputs, and the
-> people who can see them are the shared drive's members, who you control in Part 2. But do it
-> deliberately rather than by accident.
+> Every folder under `Cornerstone Reports` was created by *the runner*, not by a person.
+> `ensure_period_skeleton` makes the `<manager>/<property>/<period>/inputs/` tree, and folder
+> creation is the one write a service account **can** do — folders consume no quota. So the
+> robot owns them. **Drive will not let you move items you do not own**, and ownership cannot be
+> transferred from a service account to a user in another domain.
 >
-> **Anything shared with people outside your Workspace domain may lose that sharing.** If an
-> external accountant or investor has a link to a file in here, re-share it afterwards.
+> Checked on this Drive on 2026-09-11: **29 folders, 0 files, 0 bytes, all 29 owned by
+> `crr-runner@…`.** The tree is empty scaffolding. There is nothing in it to preserve, so the
+> answer is not to fight the move — it is to point the runner somewhere new.
 
-1. In the left sidebar, click **My Drive** and find the **Cornerstone Reports** folder.
-2. Right-click it → **Organise** → **Move** (older UI: just **Move**).
-3. Pick **Shared drives** → your new **Cornerstone Investor Reports** drive → **Move**.
-4. Drive will warn you that ownership will transfer and sharing may change. Read it, then
-   confirm.
+## 3.1 Create a fresh root inside the shared drive
 
-Depending on how much is in the folder this may take a minute or two to settle. Refresh and
-confirm **Cornerstone Reports** now appears *inside* the shared drive, and is gone from My
-Drive.
+1. Open your new shared drive (**Shared drives** → **Cornerstone Investor Reports**).
+2. Click **+ New** → **New folder**.
+3. Name it **`Cornerstone Reports`** — the same name as before, so nothing else reads
+   differently. It is a *different folder*; that is fine and intended.
+
+Because it was created inside a shared drive, this folder is owned by the **drive**. So is
+everything the runner ever puts in it. That is the whole fix.
+
+## 3.2 Leave the old folder alone for now
+
+The old My Drive `Cornerstone Reports` and its 29 empty folders are now unused. They are
+harmless. Delete them once a real run has published successfully and you are confident — not
+before, and there is no hurry.
+
+> **If your tree is not empty** — you are reading this later and real input files are staged —
+> then the files themselves are owned by whoever uploaded them, usually a person, and *those*
+> can be moved. Move the **files** into the new tree (Drive lets you move items you own), and
+> let the runner recreate the folders. The robot-owned folders stay behind either way.
 
 ---
 
-# Part 4 — Confirm the folder id did not change
+# Part 4 — Update `CRR_GDRIVE_ROOT_FOLDER_ID`
 
-Google Drive keeps a folder's id when you move it, so `CRR_GDRIVE_ROOT_FOLDER_ID` should still
-be correct and there is usually **nothing to do here**. Confirm it rather than assume it:
+The new folder is a new folder, so its id is **different**. This step is required, not a
+formality.
 
-1. Open the **Cornerstone Reports** folder (now inside the shared drive).
-2. Look at the browser address bar. It ends with the folder id:
+1. Open the new **Cornerstone Reports** folder inside the shared drive.
+2. Copy the id out of the browser address bar — everything after `/folders/`:
 
    ```
-   https://drive.google.com/drive/folders/1_tUMel............
-                                          ^^^^^^^^^^^^^^^^^^ this is the id
+   https://drive.google.com/drive/folders/1AbCdEf...................
+                                          ^^^^^^^^^^^^^^^^^^^^^^^^^ this is the id
    ```
 
-3. Compare it to the value of `CRR_GDRIVE_ROOT_FOLDER_ID`. If they match — and they should —
-   you are done with this part.
-
-**If they differ** (you created a fresh folder instead of moving the old one, say), update the
-value everywhere it is set:
+3. Set `CRR_GDRIVE_ROOT_FOLDER_ID` to it **everywhere it is configured**:
 
 | Where | How |
 |---|---|
@@ -159,6 +168,9 @@ value everywhere it is set:
 | Azure | Key Vault → the secret of the same name → **+ New Version** (see `SETUP-AZURE-PORTAL.md`) |
 | Claude Code | the cloud environment's variables |
 | Your laptop | `.env` |
+
+Miss one and that host keeps writing to — or failing against — the old folder. The symptom is
+confusing precisely because the *other* hosts will have started working.
 
 ---
 
@@ -184,10 +196,19 @@ operation that was failing. If it passes, publishing works.
 
 | Message contains | What it means | Fix |
 |---|---|---|
-| `storageQuotaExceeded` | the root is still a My Drive folder | Part 3 did not take effect, or `CRR_GDRIVE_ROOT_FOLDER_ID` points at a different folder than the one you moved. Re-check Part 4. |
+| `storageQuotaExceeded` | the id still points at a **My Drive** folder | The most likely cause is Part 4: the variable was not updated, or was updated in one place and not another. Confirm the id in the address bar of the folder *inside the shared drive* matches the one the failing host is using. |
 | `File not found` / `404` | the runner cannot see the folder at all | Part 2: the robot is not a member of the shared drive, or you added a different address. Check for a typo. |
 | `insufficientFilePermissions` | the robot can read but not write | Part 2: the role is Viewer, Commenter or Contributor. Set it to **Content manager**. |
 | `invalid_grant` / auth errors | the credentials are wrong or expired | Not this document's problem — see `SETUP-CREDENTIALS.md`. |
+
+**Still stuck?** Ask the runner what it can see:
+
+```bash
+uv run crr inspect --repo gdrive --period 2026-09
+```
+
+If that lists folders, authentication and read access are fine and the problem is squarely the
+write path — which narrows it to Part 2 (role) or Part 4 (wrong folder).
 
 `crr build` runs this same check before it does anything else, so a real run will now stop in
 about a second rather than spending a full run's classification (~$4.72 across eight
