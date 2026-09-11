@@ -169,15 +169,30 @@ Why it cannot be part of the template: the job's identity does not exist until t
 
 Two runs that touch neither Drive nor the model: `version` and `validate-config`.
 
-**The easy way — Actions → Run the Azure job.** Enter `version` (then `validate-config`), run it,
-and read the summary. It does the whole dance below, waits for the execution, prints its logs,
-and **restores the scheduled arguments even if it fails or is cancelled** — which is the part
-that is easy to forget by hand. It also warns if it finds the job already holding the wrong
-arguments from an earlier manual start.
+**The easy way — Actions → Run the Azure job.** Pick `version` from the dropdown, run it, then
+again with `validate-config`. It does the whole dance below, waits for the execution, prints its
+logs, and **restores the scheduled arguments even if it fails or is cancelled** — which is the
+part that is easy to forget by hand. It restores by re-deploying the template, for the reason in
+the next paragraph, and then checks that the restore actually took.
+
+### Why the restore is a re-deploy
+
+`az containerapp job update --args` can set `version`, and cannot set
+`build --repo gdrive --classifier anthropic`. The CLI's parser reads every `--`-prefixed token
+after `--args` as one of its own flags and stops:
+
+```
+ERROR: unrecognized arguments: --repo gdrive --classifier anthropic
+```
+
+No amount of quoting changes that, and there is no `--` escape. So the arguments can be *set* to
+a single-token command and not set back, which is the worst possible asymmetry for something the
+quarterly cron depends on. `infra/main.bicep` is the only place the real argument list is
+written down, so re-deploying is how you get back to it — and it is the only way.
 
 ### Or by hand
 
-**`--args` does not work on `job start`** —
+**`--args` does not work on `job start`** either —
 it fails with `ContainerAppImageRequired`, and adding `--image` drops the job's environment
 variables ([azure-cli#27521](https://github.com/Azure/azure-cli/issues/27521)); `--args` is also
 reported as ignored there
@@ -193,7 +208,15 @@ az containerapp job start  --name crr-quarterly --resource-group rg-cust-corners
 ```
 
 **Restore the arguments when you are done** — the quarterly schedule runs whatever is
-configured. Re-running the deploy workflow resets them from `infra/main.bicep`.
+configured, and as above you cannot put them back with `--args`. **Re-run the deploy workflow**
+(Preview unticked); it resets them from `infra/main.bicep`. Check with:
+
+```bash
+az containerapp job show --name crr-quarterly --resource-group rg-cust-cornerstone \
+  --query "properties.template.containers[0].args" -o tsv
+```
+
+which must print `build --repo gdrive --classifier anthropic`, one per line.
 
 Watch them:
 

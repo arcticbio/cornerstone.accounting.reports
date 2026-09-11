@@ -140,6 +140,20 @@ properties end to end.
     so anyone following them would have rebuilt B-09 exactly. All four now give the shared-drive
     id and say why it has to be a shared drive. The old root folder itself is left in place,
     empty.
+13. **The Azure job has run. `crr version` → execution `crr-quarterly-8gkaig4`, status
+    `Succeeded`** (2026-09-11 06:19 UTC, [run 34569379705](https://github.com/arcticbio/cornerstone.accounting.reports/actions/runs/34569379705)).
+    That is the first execution this deployment has ever had, and it closes the live half of
+    PLAN Phase 8's acceptance — *job exists, manual start succeeds*. The remaining clause,
+    *logs show `crr version`*, is still unproven: the log step used a flag that does not exist.
+    Two defects, both in the workflow, both mine, both fixed (**A-13**):
+    - `az containerapp job logs show --job-execution-name` is not a flag. It is `--execution`.
+    - **`az containerapp job update --args` cannot set a multi-token argument list at all** —
+      the CLI reads `--repo` as one of its own flags. So the restore failed and the job was left
+      holding `version`, which the 20 October cron would have run to no effect. Repaired within
+      the hour by a deploy; the what-if diff is the proof (`- 0: "version"` → `+ 0: "build" …`).
+      The workflow now takes a `choice`, not free text, and restores by *calling* `deploy.yml`
+      as a reusable workflow, with a third job that re-reads the job and compares it to the
+      template.
 11. ~~**B-01's remaining half**~~ — **closed 2026-09-11.** The session container strips
     `ANTHROPIC_API_KEY`, but not `CRR_ANTHROPIC_API_KEY`; `settings.py` now reads either name.
     The fix existed on the abandoned branch `claude/ecstatic-goodall-ji7yur` (PR #2) and had never

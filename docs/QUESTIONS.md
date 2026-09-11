@@ -205,6 +205,38 @@ told you to set it. Grepping for the old value is the check, and it costs one co
 *Where:* `docs/SETUP-CREDENTIALS.md`, `docs/SETUP-AZURE-PORTAL.md`, `infra/README.md`. The
 remaining occurrences in `PROGRESS.md` are historical record and are correct as history.
 
+**A-13 · A manual Azure run is restored by re-deploying the template, not by setting `--args`
+back.**
+*What the first live run found:* `az containerapp job update --args` sets a single-token command
+fine and **cannot set the real argument list at all**. The CLI's parser reads every
+`--`-prefixed token after `--args` as one of its own flags:
+
+```
+$ az containerapp job update ... --args build --repo gdrive --classifier anthropic
+ERROR: unrecognized arguments: --repo gdrive --classifier anthropic
+```
+
+No quoting fixes it — `--args="a b c"` yields one argv element, not three — and there is no `--`
+escape. This is the same family as the `job start` limitation already recorded in
+`SETUP-AZURE.md` step 7 (azure-cli#27521), and it is worse, because it is *asymmetric*: the
+smoke test can set `version` and then cannot put the schedule's arguments back. The first run of
+`Run the Azure job` did exactly that and left `crr-quarterly` holding `version`, which the
+20 October cron would have run to no effect. Caught by the workflow's own verification step,
+repaired by a deploy the same hour (what-if diff: `- 0: "version"` → `+ 0: "build" …`).
+*What changed:* the workflow no longer accepts free-text arguments — a `choice` of `version`,
+`validate-config`, or the job's own scheduled arguments unchanged, so a `--`-prefixed token can
+never reach `--args`. The restore is a *call* to `deploy.yml` as a reusable workflow, so it
+cannot drift from the deploy, and a third job then re-reads the job and compares it against the
+template. Anything else — another period, one property — goes through `Build a period`, which
+runs the identical image and mutates nothing.
+*Also fixed:* the flag that selects an execution on `az containerapp job logs show` is
+**`--execution`**. It was guessed as `--job-execution-name`, which cost the first run's logs;
+the step now dumps `--help` if the call ever fails again rather than leaving a silent gap.
+*The lesson:* "set X, do work, set X back" is only safe when both directions are known to work.
+The first run proved the setting direction and assumed the restoring one.
+*Where:* `.github/workflows/azure-job.yml`, `.github/workflows/deploy.yml` (`workflow_call`),
+`docs/SETUP-AZURE.md` step 7, `docs/RUNBOOK.md`.
+
 ---
 
 ## Blocked (Claude Code appends here)
