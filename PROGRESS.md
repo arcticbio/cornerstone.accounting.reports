@@ -129,6 +129,31 @@ properties end to end.
     quarterly cron armed with the right arguments. It reads the arguments to restore out of
     `infra/main.bicep` rather than off the live job, so a job left mutated by an earlier manual
     start gets corrected instead of preserved.
+12. **Drive is tidied, and the setup documents no longer point at the dead root.** Trashed on
+    2026-09-11: the B-09 test package under Fort Grounds / 2026-06 June in the shared drive (four
+    inputs and the whole `output/`, six files), and the 29 abandoned, empty folders in the old
+    My Drive root. Trash rather than permanent delete — reversible for 30 days, and in a shared
+    drive a Content manager may only trash anyway. The shared drive now holds the skeleton plus
+    the 31 rehearsal files and nothing else; `preflight` still passes and `2026-08` still reads
+    8/8 ready. **The find that mattered:** `SETUP-CREDENTIALS.md`, `SETUP-AZURE-PORTAL.md` (twice)
+    and `infra/README.md` all still gave the *old My Drive* folder id as the value to configure —
+    so anyone following them would have rebuilt B-09 exactly. All four now give the shared-drive
+    id and say why it has to be a shared drive. The old root folder itself is left in place,
+    empty.
+13. **The Azure job has run. `crr version` → execution `crr-quarterly-8gkaig4`, status
+    `Succeeded`** (2026-09-11 06:19 UTC, [run 34569379705](https://github.com/arcticbio/cornerstone.accounting.reports/actions/runs/34569379705)).
+    That is the first execution this deployment has ever had, and it closes the live half of
+    PLAN Phase 8's acceptance — *job exists, manual start succeeds*. The remaining clause,
+    *logs show `crr version`*, is still unproven: the log step used a flag that does not exist.
+    Two defects, both in the workflow, both mine, both fixed (**A-13**):
+    - `az containerapp job logs show --job-execution-name` is not a flag. It is `--execution`.
+    - **`az containerapp job update --args` cannot set a multi-token argument list at all** —
+      the CLI reads `--repo` as one of its own flags. So the restore failed and the job was left
+      holding `version`, which the 20 October cron would have run to no effect. Repaired within
+      the hour by a deploy; the what-if diff is the proof (`- 0: "version"` → `+ 0: "build" …`).
+      The workflow now takes a `choice`, not free text, and restores by *calling* `deploy.yml`
+      as a reusable workflow, with a third job that re-reads the job and compares it to the
+      template.
 11. ~~**B-01's remaining half**~~ — **closed 2026-09-11.** The session container strips
     `ANTHROPIC_API_KEY`, but not `CRR_ANTHROPIC_API_KEY`; `settings.py` now reads either name.
     The fix existed on the abandoned branch `claude/ecstatic-goodall-ji7yur` (PR #2) and had never

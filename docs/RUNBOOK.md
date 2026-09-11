@@ -242,25 +242,32 @@ closes. One-time setup is [`SETUP-AZURE.md`](SETUP-AZURE.md).
 
 **Actions → Run the Azure job → Run workflow.**
 
-| Input | What to put | Default |
+| Input | What it does | Cost |
 |---|---|---|
-| **args** | `version` · `validate-config` · `build --repo gdrive --classifier anthropic` · or that with `--period 2026-06` | `version` |
+| **version** | prints `crr 1.0.0` and exits | nothing |
+| **validate-config** | lists 4 schemas, 3 output definitions, 8 properties | nothing |
+| **build (the job's own scheduled arguments, unchanged)** | the full eight-property keyed build on the month just ended — exactly what the cron does | **~$4.72** |
 | **wait_minutes** | how long to wait before giving up on the execution | `20` |
-| **restore_args** | leave ticked | ticked |
 
-The first two cost nothing and touch neither Drive nor the model — run them after any deploy.
-The third is a full eight-property keyed build: **about $4.72**.
+Run the first two after any deploy; they touch neither Drive nor the model.
 
-The workflow sets the arguments on the job, starts it, waits, prints the container's logs, and
-**puts the scheduled arguments back**. That last step matters more than it looks: `--args`
-cannot be passed to `az containerapp job start`, so a manual run has to change the definition
-the quarterly cron reads. Doing it in a terminal means remembering to undo it; here the restore
-runs even if the workflow fails or is cancelled, and it restores from `infra/main.bicep` rather
-than from whatever the job happened to be holding — so a job left mutated by an earlier manual
-start gets corrected, and the run says so.
+The first two set the job's arguments, start it, wait, print the container's logs, and then
+**put the scheduled arguments back by re-deploying the template** — and a separate job checks
+afterwards that the restore actually took. The third changes nothing at all: the job already
+holds those arguments, so it just starts.
 
-Untick **restore_args** only if you are deliberately leaving the job pointed somewhere else, and
-put it back before the next scheduled fire.
+**Why a re-deploy and not just setting the arguments back.** `az containerapp job update --args`
+can set `version`; it cannot set `build --repo gdrive --classifier anthropic`, because the CLI
+parses every `--`-prefixed token after `--args` as one of its own flags and fails with
+`unrecognized arguments: --repo gdrive --classifier anthropic`. Nothing quotes around it. So the
+arguments can be set one way and not the other, which is the worst possible asymmetry for
+something the quarterly cron reads — and `infra/main.bicep` is the only place the real list is
+written down. This is why the workflow only ever offers single-token commands, and why the
+**build** option mutates nothing.
+
+**For any other period, or one property, use *Build a period* instead** — it takes `--period` and
+`--property` as inputs, runs the identical image with the same secrets, and never touches the
+job definition the schedule depends on.
 
 ### Reading the result
 

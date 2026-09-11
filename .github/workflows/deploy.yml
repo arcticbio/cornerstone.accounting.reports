@@ -40,6 +40,31 @@ on:
         default: true
         type: boolean
 
+  # Same workflow, callable from another one. `Run the Azure job` restores the job's arguments
+  # by re-deploying the template, because the template is the only definition of what those
+  # arguments should be — and calling this rather than reimplementing it means the restore can
+  # never drift from the deploy.
+  workflow_call:
+    inputs:
+      what_if_only:
+        required: true
+        type: boolean
+      image:
+        required: false
+        type: string
+      resource_group:
+        required: false
+        type: string
+      key_vault_name:
+        required: false
+        type: string
+      grant_key_vault_access:
+        required: true
+        type: boolean
+      schedule_enabled:
+        required: true
+        type: boolean
+
 jobs:
   deploy:
     name: az deployment group create

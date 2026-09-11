@@ -38,11 +38,17 @@ only so Claude can measure real-model accuracy for you; nothing in production de
 While you are on that page, check the other two are there as well:
 
 - **Secrets** tab: `ANTHROPIC_API_KEY`, `GOOGLE_SERVICE_ACCOUNT_B64`
-- **Variables** tab: `CRR_GDRIVE_ROOT_FOLDER_ID` = `1_tUMelVG8trnjPmJWul0YXo23VgWgdSc`
+- **Variables** tab: `CRR_GDRIVE_ROOT_FOLDER_ID` = `1SQUgfGiw1AIFCEqXlloSQ9CnActFwE7O`
 
 The variable goes on the **Variables** tab, not Secrets — the workflow reads it as
 `vars.CRR_GDRIVE_ROOT_FOLDER_ID`. A folder id is not sensitive and putting it in Secrets only
 makes it invisible when you are trying to check it.
+
+**That folder must live in a shared drive.** A service account has no storage quota of its own,
+so a root in someone's My Drive lets the runner create folders and read files and then fails
+every single upload with `403 storageQuotaExceeded` — the setup looks healthy right up until the
+first byte. The id above is the shared-drive root; if you ever point this somewhere else, follow
+[`SETUP-GOOGLE-DRIVE.md`](SETUP-GOOGLE-DRIVE.md) and prove it with `crr preflight --repo gdrive`.
 
 **Verify it works** without spending anything on a full run:
 

@@ -266,10 +266,15 @@ Go to **<https://github.com/arcticbio/cornerstone.accounting.reports/settings/se
 |---|---|
 | `AZURE_RESOURCE_GROUP` | `rg-cust-cornerstone` |
 | `AZURE_KEY_VAULT_NAME` | `crr-kv-accounting` |
-| `CRR_GDRIVE_ROOT_FOLDER_ID` | `1_tUMelVG8trnjPmJWul0YXo23VgWgdSc` |
+| `CRR_GDRIVE_ROOT_FOLDER_ID` | `1SQUgfGiw1AIFCEqXlloSQ9CnActFwE7O` |
 
 Variables, not Secrets — the workflow reads them as `vars.*`, and a resource group name you
 cannot see when checking your work helps nobody.
+
+The folder id above is the **shared-drive** root, and it has to be one: a service account has no
+storage quota, so a root in someone's My Drive creates folders and reads files happily and then
+fails every upload with `403 storageQuotaExceeded`. Background and the fix:
+[`SETUP-GOOGLE-DRIVE.md`](SETUP-GOOGLE-DRIVE.md).
 
 ## 2.3 Decide how Azure pulls the image
 
@@ -517,7 +522,7 @@ JSON**, not Bicep, so you need the compiled template.
 5. Fill the parameters:
    - **Resource group:** `rg-cust-cornerstone`
    - **Key Vault Name:** your vault
-   - **Gdrive Root Folder Id:** `1_tUMelVG8trnjPmJWul0YXo23VgWgdSc`
+   - **Gdrive Root Folder Id:** `1SQUgfGiw1AIFCEqXlloSQ9CnActFwE7O`
    - **Image:** `ghcr.io/arcticbio/crr:build-v1`
    - leave the rest at their defaults
 6. **Review + create** → **Create**.
