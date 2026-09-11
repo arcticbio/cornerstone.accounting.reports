@@ -238,6 +238,39 @@ stopped, the run went green. Left as-is — cancelling superseded runs is the ri
 
 ---
 
+**B-09 · Two open PRs carry the same three changes, and neither is redundant.** *Needs: which
+one to merge first.* *Blocks: nothing — both branches are pushed and green.* *Meanwhile:* work
+continues on `claude/gifted-lamport-wwgenm`.
+
+[#6](https://github.com/arcticbio/cornerstone.accounting.reports/pull/6) (this session) and
+[#7](https://github.com/arcticbio/cornerstone.accounting.reports/pull/7) (session
+`01CtcCcoPJupMQeiJkZzbbnX`, opened 2026-09-10 23:13) both branch off the same `main` and both
+carry the B-08 segmenter fix, the `CRR_ANTHROPIC_API_KEY` alias and `docs/SETUP-AZURE-PORTAL.md`.
+They were written independently, so the shared files differ textually and **merging one will
+conflict the other** in `SPEC.md`, `PROGRESS.md`, `QUESTIONS.md`, `segmenter.py` and
+`settings.py`.
+
+Each has something the other does not, so neither should simply be closed:
+
+- **#7 only:** the portal guide rewritten against the *live* Azure environment —
+  `rg-cust-cornerstone`, `crr-kv-accounting`, `West US 2` pinned throughout instead of
+  placeholders — plus a troubleshooting block on `AADSTS7000215` (copying the Client **Secret
+  ID** instead of the **Value**), step renumbering in `SETUP-AZURE.md`, and matching defaults in
+  `infra/bootstrap.sh` and `deploy.yml`. This reads as written while someone was actually
+  following it, and it is the guide the user is working from.
+- **#6 only:** the orientation cross-check (A-09) and the record metric fix (A-10), plus the
+  real-model eval reports.
+
+*Recommended order:* merge **#7** first, since it is the smaller, self-contained one and its
+Azure content is what is being used right now; then `main` merges into this branch, the
+conflicts get resolved here (they are all "keep both" — different sections of the same files),
+and #6 reduces to the orientation and metric work. Doing it the other way round leaves the
+conflict resolution on a branch nobody is sitting on.
+
+*Not done unilaterally:* #7 belongs to another session, and its Azure edits are not mine to
+discard.
+
+---
 ## Known unknowns the user may want to act on (not blocking)
 
 1. **Is the Missoula drop list a standing rule or a monthly judgement?** One period of evidence,

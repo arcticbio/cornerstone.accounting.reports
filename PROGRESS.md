@@ -73,10 +73,17 @@ properties end to end.
    `build-period.yml`, or a small `eval.yml`, is the cheap way in.
 5. ~~**Log `is_continuation` on `classify.page`**~~ — done; a run log now answers the B-08
    question without the artifact.
-6. **B-04 — Azure.** Untouched and still gated on `AZURE_CREDENTIALS`; `docs/SETUP-AZURE.md` and
+6. **B-09 — two open PRs, neither redundant.** [#6](https://github.com/arcticbio/cornerstone.accounting.reports/pull/6)
+   (this branch) and [#7](https://github.com/arcticbio/cornerstone.accounting.reports/pull/7)
+   (another session, opened 23:13 tonight) both carry B-08, the key alias and the portal guide,
+   written independently — so merging one conflicts the other. #7 additionally has the portal
+   guide pinned to the *live* Azure names and an `AADSTS7000215` troubleshooting block; #6
+   additionally has the orientation and record-metric work. **Merge #7 first**, then resolve
+   here. Needs a decision; see B-09 in `QUESTIONS.md`.
+7. **B-04 — Azure.** Untouched and still gated on `AZURE_CREDENTIALS`; `docs/SETUP-AZURE.md` and
    `infra/bootstrap.sh` are written and waiting. Actions is a working host in the meantime (D-13),
    so this is a choice, not a blocker.
-7. ~~**B-01's remaining half**~~ — **closed 2026-09-11.** The session container strips
+8. ~~**B-01's remaining half**~~ — **closed 2026-09-11.** The session container strips
    `ANTHROPIC_API_KEY`, but not `CRR_ANTHROPIC_API_KEY`; `settings.py` now reads either name.
    The fix existed on the abandoned branch `claude/ecstatic-goodall-ji7yur` (PR #2) and had never
    reached `main`, which is why this was recorded as impossible. `pytest -m api` runs in-session:
