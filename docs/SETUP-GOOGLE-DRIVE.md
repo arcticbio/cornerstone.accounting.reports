@@ -1,8 +1,12 @@
 # Setting up Google Drive so the runner can publish
 
-**Status: this is the one thing standing between the runner and production.** Everything else
-works — it reads inputs from Drive, classifies, composes and produces correct packages. It
-cannot put a single file back. This document fixes that.
+> **Done on this account on 2026-09-11**, and verified: `crr preflight --repo gdrive` passes and
+> a real build published `Fort Grounds - Investor Report - June 2026.pdf` into `output/`. What
+> follows is the procedure, kept for the next Drive root, the next environment, or whoever has
+> to understand why it is arranged this way.
+
+**Why this matters:** without it, everything else works — the runner reads inputs from Drive,
+classifies, composes and produces correct packages — and it cannot put a single file back.
 
 Budget **20 minutes**, almost all of it clicking in the Drive web UI. One optional step needs a
 terminal, and it is the verification step at the end.

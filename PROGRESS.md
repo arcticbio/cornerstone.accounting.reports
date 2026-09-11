@@ -4,7 +4,7 @@ Single source of truth for build state. Claude Code ticks tasks here after each 
 commits. Humans read this to see where things stand. Mirrors `docs/PLAN.md`; if they diverge,
 PLAN.md defines the work and this file records what has been done.
 
-**Branch:** `main` — v1 landed there via [#1](https://github.com/arcticbio/cornerstone.accounting.reports/pull/1) (built on the session branch `claude/gifted-lamport-wwgenm`; D-15 — every reference to `build/v1` in these documents means the release line, now `main`) · **Current phase:** 9 (complete) · **Tag:** `v1.0.0` pushed · **Last session note:** B-08 fixed; real-model eval run over all 172 pages and now **100 % on every metric**; the orientation defect it surfaced fixed — a page was shipping upside down — and the 59 % record score it reported traced to the metric, not the classifier. #7 merged to `main`; this branch merged it back cleanly. **Top blocker is now B-09: no package can reach Drive.** See "Pick up here" below.
+**Branch:** `main` — v1 landed there via [#1](https://github.com/arcticbio/cornerstone.accounting.reports/pull/1) (built on the session branch `claude/gifted-lamport-wwgenm`; D-15 — every reference to `build/v1` in these documents means the release line, now `main`) · **Current phase:** 9 (complete) · **Tag:** `v1.0.0` pushed · **Last session note:** B-08 fixed; real-model eval run over all 172 pages and now **100 % on every metric**; the orientation defect it surfaced fixed — a page was shipping upside down — and the 59 % record score it reported traced to the metric, not the classifier. #7 merged to `main`; this branch merged it back cleanly. **B-09 is resolved: the production publish path works end to end.** See "Pick up here" below.
 
 ## Pick up here
 
@@ -77,7 +77,12 @@ properties end to end.
    `build-period.yml`, or a small `eval.yml`, is the cheap way in.
 5. ~~**Log `is_continuation` on `classify.page`**~~ — done; a run log now answers the B-08
    question without the artifact.
-6. **B-09 — no package can reach Drive.** *(Not this branch's work; it arrived with #7, and it
+6. ~~**B-09 — no package can reach Drive.**~~ **RESOLVED 2026-09-11 — one has.** The shared
+   drive is live, the runner is Content manager on it, the 2026-06 and 2026-09 skeletons are
+   built out (43 folders, all owned by the *drive*), and a real `--repo gdrive` build of Fort
+   Grounds published `Fort Grounds - Investor Report - June 2026.pdf` into `output/` — verified
+   by downloading it back: 8 pages, 6 bookmarks, correct title. **The production publish path
+   works.** Original text: *(Not this branch's work; it arrived with #7, and it
    is the top production blocker.)* The service account has no storage quota, so every
    `--repo gdrive` upload fails `403 storageQuotaExceeded` — including `publish`, which means a
    gdrive build classifies, composes, and then fails at the last step. Folders are exempt, so
