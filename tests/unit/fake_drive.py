@@ -31,6 +31,7 @@ class FakeDrive:
         self.list_calls = 0
         self.uploads: list[tuple[str, str]] = []
         self.created_folders: list[str] = []
+        self.deleted: list[str] = []
 
     # -- construction helpers ---------------------------------------------------------
     def add_folder(self, parent_id: str, name: str) -> str:
@@ -105,3 +106,12 @@ class FakeDrive:
         self.created_folders.append(name)
         folder_id = self.add_folder(parent_id, name)
         return DriveFile(id=folder_id, name=name, mime_type=FOLDER_MIME)
+
+    def trash(self, file_id: str) -> None:
+        self.deleted.append(file_id)
+        node = self._nodes.pop(file_id, None)
+        if node is None:
+            return
+        for parent in self._nodes.values():
+            if file_id in parent.children:
+                parent.children.remove(file_id)

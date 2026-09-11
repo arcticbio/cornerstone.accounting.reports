@@ -16,6 +16,9 @@ as `<name> (build N).<ext>`, exactly as the local repository does.
 
 from __future__ import annotations
 
+import tempfile
+import uuid
+from contextlib import suppress
 from pathlib import Path
 
 from crr.config.properties import PropertyRegistry
@@ -197,6 +200,41 @@ class GoogleDriveRepository:
                 kind=path.suffix.lstrip(".") or "file",
                 renamed=name != path.name,
             )
+
+    def preflight_publish(self) -> None:
+        """Upload one byte to the Drive root and delete it again (SPEC §6.1, B-09).
+
+        Nothing cheaper is trustworthy. `capabilities.canAddChildren` reports `true` on the
+        folder even when every upload into it fails, because creating a *folder* really is
+        allowed — folders consume no quota. Only writing a file proves a file can be written,
+        which is why this does exactly that and nothing clever.
+        """
+        probe = Path(tempfile.gettempdir()) / f".crr-preflight-{uuid.uuid4().hex}"
+        probe.write_bytes(b"crr")
+        try:
+            created = self._api.upload(self._root, probe, name=probe.name)
+        # Broad on purpose: the client raises googleapiclient's HttpError, which this module
+        # does not import, and any failure to write here means the same thing to the caller.
+        except Exception as exc:
+            raise RepositoryError(
+                f"Drive rejected a test upload to the root folder: {exc}\n"
+                "The runner cannot publish. If this is `storageQuotaExceeded`, the root is a "
+                "My Drive folder and a service account has no storage of its own — move it to "
+                "a shared drive. See docs/SETUP-GOOGLE-DRIVE.md."
+            ) from exc
+        finally:
+            with suppress(OSError):
+                probe.unlink()
+        self._children.pop(self._root, None)
+        try:
+            self._api.trash(created.id)
+        except Exception as exc:
+            # Cleanup only: the probe is what mattered and it passed. A leftover byte is not
+            # worth failing a run over, but it is worth saying so — someone will find the file.
+            log.warning("repository.preflight_probe_left", error=type(exc).__name__)
+        else:
+            self._children.pop(self._root, None)
+        log.info("repository.preflight_ok", repo="gdrive")
 
     def previous_pm_pages(self, prop: Property, period: PeriodId, work_dir: Path) -> int | None:
         """PM source page count from the last period this property published (SPEC §6.8).

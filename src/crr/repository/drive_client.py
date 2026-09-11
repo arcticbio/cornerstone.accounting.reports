@@ -53,6 +53,8 @@ class DriveApi(Protocol):
 
     def create_folder(self, parent_id: str, name: str) -> DriveFile: ...
 
+    def trash(self, file_id: str) -> None: ...
+
 
 def credentials_from_b64(encoded: str) -> Any:
     """Service-account credentials from `GOOGLE_SERVICE_ACCOUNT_B64` (SPEC §12).
@@ -171,3 +173,16 @@ class GoogleDriveApi:
             .execute()
         )
         return DriveFile(id=created["id"], name=created["name"], mime_type=created["mimeType"])
+
+    def trash(self, file_id: str) -> None:
+        """Move a file to the trash. Used to clean up the publish preflight probe (SPEC §6.1).
+
+        Trash rather than `files.delete`, which removes permanently: in a **shared drive** only
+        a Manager may permanently delete, while a Content manager — the role the runner is meant
+        to hold, and the least privilege that lets it publish — may only trash. Using delete
+        here made the probe fail to clean up on a correctly configured drive, leaving one file
+        behind per run.
+        """
+        self._service.files().update(
+            fileId=file_id, body={"trashed": True}, supportsAllDrives=True
+        ).execute()

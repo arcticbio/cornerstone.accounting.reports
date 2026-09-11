@@ -82,8 +82,12 @@ properties end to end.
    `--repo gdrive` upload fails `403 storageQuotaExceeded` — including `publish`, which means a
    gdrive build classifies, composes, and then fails at the last step. Folders are exempt, so
    the setup looks healthy right up until the first byte. Needs an account change, not a code
-   change: move the Drive root into a **shared drive** with the runner as **Content manager**.
-   `--repo local` is unaffected. See B-09 in `QUESTIONS.md`.
+   change: move the Drive root into a **shared drive** with the runner as **Content manager** —
+   written up as **[`docs/SETUP-GOOGLE-DRIVE.md`](docs/SETUP-GOOGLE-DRIVE.md)** (2026-09-11),
+   verifiable with `crr preflight --repo gdrive`. `--repo local` is unaffected.
+   **Mitigated, not fixed, 2026-09-11:** a build now proves the repository is writable before it
+   constructs a classifier, so the run stops in about a second instead of spending ~$4.72 and
+   failing at the last stage. Confirmed against the live account. See B-09 in `QUESTIONS.md`.
 7. ~~**Two open PRs, neither redundant.**~~ **Settled 2026-09-11.** The operator merged
    [#7](https://github.com/arcticbio/cornerstone.accounting.reports/pull/7) at 01:33 and `main`
    merged back into this branch **with no conflicts** — the two had shared history (#7 branched

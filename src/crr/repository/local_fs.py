@@ -11,7 +11,9 @@ from __future__ import annotations
 import json
 import re
 import shutil
+import uuid
 from collections.abc import Callable
+from contextlib import suppress
 from pathlib import Path
 
 from crr.config.properties import PropertyRegistry
@@ -160,6 +162,24 @@ class LocalFsRepository:
         """PM source page count from this property's last build, for the drift check."""
         path = previous_manifest_path(work_dir, prop.id, period)
         return pm_pages_from_manifest(path)
+
+    def preflight_publish(self) -> None:
+        """Prove the publish root can be written to (SPEC §6.1)."""
+        probe = self.publish_root / f".crr-preflight-{uuid.uuid4().hex}"
+        try:
+            self.publish_root.mkdir(parents=True, exist_ok=True)
+            probe.write_bytes(b"crr")
+        except OSError as exc:
+            raise RepositoryError(
+                f"cannot write to the publish root {self.publish_root}: {exc}"
+            ) from exc
+        finally:
+            # `missing_ok` only swallows FileNotFoundError. When the root could not be created
+            # at all the parent is not a directory, and an unguarded unlink raises over the
+            # top of the error we actually want to report.
+            with suppress(OSError):
+                probe.unlink()
+        log.info("repository.preflight_ok", repo="local")
 
     def publish(
         self, prop: Property, period: PeriodId, files: list[Path], status: BuildStatus

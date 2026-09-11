@@ -27,3 +27,18 @@ class SourceRepository(Protocol):
     def publish(
         self, prop: Property, period: PeriodId, files: list[Path], status: BuildStatus
     ) -> None: ...
+
+    def preflight_publish(self) -> None:
+        """Prove the repository can be written to, before anything is spent (SPEC §6.1).
+
+        `publish` is the last stage of a build, after OCR, classification and composition —
+        so a repository that cannot be written to is discovered at the most expensive possible
+        moment. On Drive that is not hypothetical: a service account has no storage quota of
+        its own, so every upload fails `403 storageQuotaExceeded` while folder creation and
+        reads keep working, and a full eight-property run costs ~$4.72 in classification before
+        the first byte is refused (B-09).
+
+        Raises `RepositoryError` when a write would fail. The default is a no-op, so an
+        implementation that cannot be probed cheaply simply does not.
+        """
+        return None

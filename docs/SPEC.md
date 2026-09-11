@@ -288,6 +288,7 @@ class SourceRepository(Protocol):
     def list_periods(self, property: Property) -> list[PeriodId]: ...
     def fetch_inputs(self, property: Property, period: PeriodId, dest: Path) -> list[SourceDocument]: ...
     def publish(self, property: Property, period: PeriodId, files: list[Path], status: BuildStatus) -> None: ...
+    def preflight_publish(self) -> None: ...
 ```
 
 - `LocalFsRepository(root, publish_root=root)` — reads
@@ -299,8 +300,26 @@ class SourceRepository(Protocol):
   to publish beside the inputs.
 - `GoogleDriveRepository(root_folder_id, service_account_json)` — identical layout on Drive.
   Uses `google-api-python-client` with a service account; lists by folder name; downloads to
-  `dest`; uploads outputs with `supportsAllDrives=True`. Never deletes. Never overwrites: a
-  second publish for the same period writes `<name> (build N).pdf`.
+  `dest`; uploads outputs with `supportsAllDrives=True`. Never overwrites: a second publish for
+  the same period writes `<name> (build N).pdf`. **Never deletes anything it did not just
+  write** — the one deletion it performs is removing its own preflight probe, below.
+
+**`preflight_publish()` — prove a write is possible before anything is spent.** `publish` is the
+*last* stage of a build, so a repository that cannot be written to is discovered after OCR,
+classification and composition have already been paid for — per property, every run. B-09 is
+that failure in the wild: a service account has no Drive storage of its own, so every upload
+fails `403 storageQuotaExceeded` while folder creation and reads keep working, and the tree
+looks healthy right up until the first byte.
+
+The probe writes one byte to the repository root and removes it. Nothing cheaper is
+trustworthy: the root folder's `capabilities.canAddChildren` reads `true` in exactly the failing
+case, because creating a *folder* really is permitted — folders consume no quota. A failure to
+clean the probe up is logged, not raised: the write is what was being tested and it succeeded.
+
+`crr build` runs it once per run before constructing a classifier, and exits 1 with the remedy
+if it fails; `CRR_PUBLISH_PREFLIGHT=false` skips it. `crr preflight --repo <local|gdrive>` runs
+it alone, which is the verification step of `docs/SETUP-GOOGLE-DRIVE.md`. The protocol default
+is a no-op, so a repository that cannot be probed cheaply simply does not.
 
 Input files are matched by the exact filenames in `properties.yaml`. A PM source file that is
 missing is a hard failure for that property; a missing optional Cornerstone file is recorded.
@@ -724,6 +743,7 @@ Never log page text or image bytes. Log document sha256s, not paths, at INFO.
 | `CRR_GDRIVE_ROOT_FOLDER_ID` | — | Drive folder that contains the `<PM>/` folders |
 | `CRR_WORK_DIR` | `work/` | |
 | `CRR_PUBLISH_ROOT` | `<work_dir>/published` | where the local repository publishes; keeps builds out of the read-only bundle |
+| `CRR_PUBLISH_PREFLIGHT` | `true` | prove the repository is writable before a run spends anything (§6.1) |
 | `CRR_EXEMPLAR_POLICY` | `exclude_same_property` | `exclude_same_property` \| `any` |
 | `CRR_CLASSIFIER_EFFORT` | `low` | `output_config.effort` for the classifier: `low`\|`medium`\|`high`\|`xhigh`\|`max` |
 | `CRR_EVAL_MIN_PAGE_ACCURACY` | `0.98` | per-manager gate |
