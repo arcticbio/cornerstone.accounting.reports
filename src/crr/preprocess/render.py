@@ -24,7 +24,7 @@ def _cache_name(sha256: str, page: int, dpi: int, max_edge: int) -> str:
     return f"{sha256[:16]}-p{page:04d}-{dpi}dpi-{max_edge}px.png"
 
 
-def _scale_for(width_pt: float, height_pt: float, dpi: int, max_edge: int) -> float:
+def scale_for(width_pt: float, height_pt: float, dpi: int, max_edge: int) -> float:
     """Points-to-pixels scale at `dpi`, reduced so the long edge fits `max_edge`."""
     scale = dpi / _PDF_POINTS_PER_INCH
     long_edge_px = max(width_pt, height_pt) * scale
@@ -58,7 +58,7 @@ def render_pages(
                 continue
             page = doc[page_no - 1]
             try:
-                scale = _scale_for(page.get_width(), page.get_height(), dpi, max_edge)
+                scale = scale_for(page.get_width(), page.get_height(), dpi, max_edge)
                 bitmap = page.render(scale=scale, rev_byteorder=False, draw_annots=True)
                 try:
                     image = bitmap.to_pil().convert("RGB")

@@ -108,6 +108,71 @@ choice. Worth revisiting the first time a new manager's schema scores below thre
 exactly the case exemplars are for.
 *Where:* `src/crr/cli.py` (`_make_classifier`), `src/crr/classify/prompts.py`, SPEC §7.2/§8.
 
+**A-09 · Orientation is decided by a cross-check, not by the classifier alone.**
+*What the eval found:* the real-model eval scored **orientation 0.00 % (0/1)**. On Timber Place
+page 3 — the only rotated page in the corpus — the classifier answers `rotated_90_cw` where the
+truth is `rotated_90_ccw`, the opposite direction, at 0.96 confidence. The composer applied the
+complementary rotation and **the aged-receivable page shipped to investors upside down**, with
+page counts, dimensions, both eval gates and every review code passing, because either rotation
+yields the same 792x612 landscape page. Only the eval's orientation metric saw it.
+*What was tried and did not work:* rewriting the prompt rule twice — once to lead with the edge
+the top of the content faces, once to key purely on the reading direction, with the mapping given
+as a lookup table. The first went from 1-in-4 right to 0-in-4; the second was 0-in-6, and the
+model's *evidence* string contradicted its own label ("reading bottom-to-top" → `rotated_90_cw`).
+Both prompt versions were reverted rather than shipped: a `prompt_version` bump costs a re-eval
+and neither bought anything.
+*What was taken instead:* two independent signals must agree before the composer turns a page
+(SPEC §7.6). Tesseract OSD at 400 DPI agreed with all **172/172** golden pages. It is not
+authoritative either — over the 150 DPI classifier images, ink-cropped and upscaled, the same
+detector called eight upright pages `rotated_180`, three of them at higher confidence than the
+page it got right, so **OSD confidence is not a safety margin**. On disagreement an arbiter shows
+the page in all four rotations, shuffled, and asks which reads normally: a discrimination, not a
+mental rotation, and **12/12** including the page the naming task never gets right. Unsettled →
+`orientation_uncertain` and a human (D-12).
+*Cost:* one 400 DPI render plus a tesseract run per page, and one extra API call per
+disagreement — one page in 172. Timber Place rebuilt clean end to end at $0.74 and the shipped
+page now reads right-side-up.
+*The decision this leaves open:* whether `orientation` should stay in the classifier's tool
+schema at all. It is now only ever a hint, and dropping it would save output tokens — but it is
+also the signal the cross-check is measured against, so it stays until a second rotated page
+exists to test with.
+*Where:* `src/crr/preprocess/orientation.py`, `src/crr/classify/orientation_check.py`,
+`src/crr/classify/orientation_arbiter.py`, SPEC §6.2/§6.5/§6.8/§7.6/§12.
+
+**A-10 · The `record_qualifier` metric scores the resolved record, not the printed string.**
+*What the eval found:* Missoula record accuracy **59.38 % (38/64)** on a run where page
+accuracy, continuation and boundary F1 were all 1.0000, every Missoula property resolved to its
+exact golden page count, and no build raised `unresolved_record`. Those cannot all be true of a
+classifier that is wrong about records 40 % of the time.
+*Root cause, measured not inferred:* a real-model run over Fort Grounds' PM source (16 pages)
+shows the model transcribing `Fort Grounds Apartment Homes` on each of the 8 section-head pages
+— Rent Manager prints a `Property:` header there — and `null` on the continuation pages. The
+golden file carries `null` on all 16, because `map_qualifier` maps null *and* an exactly
+matching `pm_name` to the same record on a single-record property. Comparing the raw strings
+therefore marked all 8 head pages wrong. Checked page by page: **0 of 16 pages resolve
+differently** with the transcription than with null. The metric was measuring transcription,
+not correctness.
+*What changed:* both sides of the comparison now go through `map_qualifier`, so the metric
+scores the record a page lands in. Fort Grounds goes 8/16 → 16/16 with no change to any label.
+*And a second cause behind the first:* that took Missoula to 96.88 % (62/64), not 100 %. The
+remaining two were WayPointe pages 4 and 7 — `unit_availability` **continuations** where the
+model correctly returned `null`, exactly as the prompt instructs, and where a bare null on a
+multi-record property resolves nowhere. The metric was scoring each page in isolation, without
+the §6.4 continuation inheritance the segmenter applies before it maps anything. Scoring the
+*effective* qualifier closes it: **100.00 % (64/64)**. Boundary F1 was 1.0000 throughout, which
+was the standing clue that no section was ever filed under the wrong record.
+The metric does not become vacuous — a qualifier matching no record still scores wrong, and so
+does a non-continuation page that inherits nothing, both pinned by tests over the real labels.
+*What did not change:* nothing in the pipeline. No label, no plan, no output page. This was a
+reporting defect, and worth contrasting with A-09, which looked similar in the report and was a
+real page shipping upside down. A number that disagrees with the rest of the report is worth
+running down either way.
+*Recommendation for next time:* `crr eval` does not persist per-page predictions, so re-scoring
+under a corrected metric costs a full keyed run ($4.66). Dumping the predictions beside the
+report would make metric changes free to re-measure.
+*Where:* `src/crr/evaluate/metrics.py`, `src/crr/evaluate/harness.py`, SPEC §8,
+`tests/unit/test_record_metric.py`.
+
 ---
 
 ## Blocked (Claude Code appends here)
@@ -200,6 +265,33 @@ those folders and to read; it is not sufficient to put a file in them.
 
 ---
 
+**B-10 · ~~PR #6 and PR #7 overlap and neither is redundant.~~ RESOLVED 2026-09-11 — and the
+prediction in it was wrong.** (Recorded here as B-10: this was filed as B-09 before the Drive
+blocker above merged to `main` and took that number.)
+
+*What was recorded:* that #6 and #7 carried the same B-08 fix, key alias and portal guide
+"written independently", so merging either would conflict the other in `SPEC.md`,
+`PROGRESS.md`, `QUESTIONS.md`, `segmenter.py` and `settings.py`. The recommendation — merge #7
+first, because its Azure content was the guide in live use — was right, and the operator merged
+it at 01:33.
+
+*What was wrong:* the two were **not** written independently. #7 branched off
+`claude/gifted-lamport-wwgenm` at `a3deab3`, so the B-08 fix, the key alias and the A-08 note
+were literally the same commits, shared history rather than parallel reimplementations. Merging
+`main` back produced **no conflicts at all** — eight files, all fast-forward. The diff that
+prompted the warning (`segmenter.py | 4 +-`, `SPEC.md | 63 +---`) was mostly *this* branch's
+later commits that #7 lacked, read as if it were divergence in the shared files.
+
+*The lesson worth keeping:* `git diff A B` answers "how do these differ", not "were these
+written independently" — `git merge-base` answers that, and it was one command away. A cheap
+check would have replaced a paragraph of confident speculation with a fact.
+
+*What was right and worth keeping:* #7 was not redundant and should not have been closed on
+that assumption; its Azure content was written against the live subscription and carries the
+`AADSTS7000215` trap, the `Run now`-is-a-production-build correction, and the Drive blocker now
+recorded as B-09 above.
+
+---
 ## Known unknowns the user may want to act on (not blocking)
 
 1. **Is the Missoula drop list a standing rule or a monthly judgement?** One period of evidence,

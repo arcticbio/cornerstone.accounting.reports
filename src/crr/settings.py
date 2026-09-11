@@ -67,6 +67,13 @@ class Settings(BaseSettings):
     render_dpi: int = 150
     render_max_edge_px: int = 1568
     page_text_chars: int = 6_000
+    #: Cross-check every page's orientation against Tesseract OSD before the composer turns it
+    #: (SPEC §7.6). Off makes builds faster and the classifier's label authoritative again,
+    #: which is what shipped a page upside down; leave it on outside tests.
+    orientation_check: bool = True
+    #: DPI for the OSD render. 400 is what the golden corpus was measured at; OSD is sensitive
+    #: to this and gets materially worse on smaller renders.
+    osd_dpi: int = 400
 
     # -- repositories ----------------------------------------------------------------
     repo: RepoKind = "local"

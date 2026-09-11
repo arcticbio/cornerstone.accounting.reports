@@ -54,7 +54,10 @@ def _schema_for_role(prop, role):  # type: ignore[no-untyped-def]
 
 def _build(tmp_path: Path):  # type: ignore[no-untyped-def]
     settings = Settings(  # type: ignore[call-arg]
-        _env_file=None, work_dir=tmp_path / "work", publish_root=tmp_path / "published"
+        _env_file=None,
+        work_dir=tmp_path / "work",
+        publish_root=tmp_path / "published",
+        orientation_check=False,
     )
     prop = CONFIG.properties.property("fort-grounds").to_domain()
     repository = LocalFsRepository(

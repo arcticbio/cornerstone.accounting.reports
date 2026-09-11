@@ -6,6 +6,7 @@ Pure functions over label lists: no I/O, no model, no PDFs. The harness supplies
 from __future__ import annotations
 
 from collections import Counter
+from collections.abc import Callable
 from dataclasses import dataclass, field
 
 from crr.golden import GoldenDocument
@@ -89,11 +90,29 @@ def score_document(
     *,
     score_record: bool,
     golden_record_names: dict[str | None, str | None],
+    resolve_record: Callable[[str, str | None], str | None] | None = None,
+    effective_qualifiers: dict[int, str | None] | None = None,
 ) -> Scores:
     """Page-level metrics for one document.
 
     `golden_record_names` maps a golden record id to the `pm_name` a classifier would print,
     so a predicted `record_qualifier` is compared against what the source actually says.
+
+    `resolve_record` maps `(section_id, qualifier)` to the record the pipeline would file the
+    page under — `map_qualifier`, bound to this property and schema. Both sides of the
+    comparison go through it, so the metric scores the record a page *lands in* rather than
+    the string the model happened to print. Without it the comparison falls back to the raw
+    strings, which scores a correct package wrong: Rent Manager prints the `Property:` header
+    on every section-head page, the model dutifully transcribes it, and the golden files carry
+    `null` on a single-record property because `map_qualifier` maps null and the matching
+    `pm_name` to the same record. Measured on Fort Grounds: 8/16 on strings, 16/16 on records,
+    with zero pages where the transcription changes where the page lands (A-10).
+
+    `effective_qualifiers` supplies the qualifier each page carries *after* the continuation
+    inheritance of SPEC §6.4 — `segmenter.effective_qualifiers`. Scoring the raw field instead
+    penalises the model for obeying the prompt: a continuation page carrying no `Property:`
+    header must return null, and on a multi-record property a bare null resolves nowhere. Both
+    of WayPointe's remaining misses were pages of exactly that kind (A-10).
     """
     scores = Scores()
     by_page = {p.page: p for p in predicted}
@@ -107,9 +126,18 @@ def score_document(
             scores.continuation.add(prediction.is_continuation == page.continuation)
             if score_record:
                 expected_name = golden_record_names.get(page.record)
-                scores.record.add(
-                    _normalise(prediction.record_qualifier) == _normalise(expected_name)
+                qualifier = (
+                    prediction.record_qualifier
+                    if effective_qualifiers is None
+                    else effective_qualifiers.get(page.page)
                 )
+                if resolve_record is None:
+                    correct = _normalise(qualifier) == _normalise(expected_name)
+                else:
+                    correct = resolve_record(page.section, qualifier) == resolve_record(
+                        page.section, expected_name
+                    )
+                scores.record.add(correct)
             if page.orientation is not None:
                 scores.orientation.add(prediction.orientation is page.orientation)
         else:

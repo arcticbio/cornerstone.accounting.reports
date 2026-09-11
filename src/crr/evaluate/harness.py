@@ -10,17 +10,21 @@ from __future__ import annotations
 import time
 from collections import Counter
 from dataclasses import dataclass, field
+from functools import partial
 
+from crr.classify.orientation_check import OrientationArbiter, apply_orientation_check
 from crr.classify.protocol import Classifier, PageInput, Usage
 from crr.config.loader import ConfigBundle
+from crr.config.models import SourceSchema
 from crr.evaluate.metrics import Scores, score_boundaries, score_document
-from crr.golden import GoldenProperty
+from crr.golden import GoldenDocument, GoldenProperty
 from crr.log import get_logger
 from crr.models import PageClassification, Property, SourceDocument
 from crr.preprocess.ocr import ocr_if_needed
 from crr.preprocess.render import render_pages
 from crr.preprocess.text import page_texts, sha256_file
-from crr.segment.segmenter import segment
+from crr.segment.records import map_qualifier
+from crr.segment.segmenter import effective_qualifiers, segment
 from crr.settings import Settings
 
 log = get_logger(__name__)
@@ -77,6 +81,7 @@ def evaluate(
     *,
     property_ids: list[str] | None = None,
     pm_id: str | None = None,
+    arbiter: OrientationArbiter | None = None,
 ) -> EvalResult:
     """Score `classifier_for(property_id)` over every golden document in scope."""
     started = time.monotonic()
@@ -91,12 +96,100 @@ def evaluate(
         result.classifier = classifier.name
         result.model = settings.model if classifier.name.startswith("anthropic") else None
         result.prompt_version = getattr(classifier, "prompt_version", None)
-        documents, usage = _evaluate_property(entry, prop, config, settings, classifier)
+        documents, usage = _evaluate_property(entry, prop, config, settings, classifier, arbiter)
         result.documents.extend(documents)
         result.usage.add(usage)
         log.info("eval.property_done", property=property_id)
     result.duration_s = time.monotonic() - started
     return result
+
+
+def score_predictions(
+    golden: GoldenProperty,
+    golden_doc: GoldenDocument,
+    predictions: list[PageClassification],
+    schema: SourceSchema,
+    prop: Property,
+) -> Scores:
+    """Every SPEC §8 metric for one document, given labels from anywhere.
+
+    Pure: no model, no PDFs. That is what lets `crr eval --from` re-score a saved run when a
+    metric turns out to be wrong, instead of paying for the labels again (A-10).
+    """
+    scores = score_document(
+        golden_doc,
+        predictions,
+        score_record=golden_doc.schema_id in RECORD_SCORED_SCHEMAS,
+        golden_record_names={r.id: r.pm_name for r in golden.records} | {None: None},
+        resolve_record=partial(_resolve_record, prop, schema),
+        effective_qualifiers=_effective_by_page(predictions),
+    )
+    golden_labels = golden.classifications(golden_doc.role)
+    scores.boundary = score_boundaries(
+        list(segment(golden_labels, schema, prop, golden_doc.role).sections),
+        list(segment(predictions, schema, prop, golden_doc.role).sections),
+    )
+    return scores
+
+
+def rescore(
+    saved: dict[tuple[str, str], list[PageClassification]],
+    golden: dict[str, GoldenProperty],
+    config: ConfigBundle,
+    *,
+    classifier: str,
+    model: str | None,
+    prompt_version: str | None,
+    usage: Usage | None = None,
+) -> EvalResult:
+    """Re-score a saved run under the current metrics. No model calls, no cost.
+
+    The saved labels are already past the §7.6 orientation cross-check — that is what was
+    scored and what a build would have composed — so it is not re-applied here.
+    """
+    started = time.monotonic()
+    result = EvalResult(classifier=classifier, model=model, prompt_version=prompt_version)
+    if usage is not None:
+        result.usage = usage
+    # Insertion order, not sorted: the file was written in the live run's document order, so
+    # a replayed report diffs cleanly against the one it was replayed from.
+    for (property_id, doc_role), predictions in saved.items():
+        entry = golden.get(property_id)
+        if entry is None:
+            log.warning("eval.rescore_unknown_property", property=property_id)
+            continue
+        golden_doc = next((d for d in entry.documents if d.role == doc_role), None)
+        if golden_doc is None:
+            log.warning("eval.rescore_unknown_role", property=property_id, role=doc_role)
+            continue
+        prop = config.properties.property(property_id).to_domain()
+        schema = config.schemas[golden_doc.schema_id]
+        result.documents.append(
+            DocumentResult(
+                property_id=property_id,
+                pm_id=entry.pm_id,
+                doc_role=doc_role,
+                schema_id=golden_doc.schema_id,
+                pages=len(golden_doc.pages),
+                scores=score_predictions(entry, golden_doc, predictions, schema, prop),
+                predictions=predictions,
+            )
+        )
+    result.duration_s = time.monotonic() - started
+    return result
+
+
+def _effective_by_page(predictions: list[PageClassification]) -> dict[int, str | None]:
+    """Each page's qualifier after §6.4 continuation inheritance, as the segmenter sees it."""
+    ordered = sorted(predictions, key=lambda p: p.page)
+    return dict(zip((p.page for p in ordered), effective_qualifiers(ordered), strict=True))
+
+
+def _resolve_record(
+    prop: Property, schema: SourceSchema, section_id: str, qualifier: str | None
+) -> str | None:
+    """Where the pipeline would file a page carrying `qualifier`, for the record metric."""
+    return map_qualifier(prop, schema.section(section_id), qualifier)
 
 
 def _evaluate_property(
@@ -105,6 +198,7 @@ def _evaluate_property(
     config: ConfigBundle,
     settings: Settings,
     classifier: Classifier,
+    arbiter: OrientationArbiter | None = None,
 ) -> tuple[list[DocumentResult], Usage]:
     out: list[DocumentResult] = []
     usage = Usage()
@@ -161,18 +255,21 @@ def _evaluate_property(
         ]
         classified = classifier.classify(doc, schema, pages)
         usage.add(classified.usage)
+        # Score what would ship, not the raw label: the orientation a build applies is the one
+        # the §7.6 cross-check settled. Skipped for a classifier that reads no images — the
+        # golden one, whose labels are the answer key — so the CI self-consistency run stays
+        # free.
+        predictions = classified.pages
+        if settings.orientation_check and needs_images:
+            predictions, _ = apply_orientation_check(
+                predictions,
+                path,
+                doc_role=golden_doc.role,
+                dpi=settings.osd_dpi,
+                arbiter=arbiter,
+            )
 
-        scores = score_document(
-            golden_doc,
-            classified.pages,
-            score_record=golden_doc.schema_id in RECORD_SCORED_SCHEMAS,
-            golden_record_names={r.id: r.pm_name for r in golden.records} | {None: None},
-        )
-        golden_labels = golden.classifications(golden_doc.role)
-        scores.boundary = score_boundaries(
-            list(segment(golden_labels, schema, prop, golden_doc.role).sections),
-            list(segment(classified.pages, schema, prop, golden_doc.role).sections),
-        )
+        scores = score_predictions(golden, golden_doc, predictions, schema, prop)
         out.append(
             DocumentResult(
                 property_id=golden.property_id,
@@ -181,7 +278,7 @@ def _evaluate_property(
                 schema_id=golden_doc.schema_id,
                 pages=len(golden_doc.pages),
                 scores=scores,
-                predictions=classified.pages,
+                predictions=predictions,
             )
         )
     return out, usage

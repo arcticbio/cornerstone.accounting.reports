@@ -14,6 +14,7 @@ from datetime import UTC, datetime
 from pathlib import Path
 
 from crr.classify.footer_check import apply_footer_check
+from crr.classify.orientation_check import OrientationArbiter, apply_orientation_check
 from crr.classify.protocol import Classifier, PageInput, Usage
 from crr.compose.composer import compose, output_filename
 from crr.config.loader import ConfigBundle
@@ -85,6 +86,7 @@ def build_property(
     settings: Settings,
     repository: SourceRepository,
     classifier: Classifier,
+    arbiter: OrientationArbiter | None = None,
     dry_run: bool = False,
     previous_pm_pages: int | None = None,
 ) -> BuildResult:
@@ -139,7 +141,9 @@ def build_property(
         manifest.inputs = [_input_ref(doc) for doc in documents]
 
         started = time.monotonic()
-        classifications, usage = _classify(documents, page_text, page_images, config, classifier)
+        classifications, usage, orientation_reasons = _classify(
+            documents, page_text, page_images, config, classifier, settings, arbiter
+        )
         stages.time("classify", started)
         manifest.classifications = classifications
         manifest.cost = _cost(usage, settings, classifier)
@@ -166,7 +170,7 @@ def build_property(
             for d in plan_result.dropped
         ]
 
-        reasons = _all_reasons(
+        reasons = orientation_reasons + _all_reasons(
             classifications, segments, plan_result, settings, documents, previous_pm_pages
         )
         verdict = decide(reasons)
@@ -325,10 +329,13 @@ def _classify(
     images: dict[str, dict[int, Path]],
     config: ConfigBundle,
     classifier: Classifier,
-) -> tuple[list[PageClassification], Usage]:
-    """Label every page of every input, then run the footer check over the result."""
+    settings: Settings,
+    arbiter: OrientationArbiter | None = None,
+) -> tuple[list[PageClassification], Usage, list[ReviewReason]]:
+    """Label every page of every input, then run the footer and orientation checks over it."""
     labels: list[PageClassification] = []
     usage = Usage()
+    orientation_reasons: list[ReviewReason] = []
     for doc in documents:
         schema = config.schemas[doc.schema_id]
         pages = [
@@ -337,14 +344,27 @@ def _classify(
         ]
         result = classifier.classify(doc, schema, pages)
         usage.add(result.usage)
-        labels.extend(
-            apply_footer_check(
-                result.pages,
-                schema,
-                {n: texts[doc.role][n - 1] for n in sorted(images[doc.role])},
-            )
+        checked = apply_footer_check(
+            result.pages,
+            schema,
+            {n: texts[doc.role][n - 1] for n in sorted(images[doc.role])},
         )
-    return labels, usage
+        # Skipped for a classifier that reads no page images — the golden one, whose labels
+        # are the answer key. There is nothing for a cross-check to find there, and the OSD
+        # pass costs a 400 DPI render plus a tesseract run per page: on the eight golden
+        # properties that is ~172 pages of work for a result that is known in advance. The
+        # eval harness draws the same line for the same reason.
+        if settings.orientation_check and getattr(classifier, "needs_page_images", True):
+            checked, reasons = apply_orientation_check(
+                checked,
+                doc.path,
+                doc_role=doc.role,
+                dpi=settings.osd_dpi,
+                arbiter=arbiter,
+            )
+            orientation_reasons.extend(reasons)
+        labels.extend(checked)
+    return labels, usage, orientation_reasons
 
 
 def _segment(

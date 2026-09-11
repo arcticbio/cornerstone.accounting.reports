@@ -4,7 +4,7 @@ Single source of truth for build state. Claude Code ticks tasks here after each 
 commits. Humans read this to see where things stand. Mirrors `docs/PLAN.md`; if they diverge,
 PLAN.md defines the work and this file records what has been done.
 
-**Branch:** `main` — v1 landed there via [#1](https://github.com/arcticbio/cornerstone.accounting.reports/pull/1) (built on the session branch `claude/gifted-lamport-wwgenm`; D-15 — every reference to `build/v1` in these documents means the release line, now `main`) · **Current phase:** 9 (complete) · **Tag:** `v1.0.0` pushed · **Last session note:** all eight properties built against the real model — 6 built, 2 to review, $4.72/run. See "Pick up here" below.
+**Branch:** `main` — v1 landed there via [#1](https://github.com/arcticbio/cornerstone.accounting.reports/pull/1) (built on the session branch `claude/gifted-lamport-wwgenm`; D-15 — every reference to `build/v1` in these documents means the release line, now `main`) · **Current phase:** 9 (complete) · **Tag:** `v1.0.0` pushed · **Last session note:** B-08 fixed; real-model eval run over all 172 pages and now **100 % on every metric**; the orientation defect it surfaced fixed — a page was shipping upside down — and the 59 % record score it reported traced to the metric, not the classifier. #7 merged to `main`; this branch merged it back cleanly. **Top blocker is now B-09: no package can reach Drive.** See "Pick up here" below.
 
 ## Pick up here
 
@@ -37,15 +37,62 @@ properties end to end.
    anyway. The break condition is now qualified, SPEC §6.4 amended, three tests pin both
    directions. **Both properties rebuilt against the real model: `ok`, 25 and 29 pages, exit 0**
    ($1.63 for the pair).
-2. **`crr eval --classifier anthropic`** — the one measurement still missing, and what would
-   quantify B-08's continuation accuracy across all 31 documents. It needs the key, so it has to
-   run in Actions; there is no dispatchable workflow for it yet (CI runs only the golden eval).
-   Adding a `command` input to `build-period.yml`, or a small `eval.yml`, is the cheap way in.
-3. **Log `is_continuation` on `classify.page`** so a run log can answer (1) without the artifact.
-4. **B-04 — Azure.** Untouched and still gated on `AZURE_CREDENTIALS`; `docs/SETUP-AZURE.md` and
+2. ~~**`crr eval --classifier anthropic`**~~ — **run 2026-09-11, locally, now that B-01 is
+   closed.** All 31 documents, 172 pages: **page accuracy 1.0000, continuation 1.0000, boundary
+   F1 1.0000**, gate passed, **$4.66** (`20260910T233821Z`). It found one real defect and one
+   false alarm, and both are now closed — **every metric reads 100 %**:
+   - ~~**orientation 0.00 % (0/1)**~~ — **fixed 2026-09-11.** Not a metric artefact: the
+     classifier named Timber Place p3 `rotated_90_cw` where the truth is `rotated_90_ccw`, the
+     composer applied 270° instead of 90°, and **the page shipped to investors upside down**.
+     Every gate passed — both rotations give the same 792×612 landscape page — so only this
+     metric saw it. Two prompt rewrites made it *worse* (1/4 → 0/4 → 0/6) and were reverted.
+     Orientation is now a cross-check of two independent signals with a discrimination arbiter
+     on disagreement (SPEC §7.6, A-09). Timber Place rebuilt clean, page verified right-side-up,
+     eval orientation now **100 % (1/1)**.
+   - ~~**Missoula `record_qualifier` 59.38 % (38/64)**~~ — **a reporting defect, not a
+     classifier one; fixed 2026-09-11 and now 100.00 % (64/64)** (`20260910T235640Z`, $1.97).
+     Nothing in the pipeline changed — no label, no plan, no output page. The metric compared
+     the string the model printed instead of the record the page lands in, and it did it
+     twice over. Run down with real labels rather than inferred:
+     - Rent Manager prints the `Property:` header on every section-head page and the model
+       transcribes it, while golden carries `null` on a single-record property because
+       `map_qualifier` maps null *and* the matching `pm_name` to the same record. Checked page
+       by page on Fort Grounds: **0 of 16 pages resolve differently**. That was 38 → 62.
+     - The last 2 were WayPointe pages 4 and 7 — `unit_availability` *continuations* where the
+       model correctly returned `null`, exactly as the prompt requires, and the metric scored
+       each page in isolation without the §6.4 inheritance the segmenter applies. Scoring the
+       effective qualifier makes it 64/64.
+     Both real-model label sets are committed as fixtures under `tests/data/`, so the metric is
+     pinned against actual model output rather than a hand-written stub (A-10).
+3. ~~**`crr eval` does not persist per-page predictions.**~~ **Done 2026-09-11.** Both metric
+   defects above had to be re-measured with fresh keyed runs ($4.66 + $1.97) on labels that had
+   not changed. `crr eval` now writes `<report stem>.predictions.json` beside every report, and
+   `crr eval --from <file>` re-scores it under the current metrics with no model calls.
+   Verified over the full corpus: the replayed report is **identical to the live one across all
+   31 documents and 172 pages, in 1.8 s**. `evidence` is omitted from the file — it is a
+   model-written sentence about the page and these files are committed — and the run's token
+   usage is carried so a replay still reports what the run cost.
+4. **A dispatchable eval workflow.** The eval now runs locally, but CI still runs only the
+   golden one; there is no way to trigger a keyed eval from Actions. A `command` input on
+   `build-period.yml`, or a small `eval.yml`, is the cheap way in.
+5. ~~**Log `is_continuation` on `classify.page`**~~ — done; a run log now answers the B-08
+   question without the artifact.
+6. **B-09 — no package can reach Drive.** *(Not this branch's work; it arrived with #7, and it
+   is the top production blocker.)* The service account has no storage quota, so every
+   `--repo gdrive` upload fails `403 storageQuotaExceeded` — including `publish`, which means a
+   gdrive build classifies, composes, and then fails at the last step. Folders are exempt, so
+   the setup looks healthy right up until the first byte. Needs an account change, not a code
+   change: move the Drive root into a **shared drive** with the runner as **Content manager**.
+   `--repo local` is unaffected. See B-09 in `QUESTIONS.md`.
+7. ~~**Two open PRs, neither redundant.**~~ **Settled 2026-09-11.** The operator merged
+   [#7](https://github.com/arcticbio/cornerstone.accounting.reports/pull/7) at 01:33 and `main`
+   merged back into this branch **with no conflicts** — the two had shared history (#7 branched
+   off this branch at `a3deab3`), not the independent implementations this file predicted. The
+   mis-call, and the one-command check that would have caught it, are recorded as B-10.
+8. **B-04 — Azure.** Untouched and still gated on `AZURE_CREDENTIALS`; `docs/SETUP-AZURE.md` and
    `infra/bootstrap.sh` are written and waiting. Actions is a working host in the meantime (D-13),
    so this is a choice, not a blocker.
-5. ~~**B-01's remaining half**~~ — **closed 2026-09-11.** The session container strips
+9. ~~**B-01's remaining half**~~ — **closed 2026-09-11.** The session container strips
    `ANTHROPIC_API_KEY`, but not `CRR_ANTHROPIC_API_KEY`; `settings.py` now reads either name.
    The fix existed on the abandoned branch `claude/ecstatic-goodall-ji7yur` (PR #2) and had never
    reached `main`, which is why this was recorded as impossible. `pytest -m api` runs in-session:
