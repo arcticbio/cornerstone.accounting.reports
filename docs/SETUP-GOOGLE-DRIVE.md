@@ -162,15 +162,26 @@ formality.
 
 3. Set `CRR_GDRIVE_ROOT_FOLDER_ID` to it **everywhere it is configured**:
 
+> **It is not a secret, and it is not in Key Vault.** A folder id is an opaque identifier that
+> is useless without credentials, and `infra/main.bicep` reflects that: `ANTHROPIC_API_KEY` and
+> `GOOGLE_SERVICE_ACCOUNT_B64` reach the container as `secretRef`s backed by the vault, while
+> `CRR_GDRIVE_ROOT_FOLDER_ID` is a plain `value:` on a Bicep parameter. Putting it in the vault
+> would hide it from the people checking their work without protecting anything.
+
 | Where | How |
 |---|---|
-| GitHub Actions | repo → **Settings** → **Secrets and variables** → **Actions** → **Variables** → `CRR_GDRIVE_ROOT_FOLDER_ID` |
-| Azure | Key Vault → the secret of the same name → **+ New Version** (see `SETUP-AZURE-PORTAL.md`) |
-| Claude Code | the cloud environment's variables |
-| Your laptop | `.env` |
+| **GitHub Actions** *(this is also how Azure gets it)* | repo → **Settings** → **Secrets and variables** → **Actions** → **Variables** tab → `CRR_GDRIVE_ROOT_FOLDER_ID` → **edit** → paste the new id → **Save**. Variables, not Secrets. |
+| **Azure** | Nothing to set by hand. `deploy.yml` reads that same repository variable and passes it as the `gdriveRootFolderId` Bicep parameter, which becomes the job's `CRR_GDRIVE_ROOT_FOLDER_ID` environment variable. **Re-run the deploy workflow** after changing it: Actions → **Deploy to Azure** → **Run workflow**. Until you do, the deployed job keeps the old id. |
+| **Claude Code** | the cloud environment's variables |
+| **Your laptop** | `.env` |
 
-Miss one and that host keeps writing to — or failing against — the old folder. The symptom is
-confusing precisely because the *other* hosts will have started working.
+Miss one and that host keeps failing against the old folder — and the symptom is confusing
+precisely because the *others* will have started working.
+
+> **In a hurry?** You can edit the value directly on the Container App Job in the portal
+> (**Containers** → **Edit and deploy** → the container → **Environment variables**). It takes
+> effect on the next execution — but the next run of `deploy.yml` overwrites it from the
+> repository variable, so change the variable too or you will be debugging this twice.
 
 ---
 
