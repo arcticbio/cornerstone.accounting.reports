@@ -107,7 +107,7 @@ class FakeDrive:
         folder_id = self.add_folder(parent_id, name)
         return DriveFile(id=folder_id, name=name, mime_type=FOLDER_MIME)
 
-    def delete(self, file_id: str) -> None:
+    def trash(self, file_id: str) -> None:
         self.deleted.append(file_id)
         node = self._nodes.pop(file_id, None)
         if node is None:

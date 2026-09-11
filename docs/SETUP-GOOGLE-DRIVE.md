@@ -96,9 +96,17 @@ whole trick.
    | Role | |
    |---|---|
    | Viewer, Commenter | ✗ read only — the runner could fetch inputs but not publish |
-   | Contributor | ⚠️ may be enough to upload, but not to remove the runner's own preflight probe. Don't pick it. |
-   | **Content manager** | ✅ **choose this** — everything the runner does, nothing it doesn't |
+   | Contributor | ⚠️ not tested here. Don't pick it; there is no upside. |
+   | **Content manager** | ✅ **choose this** — verified end to end on this drive, 2026-09-11 |
    | Manager | also works, but additionally lets the robot change who has access. No reason to grant that. |
+
+   > **Why not Manager, given it can do more?** Because Content manager is enough, and the
+   > difference is the runner's ability to change the drive's membership. One thing does need
+   > saying: in a shared drive, **only a Manager may permanently delete a file.** A Content
+   > manager can trash. The runner is built for that — its preflight *trashes* its probe rather
+   > than deleting it — so Content manager leaves nothing behind. (This was a real bug: the
+   > first version used permanent delete and left one probe file per run on a correctly
+   > configured drive.)
 
 6. **Untick "Notify people"** if the option appears — nobody is going to read a robot's email.
 7. Click **Send** / **Share**.

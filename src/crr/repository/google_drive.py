@@ -227,7 +227,7 @@ class GoogleDriveRepository:
                 probe.unlink()
         self._children.pop(self._root, None)
         try:
-            self._api.delete(created.id)
+            self._api.trash(created.id)
         except Exception as exc:
             # Cleanup only: the probe is what mattered and it passed. A leftover byte is not
             # worth failing a run over, but it is worth saying so — someone will find the file.

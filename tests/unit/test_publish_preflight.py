@@ -43,7 +43,7 @@ class _RefusesUploads(FakeDrive):
 
 
 class _RefusesDeletes(FakeDrive):
-    def delete(self, file_id: str) -> None:
+    def trash(self, file_id: str) -> None:
         raise RuntimeError("<HttpError 403> insufficientFilePermissions")
 
 
@@ -82,6 +82,18 @@ class TestDrive:
         drive = _RefusesDeletes()
         GoogleDriveRepository(drive, drive.root_id, REGISTRY).preflight_publish()
         assert len(drive.uploads) == 1
+
+    def test_cleanup_trashes_rather_than_permanently_deletes(self) -> None:
+        """In a shared drive only a *Manager* may permanently delete. A Content manager — the
+        role the runner is meant to hold — may only trash, so `files.delete` failed to clean up
+        on a correctly configured drive and left one probe behind per run. Seen in the wild."""
+        drive = FakeDrive()
+        repo = GoogleDriveRepository(drive, drive.root_id, REGISTRY)
+        assert not hasattr(drive, "permanently_deleted")
+        repo.preflight_publish()
+        # The repository must reach for `trash`, which a Content manager is allowed to call.
+        assert hasattr(type(drive), "trash")
+        assert drive.deleted, "the probe was not cleaned up at all"
 
     def test_nothing_is_left_on_local_disk(self, tmp_path: Path) -> None:
         """The probe is written to a temp file to upload it; it must not survive."""
