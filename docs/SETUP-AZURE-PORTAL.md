@@ -393,6 +393,17 @@ az containerapp job execution list --name crr-quarterly --resource-group rg-cust
 definitions and 8 properties. If `version` works and `validate-config` does not, the image is
 fine and the config copy is not — worth reporting as a bug.
 
+Neither touches Drive. To prove the Drive credential end to end — and to see whether a period is
+actually buildable — ask the job what it can see:
+
+```bash
+az containerapp job start --name crr-quarterly --resource-group rg-cust-cornerstone \
+  --args "inspect --repo gdrive --period 2026-09"
+```
+
+It lists each property as `ready` or `NOT READY` and writes nothing. Run it before any real
+build: `NOT READY` everywhere means the period was never staged, not that anything is broken.
+
 ## 5.2 Reading the result
 
 **The runner's exit codes are 0 built, 2 needs review, 1 failed — and Azure marks any non-zero
@@ -516,5 +527,6 @@ repository — so if you take this path, note which CI run the artifact came fro
 | Job execution fails: *UNAUTHORIZED* / manifest unknown | private GHCR image, no pull credentials | 2.3 |
 | Execution *Failed*, logs end with review reasons | **exit code 2 — packages need review** | normal; work the queue per `RUNBOOK.md` |
 | Execution ends `BackoffLimitExceeded` seconds after starting, system logs show the image pulled and the container started | the platform is fine — the runner exited non-zero almost immediately. Most often **Run now** was used, which starts a full build against a period with no inputs in Drive | read `ContainerAppConsoleLogs_CL` (Part 6) for the real error; smoke-test with explicit `--args` per 5.1 |
+| Console logs: `RepositoryError: <property>: no PM source in Drive for period YYYY-MM` for every property | the deployment is working — Drive was read and the expected filename reported. That period simply has no inputs staged | `docs/RUNBOOK.md` → *Preparing a period in Drive*; check with `inspect --repo gdrive --period <id>` before building |
 | Region missing from the Container Apps dropdown | Container Apps is not in that region | recreate the resource group in a supported one |
 | `crr version` works, a real build fails at the classifier | vault's Anthropic key is wrong or expired | Part 7, rotate |
