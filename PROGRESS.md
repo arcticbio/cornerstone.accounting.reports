@@ -146,7 +146,10 @@ properties end to end.
     PLAN Phase 8's acceptance — *job exists, manual start succeeds*. The remaining clause,
     *logs show `crr version`*, is still unproven: the log step used a flag that does not exist.
     Two defects, both in the workflow, both mine, both fixed (**A-13**):
-    - `az containerapp job logs show --job-execution-name` is not a flag. It is `--execution`.
+    - `az containerapp job logs show --job-execution-name` is not a flag. It is `--execution` —
+      and `--tail` is capped at 300, which cost a second run's logs. Both were found by the
+      `--help` dump the step now performs on failure; the second took one run rather than
+      another guess because of it.
     - **`az containerapp job update --args` cannot set a multi-token argument list at all** —
       the CLI reads `--repo` as one of its own flags. So the restore failed and the job was left
       holding `version`, which the 20 October cron would have run to no effect. Repaired within

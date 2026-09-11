@@ -18,7 +18,8 @@ name: Run the Azure job
 #    restores by re-deploying the template — which is the only place the real argument list is
 #    written down anyway.
 # 2. The flag that selects an execution on `job logs show` is `--execution`. Guessing it as
-#    `--job-execution-name` cost a run's logs.
+#    `--job-execution-name` cost a run's logs. `--tail` is capped at 300, which cost a second
+#    run's logs — hence the `--help` dump on failure, which is what found both.
 
 on:
   workflow_dispatch:
@@ -214,8 +215,11 @@ jobs:
           set -uo pipefail
           echo "Waiting 60s for Log Analytics to ingest…"
           sleep 60
+          # --tail is capped at 300 by the CLI ("--tail must be between 0 and 300"), and the
+          # default output format is JSON-wrapped, one object per line. A build prints well
+          # under 300 lines.
           if az containerapp job logs show --name "$JOB" --resource-group "$RG" \
-               --container crr --execution "$EXECUTION" --tail 400; then
+               --container crr --execution "$EXECUTION" --tail 300 --format text; then
             exit 0
           fi
           echo "::warning title=Could not read the logs::Falling back; the accepted flags follow."
