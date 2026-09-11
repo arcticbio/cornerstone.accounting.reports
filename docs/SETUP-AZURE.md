@@ -159,6 +159,10 @@ have it, the step is marked as failed-but-continued and the run prints the exact
 yourself. **This is expected and not a problem** — run the command it prints, then re-run the
 workflow so the job picks the secrets up.
 
+The workflow checks Azure before it warns: if the job's identity can already read the vault —
+because you, or an earlier run, granted it — the step reports that and stays quiet. A warning
+therefore means the access really is missing, not merely that this run could not create it.
+
 Why it cannot be part of the template: the job's identity does not exist until the job does.
 
 ## Step 7 — Smoke test

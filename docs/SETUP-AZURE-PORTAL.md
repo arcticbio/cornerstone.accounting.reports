@@ -339,6 +339,25 @@ does** — which is why this cannot be part of the template.
 5. Wait a minute, then go back to GitHub and **run the deploy workflow again** (Preview
    unticked) so the job picks up secrets it can now read.
 
+### About the "Grant Key Vault access by hand" warning
+
+If you skipped the optional User Access Administrator assignment in 1.8, the deploy's **Grant
+the job read access to Key Vault** step cannot hand out roles and fails with
+`AuthorizationFailed`. That is the expected path, not a problem: the step is marked
+`continue-on-error`, **the job still shows green, and the deployment itself succeeded**. Check
+the **Deploy** step above it — if that is green, your infrastructure is up.
+
+The warning means only *"this workflow could not do the grant for you."* It does not mean the
+grant is missing. Once you have done the steps above, confirm it in **Key Vault → Access control
+(IAM) → Role assignments**: you want a **Key Vault Secrets User** row whose name is
+`crr-quarterly` and whose type is **Managed identity**. If that row is there, the job can read
+its secrets and the warning is stale.
+
+> **The GUIDs in that IAM list are not object IDs.** The portal shows each principal's
+> *client* ID under its name, while the deploy log prints the *object* (principal) ID. They are
+> different values for the same identity, so do not be alarmed when they fail to match — compare
+> the names, not the GUIDs.
+
 ---
 
 # Part 5 — Smoke test
@@ -476,6 +495,7 @@ repository — so if you take this path, note which CI run the artifact came fro
 | Deploy: *AADSTS700016* / app not found | wrong `clientId`, or wrong `tenantId` | 1.9 |
 | Deploy: sign-in fails with no AADSTS code | `AZURE_CREDENTIALS` is not valid JSON | 1.9 |
 | Job execution fails instantly, logs mention a secret | the job's identity cannot read the vault | Part 4, then redeploy |
+| Deploy is green but warns *Grant Key Vault access by hand* | the service principal cannot hand out roles — it says nothing about whether the grant exists | expected if you skipped 1.8; confirm the **Key Vault Secrets User** row for `crr-quarterly` in the vault's IAM and ignore it |
 | Job execution fails: *UNAUTHORIZED* / manifest unknown | private GHCR image, no pull credentials | 2.3 |
 | Execution *Failed*, logs end with review reasons | **exit code 2 — packages need review** | normal; work the queue per `RUNBOOK.md` |
 | Region missing from the Container Apps dropdown | Container Apps is not in that region | recreate the resource group in a supported one |
