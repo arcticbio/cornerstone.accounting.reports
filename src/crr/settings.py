@@ -83,6 +83,10 @@ class Settings(BaseSettings):
     #: the repository layout without writing into `bundle_root` — the June bundle is a
     #: read-only fixture (D-08). Set it to `bundle_root` to publish beside the inputs.
     publish_root: Path | None = None
+    #: Prove the repository can be written to before a run spends anything on classification
+    #: (SPEC §6.1). Off skips the probe and restores the old behaviour — discovering at the
+    #: last stage, once per property, that nothing can be delivered.
+    publish_preflight: bool = True
     google_service_account_b64: Annotated[
         str | None, Field(validation_alias="GOOGLE_SERVICE_ACCOUNT_B64")
     ] = None

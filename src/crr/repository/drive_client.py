@@ -53,6 +53,8 @@ class DriveApi(Protocol):
 
     def create_folder(self, parent_id: str, name: str) -> DriveFile: ...
 
+    def delete(self, file_id: str) -> None: ...
+
 
 def credentials_from_b64(encoded: str) -> Any:
     """Service-account credentials from `GOOGLE_SERVICE_ACCOUNT_B64` (SPEC §12).
@@ -171,3 +173,7 @@ class GoogleDriveApi:
             .execute()
         )
         return DriveFile(id=created["id"], name=created["name"], mime_type=created["mimeType"])
+
+    def delete(self, file_id: str) -> None:
+        """Remove a file. Used to clean up the publish preflight probe (SPEC §6.1)."""
+        self._service.files().delete(fileId=file_id, supportsAllDrives=True).execute()

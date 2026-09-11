@@ -263,6 +263,37 @@ def validate_config() -> None:
 
 
 @app.command()
+def preflight(
+    repo: Annotated[str, typer.Option("--repo", help="local|gdrive")] = "local",
+) -> None:
+    """Check the runner can publish, without building anything (SPEC §6.1).
+
+    This is the verification step at the end of `docs/SETUP-GOOGLE-DRIVE.md`: it writes one
+    byte to the repository root and removes it, which is the only check that actually proves
+    a package could be delivered. `crr build` runs the same probe before it spends anything.
+    """
+    from crr.config import ConfigError, load_config
+    from crr.repository.protocol import RepositoryError
+    from crr.settings import Settings
+
+    settings = Settings()
+    try:
+        bundle = load_config(settings.config_dir)
+    except ConfigError as exc:
+        typer.echo(f"config invalid:\n{exc}", err=True)
+        raise typer.Exit(code=1) from None
+
+    repository = _make_repository(repo, settings, bundle)
+    try:
+        repository.preflight_publish()
+    except RepositoryError as exc:
+        typer.echo(f"FAIL  {repository.name} cannot be written to.\n", err=True)
+        typer.echo(str(exc), err=True)
+        raise typer.Exit(code=1) from None
+    typer.echo(f"ok    {repository.name} accepted a test write, and it was cleaned up.")
+
+
+@app.command()
 def build(
     period: Annotated[
         str | None,
@@ -283,6 +314,7 @@ def build(
     from crr.config import ConfigError, load_config
     from crr.models import BuildStatus
     from crr.pipeline import build_property
+    from crr.repository.protocol import RepositoryError
     from crr.settings import Settings
 
     settings = Settings()
@@ -305,6 +337,16 @@ def build(
         raise typer.Exit(code=1)
 
     repository = _make_repository(repo, settings, bundle)
+    if settings.publish_preflight and not dry_run:
+        # Before the first API call, not after the last one: `publish` is the final stage, so
+        # an unwritable repository otherwise costs a full run's classification per property
+        # to discover (B-09).
+        try:
+            repository.preflight_publish()
+        except RepositoryError as exc:
+            typer.echo(f"cannot publish to {repository.name}: {exc}", err=True)
+            typer.echo("nothing was built; no model calls were made.", err=True)
+            raise typer.Exit(code=1) from None
     results = []
     for property_id in wanted:
         prop = bundle.properties.property(property_id).to_domain()

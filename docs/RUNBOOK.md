@@ -142,8 +142,12 @@ deletes or overwrites: a second publish of the same name lands beside the first 
 > Because folder creation succeeds, the setup looks correct until the first publish. Move the
 > root folder into a **shared drive** and add the service account as **Content manager**: files
 > there are owned by the drive rather than the uploader. No code change is needed — the client
-> already sets `supportsAllDrives`. The alternative, domain-wide delegation, does need one. See
-> `docs/QUESTIONS.md` → **B-09**.
+> already sets `supportsAllDrives`. The alternative, domain-wide delegation, does need one.
+>
+> **Step-by-step: [`SETUP-GOOGLE-DRIVE.md`](SETUP-GOOGLE-DRIVE.md).** Verify with
+> `crr preflight --repo gdrive`, which writes one byte and removes it — the only check that
+> proves a package could actually be delivered. `crr build` runs the same probe before it
+> spends anything. Background: `docs/QUESTIONS.md` → **B-09**.
 
 ---
 
