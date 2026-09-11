@@ -38,9 +38,14 @@ az deployment group create \
   --parameters \
       namePrefix=crr \
       keyVaultName=crr-kv-accounting \
-      gdriveRootFolderId=1_tUMelVG8trnjPmJWul0YXo23VgWgdSc \
+      gdriveRootFolderId=1SQUgfGiw1AIFCEqXlloSQ9CnActFwE7O \
       image=ghcr.io/arcticbio/crr:build-v1
 ```
+
+`gdriveRootFolderId` must name a folder **in a shared drive**. A service account has no storage
+quota of its own, so a root in someone's My Drive creates folders and reads files and then fails
+every upload with `403 storageQuotaExceeded` — see `docs/SETUP-GOOGLE-DRIVE.md`, and prove it
+with `crr preflight --repo gdrive` before deploying.
 
 ## After the first deploy: let the job read the vault
 

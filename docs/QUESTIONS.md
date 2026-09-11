@@ -190,6 +190,21 @@ defaulting, which is the one piece of the schedule's behaviour that has never ru
 available from `Actions → Run the Azure job`.
 *Where:* Drive `inputs/2026-08` (delete it there); nothing in the repository depends on it.
 
+**A-12 · The setup documents gave the old My Drive folder id, not the shared-drive one.**
+*Found 2026-09-11* while tidying Drive, which is the only reason it was found at all.
+`SETUP-CREDENTIALS.md`, `SETUP-AZURE-PORTAL.md` (in two places) and `infra/README.md` all still
+printed `1_tUMelVG8…` as the value to paste into `CRR_GDRIVE_ROOT_FOLDER_ID`. The live
+configuration was already correct — GitHub and Azure both carry the shared-drive id — so nothing
+was broken; but anyone setting up a second environment by following those documents would have
+pointed the runner at a My Drive root and **reproduced B-09 exactly**, right down to the failure
+mode where folders create fine and every upload 403s.
+*What changed:* all four now carry `1SQUgfGiw1…` and a sentence saying the root must be in a
+shared drive, with the reason and a link to `SETUP-GOOGLE-DRIVE.md`.
+*The lesson:* a resolved blocker leaves copies of the broken value behind in the documents that
+told you to set it. Grepping for the old value is the check, and it costs one command.
+*Where:* `docs/SETUP-CREDENTIALS.md`, `docs/SETUP-AZURE-PORTAL.md`, `infra/README.md`. The
+remaining occurrences in `PROGRESS.md` are historical record and are correct as history.
+
 ---
 
 ## Blocked (Claude Code appends here)
@@ -276,6 +291,10 @@ Fort Grounds' four June inputs upload; and `crr build --period 2026-06 --propert
 `Fort Grounds - Investor Report - June 2026.pdf` and its manifest into `output/`. Downloaded back
 out of Drive it is 8 pages, 6 bookmarks, correct `/Title`, **owned by the drive**. The original
 diagnosis below is kept because it explains why this took a day to see.
+*Cleaned up 2026-09-11:* that test package, its manifest and the four June inputs are trashed now
+that they have served their purpose, along with the 29 empty folders in the old My Drive root —
+so do not go looking for them. Trashed, not permanently deleted: recoverable for 30 days, and a
+Content manager cannot permanently delete in a shared drive anyway. The skeletons remain.
 *Two traps found while fixing it, both now in `SETUP-GOOGLE-DRIVE.md`:* the old root could not be
 *moved* (the service account owned every folder under it, and Drive will not move what you do not
 own — it did not need moving, the tree was 29 empty folders); and the runner's preflight cleanup

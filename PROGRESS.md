@@ -129,6 +129,17 @@ properties end to end.
     quarterly cron armed with the right arguments. It reads the arguments to restore out of
     `infra/main.bicep` rather than off the live job, so a job left mutated by an earlier manual
     start gets corrected instead of preserved.
+12. **Drive is tidied, and the setup documents no longer point at the dead root.** Trashed on
+    2026-09-11: the B-09 test package under Fort Grounds / 2026-06 June in the shared drive (four
+    inputs and the whole `output/`, six files), and the 29 abandoned, empty folders in the old
+    My Drive root. Trash rather than permanent delete — reversible for 30 days, and in a shared
+    drive a Content manager may only trash anyway. The shared drive now holds the skeleton plus
+    the 31 rehearsal files and nothing else; `preflight` still passes and `2026-08` still reads
+    8/8 ready. **The find that mattered:** `SETUP-CREDENTIALS.md`, `SETUP-AZURE-PORTAL.md` (twice)
+    and `infra/README.md` all still gave the *old My Drive* folder id as the value to configure —
+    so anyone following them would have rebuilt B-09 exactly. All four now give the shared-drive
+    id and say why it has to be a shared drive. The old root folder itself is left in place,
+    empty.
 11. ~~**B-01's remaining half**~~ — **closed 2026-09-11.** The session container strips
     `ANTHROPIC_API_KEY`, but not `CRR_ANTHROPIC_API_KEY`; `settings.py` now reads either name.
     The fix existed on the abandoned branch `claude/ecstatic-goodall-ji7yur` (PR #2) and had never
