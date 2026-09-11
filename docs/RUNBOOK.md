@@ -10,6 +10,7 @@ work it.
 - [The quarterly checklist](#the-quarterly-checklist)
 - [Preparing a period in Drive](#preparing-a-period-in-drive)
 - [Running a build from GitHub Actions](#running-a-build-from-github-actions)
+- [Running a build on Azure](#running-a-build-on-azure)
 - [Failure modes and what to do about them](#failure-modes-and-what-to-do-about-them)
 - [Adding a property](#adding-a-property)
 - [Adding a property manager](#adding-a-property-manager)
@@ -226,6 +227,50 @@ Set them under **Settings → Secrets and variables → Actions**: the two secre
 UTC on the 20th of January, April, July and October. Uncomment it once a period has been run by
 hand and the review queue is understood. A scheduled run uses the workflow's default inputs, so
 it builds every property from Drive with the real classifier.
+
+---
+
+## Running a build on Azure
+
+The Azure Container Apps Job is the production host. It runs **the same image** as *Build a
+period* with the same secrets, on its own quarterly cron — `0 6 20 1,4,7,10 *`, 06:00 UTC on
+the 20th of January, April, July and October — and it needs no arguments, because the runner
+defaults `--period` to the month just ended, which is exactly the period a run on the 20th
+closes. One-time setup is [`SETUP-AZURE.md`](SETUP-AZURE.md).
+
+### Starting it by hand
+
+**Actions → Run the Azure job → Run workflow.**
+
+| Input | What to put | Default |
+|---|---|---|
+| **args** | `version` · `validate-config` · `build --repo gdrive --classifier anthropic` · or that with `--period 2026-06` | `version` |
+| **wait_minutes** | how long to wait before giving up on the execution | `20` |
+| **restore_args** | leave ticked | ticked |
+
+The first two cost nothing and touch neither Drive nor the model — run them after any deploy.
+The third is a full eight-property keyed build: **about $4.72**.
+
+The workflow sets the arguments on the job, starts it, waits, prints the container's logs, and
+**puts the scheduled arguments back**. That last step matters more than it looks: `--args`
+cannot be passed to `az containerapp job start`, so a manual run has to change the definition
+the quarterly cron reads. Doing it in a terminal means remembering to undo it; here the restore
+runs even if the workflow fails or is cancelled, and it restores from `infra/main.bicep` rather
+than from whatever the job happened to be holding — so a job left mutated by an earlier manual
+start gets corrected, and the run says so.
+
+Untick **restore_args** only if you are deliberately leaving the job pointed somewhere else, and
+put it back before the next scheduled fire.
+
+### Reading the result
+
+Same exit codes as everywhere else (SPEC §6.8) — with one trap. **Azure marks any non-zero exit
+as a failed execution**, and exit 2 means the packages built and one or more went to `review/`.
+An execution showing **Failed** is very often a successful build with a review queue. Read the
+logs before treating it as an incident; the packages and manifests are in Drive either way.
+
+Logs are also in the portal: the resource group → `crr-logs` → **Logs**. Every line is JSON, and
+page text, tenant names, file paths and secrets are never among them.
 
 ---
 
