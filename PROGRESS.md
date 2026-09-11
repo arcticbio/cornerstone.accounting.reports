@@ -64,10 +64,14 @@ properties end to end.
        effective qualifier makes it 64/64.
      Both real-model label sets are committed as fixtures under `tests/data/`, so the metric is
      pinned against actual model output rather than a hand-written stub (A-10).
-3. **`crr eval` does not persist per-page predictions.** Both metric defects above had to be
-   re-measured with fresh keyed runs ($4.66 + $1.97) because the predictions are thrown away
-   with the process. Dumping them beside the report would make any future metric change free to
-   re-score. Cheap, and it would have paid for itself twice today.
+3. ~~**`crr eval` does not persist per-page predictions.**~~ **Done 2026-09-11.** Both metric
+   defects above had to be re-measured with fresh keyed runs ($4.66 + $1.97) on labels that had
+   not changed. `crr eval` now writes `<report stem>.predictions.json` beside every report, and
+   `crr eval --from <file>` re-scores it under the current metrics with no model calls.
+   Verified over the full corpus: the replayed report is **identical to the live one across all
+   31 documents and 172 pages, in 1.8 s**. `evidence` is omitted from the file — it is a
+   model-written sentence about the page and these files are committed — and the run's token
+   usage is carried so a replay still reports what the run cost.
 4. **A dispatchable eval workflow.** The eval now runs locally, but CI still runs only the
    golden one; there is no way to trigger a keyed eval from Actions. A `command` input on
    `build-period.yml`, or a small `eval.yml`, is the cheap way in.

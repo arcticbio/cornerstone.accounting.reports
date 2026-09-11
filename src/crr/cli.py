@@ -421,10 +421,25 @@ def eval_cmd(
     report: Annotated[
         Path | None, typer.Option("--report", help="Write the markdown report here")
     ] = None,
+    from_predictions: Annotated[
+        Path | None,
+        typer.Option(
+            "--from",
+            help="Re-score a saved .predictions.json under the current metrics; no model calls",
+        ),
+    ] = None,
 ) -> None:
     """Score a classifier against the golden labels (SPEC §8)."""
     from crr.config import ConfigError, load_config
     from crr.evaluate import evaluate, gate_failures, render_report, report_filename
+    from crr.evaluate.harness import rescore
+    from crr.evaluate.predictions import (
+        dump_predictions,
+        load_predictions,
+        predictions_filename,
+        predictions_header,
+        predictions_usage,
+    )
     from crr.golden import load_all_golden
     from crr.settings import Settings
 
@@ -436,15 +451,36 @@ def eval_cmd(
         raise typer.Exit(code=1) from None
 
     golden = load_all_golden(settings.golden_dir)
-    result = evaluate(
-        golden,
-        bundle,
-        settings,
-        lambda property_id: _make_classifier(classifier, settings, property_id),
-        property_ids=property_ids,
-        pm_id=pm,
-        arbiter=_make_orientation_arbiter(settings),
-    )
+    if from_predictions is not None:
+        if not from_predictions.is_file():
+            typer.echo(f"no such predictions file: {from_predictions}", err=True)
+            raise typer.Exit(code=1)
+        try:
+            saved = load_predictions(from_predictions)
+            saved_classifier, saved_model, saved_prompt = predictions_header(from_predictions)
+        except (ValueError, KeyError) as exc:
+            typer.echo(f"{from_predictions}: not a predictions file ({exc})", err=True)
+            raise typer.Exit(code=1) from None
+        result = rescore(
+            saved,
+            golden,
+            bundle,
+            classifier=saved_classifier,
+            model=saved_model,
+            prompt_version=saved_prompt,
+            usage=predictions_usage(from_predictions),
+        )
+        typer.echo(f"re-scored {from_predictions} — no model calls")
+    else:
+        result = evaluate(
+            golden,
+            bundle,
+            settings,
+            lambda property_id: _make_classifier(classifier, settings, property_id),
+            property_ids=property_ids,
+            pm_id=pm,
+            arbiter=_make_orientation_arbiter(settings),
+        )
     if not result.documents:
         typer.echo("no golden documents in scope", err=True)
         raise typer.Exit(code=1)
@@ -456,6 +492,10 @@ def eval_cmd(
     destination.parent.mkdir(parents=True, exist_ok=True)
     destination.write_text(text)
     (destination.parent / "LATEST.md").write_text(text)
+    # The labels are the expensive half of an eval and the scoring is pure, so keep them:
+    # a metric that turns out to be wrong is then free to re-measure with `--from` (A-10).
+    predictions_path = destination.parent / predictions_filename(destination.name)
+    dump_predictions(result, predictions_path)
 
     overall = result.overall()
     for manager, scores in sorted(result.by_manager().items()):
@@ -472,6 +512,7 @@ def eval_cmd(
         f"boundary_f1={'—' if overall.boundary.f1 is None else f'{overall.boundary.f1:.4f}'}"
     )
     typer.echo(f"report: {destination}")
+    typer.echo(f"predictions: {predictions_path}")
 
     if failures:
         for failure in failures:

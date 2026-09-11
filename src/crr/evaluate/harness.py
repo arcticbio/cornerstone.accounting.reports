@@ -17,7 +17,7 @@ from crr.classify.protocol import Classifier, PageInput, Usage
 from crr.config.loader import ConfigBundle
 from crr.config.models import SourceSchema
 from crr.evaluate.metrics import Scores, score_boundaries, score_document
-from crr.golden import GoldenProperty
+from crr.golden import GoldenDocument, GoldenProperty
 from crr.log import get_logger
 from crr.models import PageClassification, Property, SourceDocument
 from crr.preprocess.ocr import ocr_if_needed
@@ -100,6 +100,81 @@ def evaluate(
         result.documents.extend(documents)
         result.usage.add(usage)
         log.info("eval.property_done", property=property_id)
+    result.duration_s = time.monotonic() - started
+    return result
+
+
+def score_predictions(
+    golden: GoldenProperty,
+    golden_doc: GoldenDocument,
+    predictions: list[PageClassification],
+    schema: SourceSchema,
+    prop: Property,
+) -> Scores:
+    """Every SPEC §8 metric for one document, given labels from anywhere.
+
+    Pure: no model, no PDFs. That is what lets `crr eval --from` re-score a saved run when a
+    metric turns out to be wrong, instead of paying for the labels again (A-10).
+    """
+    scores = score_document(
+        golden_doc,
+        predictions,
+        score_record=golden_doc.schema_id in RECORD_SCORED_SCHEMAS,
+        golden_record_names={r.id: r.pm_name for r in golden.records} | {None: None},
+        resolve_record=partial(_resolve_record, prop, schema),
+        effective_qualifiers=_effective_by_page(predictions),
+    )
+    golden_labels = golden.classifications(golden_doc.role)
+    scores.boundary = score_boundaries(
+        list(segment(golden_labels, schema, prop, golden_doc.role).sections),
+        list(segment(predictions, schema, prop, golden_doc.role).sections),
+    )
+    return scores
+
+
+def rescore(
+    saved: dict[tuple[str, str], list[PageClassification]],
+    golden: dict[str, GoldenProperty],
+    config: ConfigBundle,
+    *,
+    classifier: str,
+    model: str | None,
+    prompt_version: str | None,
+    usage: Usage | None = None,
+) -> EvalResult:
+    """Re-score a saved run under the current metrics. No model calls, no cost.
+
+    The saved labels are already past the §7.6 orientation cross-check — that is what was
+    scored and what a build would have composed — so it is not re-applied here.
+    """
+    started = time.monotonic()
+    result = EvalResult(classifier=classifier, model=model, prompt_version=prompt_version)
+    if usage is not None:
+        result.usage = usage
+    # Insertion order, not sorted: the file was written in the live run's document order, so
+    # a replayed report diffs cleanly against the one it was replayed from.
+    for (property_id, doc_role), predictions in saved.items():
+        entry = golden.get(property_id)
+        if entry is None:
+            log.warning("eval.rescore_unknown_property", property=property_id)
+            continue
+        golden_doc = next((d for d in entry.documents if d.role == doc_role), None)
+        if golden_doc is None:
+            log.warning("eval.rescore_unknown_role", property=property_id, role=doc_role)
+            continue
+        prop = config.properties.property(property_id).to_domain()
+        schema = config.schemas[golden_doc.schema_id]
+        result.documents.append(
+            DocumentResult(
+                property_id=property_id,
+                pm_id=entry.pm_id,
+                doc_role=doc_role,
+                schema_id=golden_doc.schema_id,
+                pages=len(golden_doc.pages),
+                scores=score_predictions(entry, golden_doc, predictions, schema, prop),
+                predictions=predictions,
+            )
+        )
     result.duration_s = time.monotonic() - started
     return result
 
@@ -194,19 +269,7 @@ def _evaluate_property(
                 arbiter=arbiter,
             )
 
-        scores = score_document(
-            golden_doc,
-            predictions,
-            score_record=golden_doc.schema_id in RECORD_SCORED_SCHEMAS,
-            golden_record_names={r.id: r.pm_name for r in golden.records} | {None: None},
-            resolve_record=partial(_resolve_record, prop, schema),
-            effective_qualifiers=_effective_by_page(predictions),
-        )
-        golden_labels = golden.classifications(golden_doc.role)
-        scores.boundary = score_boundaries(
-            list(segment(golden_labels, schema, prop, golden_doc.role).sections),
-            list(segment(predictions, schema, prop, golden_doc.role).sections),
-        )
+        scores = score_predictions(golden, golden_doc, predictions, schema, prop)
         out.append(
             DocumentResult(
                 property_id=golden.property_id,

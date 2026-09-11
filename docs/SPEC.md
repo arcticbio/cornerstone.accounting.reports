@@ -578,6 +578,7 @@ that shipped an upside-down page.
 ## 8. Eval harness
 
 `crr eval --classifier anthropic [--pm <id>] [--property <id>] [--report eval/reports/<ts>.md]`
+`crr eval --from eval/reports/<ts>.predictions.json [--report <path>] [--gate]` — re-score only
 
 For every golden document: preprocess exactly as `build` does (OCR first for `text_layer:
 never` schemas, so the classifier sees the same page images a build would), run the classifier
@@ -607,6 +608,15 @@ demand and before any prompt or model change is merged.
 
 `crr eval` writes `eval/reports/<timestamp>-<model>-<prompt_version>.md` and updates
 `eval/reports/LATEST.md`. Reports are committed.
+
+Beside each report it also writes `<same stem>.predictions.json`: every page label the run
+produced, `evidence` omitted (§15 keeps page text out of the repository, and nothing scores it),
+plus the run's token usage so a replay still states what it cost. `crr eval --from <file>`
+re-scores those labels under the current metrics with no model calls — a replay reproduces the
+report it replays, line for line, in about two seconds. This exists because correcting a metric
+used to mean paying for the labels again: A-09 and A-10 cost $4.66 and $1.97 to re-measure on
+labels that had not changed. The saved labels are already past the §7.6 cross-check, which is
+what was scored and what a build would have composed, so `--from` does not re-apply it.
 
 ---
 

@@ -1,0 +1,2329 @@
+{
+  "format_version": 1,
+  "classifier": "golden",
+  "model": null,
+  "prompt_version": null,
+  "written_at": "2026-09-11T00:07:34+00:00",
+  "usage": {
+    "input_tokens": 0,
+    "cache_read_tokens": 0,
+    "cache_write_tokens": 0,
+    "output_tokens": 0,
+    "api_calls": 0,
+    "latency_ms": 0
+  },
+  "documents": [
+    {
+      "property_id": "bridgewater",
+      "pm_id": "cobalt",
+      "doc_role": "pm_source",
+      "schema_id": "cobalt",
+      "pages": [
+        {
+          "doc_role": "pm_source",
+          "page": 1,
+          "section_id": "owner_statement",
+          "is_continuation": false,
+          "record_qualifier": null,
+          "orientation": "upright",
+          "confidence": 1.0,
+          "footer_label": null,
+          "footer_agrees": null,
+          "classifier": "golden"
+        },
+        {
+          "doc_role": "pm_source",
+          "page": 2,
+          "section_id": "owner_statement",
+          "is_continuation": true,
+          "record_qualifier": null,
+          "orientation": "upright",
+          "confidence": 1.0,
+          "footer_label": null,
+          "footer_agrees": null,
+          "classifier": "golden"
+        },
+        {
+          "doc_role": "pm_source",
+          "page": 3,
+          "section_id": "owner_statement",
+          "is_continuation": true,
+          "record_qualifier": null,
+          "orientation": "upright",
+          "confidence": 1.0,
+          "footer_label": null,
+          "footer_agrees": null,
+          "classifier": "golden"
+        },
+        {
+          "doc_role": "pm_source",
+          "page": 4,
+          "section_id": "owner_statement",
+          "is_continuation": true,
+          "record_qualifier": null,
+          "orientation": "upright",
+          "confidence": 1.0,
+          "footer_label": null,
+          "footer_agrees": null,
+          "classifier": "golden"
+        },
+        {
+          "doc_role": "pm_source",
+          "page": 5,
+          "section_id": "owner_statement",
+          "is_continuation": true,
+          "record_qualifier": null,
+          "orientation": "upright",
+          "confidence": 1.0,
+          "footer_label": null,
+          "footer_agrees": null,
+          "classifier": "golden"
+        },
+        {
+          "doc_role": "pm_source",
+          "page": 6,
+          "section_id": "owner_statement",
+          "is_continuation": true,
+          "record_qualifier": null,
+          "orientation": "upright",
+          "confidence": 1.0,
+          "footer_label": null,
+          "footer_agrees": null,
+          "classifier": "golden"
+        },
+        {
+          "doc_role": "pm_source",
+          "page": 7,
+          "section_id": "owner_statement",
+          "is_continuation": true,
+          "record_qualifier": null,
+          "orientation": "upright",
+          "confidence": 1.0,
+          "footer_label": null,
+          "footer_agrees": null,
+          "classifier": "golden"
+        },
+        {
+          "doc_role": "pm_source",
+          "page": 8,
+          "section_id": "owner_statement",
+          "is_continuation": true,
+          "record_qualifier": null,
+          "orientation": "upright",
+          "confidence": 1.0,
+          "footer_label": null,
+          "footer_agrees": null,
+          "classifier": "golden"
+        },
+        {
+          "doc_role": "pm_source",
+          "page": 9,
+          "section_id": "owner_statement",
+          "is_continuation": true,
+          "record_qualifier": null,
+          "orientation": "upright",
+          "confidence": 1.0,
+          "footer_label": null,
+          "footer_agrees": null,
+          "classifier": "golden"
+        },
+        {
+          "doc_role": "pm_source",
+          "page": 10,
+          "section_id": "cash_flow_12_month",
+          "is_continuation": false,
+          "record_qualifier": null,
+          "orientation": "upright",
+          "confidence": 1.0,
+          "footer_label": null,
+          "footer_agrees": null,
+          "classifier": "golden"
+        },
+        {
+          "doc_role": "pm_source",
+          "page": 11,
+          "section_id": "cash_flow_12_month",
+          "is_continuation": true,
+          "record_qualifier": null,
+          "orientation": "upright",
+          "confidence": 1.0,
+          "footer_label": null,
+          "footer_agrees": null,
+          "classifier": "golden"
+        },
+        {
+          "doc_role": "pm_source",
+          "page": 12,
+          "section_id": "cash_flow_12_month",
+          "is_continuation": true,
+          "record_qualifier": null,
+          "orientation": "upright",
+          "confidence": 1.0,
+          "footer_label": null,
+          "footer_agrees": null,
+          "classifier": "golden"
+        },
+        {
+          "doc_role": "pm_source",
+          "page": 13,
+          "section_id": "cash_flow_12_month",
+          "is_continuation": true,
+          "record_qualifier": null,
+          "orientation": "upright",
+          "confidence": 1.0,
+          "footer_label": null,
+          "footer_agrees": null,
+          "classifier": "golden"
+        },
+        {
+          "doc_role": "pm_source",
+          "page": 14,
+          "section_id": "rent_roll",
+          "is_continuation": false,
+          "record_qualifier": null,
+          "orientation": "upright",
+          "confidence": 1.0,
+          "footer_label": null,
+          "footer_agrees": null,
+          "classifier": "golden"
+        },
+        {
+          "doc_role": "pm_source",
+          "page": 15,
+          "section_id": "rent_roll",
+          "is_continuation": true,
+          "record_qualifier": null,
+          "orientation": "upright",
+          "confidence": 1.0,
+          "footer_label": null,
+          "footer_agrees": null,
+          "classifier": "golden"
+        },
+        {
+          "doc_role": "pm_source",
+          "page": 16,
+          "section_id": "rent_roll",
+          "is_continuation": true,
+          "record_qualifier": null,
+          "orientation": "upright",
+          "confidence": 1.0,
+          "footer_label": null,
+          "footer_agrees": null,
+          "classifier": "golden"
+        },
+        {
+          "doc_role": "pm_source",
+          "page": 17,
+          "section_id": "balance_sheet",
+          "is_continuation": false,
+          "record_qualifier": null,
+          "orientation": "upright",
+          "confidence": 1.0,
+          "footer_label": null,
+          "footer_agrees": null,
+          "classifier": "golden"
+        },
+        {
+          "doc_role": "pm_source",
+          "page": 18,
+          "section_id": "annual_budget_comparative",
+          "is_continuation": false,
+          "record_qualifier": null,
+          "orientation": "upright",
+          "confidence": 1.0,
+          "footer_label": null,
+          "footer_agrees": null,
+          "classifier": "golden"
+        },
+        {
+          "doc_role": "pm_source",
+          "page": 19,
+          "section_id": "annual_budget_comparative",
+          "is_continuation": true,
+          "record_qualifier": null,
+          "orientation": "upright",
+          "confidence": 1.0,
+          "footer_label": null,
+          "footer_agrees": null,
+          "classifier": "golden"
+        },
+        {
+          "doc_role": "pm_source",
+          "page": 20,
+          "section_id": "annual_budget_comparative",
+          "is_continuation": true,
+          "record_qualifier": null,
+          "orientation": "upright",
+          "confidence": 1.0,
+          "footer_label": null,
+          "footer_agrees": null,
+          "classifier": "golden"
+        },
+        {
+          "doc_role": "pm_source",
+          "page": 21,
+          "section_id": "annual_budget_comparative",
+          "is_continuation": true,
+          "record_qualifier": null,
+          "orientation": "upright",
+          "confidence": 1.0,
+          "footer_label": null,
+          "footer_agrees": null,
+          "classifier": "golden"
+        }
+      ]
+    },
+    {
+      "property_id": "bridgewater",
+      "pm_id": "cobalt",
+      "doc_role": "cornerstone_balance_sheet",
+      "schema_id": "cornerstone-qbo",
+      "pages": [
+        {
+          "doc_role": "cornerstone_balance_sheet",
+          "page": 1,
+          "section_id": "balance_sheet",
+          "is_continuation": false,
+          "record_qualifier": null,
+          "orientation": "upright",
+          "confidence": 1.0,
+          "footer_label": null,
+          "footer_agrees": null,
+          "classifier": "golden"
+        }
+      ]
+    },
+    {
+      "property_id": "bridgewater",
+      "pm_id": "cobalt",
+      "doc_role": "cornerstone_profit_loss_ytd",
+      "schema_id": "cornerstone-qbo",
+      "pages": [
+        {
+          "doc_role": "cornerstone_profit_loss_ytd",
+          "page": 1,
+          "section_id": "profit_loss_ytd_comparison",
+          "is_continuation": false,
+          "record_qualifier": null,
+          "orientation": "upright",
+          "confidence": 1.0,
+          "footer_label": null,
+          "footer_agrees": null,
+          "classifier": "golden"
+        }
+      ]
+    },
+    {
+      "property_id": "bridgewater",
+      "pm_id": "cobalt",
+      "doc_role": "cornerstone_distribution_schedule",
+      "schema_id": "cornerstone-qbo",
+      "pages": [
+        {
+          "doc_role": "cornerstone_distribution_schedule",
+          "page": 1,
+          "section_id": "investor_distribution_schedule",
+          "is_continuation": false,
+          "record_qualifier": null,
+          "orientation": "upright",
+          "confidence": 1.0,
+          "footer_label": null,
+          "footer_agrees": null,
+          "classifier": "golden"
+        }
+      ]
+    },
+    {
+      "property_id": "fort-grounds",
+      "pm_id": "missoula",
+      "doc_role": "pm_source",
+      "schema_id": "rentmanager-missoula",
+      "pages": [
+        {
+          "doc_role": "pm_source",
+          "page": 1,
+          "section_id": "owner_statement",
+          "is_continuation": false,
+          "record_qualifier": null,
+          "orientation": "upright",
+          "confidence": 1.0,
+          "footer_label": null,
+          "footer_agrees": null,
+          "classifier": "golden"
+        },
+        {
+          "doc_role": "pm_source",
+          "page": 2,
+          "section_id": "owner_statement",
+          "is_continuation": true,
+          "record_qualifier": null,
+          "orientation": "upright",
+          "confidence": 1.0,
+          "footer_label": null,
+          "footer_agrees": null,
+          "classifier": "golden"
+        },
+        {
+          "doc_role": "pm_source",
+          "page": 3,
+          "section_id": "profit_loss_comparison",
+          "is_continuation": false,
+          "record_qualifier": null,
+          "orientation": "upright",
+          "confidence": 1.0,
+          "footer_label": null,
+          "footer_agrees": null,
+          "classifier": "golden"
+        },
+        {
+          "doc_role": "pm_source",
+          "page": 4,
+          "section_id": "unit_availability",
+          "is_continuation": false,
+          "record_qualifier": null,
+          "orientation": "upright",
+          "confidence": 1.0,
+          "footer_label": null,
+          "footer_agrees": null,
+          "classifier": "golden"
+        },
+        {
+          "doc_role": "pm_source",
+          "page": 5,
+          "section_id": "unit_availability",
+          "is_continuation": true,
+          "record_qualifier": null,
+          "orientation": "upright",
+          "confidence": 1.0,
+          "footer_label": null,
+          "footer_agrees": null,
+          "classifier": "golden"
+        },
+        {
+          "doc_role": "pm_source",
+          "page": 6,
+          "section_id": "financial_statement",
+          "is_continuation": false,
+          "record_qualifier": null,
+          "orientation": "upright",
+          "confidence": 1.0,
+          "footer_label": null,
+          "footer_agrees": null,
+          "classifier": "golden"
+        },
+        {
+          "doc_role": "pm_source",
+          "page": 7,
+          "section_id": "financial_statement",
+          "is_continuation": true,
+          "record_qualifier": null,
+          "orientation": "upright",
+          "confidence": 1.0,
+          "footer_label": null,
+          "footer_agrees": null,
+          "classifier": "golden"
+        },
+        {
+          "doc_role": "pm_source",
+          "page": 8,
+          "section_id": "rent_roll_analysis",
+          "is_continuation": false,
+          "record_qualifier": null,
+          "orientation": "upright",
+          "confidence": 1.0,
+          "footer_label": null,
+          "footer_agrees": null,
+          "classifier": "golden"
+        },
+        {
+          "doc_role": "pm_source",
+          "page": 9,
+          "section_id": "rent_roll_analysis",
+          "is_continuation": true,
+          "record_qualifier": null,
+          "orientation": "upright",
+          "confidence": 1.0,
+          "footer_label": null,
+          "footer_agrees": null,
+          "classifier": "golden"
+        },
+        {
+          "doc_role": "pm_source",
+          "page": 10,
+          "section_id": "general_ledger",
+          "is_continuation": false,
+          "record_qualifier": null,
+          "orientation": "upright",
+          "confidence": 1.0,
+          "footer_label": null,
+          "footer_agrees": null,
+          "classifier": "golden"
+        },
+        {
+          "doc_role": "pm_source",
+          "page": 11,
+          "section_id": "actual_budget_fy_analysis",
+          "is_continuation": false,
+          "record_qualifier": null,
+          "orientation": "upright",
+          "confidence": 1.0,
+          "footer_label": null,
+          "footer_agrees": null,
+          "classifier": "golden"
+        },
+        {
+          "doc_role": "pm_source",
+          "page": 12,
+          "section_id": "actual_budget_fy_analysis",
+          "is_continuation": true,
+          "record_qualifier": null,
+          "orientation": "upright",
+          "confidence": 1.0,
+          "footer_label": null,
+          "footer_agrees": null,
+          "classifier": "golden"
+        },
+        {
+          "doc_role": "pm_source",
+          "page": 13,
+          "section_id": "actual_budget_fy_analysis",
+          "is_continuation": true,
+          "record_qualifier": null,
+          "orientation": "upright",
+          "confidence": 1.0,
+          "footer_label": null,
+          "footer_agrees": null,
+          "classifier": "golden"
+        },
+        {
+          "doc_role": "pm_source",
+          "page": 14,
+          "section_id": "rent_roll_bank",
+          "is_continuation": false,
+          "record_qualifier": null,
+          "orientation": "upright",
+          "confidence": 1.0,
+          "footer_label": null,
+          "footer_agrees": null,
+          "classifier": "golden"
+        },
+        {
+          "doc_role": "pm_source",
+          "page": 15,
+          "section_id": "rent_roll_bank",
+          "is_continuation": true,
+          "record_qualifier": null,
+          "orientation": "upright",
+          "confidence": 1.0,
+          "footer_label": null,
+          "footer_agrees": null,
+          "classifier": "golden"
+        },
+        {
+          "doc_role": "pm_source",
+          "page": 16,
+          "section_id": "delinquency",
+          "is_continuation": false,
+          "record_qualifier": null,
+          "orientation": "upright",
+          "confidence": 1.0,
+          "footer_label": null,
+          "footer_agrees": null,
+          "classifier": "golden"
+        }
+      ]
+    },
+    {
+      "property_id": "fort-grounds",
+      "pm_id": "missoula",
+      "doc_role": "cornerstone_balance_sheet",
+      "schema_id": "cornerstone-qbo",
+      "pages": [
+        {
+          "doc_role": "cornerstone_balance_sheet",
+          "page": 1,
+          "section_id": "balance_sheet",
+          "is_continuation": false,
+          "record_qualifier": null,
+          "orientation": "upright",
+          "confidence": 1.0,
+          "footer_label": null,
+          "footer_agrees": null,
+          "classifier": "golden"
+        }
+      ]
+    },
+    {
+      "property_id": "fort-grounds",
+      "pm_id": "missoula",
+      "doc_role": "cornerstone_profit_loss_ytd",
+      "schema_id": "cornerstone-qbo",
+      "pages": [
+        {
+          "doc_role": "cornerstone_profit_loss_ytd",
+          "page": 1,
+          "section_id": "profit_loss_ytd_comparison",
+          "is_continuation": false,
+          "record_qualifier": null,
+          "orientation": "upright",
+          "confidence": 1.0,
+          "footer_label": null,
+          "footer_agrees": null,
+          "classifier": "golden"
+        }
+      ]
+    },
+    {
+      "property_id": "fort-grounds",
+      "pm_id": "missoula",
+      "doc_role": "cornerstone_distribution_schedule",
+      "schema_id": "cornerstone-qbo",
+      "pages": [
+        {
+          "doc_role": "cornerstone_distribution_schedule",
+          "page": 1,
+          "section_id": "investor_distribution_schedule",
+          "is_continuation": false,
+          "record_qualifier": null,
+          "orientation": "upright",
+          "confidence": 1.0,
+          "footer_label": null,
+          "footer_agrees": null,
+          "classifier": "golden"
+        }
+      ]
+    },
+    {
+      "property_id": "lolo-peak-village",
+      "pm_id": "missoula",
+      "doc_role": "pm_source",
+      "schema_id": "rentmanager-missoula",
+      "pages": [
+        {
+          "doc_role": "pm_source",
+          "page": 1,
+          "section_id": "owner_statement",
+          "is_continuation": false,
+          "record_qualifier": null,
+          "orientation": "upright",
+          "confidence": 1.0,
+          "footer_label": null,
+          "footer_agrees": null,
+          "classifier": "golden"
+        },
+        {
+          "doc_role": "pm_source",
+          "page": 2,
+          "section_id": "owner_statement",
+          "is_continuation": true,
+          "record_qualifier": null,
+          "orientation": "upright",
+          "confidence": 1.0,
+          "footer_label": null,
+          "footer_agrees": null,
+          "classifier": "golden"
+        },
+        {
+          "doc_role": "pm_source",
+          "page": 3,
+          "section_id": "profit_loss_comparison",
+          "is_continuation": false,
+          "record_qualifier": null,
+          "orientation": "upright",
+          "confidence": 1.0,
+          "footer_label": null,
+          "footer_agrees": null,
+          "classifier": "golden"
+        },
+        {
+          "doc_role": "pm_source",
+          "page": 4,
+          "section_id": "unit_availability",
+          "is_continuation": false,
+          "record_qualifier": null,
+          "orientation": "upright",
+          "confidence": 1.0,
+          "footer_label": null,
+          "footer_agrees": null,
+          "classifier": "golden"
+        },
+        {
+          "doc_role": "pm_source",
+          "page": 5,
+          "section_id": "unit_availability",
+          "is_continuation": true,
+          "record_qualifier": null,
+          "orientation": "upright",
+          "confidence": 1.0,
+          "footer_label": null,
+          "footer_agrees": null,
+          "classifier": "golden"
+        },
+        {
+          "doc_role": "pm_source",
+          "page": 6,
+          "section_id": "financial_statement",
+          "is_continuation": false,
+          "record_qualifier": null,
+          "orientation": "upright",
+          "confidence": 1.0,
+          "footer_label": null,
+          "footer_agrees": null,
+          "classifier": "golden"
+        },
+        {
+          "doc_role": "pm_source",
+          "page": 7,
+          "section_id": "financial_statement",
+          "is_continuation": true,
+          "record_qualifier": null,
+          "orientation": "upright",
+          "confidence": 1.0,
+          "footer_label": null,
+          "footer_agrees": null,
+          "classifier": "golden"
+        },
+        {
+          "doc_role": "pm_source",
+          "page": 8,
+          "section_id": "rent_roll_analysis",
+          "is_continuation": false,
+          "record_qualifier": null,
+          "orientation": "upright",
+          "confidence": 1.0,
+          "footer_label": null,
+          "footer_agrees": null,
+          "classifier": "golden"
+        },
+        {
+          "doc_role": "pm_source",
+          "page": 9,
+          "section_id": "rent_roll_analysis",
+          "is_continuation": true,
+          "record_qualifier": null,
+          "orientation": "upright",
+          "confidence": 1.0,
+          "footer_label": null,
+          "footer_agrees": null,
+          "classifier": "golden"
+        },
+        {
+          "doc_role": "pm_source",
+          "page": 10,
+          "section_id": "general_ledger",
+          "is_continuation": false,
+          "record_qualifier": null,
+          "orientation": "upright",
+          "confidence": 1.0,
+          "footer_label": null,
+          "footer_agrees": null,
+          "classifier": "golden"
+        },
+        {
+          "doc_role": "pm_source",
+          "page": 11,
+          "section_id": "actual_budget_fy_analysis",
+          "is_continuation": false,
+          "record_qualifier": null,
+          "orientation": "upright",
+          "confidence": 1.0,
+          "footer_label": null,
+          "footer_agrees": null,
+          "classifier": "golden"
+        },
+        {
+          "doc_role": "pm_source",
+          "page": 12,
+          "section_id": "actual_budget_fy_analysis",
+          "is_continuation": true,
+          "record_qualifier": null,
+          "orientation": "upright",
+          "confidence": 1.0,
+          "footer_label": null,
+          "footer_agrees": null,
+          "classifier": "golden"
+        },
+        {
+          "doc_role": "pm_source",
+          "page": 13,
+          "section_id": "actual_budget_fy_analysis",
+          "is_continuation": true,
+          "record_qualifier": null,
+          "orientation": "upright",
+          "confidence": 1.0,
+          "footer_label": null,
+          "footer_agrees": null,
+          "classifier": "golden"
+        },
+        {
+          "doc_role": "pm_source",
+          "page": 14,
+          "section_id": "rent_roll_bank",
+          "is_continuation": false,
+          "record_qualifier": null,
+          "orientation": "upright",
+          "confidence": 1.0,
+          "footer_label": null,
+          "footer_agrees": null,
+          "classifier": "golden"
+        },
+        {
+          "doc_role": "pm_source",
+          "page": 15,
+          "section_id": "delinquency",
+          "is_continuation": false,
+          "record_qualifier": null,
+          "orientation": "upright",
+          "confidence": 1.0,
+          "footer_label": null,
+          "footer_agrees": null,
+          "classifier": "golden"
+        }
+      ]
+    },
+    {
+      "property_id": "lolo-peak-village",
+      "pm_id": "missoula",
+      "doc_role": "cornerstone_balance_sheet",
+      "schema_id": "cornerstone-qbo",
+      "pages": [
+        {
+          "doc_role": "cornerstone_balance_sheet",
+          "page": 1,
+          "section_id": "balance_sheet",
+          "is_continuation": false,
+          "record_qualifier": null,
+          "orientation": "upright",
+          "confidence": 1.0,
+          "footer_label": null,
+          "footer_agrees": null,
+          "classifier": "golden"
+        }
+      ]
+    },
+    {
+      "property_id": "lolo-peak-village",
+      "pm_id": "missoula",
+      "doc_role": "cornerstone_profit_loss_ytd",
+      "schema_id": "cornerstone-qbo",
+      "pages": [
+        {
+          "doc_role": "cornerstone_profit_loss_ytd",
+          "page": 1,
+          "section_id": "profit_loss_ytd_comparison",
+          "is_continuation": false,
+          "record_qualifier": null,
+          "orientation": "upright",
+          "confidence": 1.0,
+          "footer_label": null,
+          "footer_agrees": null,
+          "classifier": "golden"
+        }
+      ]
+    },
+    {
+      "property_id": "lolo-peak-village",
+      "pm_id": "missoula",
+      "doc_role": "cornerstone_distribution_schedule",
+      "schema_id": "cornerstone-qbo",
+      "pages": [
+        {
+          "doc_role": "cornerstone_distribution_schedule",
+          "page": 1,
+          "section_id": "investor_distribution_schedule",
+          "is_continuation": false,
+          "record_qualifier": null,
+          "orientation": "upright",
+          "confidence": 1.0,
+          "footer_label": null,
+          "footer_agrees": null,
+          "classifier": "golden"
+        }
+      ]
+    },
+    {
+      "property_id": "mullan-crossing",
+      "pm_id": "missoula",
+      "doc_role": "pm_source",
+      "schema_id": "rentmanager-missoula",
+      "pages": [
+        {
+          "doc_role": "pm_source",
+          "page": 1,
+          "section_id": "owner_statement",
+          "is_continuation": false,
+          "record_qualifier": null,
+          "orientation": "upright",
+          "confidence": 1.0,
+          "footer_label": null,
+          "footer_agrees": null,
+          "classifier": "golden"
+        },
+        {
+          "doc_role": "pm_source",
+          "page": 2,
+          "section_id": "owner_statement",
+          "is_continuation": true,
+          "record_qualifier": null,
+          "orientation": "upright",
+          "confidence": 1.0,
+          "footer_label": null,
+          "footer_agrees": null,
+          "classifier": "golden"
+        },
+        {
+          "doc_role": "pm_source",
+          "page": 3,
+          "section_id": "profit_loss_comparison",
+          "is_continuation": false,
+          "record_qualifier": null,
+          "orientation": "upright",
+          "confidence": 1.0,
+          "footer_label": null,
+          "footer_agrees": null,
+          "classifier": "golden"
+        },
+        {
+          "doc_role": "pm_source",
+          "page": 4,
+          "section_id": "unit_availability",
+          "is_continuation": false,
+          "record_qualifier": null,
+          "orientation": "upright",
+          "confidence": 1.0,
+          "footer_label": null,
+          "footer_agrees": null,
+          "classifier": "golden"
+        },
+        {
+          "doc_role": "pm_source",
+          "page": 5,
+          "section_id": "unit_availability",
+          "is_continuation": true,
+          "record_qualifier": null,
+          "orientation": "upright",
+          "confidence": 1.0,
+          "footer_label": null,
+          "footer_agrees": null,
+          "classifier": "golden"
+        },
+        {
+          "doc_role": "pm_source",
+          "page": 6,
+          "section_id": "financial_statement",
+          "is_continuation": false,
+          "record_qualifier": null,
+          "orientation": "upright",
+          "confidence": 1.0,
+          "footer_label": null,
+          "footer_agrees": null,
+          "classifier": "golden"
+        },
+        {
+          "doc_role": "pm_source",
+          "page": 7,
+          "section_id": "financial_statement",
+          "is_continuation": true,
+          "record_qualifier": null,
+          "orientation": "upright",
+          "confidence": 1.0,
+          "footer_label": null,
+          "footer_agrees": null,
+          "classifier": "golden"
+        },
+        {
+          "doc_role": "pm_source",
+          "page": 8,
+          "section_id": "rent_roll_analysis",
+          "is_continuation": false,
+          "record_qualifier": null,
+          "orientation": "upright",
+          "confidence": 1.0,
+          "footer_label": null,
+          "footer_agrees": null,
+          "classifier": "golden"
+        },
+        {
+          "doc_role": "pm_source",
+          "page": 9,
+          "section_id": "rent_roll_analysis",
+          "is_continuation": true,
+          "record_qualifier": null,
+          "orientation": "upright",
+          "confidence": 1.0,
+          "footer_label": null,
+          "footer_agrees": null,
+          "classifier": "golden"
+        },
+        {
+          "doc_role": "pm_source",
+          "page": 10,
+          "section_id": "rent_roll_analysis",
+          "is_continuation": true,
+          "record_qualifier": null,
+          "orientation": "upright",
+          "confidence": 1.0,
+          "footer_label": null,
+          "footer_agrees": null,
+          "classifier": "golden"
+        },
+        {
+          "doc_role": "pm_source",
+          "page": 11,
+          "section_id": "general_ledger",
+          "is_continuation": false,
+          "record_qualifier": null,
+          "orientation": "upright",
+          "confidence": 1.0,
+          "footer_label": null,
+          "footer_agrees": null,
+          "classifier": "golden"
+        },
+        {
+          "doc_role": "pm_source",
+          "page": 12,
+          "section_id": "actual_budget_fy_analysis",
+          "is_continuation": false,
+          "record_qualifier": null,
+          "orientation": "upright",
+          "confidence": 1.0,
+          "footer_label": null,
+          "footer_agrees": null,
+          "classifier": "golden"
+        },
+        {
+          "doc_role": "pm_source",
+          "page": 13,
+          "section_id": "actual_budget_fy_analysis",
+          "is_continuation": true,
+          "record_qualifier": null,
+          "orientation": "upright",
+          "confidence": 1.0,
+          "footer_label": null,
+          "footer_agrees": null,
+          "classifier": "golden"
+        },
+        {
+          "doc_role": "pm_source",
+          "page": 14,
+          "section_id": "actual_budget_fy_analysis",
+          "is_continuation": true,
+          "record_qualifier": null,
+          "orientation": "upright",
+          "confidence": 1.0,
+          "footer_label": null,
+          "footer_agrees": null,
+          "classifier": "golden"
+        },
+        {
+          "doc_role": "pm_source",
+          "page": 15,
+          "section_id": "rent_roll_bank",
+          "is_continuation": false,
+          "record_qualifier": null,
+          "orientation": "upright",
+          "confidence": 1.0,
+          "footer_label": null,
+          "footer_agrees": null,
+          "classifier": "golden"
+        },
+        {
+          "doc_role": "pm_source",
+          "page": 16,
+          "section_id": "rent_roll_bank",
+          "is_continuation": true,
+          "record_qualifier": null,
+          "orientation": "upright",
+          "confidence": 1.0,
+          "footer_label": null,
+          "footer_agrees": null,
+          "classifier": "golden"
+        },
+        {
+          "doc_role": "pm_source",
+          "page": 17,
+          "section_id": "delinquency",
+          "is_continuation": false,
+          "record_qualifier": null,
+          "orientation": "upright",
+          "confidence": 1.0,
+          "footer_label": null,
+          "footer_agrees": null,
+          "classifier": "golden"
+        }
+      ]
+    },
+    {
+      "property_id": "mullan-crossing",
+      "pm_id": "missoula",
+      "doc_role": "cornerstone_balance_sheet",
+      "schema_id": "cornerstone-qbo",
+      "pages": [
+        {
+          "doc_role": "cornerstone_balance_sheet",
+          "page": 1,
+          "section_id": "balance_sheet",
+          "is_continuation": false,
+          "record_qualifier": null,
+          "orientation": "upright",
+          "confidence": 1.0,
+          "footer_label": null,
+          "footer_agrees": null,
+          "classifier": "golden"
+        }
+      ]
+    },
+    {
+      "property_id": "mullan-crossing",
+      "pm_id": "missoula",
+      "doc_role": "cornerstone_profit_loss_ytd",
+      "schema_id": "cornerstone-qbo",
+      "pages": [
+        {
+          "doc_role": "cornerstone_profit_loss_ytd",
+          "page": 1,
+          "section_id": "profit_loss_ytd_comparison",
+          "is_continuation": false,
+          "record_qualifier": null,
+          "orientation": "upright",
+          "confidence": 1.0,
+          "footer_label": null,
+          "footer_agrees": null,
+          "classifier": "golden"
+        }
+      ]
+    },
+    {
+      "property_id": "mullan-crossing",
+      "pm_id": "missoula",
+      "doc_role": "cornerstone_distribution_schedule",
+      "schema_id": "cornerstone-qbo",
+      "pages": [
+        {
+          "doc_role": "cornerstone_distribution_schedule",
+          "page": 1,
+          "section_id": "investor_distribution_schedule",
+          "is_continuation": false,
+          "record_qualifier": null,
+          "orientation": "upright",
+          "confidence": 1.0,
+          "footer_label": null,
+          "footer_agrees": null,
+          "classifier": "golden"
+        }
+      ]
+    },
+    {
+      "property_id": "river-falls",
+      "pm_id": "mccathren",
+      "doc_role": "pm_source",
+      "schema_id": "mccathren",
+      "pages": [
+        {
+          "doc_role": "pm_source",
+          "page": 1,
+          "section_id": "cover_letter",
+          "is_continuation": false,
+          "record_qualifier": null,
+          "orientation": "upright",
+          "confidence": 1.0,
+          "footer_label": null,
+          "footer_agrees": null,
+          "classifier": "golden"
+        },
+        {
+          "doc_role": "pm_source",
+          "page": 2,
+          "section_id": "managers_report",
+          "is_continuation": false,
+          "record_qualifier": null,
+          "orientation": "upright",
+          "confidence": 1.0,
+          "footer_label": null,
+          "footer_agrees": null,
+          "classifier": "golden"
+        },
+        {
+          "doc_role": "pm_source",
+          "page": 3,
+          "section_id": "rent_roll_lease_charges",
+          "is_continuation": false,
+          "record_qualifier": null,
+          "orientation": "upright",
+          "confidence": 1.0,
+          "footer_label": null,
+          "footer_agrees": null,
+          "classifier": "golden"
+        },
+        {
+          "doc_role": "pm_source",
+          "page": 4,
+          "section_id": "rent_roll_lease_charges",
+          "is_continuation": true,
+          "record_qualifier": null,
+          "orientation": "upright",
+          "confidence": 1.0,
+          "footer_label": null,
+          "footer_agrees": null,
+          "classifier": "golden"
+        },
+        {
+          "doc_role": "pm_source",
+          "page": 5,
+          "section_id": "rent_roll_lease_charges",
+          "is_continuation": true,
+          "record_qualifier": null,
+          "orientation": "upright",
+          "confidence": 1.0,
+          "footer_label": null,
+          "footer_agrees": null,
+          "classifier": "golden"
+        },
+        {
+          "doc_role": "pm_source",
+          "page": 6,
+          "section_id": "rent_roll_lease_charges",
+          "is_continuation": true,
+          "record_qualifier": null,
+          "orientation": "upright",
+          "confidence": 1.0,
+          "footer_label": null,
+          "footer_agrees": null,
+          "classifier": "golden"
+        },
+        {
+          "doc_role": "pm_source",
+          "page": 7,
+          "section_id": "budget_variance_report",
+          "is_continuation": false,
+          "record_qualifier": null,
+          "orientation": "upright",
+          "confidence": 1.0,
+          "footer_label": null,
+          "footer_agrees": null,
+          "classifier": "golden"
+        },
+        {
+          "doc_role": "pm_source",
+          "page": 8,
+          "section_id": "budget_comparison_cash_flow",
+          "is_continuation": false,
+          "record_qualifier": null,
+          "orientation": "upright",
+          "confidence": 1.0,
+          "footer_label": null,
+          "footer_agrees": null,
+          "classifier": "golden"
+        },
+        {
+          "doc_role": "pm_source",
+          "page": 9,
+          "section_id": "budget_comparison_cash_flow",
+          "is_continuation": true,
+          "record_qualifier": null,
+          "orientation": "upright",
+          "confidence": 1.0,
+          "footer_label": null,
+          "footer_agrees": null,
+          "classifier": "golden"
+        },
+        {
+          "doc_role": "pm_source",
+          "page": 10,
+          "section_id": "operating_statement_summary",
+          "is_continuation": false,
+          "record_qualifier": null,
+          "orientation": "upright",
+          "confidence": 1.0,
+          "footer_label": null,
+          "footer_agrees": null,
+          "classifier": "golden"
+        },
+        {
+          "doc_role": "pm_source",
+          "page": 11,
+          "section_id": "cash_flow_statement",
+          "is_continuation": false,
+          "record_qualifier": null,
+          "orientation": "upright",
+          "confidence": 1.0,
+          "footer_label": null,
+          "footer_agrees": null,
+          "classifier": "golden"
+        },
+        {
+          "doc_role": "pm_source",
+          "page": 12,
+          "section_id": "cash_flow_statement",
+          "is_continuation": true,
+          "record_qualifier": null,
+          "orientation": "upright",
+          "confidence": 1.0,
+          "footer_label": null,
+          "footer_agrees": null,
+          "classifier": "golden"
+        },
+        {
+          "doc_role": "pm_source",
+          "page": 13,
+          "section_id": "cash_flow_statement",
+          "is_continuation": true,
+          "record_qualifier": null,
+          "orientation": "upright",
+          "confidence": 1.0,
+          "footer_label": null,
+          "footer_agrees": null,
+          "classifier": "golden"
+        },
+        {
+          "doc_role": "pm_source",
+          "page": 14,
+          "section_id": "balance_sheet",
+          "is_continuation": false,
+          "record_qualifier": null,
+          "orientation": "upright",
+          "confidence": 1.0,
+          "footer_label": null,
+          "footer_agrees": null,
+          "classifier": "golden"
+        },
+        {
+          "doc_role": "pm_source",
+          "page": 15,
+          "section_id": "balance_sheet",
+          "is_continuation": true,
+          "record_qualifier": null,
+          "orientation": "upright",
+          "confidence": 1.0,
+          "footer_label": null,
+          "footer_agrees": null,
+          "classifier": "golden"
+        },
+        {
+          "doc_role": "pm_source",
+          "page": 16,
+          "section_id": "trial_balance",
+          "is_continuation": false,
+          "record_qualifier": null,
+          "orientation": "upright",
+          "confidence": 1.0,
+          "footer_label": null,
+          "footer_agrees": null,
+          "classifier": "golden"
+        },
+        {
+          "doc_role": "pm_source",
+          "page": 17,
+          "section_id": "trial_balance",
+          "is_continuation": true,
+          "record_qualifier": null,
+          "orientation": "upright",
+          "confidence": 1.0,
+          "footer_label": null,
+          "footer_agrees": null,
+          "classifier": "golden"
+        },
+        {
+          "doc_role": "pm_source",
+          "page": 18,
+          "section_id": "general_ledger",
+          "is_continuation": false,
+          "record_qualifier": null,
+          "orientation": "upright",
+          "confidence": 1.0,
+          "footer_label": null,
+          "footer_agrees": null,
+          "classifier": "golden"
+        },
+        {
+          "doc_role": "pm_source",
+          "page": 19,
+          "section_id": "general_ledger",
+          "is_continuation": true,
+          "record_qualifier": null,
+          "orientation": "upright",
+          "confidence": 1.0,
+          "footer_label": null,
+          "footer_agrees": null,
+          "classifier": "golden"
+        },
+        {
+          "doc_role": "pm_source",
+          "page": 20,
+          "section_id": "general_ledger",
+          "is_continuation": true,
+          "record_qualifier": null,
+          "orientation": "upright",
+          "confidence": 1.0,
+          "footer_label": null,
+          "footer_agrees": null,
+          "classifier": "golden"
+        },
+        {
+          "doc_role": "pm_source",
+          "page": 21,
+          "section_id": "general_ledger",
+          "is_continuation": true,
+          "record_qualifier": null,
+          "orientation": "upright",
+          "confidence": 1.0,
+          "footer_label": null,
+          "footer_agrees": null,
+          "classifier": "golden"
+        },
+        {
+          "doc_role": "pm_source",
+          "page": 22,
+          "section_id": "general_ledger",
+          "is_continuation": true,
+          "record_qualifier": null,
+          "orientation": "upright",
+          "confidence": 1.0,
+          "footer_label": null,
+          "footer_agrees": null,
+          "classifier": "golden"
+        },
+        {
+          "doc_role": "pm_source",
+          "page": 23,
+          "section_id": "general_ledger",
+          "is_continuation": true,
+          "record_qualifier": null,
+          "orientation": "upright",
+          "confidence": 1.0,
+          "footer_label": null,
+          "footer_agrees": null,
+          "classifier": "golden"
+        },
+        {
+          "doc_role": "pm_source",
+          "page": 24,
+          "section_id": "general_ledger",
+          "is_continuation": true,
+          "record_qualifier": null,
+          "orientation": "upright",
+          "confidence": 1.0,
+          "footer_label": null,
+          "footer_agrees": null,
+          "classifier": "golden"
+        },
+        {
+          "doc_role": "pm_source",
+          "page": 25,
+          "section_id": "general_ledger",
+          "is_continuation": true,
+          "record_qualifier": null,
+          "orientation": "upright",
+          "confidence": 1.0,
+          "footer_label": null,
+          "footer_agrees": null,
+          "classifier": "golden"
+        },
+        {
+          "doc_role": "pm_source",
+          "page": 26,
+          "section_id": "general_ledger",
+          "is_continuation": true,
+          "record_qualifier": null,
+          "orientation": "upright",
+          "confidence": 1.0,
+          "footer_label": null,
+          "footer_agrees": null,
+          "classifier": "golden"
+        }
+      ]
+    },
+    {
+      "property_id": "river-falls",
+      "pm_id": "mccathren",
+      "doc_role": "cornerstone_balance_sheet",
+      "schema_id": "cornerstone-qbo",
+      "pages": [
+        {
+          "doc_role": "cornerstone_balance_sheet",
+          "page": 1,
+          "section_id": "balance_sheet",
+          "is_continuation": false,
+          "record_qualifier": null,
+          "orientation": "upright",
+          "confidence": 1.0,
+          "footer_label": null,
+          "footer_agrees": null,
+          "classifier": "golden"
+        }
+      ]
+    },
+    {
+      "property_id": "river-falls",
+      "pm_id": "mccathren",
+      "doc_role": "cornerstone_profit_loss_ytd",
+      "schema_id": "cornerstone-qbo",
+      "pages": [
+        {
+          "doc_role": "cornerstone_profit_loss_ytd",
+          "page": 1,
+          "section_id": "profit_loss_ytd_comparison",
+          "is_continuation": false,
+          "record_qualifier": null,
+          "orientation": "upright",
+          "confidence": 1.0,
+          "footer_label": null,
+          "footer_agrees": null,
+          "classifier": "golden"
+        }
+      ]
+    },
+    {
+      "property_id": "river-falls",
+      "pm_id": "mccathren",
+      "doc_role": "cornerstone_distribution_schedule",
+      "schema_id": "cornerstone-qbo",
+      "pages": [
+        {
+          "doc_role": "cornerstone_distribution_schedule",
+          "page": 1,
+          "section_id": "investor_distribution_schedule",
+          "is_continuation": false,
+          "record_qualifier": null,
+          "orientation": "upright",
+          "confidence": 1.0,
+          "footer_label": null,
+          "footer_agrees": null,
+          "classifier": "golden"
+        }
+      ]
+    },
+    {
+      "property_id": "salmon-crossing",
+      "pm_id": "cobalt",
+      "doc_role": "pm_source",
+      "schema_id": "cobalt",
+      "pages": [
+        {
+          "doc_role": "pm_source",
+          "page": 1,
+          "section_id": "owner_statement",
+          "is_continuation": false,
+          "record_qualifier": null,
+          "orientation": "upright",
+          "confidence": 1.0,
+          "footer_label": null,
+          "footer_agrees": null,
+          "classifier": "golden"
+        },
+        {
+          "doc_role": "pm_source",
+          "page": 2,
+          "section_id": "owner_statement",
+          "is_continuation": true,
+          "record_qualifier": null,
+          "orientation": "upright",
+          "confidence": 1.0,
+          "footer_label": null,
+          "footer_agrees": null,
+          "classifier": "golden"
+        },
+        {
+          "doc_role": "pm_source",
+          "page": 3,
+          "section_id": "owner_statement",
+          "is_continuation": true,
+          "record_qualifier": null,
+          "orientation": "upright",
+          "confidence": 1.0,
+          "footer_label": null,
+          "footer_agrees": null,
+          "classifier": "golden"
+        },
+        {
+          "doc_role": "pm_source",
+          "page": 4,
+          "section_id": "owner_statement",
+          "is_continuation": true,
+          "record_qualifier": null,
+          "orientation": "upright",
+          "confidence": 1.0,
+          "footer_label": null,
+          "footer_agrees": null,
+          "classifier": "golden"
+        },
+        {
+          "doc_role": "pm_source",
+          "page": 5,
+          "section_id": "owner_statement",
+          "is_continuation": true,
+          "record_qualifier": null,
+          "orientation": "upright",
+          "confidence": 1.0,
+          "footer_label": null,
+          "footer_agrees": null,
+          "classifier": "golden"
+        },
+        {
+          "doc_role": "pm_source",
+          "page": 6,
+          "section_id": "cash_flow_12_month",
+          "is_continuation": false,
+          "record_qualifier": null,
+          "orientation": "upright",
+          "confidence": 1.0,
+          "footer_label": null,
+          "footer_agrees": null,
+          "classifier": "golden"
+        },
+        {
+          "doc_role": "pm_source",
+          "page": 7,
+          "section_id": "cash_flow_12_month",
+          "is_continuation": true,
+          "record_qualifier": null,
+          "orientation": "upright",
+          "confidence": 1.0,
+          "footer_label": null,
+          "footer_agrees": null,
+          "classifier": "golden"
+        },
+        {
+          "doc_role": "pm_source",
+          "page": 8,
+          "section_id": "cash_flow_12_month",
+          "is_continuation": true,
+          "record_qualifier": null,
+          "orientation": "upright",
+          "confidence": 1.0,
+          "footer_label": null,
+          "footer_agrees": null,
+          "classifier": "golden"
+        },
+        {
+          "doc_role": "pm_source",
+          "page": 9,
+          "section_id": "cash_flow_12_month",
+          "is_continuation": true,
+          "record_qualifier": null,
+          "orientation": "upright",
+          "confidence": 1.0,
+          "footer_label": null,
+          "footer_agrees": null,
+          "classifier": "golden"
+        },
+        {
+          "doc_role": "pm_source",
+          "page": 10,
+          "section_id": "rent_roll",
+          "is_continuation": false,
+          "record_qualifier": null,
+          "orientation": "upright",
+          "confidence": 1.0,
+          "footer_label": null,
+          "footer_agrees": null,
+          "classifier": "golden"
+        },
+        {
+          "doc_role": "pm_source",
+          "page": 11,
+          "section_id": "balance_sheet",
+          "is_continuation": false,
+          "record_qualifier": null,
+          "orientation": "upright",
+          "confidence": 1.0,
+          "footer_label": null,
+          "footer_agrees": null,
+          "classifier": "golden"
+        },
+        {
+          "doc_role": "pm_source",
+          "page": 12,
+          "section_id": "annual_budget_comparative",
+          "is_continuation": false,
+          "record_qualifier": null,
+          "orientation": "upright",
+          "confidence": 1.0,
+          "footer_label": null,
+          "footer_agrees": null,
+          "classifier": "golden"
+        },
+        {
+          "doc_role": "pm_source",
+          "page": 13,
+          "section_id": "annual_budget_comparative",
+          "is_continuation": true,
+          "record_qualifier": null,
+          "orientation": "upright",
+          "confidence": 1.0,
+          "footer_label": null,
+          "footer_agrees": null,
+          "classifier": "golden"
+        },
+        {
+          "doc_role": "pm_source",
+          "page": 14,
+          "section_id": "annual_budget_comparative",
+          "is_continuation": true,
+          "record_qualifier": null,
+          "orientation": "upright",
+          "confidence": 1.0,
+          "footer_label": null,
+          "footer_agrees": null,
+          "classifier": "golden"
+        },
+        {
+          "doc_role": "pm_source",
+          "page": 15,
+          "section_id": "annual_budget_comparative",
+          "is_continuation": true,
+          "record_qualifier": null,
+          "orientation": "upright",
+          "confidence": 1.0,
+          "footer_label": null,
+          "footer_agrees": null,
+          "classifier": "golden"
+        }
+      ]
+    },
+    {
+      "property_id": "salmon-crossing",
+      "pm_id": "cobalt",
+      "doc_role": "cornerstone_balance_sheet",
+      "schema_id": "cornerstone-qbo",
+      "pages": [
+        {
+          "doc_role": "cornerstone_balance_sheet",
+          "page": 1,
+          "section_id": "balance_sheet",
+          "is_continuation": false,
+          "record_qualifier": null,
+          "orientation": "upright",
+          "confidence": 1.0,
+          "footer_label": null,
+          "footer_agrees": null,
+          "classifier": "golden"
+        }
+      ]
+    },
+    {
+      "property_id": "salmon-crossing",
+      "pm_id": "cobalt",
+      "doc_role": "cornerstone_profit_loss_ytd",
+      "schema_id": "cornerstone-qbo",
+      "pages": [
+        {
+          "doc_role": "cornerstone_profit_loss_ytd",
+          "page": 1,
+          "section_id": "profit_loss_ytd_comparison",
+          "is_continuation": false,
+          "record_qualifier": null,
+          "orientation": "upright",
+          "confidence": 1.0,
+          "footer_label": null,
+          "footer_agrees": null,
+          "classifier": "golden"
+        }
+      ]
+    },
+    {
+      "property_id": "salmon-crossing",
+      "pm_id": "cobalt",
+      "doc_role": "cornerstone_distribution_schedule",
+      "schema_id": "cornerstone-qbo",
+      "pages": [
+        {
+          "doc_role": "cornerstone_distribution_schedule",
+          "page": 1,
+          "section_id": "investor_distribution_schedule",
+          "is_continuation": false,
+          "record_qualifier": null,
+          "orientation": "upright",
+          "confidence": 1.0,
+          "footer_label": null,
+          "footer_agrees": null,
+          "classifier": "golden"
+        }
+      ]
+    },
+    {
+      "property_id": "timber-place",
+      "pm_id": "mccathren",
+      "doc_role": "pm_source",
+      "schema_id": "mccathren",
+      "pages": [
+        {
+          "doc_role": "pm_source",
+          "page": 1,
+          "section_id": "cover_letter",
+          "is_continuation": false,
+          "record_qualifier": null,
+          "orientation": "upright",
+          "confidence": 1.0,
+          "footer_label": null,
+          "footer_agrees": null,
+          "classifier": "golden"
+        },
+        {
+          "doc_role": "pm_source",
+          "page": 2,
+          "section_id": "managers_report",
+          "is_continuation": false,
+          "record_qualifier": null,
+          "orientation": "upright",
+          "confidence": 1.0,
+          "footer_label": null,
+          "footer_agrees": null,
+          "classifier": "golden"
+        },
+        {
+          "doc_role": "pm_source",
+          "page": 3,
+          "section_id": "aged_receivable",
+          "is_continuation": false,
+          "record_qualifier": null,
+          "orientation": "rotated_90_ccw",
+          "confidence": 1.0,
+          "footer_label": null,
+          "footer_agrees": null,
+          "classifier": "golden"
+        },
+        {
+          "doc_role": "pm_source",
+          "page": 4,
+          "section_id": "rent_roll_lease_charges",
+          "is_continuation": false,
+          "record_qualifier": null,
+          "orientation": "upright",
+          "confidence": 1.0,
+          "footer_label": null,
+          "footer_agrees": null,
+          "classifier": "golden"
+        },
+        {
+          "doc_role": "pm_source",
+          "page": 5,
+          "section_id": "rent_roll_lease_charges",
+          "is_continuation": true,
+          "record_qualifier": null,
+          "orientation": "upright",
+          "confidence": 1.0,
+          "footer_label": null,
+          "footer_agrees": null,
+          "classifier": "golden"
+        },
+        {
+          "doc_role": "pm_source",
+          "page": 6,
+          "section_id": "budget_variance_report",
+          "is_continuation": false,
+          "record_qualifier": null,
+          "orientation": "upright",
+          "confidence": 1.0,
+          "footer_label": null,
+          "footer_agrees": null,
+          "classifier": "golden"
+        },
+        {
+          "doc_role": "pm_source",
+          "page": 7,
+          "section_id": "budget_comparison_cash_flow",
+          "is_continuation": false,
+          "record_qualifier": null,
+          "orientation": "upright",
+          "confidence": 1.0,
+          "footer_label": null,
+          "footer_agrees": null,
+          "classifier": "golden"
+        },
+        {
+          "doc_role": "pm_source",
+          "page": 8,
+          "section_id": "budget_comparison_cash_flow",
+          "is_continuation": true,
+          "record_qualifier": null,
+          "orientation": "upright",
+          "confidence": 1.0,
+          "footer_label": null,
+          "footer_agrees": null,
+          "classifier": "golden"
+        },
+        {
+          "doc_role": "pm_source",
+          "page": 9,
+          "section_id": "operating_statement_summary",
+          "is_continuation": false,
+          "record_qualifier": null,
+          "orientation": "upright",
+          "confidence": 1.0,
+          "footer_label": null,
+          "footer_agrees": null,
+          "classifier": "golden"
+        },
+        {
+          "doc_role": "pm_source",
+          "page": 10,
+          "section_id": "cash_flow_statement",
+          "is_continuation": false,
+          "record_qualifier": null,
+          "orientation": "upright",
+          "confidence": 1.0,
+          "footer_label": null,
+          "footer_agrees": null,
+          "classifier": "golden"
+        },
+        {
+          "doc_role": "pm_source",
+          "page": 11,
+          "section_id": "cash_flow_statement",
+          "is_continuation": true,
+          "record_qualifier": null,
+          "orientation": "upright",
+          "confidence": 1.0,
+          "footer_label": null,
+          "footer_agrees": null,
+          "classifier": "golden"
+        },
+        {
+          "doc_role": "pm_source",
+          "page": 12,
+          "section_id": "cash_flow_statement",
+          "is_continuation": true,
+          "record_qualifier": null,
+          "orientation": "upright",
+          "confidence": 1.0,
+          "footer_label": null,
+          "footer_agrees": null,
+          "classifier": "golden"
+        },
+        {
+          "doc_role": "pm_source",
+          "page": 13,
+          "section_id": "balance_sheet",
+          "is_continuation": false,
+          "record_qualifier": null,
+          "orientation": "upright",
+          "confidence": 1.0,
+          "footer_label": null,
+          "footer_agrees": null,
+          "classifier": "golden"
+        },
+        {
+          "doc_role": "pm_source",
+          "page": 14,
+          "section_id": "balance_sheet",
+          "is_continuation": true,
+          "record_qualifier": null,
+          "orientation": "upright",
+          "confidence": 1.0,
+          "footer_label": null,
+          "footer_agrees": null,
+          "classifier": "golden"
+        },
+        {
+          "doc_role": "pm_source",
+          "page": 15,
+          "section_id": "trial_balance",
+          "is_continuation": false,
+          "record_qualifier": null,
+          "orientation": "upright",
+          "confidence": 1.0,
+          "footer_label": null,
+          "footer_agrees": null,
+          "classifier": "golden"
+        },
+        {
+          "doc_role": "pm_source",
+          "page": 16,
+          "section_id": "trial_balance",
+          "is_continuation": true,
+          "record_qualifier": null,
+          "orientation": "upright",
+          "confidence": 1.0,
+          "footer_label": null,
+          "footer_agrees": null,
+          "classifier": "golden"
+        },
+        {
+          "doc_role": "pm_source",
+          "page": 17,
+          "section_id": "general_ledger",
+          "is_continuation": false,
+          "record_qualifier": null,
+          "orientation": "upright",
+          "confidence": 1.0,
+          "footer_label": null,
+          "footer_agrees": null,
+          "classifier": "golden"
+        },
+        {
+          "doc_role": "pm_source",
+          "page": 18,
+          "section_id": "general_ledger",
+          "is_continuation": true,
+          "record_qualifier": null,
+          "orientation": "upright",
+          "confidence": 1.0,
+          "footer_label": null,
+          "footer_agrees": null,
+          "classifier": "golden"
+        },
+        {
+          "doc_role": "pm_source",
+          "page": 19,
+          "section_id": "general_ledger",
+          "is_continuation": true,
+          "record_qualifier": null,
+          "orientation": "upright",
+          "confidence": 1.0,
+          "footer_label": null,
+          "footer_agrees": null,
+          "classifier": "golden"
+        },
+        {
+          "doc_role": "pm_source",
+          "page": 20,
+          "section_id": "general_ledger",
+          "is_continuation": true,
+          "record_qualifier": null,
+          "orientation": "upright",
+          "confidence": 1.0,
+          "footer_label": null,
+          "footer_agrees": null,
+          "classifier": "golden"
+        },
+        {
+          "doc_role": "pm_source",
+          "page": 21,
+          "section_id": "general_ledger",
+          "is_continuation": true,
+          "record_qualifier": null,
+          "orientation": "upright",
+          "confidence": 1.0,
+          "footer_label": null,
+          "footer_agrees": null,
+          "classifier": "golden"
+        },
+        {
+          "doc_role": "pm_source",
+          "page": 22,
+          "section_id": "general_ledger",
+          "is_continuation": true,
+          "record_qualifier": null,
+          "orientation": "upright",
+          "confidence": 1.0,
+          "footer_label": null,
+          "footer_agrees": null,
+          "classifier": "golden"
+        },
+        {
+          "doc_role": "pm_source",
+          "page": 23,
+          "section_id": "general_ledger",
+          "is_continuation": true,
+          "record_qualifier": null,
+          "orientation": "upright",
+          "confidence": 1.0,
+          "footer_label": null,
+          "footer_agrees": null,
+          "classifier": "golden"
+        }
+      ]
+    },
+    {
+      "property_id": "timber-place",
+      "pm_id": "mccathren",
+      "doc_role": "cornerstone_balance_sheet",
+      "schema_id": "cornerstone-qbo",
+      "pages": [
+        {
+          "doc_role": "cornerstone_balance_sheet",
+          "page": 1,
+          "section_id": "balance_sheet",
+          "is_continuation": false,
+          "record_qualifier": null,
+          "orientation": "upright",
+          "confidence": 1.0,
+          "footer_label": null,
+          "footer_agrees": null,
+          "classifier": "golden"
+        }
+      ]
+    },
+    {
+      "property_id": "timber-place",
+      "pm_id": "mccathren",
+      "doc_role": "cornerstone_profit_loss_ytd",
+      "schema_id": "cornerstone-qbo",
+      "pages": [
+        {
+          "doc_role": "cornerstone_profit_loss_ytd",
+          "page": 1,
+          "section_id": "profit_loss_ytd_comparison",
+          "is_continuation": false,
+          "record_qualifier": null,
+          "orientation": "upright",
+          "confidence": 1.0,
+          "footer_label": null,
+          "footer_agrees": null,
+          "classifier": "golden"
+        }
+      ]
+    },
+    {
+      "property_id": "waypointe",
+      "pm_id": "missoula",
+      "doc_role": "pm_source",
+      "schema_id": "rentmanager-missoula",
+      "pages": [
+        {
+          "doc_role": "pm_source",
+          "page": 1,
+          "section_id": "owner_statement",
+          "is_continuation": false,
+          "record_qualifier": null,
+          "orientation": "upright",
+          "confidence": 1.0,
+          "footer_label": null,
+          "footer_agrees": null,
+          "classifier": "golden"
+        },
+        {
+          "doc_role": "pm_source",
+          "page": 2,
+          "section_id": "profit_loss_comparison",
+          "is_continuation": false,
+          "record_qualifier": "WayPointe Apartment Homes LP",
+          "orientation": "upright",
+          "confidence": 1.0,
+          "footer_label": null,
+          "footer_agrees": null,
+          "classifier": "golden"
+        },
+        {
+          "doc_role": "pm_source",
+          "page": 3,
+          "section_id": "unit_availability",
+          "is_continuation": false,
+          "record_qualifier": "WayPointe Apartment Homes LP",
+          "orientation": "upright",
+          "confidence": 1.0,
+          "footer_label": null,
+          "footer_agrees": null,
+          "classifier": "golden"
+        },
+        {
+          "doc_role": "pm_source",
+          "page": 4,
+          "section_id": "unit_availability",
+          "is_continuation": true,
+          "record_qualifier": "WayPointe Apartment Homes LP",
+          "orientation": "upright",
+          "confidence": 1.0,
+          "footer_label": null,
+          "footer_agrees": null,
+          "classifier": "golden"
+        },
+        {
+          "doc_role": "pm_source",
+          "page": 5,
+          "section_id": "profit_loss_comparison",
+          "is_continuation": false,
+          "record_qualifier": "128 S. 5th Street West",
+          "orientation": "upright",
+          "confidence": 1.0,
+          "footer_label": null,
+          "footer_agrees": null,
+          "classifier": "golden"
+        },
+        {
+          "doc_role": "pm_source",
+          "page": 6,
+          "section_id": "unit_availability",
+          "is_continuation": false,
+          "record_qualifier": "128 S. 5th Street West",
+          "orientation": "upright",
+          "confidence": 1.0,
+          "footer_label": null,
+          "footer_agrees": null,
+          "classifier": "golden"
+        },
+        {
+          "doc_role": "pm_source",
+          "page": 7,
+          "section_id": "unit_availability",
+          "is_continuation": true,
+          "record_qualifier": "128 S. 5th Street West",
+          "orientation": "upright",
+          "confidence": 1.0,
+          "footer_label": null,
+          "footer_agrees": null,
+          "classifier": "golden"
+        },
+        {
+          "doc_role": "pm_source",
+          "page": 8,
+          "section_id": "financial_statement",
+          "is_continuation": false,
+          "record_qualifier": null,
+          "orientation": "upright",
+          "confidence": 1.0,
+          "footer_label": null,
+          "footer_agrees": null,
+          "classifier": "golden"
+        },
+        {
+          "doc_role": "pm_source",
+          "page": 9,
+          "section_id": "financial_statement",
+          "is_continuation": true,
+          "record_qualifier": null,
+          "orientation": "upright",
+          "confidence": 1.0,
+          "footer_label": null,
+          "footer_agrees": null,
+          "classifier": "golden"
+        },
+        {
+          "doc_role": "pm_source",
+          "page": 10,
+          "section_id": "rent_roll_analysis",
+          "is_continuation": false,
+          "record_qualifier": null,
+          "orientation": "upright",
+          "confidence": 1.0,
+          "footer_label": null,
+          "footer_agrees": null,
+          "classifier": "golden"
+        },
+        {
+          "doc_role": "pm_source",
+          "page": 11,
+          "section_id": "general_ledger",
+          "is_continuation": false,
+          "record_qualifier": null,
+          "orientation": "upright",
+          "confidence": 1.0,
+          "footer_label": null,
+          "footer_agrees": null,
+          "classifier": "golden"
+        },
+        {
+          "doc_role": "pm_source",
+          "page": 12,
+          "section_id": "actual_budget_fy_analysis",
+          "is_continuation": false,
+          "record_qualifier": null,
+          "orientation": "upright",
+          "confidence": 1.0,
+          "footer_label": null,
+          "footer_agrees": null,
+          "classifier": "golden"
+        },
+        {
+          "doc_role": "pm_source",
+          "page": 13,
+          "section_id": "actual_budget_fy_analysis",
+          "is_continuation": true,
+          "record_qualifier": null,
+          "orientation": "upright",
+          "confidence": 1.0,
+          "footer_label": null,
+          "footer_agrees": null,
+          "classifier": "golden"
+        },
+        {
+          "doc_role": "pm_source",
+          "page": 14,
+          "section_id": "rent_roll_bank",
+          "is_continuation": false,
+          "record_qualifier": "WayPointe Apartment Homes LP",
+          "orientation": "upright",
+          "confidence": 1.0,
+          "footer_label": null,
+          "footer_agrees": null,
+          "classifier": "golden"
+        },
+        {
+          "doc_role": "pm_source",
+          "page": 15,
+          "section_id": "delinquency",
+          "is_continuation": false,
+          "record_qualifier": "128 S. 5th Street West",
+          "orientation": "upright",
+          "confidence": 1.0,
+          "footer_label": null,
+          "footer_agrees": null,
+          "classifier": "golden"
+        },
+        {
+          "doc_role": "pm_source",
+          "page": 16,
+          "section_id": "delinquency",
+          "is_continuation": false,
+          "record_qualifier": "WayPointe Apartment Homes LP",
+          "orientation": "upright",
+          "confidence": 1.0,
+          "footer_label": null,
+          "footer_agrees": null,
+          "classifier": "golden"
+        }
+      ]
+    },
+    {
+      "property_id": "waypointe",
+      "pm_id": "missoula",
+      "doc_role": "cornerstone_balance_sheet",
+      "schema_id": "cornerstone-qbo",
+      "pages": [
+        {
+          "doc_role": "cornerstone_balance_sheet",
+          "page": 1,
+          "section_id": "balance_sheet",
+          "is_continuation": false,
+          "record_qualifier": null,
+          "orientation": "upright",
+          "confidence": 1.0,
+          "footer_label": null,
+          "footer_agrees": null,
+          "classifier": "golden"
+        }
+      ]
+    },
+    {
+      "property_id": "waypointe",
+      "pm_id": "missoula",
+      "doc_role": "cornerstone_profit_loss_ytd",
+      "schema_id": "cornerstone-qbo",
+      "pages": [
+        {
+          "doc_role": "cornerstone_profit_loss_ytd",
+          "page": 1,
+          "section_id": "profit_loss_ytd_comparison",
+          "is_continuation": false,
+          "record_qualifier": null,
+          "orientation": "upright",
+          "confidence": 1.0,
+          "footer_label": null,
+          "footer_agrees": null,
+          "classifier": "golden"
+        }
+      ]
+    },
+    {
+      "property_id": "waypointe",
+      "pm_id": "missoula",
+      "doc_role": "cornerstone_distribution_schedule",
+      "schema_id": "cornerstone-qbo",
+      "pages": [
+        {
+          "doc_role": "cornerstone_distribution_schedule",
+          "page": 1,
+          "section_id": "investor_distribution_schedule",
+          "is_continuation": false,
+          "record_qualifier": null,
+          "orientation": "upright",
+          "confidence": 1.0,
+          "footer_label": null,
+          "footer_agrees": null,
+          "classifier": "golden"
+        }
+      ]
+    }
+  ]
+}
