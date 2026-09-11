@@ -349,7 +349,12 @@ def _classify(
             schema,
             {n: texts[doc.role][n - 1] for n in sorted(images[doc.role])},
         )
-        if settings.orientation_check:
+        # Skipped for a classifier that reads no page images — the golden one, whose labels
+        # are the answer key. There is nothing for a cross-check to find there, and the OSD
+        # pass costs a 400 DPI render plus a tesseract run per page: on the eight golden
+        # properties that is ~172 pages of work for a result that is known in advance. The
+        # eval harness draws the same line for the same reason.
+        if settings.orientation_check and getattr(classifier, "needs_page_images", True):
             checked, reasons = apply_orientation_check(
                 checked,
                 doc.path,

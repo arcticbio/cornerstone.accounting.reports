@@ -14,7 +14,9 @@ and rotated pages with the options shuffled, including the page it names wrongly
 
 With no arbiter available (no key, or the golden classifier) a disagreement keeps the
 classifier's label — SPEC §6.4's authority — and raises `orientation_uncertain`, so the package
-goes to a human rather than shipping on a coin toss (D-12).
+goes to a human rather than shipping on a coin toss (D-12). The same applies when OSD itself
+cannot be asked and the classifier claims a rotation: a check that was asked for and could not
+run is not a check that passed.
 """
 
 from __future__ import annotations
@@ -50,10 +52,32 @@ def apply_orientation_check(
     """
     out: list[PageClassification] = []
     reasons: list[ReviewReason] = []
+    unavailable = 0
     for page in classifications:
         verdict = detect_orientation(pdf, page.page, dpi=dpi)
         osd = verdict.orientation
-        if osd is None or osd is page.orientation:
+        if osd is None:
+            unavailable += 1
+            out.append(page)
+            # An upright label applies no transform, so an unverified one costs nothing. A
+            # non-upright label is about to turn the page on the strength of the single signal
+            # that shipped a page upside down, and nothing downstream can tell: that is not a
+            # thing to do quietly because a dependency is missing (D-12).
+            if page.orientation is not Orientation.UPRIGHT:
+                reasons.append(
+                    ReviewReason(
+                        code="orientation_uncertain",
+                        doc_role=doc_role,
+                        page=page.page,
+                        detail=(
+                            f"classifier says {page.orientation.value} and OSD could not be "
+                            f"asked, so the rotation is unverified — is tesseract-ocr-osd "
+                            f"installed?"
+                        ),
+                    )
+                )
+            continue
+        if osd is page.orientation:
             out.append(page)
             continue
 
@@ -83,4 +107,12 @@ def apply_orientation_check(
             )
             continue
         out.append(page.model_copy(update={"orientation": settled}))
+    if unavailable:
+        # Once per document, not once per page: a missing tesseract is one fact.
+        log.warning(
+            "classify.orientation_osd_unavailable",
+            doc_role=doc_role,
+            pages=unavailable,
+            of=len(classifications),
+        )
     return out, reasons

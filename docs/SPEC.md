@@ -569,9 +569,20 @@ If the arbiter is absent (no key, or a golden build) or does not return a single
 classifier's label stands and the build raises `orientation_uncertain` (§6.8). Nothing is
 guessed: an unsettled page goes to a human (D-12).
 
-The check runs per page and costs a 400 DPI render plus a tesseract run; `CRR_ORIENTATION_CHECK`
-turns it off, which is how the test fixtures stay fast. Turning it off restores the behaviour
-that shipped an upside-down page.
+The same holds when OSD itself cannot be asked — no `tesseract`, no `tesseract-ocr-osd`, an
+unparseable answer. A check that was asked for and could not run is not a check that passed, so
+a page the classifier calls non-upright raises `orientation_uncertain` rather than being turned
+on one unverified signal. A page it calls `upright` is left alone: that applies no transform, so
+an unverified label costs nothing, and a build on a machine without tesseract still runs. The
+degradation is logged once per document, not once per page.
+
+The check runs per page and costs a 400 DPI render plus a tesseract run — measured at 2.2 s a
+page, so ~6.3 minutes over the 172-page golden corpus. It is skipped for a classifier that reads
+no page images (`needs_page_images`), because that is the golden one and its orientation labels
+are the answer key: there is nothing for a cross-check to find, and both `build` and `eval` draw
+the line there. `CRR_ORIENTATION_CHECK` turns it off outright, which is how the build fixtures
+stay fast. Turning it off for a real classifier restores the behaviour that shipped an
+upside-down page.
 
 ---
 

@@ -130,13 +130,40 @@ class TestCrossCheck:
         )
         assert [r.code for r in reasons] == ["orientation_uncertain"]
 
-    def test_no_osd_keeps_the_classifier_label(self, osd: dict[int, OsdVerdict]) -> None:
-        """Without tesseract the build still runs, on SPEC §6.4's authority."""
+    def test_no_osd_leaves_an_upright_page_alone(self, osd: dict[int, OsdVerdict]) -> None:
+        """An upright label applies no transform, so an unverified one costs nothing and the
+        build runs normally without tesseract."""
+        pages, reasons = apply_orientation_check(
+            [_page(1, Orientation.UPRIGHT)], PDF, doc_role="pm_source"
+        )
+        assert reasons == []
+        assert pages[0].orientation is Orientation.UPRIGHT
+
+    def test_no_osd_sends_a_claimed_rotation_to_review(self, osd: dict[int, OsdVerdict]) -> None:
+        """A check that was asked for and could not run is not a check that passed: rotating on
+        the lone signal that shipped a page upside down is not something to do quietly."""
         pages, reasons = apply_orientation_check(
             [_page(3, Orientation.ROT_90_CW)], PDF, doc_role="pm_source"
         )
-        assert reasons == []
+        assert [r.code for r in reasons] == ["orientation_uncertain"]
+        assert "tesseract-ocr-osd" in reasons[0].detail
         assert pages[0].orientation is Orientation.ROT_90_CW
+
+    def test_no_osd_flags_only_the_pages_that_would_be_turned(
+        self, osd: dict[int, OsdVerdict]
+    ) -> None:
+        pages, reasons = apply_orientation_check(
+            [
+                _page(1, Orientation.UPRIGHT),
+                _page(2, Orientation.UPRIGHT),
+                _page(3, Orientation.ROT_90_CCW),
+                _page(4, Orientation.ROT_180),
+            ],
+            PDF,
+            doc_role="pm_source",
+        )
+        assert [r.page for r in reasons] == [3, 4]
+        assert len(pages) == 4
 
     def test_detail_never_carries_page_content(self, osd: dict[int, OsdVerdict]) -> None:
         """Review details are logged and committed; they name signals, not the page."""
@@ -146,3 +173,19 @@ class TestCrossCheck:
         )
         assert "rotated_90_cw" in reasons[0].detail
         assert "rotated_90_ccw" in reasons[0].detail
+
+
+class TestWhoGetsChecked:
+    """A classifier that reads no page images is the golden one, whose orientation labels are
+    the answer key. Running a 400 DPI render plus a tesseract call over 172 pages to confirm
+    what is already known cost ~6.3 minutes on every CI golden build."""
+
+    def test_the_golden_classifier_declares_it_needs_no_images(self) -> None:
+        from crr.classify.golden_classifier import GoldenClassifier
+
+        assert GoldenClassifier.needs_page_images is False
+
+    def test_the_real_classifier_declares_it_does(self) -> None:
+        from crr.classify.anthropic_classifier import AnthropicClassifier
+
+        assert AnthropicClassifier.needs_page_images is True
