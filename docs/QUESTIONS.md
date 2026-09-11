@@ -408,7 +408,12 @@ that assumption; its Azure content was written against the live subscription and
 `AADSTS7000215` trap, the `Run now`-is-a-production-build correction, and the Drive blocker now
 recorded as B-09 above.
 
-**B-11 · This session cannot start the Azure job or read its executions.**
+**B-11 · ~~This session cannot start the Azure job or read its executions.~~ RESOLVED
+2026-09-11 — it can, through Actions.** `Run the Azure job` starts the job, waits, reads the
+container's logs and restores the schedule's arguments; a session can dispatch it and read the
+result. Proven on the third run: execution `crr-quarterly-94admd0`, `Succeeded`, logs
+`crr 1.0.0` — which is PLAN Phase 8's acceptance criterion word for word. The three defects it
+took to get there are A-13. Original entry:
 *What is needed:* nothing from the user, as it turns out — but it is worth recording why, because
 it was the one gap the audit could not close directly. The session container has no `az` CLI and
 no Azure credential (`env | grep AZURE` is empty; `AZURE_CREDENTIALS` is a *repository* secret,
