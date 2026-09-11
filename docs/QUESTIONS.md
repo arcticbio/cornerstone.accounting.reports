@@ -237,8 +237,25 @@ stopped, the run went green. Left as-is — cancelling superseded runs is the ri
 `cancel-in-progress: false` is the one-line change if it ever becomes a nuisance.
 
 
-**B-09 · A shared drive (or OAuth delegation) for the Drive root · every `--repo gdrive` write,
-including publishing packages · reading, folder creation and `--repo local` all still work.**
+**B-09 · ~~A shared drive for the Drive root.~~ RESOLVED 2026-09-11 — a package has reached
+Drive.**
+*Proof, end to end on the live account:* the operator created the shared drive
+**Cornerstone Investor Reports**, added the runner as **Content manager** (`fileOrganizer`),
+created a fresh `Cornerstone Reports` root inside it and re-pointed
+`CRR_GDRIVE_ROOT_FOLDER_ID`. Then: `crr preflight --repo gdrive` passes; the 2026-06 and 2026-09
+skeletons build out to **43 folders, all owned by the drive rather than by the service account**;
+Fort Grounds' four June inputs upload; and `crr build --period 2026-06 --property fort-grounds
+--repo gdrive` runs clean — `built`, 8 pages, no review reasons — publishing
+`Fort Grounds - Investor Report - June 2026.pdf` and its manifest into `output/`. Downloaded back
+out of Drive it is 8 pages, 6 bookmarks, correct `/Title`, **owned by the drive**. The original
+diagnosis below is kept because it explains why this took a day to see.
+*Two traps found while fixing it, both now in `SETUP-GOOGLE-DRIVE.md`:* the old root could not be
+*moved* (the service account owned every folder under it, and Drive will not move what you do not
+own — it did not need moving, the tree was 29 empty folders); and the runner's preflight cleanup
+used permanent delete, which in a shared drive only a **Manager** may do, so on a correctly
+configured drive it left one probe file per run. It trashes now.
+
+*Original diagnosis:*
 *Symptom:* uploading any file as the service account fails with
 `403 storageQuotaExceeded: Service Accounts do not have storage quota. Leverage shared drives,
 or use OAuth delegation instead.`
