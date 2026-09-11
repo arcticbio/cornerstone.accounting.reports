@@ -56,8 +56,8 @@ It will:
 1. confirm the subscription with you before doing anything;
 2. register the `Microsoft.App`, `Microsoft.OperationalInsights` and `Microsoft.KeyVault`
    resource providers (first time on a subscription this can take a few minutes);
-3. create the resource group `crr-rg` in `westus2`;
-4. create a Key Vault with a generated globally-unique name and RBAC authorisation;
+3. create the resource group `rg-cust-cornerstone` in `westus2` (West US 2);
+4. create the Key Vault `crr-kv-accounting` with RBAC authorisation;
 5. grant *you* `Key Vault Secrets Officer` on it, then wait 30 seconds for that to take effect;
 6. **prompt you for the Anthropic API key** (typed, not echoed) and **the path to the Google
    service-account JSON**, and store both as vault secrets;
@@ -77,22 +77,22 @@ RESOURCE_GROUP=my-rg LOCATION=eastus2 ./infra/bootstrap.sh
 The script is not magic. The equivalent commands:
 
 ```bash
-az group create --name crr-rg --location westus2
+az group create --name rg-cust-cornerstone --location westus2
 
-az keyvault create --name crr-kv-<unique> --resource-group crr-rg \
+az keyvault create --name crr-kv-accounting --resource-group rg-cust-cornerstone \
   --location westus2 --enable-rbac-authorization true
 
 # Grant yourself data-plane access — being subscription Owner is not enough for RBAC vaults.
 az role assignment create --assignee-object-id "$(az ad signed-in-user show --query id -o tsv)" \
   --assignee-principal-type User --role "Key Vault Secrets Officer" \
-  --scope "$(az keyvault show -n crr-kv-<unique> --query id -o tsv)"
+  --scope "$(az keyvault show -n crr-kv-accounting --query id -o tsv)"
 
-az keyvault secret set --vault-name crr-kv-<unique> --name anthropic-api-key --value "sk-ant-..."
-az keyvault secret set --vault-name crr-kv-<unique> --name google-service-account-b64 \
+az keyvault secret set --vault-name crr-kv-accounting --name anthropic-api-key --value "sk-ant-..."
+az keyvault secret set --vault-name crr-kv-accounting --name google-service-account-b64 \
   --value "$(base64 -w0 service-account.json)"
 
 az ad sp create-for-rbac --name crr-github-actions --role Contributor \
-  --scopes "/subscriptions/<sub-id>/resourceGroups/crr-rg" --json-auth
+  --scopes "/subscriptions/<sub-id>/resourceGroups/rg-cust-cornerstone" --json-auth
 ```
 
 ## Step 3 — Put the values into GitHub
@@ -109,8 +109,8 @@ az ad sp create-for-rbac --name crr-github-actions --role Contributor \
 
 | Name | Value |
 |---|---|
-| `AZURE_RESOURCE_GROUP` | `crr-rg` (or yours) |
-| `AZURE_KEY_VAULT_NAME` | the vault name the script printed |
+| `AZURE_RESOURCE_GROUP` | `rg-cust-cornerstone` |
+| `AZURE_KEY_VAULT_NAME` | `crr-kv-accounting` |
 
 While you are there, confirm the runtime secrets from `docs/SETUP-CREDENTIALS.md` are also set:
 `ANTHROPIC_API_KEY`, `GOOGLE_SERVICE_ACCOUNT_B64` (Secrets) and `CRR_GDRIVE_ROOT_FOLDER_ID`
@@ -159,22 +159,37 @@ have it, the step is marked as failed-but-continued and the run prints the exact
 yourself. **This is expected and not a problem** — run the command it prints, then re-run the
 workflow so the job picks the secrets up.
 
+The workflow checks Azure before it warns: if the job's identity can already read the vault —
+because you, or an earlier run, granted it — the step reports that and stays quiet. A warning
+therefore means the access really is missing, not merely that this run could not create it.
+
 Why it cannot be part of the template: the job's identity does not exist until the job does.
 
 ## Step 7 — Smoke test
 
-Two runs that touch neither Drive nor the model:
+Two runs that touch neither Drive nor the model. **`--args` does not work on `job start`** —
+it fails with `ContainerAppImageRequired`, and adding `--image` drops the job's environment
+variables ([azure-cli#27521](https://github.com/Azure/azure-cli/issues/27521)); `--args` is also
+reported as ignored there
+([azure-container-apps#1360](https://github.com/microsoft/azure-container-apps/issues/1360)).
+Set the arguments on the job instead, run it, then put them back:
 
 ```bash
-az containerapp job start --name crr-quarterly --resource-group crr-rg --args "version"
-az containerapp job start --name crr-quarterly --resource-group crr-rg --args "validate-config"
+az containerapp job update --name crr-quarterly --resource-group rg-cust-cornerstone --args "version"
+az containerapp job start  --name crr-quarterly --resource-group rg-cust-cornerstone
+
+az containerapp job update --name crr-quarterly --resource-group rg-cust-cornerstone --args "validate-config"
+az containerapp job start  --name crr-quarterly --resource-group rg-cust-cornerstone
 ```
+
+**Restore the arguments when you are done** — the quarterly schedule runs whatever is
+configured. Re-running the deploy workflow resets them from `infra/main.bicep`.
 
 Watch them:
 
 ```bash
-az containerapp job execution list --name crr-quarterly --resource-group crr-rg --output table
-az containerapp job logs show --name crr-quarterly --resource-group crr-rg --follow
+az containerapp job execution list --name crr-quarterly --resource-group rg-cust-cornerstone --output table
+az containerapp job logs show --name crr-quarterly --resource-group rg-cust-cornerstone --follow
 ```
 
 `version` should print `crr 1.0.0` and exit 0. `validate-config` should list 4 schemas,
@@ -186,13 +201,13 @@ image is fine and the config copy is not — which would be a bug worth reportin
 Only once a period's inputs are in Drive (`docs/RUNBOOK.md` → *Preparing a period in Drive*):
 
 ```bash
-# The period just ended — what the schedule does.
-az containerapp job start --name crr-quarterly --resource-group crr-rg
-
-# Or one specific property.
-az containerapp job start --name crr-quarterly --resource-group crr-rg \
-  --args "build --period 2026-09 --repo gdrive --classifier anthropic --property fort-grounds"
+# The period just ended — what the schedule does, and the only form needing no arguments.
+az containerapp job start --name crr-quarterly --resource-group rg-cust-cornerstone
 ```
+
+For any *other* period or a single property, use **Actions → Build a period**: it takes the
+period, property, repo and classifier as inputs, runs the same image with the same secrets, and
+does not require mutating the job definition the schedule depends on.
 
 **Read the exit code carefully.** The runner's contract (SPEC §6.8) is 0 built, 2 needs review,
 1 failed — and Azure marks any non-zero exit as a *failed execution*. **An execution showing
@@ -229,13 +244,13 @@ Remember the GitHub Actions copy is separate (`docs/SETUP-CREDENTIALS.md`).
 **Where the logs are.** Azure portal → the resource group → `crr-logs` → Logs, or:
 
 ```bash
-az containerapp job logs show --name crr-quarterly --resource-group crr-rg --follow
+az containerapp job logs show --name crr-quarterly --resource-group rg-cust-cornerstone --follow
 ```
 
 Every line is JSON. Page text, tenant names, file paths and secrets are never logged — only
 document hashes, page counts and status.
 
-**Tearing it down.** `az group delete --name crr-rg --yes` removes everything created here.
+**Tearing it down.** `az group delete --name rg-cust-cornerstone --yes` removes everything created here.
 Nothing in Drive or GitHub is touched.
 
 ---
@@ -267,6 +282,8 @@ that works, delete the `AZURE_CREDENTIALS` secret and reset the service principa
 |---|---|---|
 | Deploy fails: `MissingSubscriptionRegistration` | resource provider not registered | `az provider register -n Microsoft.App --wait` |
 | Deploy fails: `AuthorizationFailed` | the service principal is not Contributor on the group | re-check the `--scopes` used in step 2 |
+| Deploy fails at sign-in: `AADSTS7000215` | the `clientSecret` in `AZURE_CREDENTIALS` is not the secret's **Value** — usually the portal's **Secret ID** pasted by mistake | make a new client secret and copy the **Value** column; see `SETUP-AZURE-PORTAL.md` §1.7 |
+| Deploy fails at sign-in: `AADSTS7000222` | the client secret expired | issue a new one and update `AZURE_CREDENTIALS` |
 | Secret step in bootstrap fails: `Forbidden` | RBAC vault data-plane role not yet effective | wait a minute and retry; the role takes time to propagate |
 | Job execution fails immediately, logs mention the secret | the job's identity cannot read the vault | step 6's role assignment; then re-run the deploy |
 | Job execution fails: `UNAUTHORIZED` / manifest unknown | private GHCR image, no pull credentials | step 4 |

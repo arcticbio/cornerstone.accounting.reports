@@ -13,9 +13,9 @@
 set -euo pipefail
 
 # ---------------------------------------------------------------- settings you may change ---
-RESOURCE_GROUP="${RESOURCE_GROUP:-crr-rg}"
+RESOURCE_GROUP="${RESOURCE_GROUP:-rg-cust-cornerstone}"
 LOCATION="${LOCATION:-westus2}"
-KEY_VAULT_NAME="${KEY_VAULT_NAME:-}"          # must be globally unique; generated if blank
+KEY_VAULT_NAME="${KEY_VAULT_NAME:-crr-kv-accounting}"   # globally unique; reused if it already exists
 SP_NAME="${SP_NAME:-crr-github-actions}"
 # ---------------------------------------------------------------------------------------------
 

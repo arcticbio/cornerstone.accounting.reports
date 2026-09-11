@@ -236,6 +236,33 @@ Twice I read a superseded run's stale step data as a stall; it was not one. Once
 stopped, the run went green. Left as-is — cancelling superseded runs is the right default, and
 `cancel-in-progress: false` is the one-line change if it ever becomes a nuisance.
 
+
+**B-09 · A shared drive (or OAuth delegation) for the Drive root · every `--repo gdrive` write,
+including publishing packages · reading, folder creation and `--repo local` all still work.**
+*Symptom:* uploading any file as the service account fails with
+`403 storageQuotaExceeded: Service Accounts do not have storage quota. Leverage shared drives,
+or use OAuth delegation instead.`
+*Root cause:* the Drive root `Cornerstone Reports` (`1_tUMel…`) is a **My Drive** folder owned by
+a person. A service account has no storage quota of its own, and a file uploaded into My Drive
+must be owned by the uploader. Folders are exempt — they consume no quota — which is why
+`ensure_period_skeleton` succeeds and makes the account look healthy right up until the first
+byte is written. `canAddChildren` is `true`; it is not a permission problem, and no amount of
+sharing fixes it.
+*Blast radius:* not just input staging. `GoogleDriveRepository.publish` uploads the built PDFs
+the same way, so **no package can ever reach Drive in this configuration** — a gdrive build
+would classify, compose, and fail at the last step.
+*Fix, in order of preference:*
+1. **Shared drive.** Move `Cornerstone Reports` into one and add
+   `crr-runner@cornerstone-reports-508208.iam.gserviceaccount.com` as **Content manager**. Files
+   there are owned by the drive, not the uploader, so the quota question never arises. The client
+   already sends `supportsAllDrives=true`, so this needs no code change. Needs Google Workspace.
+2. **Domain-wide delegation.** The account impersonates a real user, who owns the files. Needs a
+   Workspace admin and a `subject=` argument when building credentials — a code change.
+*Meanwhile:* `--repo local` is unaffected, and reads from Drive are unaffected.
+*Documentation that was wrong:* `RUNBOOK.md` → *Access* said sharing the root folder as Editor
+was sufficient for the runner to "write `output/` and `review/`". It is sufficient to create
+those folders and to read; it is not sufficient to put a file in them.
+
 ---
 
 **B-09 · Two open PRs carry the same three changes, and neither is redundant.** *Needs: which
