@@ -10,6 +10,44 @@ deployed, audited and armed**, a rehearsal period (`2026-08`) is seeded in Drive
 and PLAN Phase 8 is complete: the job ran on Azure and its logs show `crr 1.0.0`.** See "Pick up
 here" below.
 
+## The production host has run a full quarter, clean
+
+**2026-09-11 08:16 UTC · execution `crr-quarterly-ectvlit` · exit 0 · $4.78**
+([run 34576554024](https://github.com/arcticbio/cornerstone.accounting.reports/actions/runs/34576554024))
+
+The Azure Container Apps Job classified, composed and published **all eight properties** against
+the seeded `2026-08` period, with the real model, writing into the shared drive. **Nothing went
+to review.** This is the first run of the system that has ever exited 0 — the previous full keyed
+run was 6 built / 2 to review.
+
+Verified by downloading every published PDF back out of Drive and opening it, rather than by
+believing the runner's own log:
+
+| Property | Pages | Golden | Bookmarks | Status |
+|---|---:|---:|---:|---|
+| bridgewater | 24 | 24 | 8 | built |
+| fort-grounds | 8 | 8 | 6 | built |
+| lolo-peak-village | 8 | 8 | 6 | built |
+| mullan-crossing | 8 | 8 | 6 | built |
+| river-falls | 29 | 29 | 13 | built |
+| salmon-crossing | 18 | 18 | 8 | built |
+| timber-place | 25 | 25 | 13 | built |
+| waypointe | 10 | 10 | 8 | built |
+
+**Every page count matches golden exactly**, every `/Title` is correct, 0 review reasons, 8
+`output/` folders and 0 `review/` folders in Drive. 172 API calls, `$4.78` ($0.60 per property) —
+within a cent of the $4.72 the Actions host measured, so the cost model holds on Azure too.
+
+Two things this confirms that only a real run could. **B-08 is fixed in production**: Timber
+Place and River Falls, the two McCathren properties that used to fail `cardinality_violation`,
+both built clean at their exact golden page counts. And the `build` option mutates nothing — the
+workflow's "Set the arguments" step was **skipped** and the restore and confirm jobs did not run,
+because the job already holds the arguments the cron reads.
+
+⚠️ **These eight packages say August and contain June figures.** They are the rehearsal dataset
+(A-11), not deliverables. Delete the `2026-08` tree from Drive before anyone can mistake them for
+a real quarter.
+
 ## Pick up here
 
 _Last updated 2026-09-11 after a full audit of the plan, the documents and the live environment.
@@ -203,6 +241,8 @@ Drive skeleton already exists (folders only), so a real September run writes int
 | 2026-09-10 | post-v1 | Full 8-property keyed run: 6 built, 2 to review (`cardinality_violation`, both McCathren); every property hit its golden page count; **$4.72/run, $0.59/property** | Work the two review cases; `crr eval --classifier anthropic` |
 | 2026-09-11 | post-v1 | Full audit of plan, documents and live environment. **B-04 closed** — Azure deployed, identity reads the vault, GHCR pull credentials present, shared-drive folder id taken, cron armed. Rehearsal period `2026-08` seeded in Drive (31 files, 8/8 ready). `azure-job.yml` added so a session can start the job and the arguments always get restored (B-11). | Dispatch `Run the Azure job` with `version`, then `validate-config`, then the no-argument build |
 | 2026-09-11 | post-v1 | **Phase 8 complete.** `crr version` ran on Azure and its logs say `crr 1.0.0` (`crr-quarterly-94admd0`). Took three runs: `--job-execution-name` is not a flag, `--args` cannot set a multi-token list (the restore left the cron on `version` — repaired), `--tail` is capped at 300. The restore is now a call to `deploy.yml` with a verification job after it (A-13). | `validate-config`, then the `build` option against the seeded `2026-08` data (~$4.72) |
+| 2026-09-11 | post-v1 | `validate-config` on Azure: `4 schema(s), 3 output definition(s), 8 propert(ies)`, identical to a local run line for line — the config in the image matches `main`. | The full build |
+| 2026-09-11 | post-v1 | **The production host built a full quarter, clean.** `crr-quarterly-ectvlit`, exit 0, **8/8 built, 0 to review**, $4.78. Every published PDF downloaded back out of Drive and checked: page counts match golden exactly, bookmarks and titles correct. B-08 confirmed fixed in production. | Delete the `2026-08` rehearsal tree; load September's real inputs |
 
 ## Phase 0 — Repository hygiene and scaffold
 
