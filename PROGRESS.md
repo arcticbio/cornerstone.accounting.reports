@@ -57,6 +57,13 @@ Everything below this block is the historical build record._
 GHCR as `:build-v1`, republished by every push to `main`. The real model has built all eight
 properties end to end.
 
+**Model successor readiness (2026-09-25, branch `claude/gracious-dirac-t7w39j`).** The
+classifier now runs on `claude-opus-5-5`, which rejects the forced tool call v1 relies on
+(A-14). Production still defaults to `claude-opus-5`. Three full evals on 5.5 score 100 % on
+every metric at $3.63–3.72 per run against $4.67. Still to do: River Falls, Bridgewater and Salmon
+Crossing have not been built end to end on 5.5 — the account hit its monthly API spend limit
+mid-build, and access returns 2026-10-01. See `docs/ANALYSIS-model-successor-2026-09.md`.
+
 **What the keyed runs established.**
 
 | | |

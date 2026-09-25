@@ -240,6 +240,22 @@ The first run proved the setting direction and assumed the restoring one.
 *Where:* `.github/workflows/azure-job.yml`, `.github/workflows/deploy.yml` (`workflow_call`),
 `docs/SETUP-AZURE.md` step 7, `docs/RUNBOOK.md`.
 
+**A-14 · The classifier forces its tool only on models known to accept it; every other model
+gets `auto` + `strict`.**
+*Why:* `claude-opus-5-5`, the successor to the model v1 ships on, rejects
+`tool_choice: {"type": "tool"}` with a 400 (confirmed live 2026-09-25) and cannot disable
+thinking. Pointing `CRR_MODEL` at it without a code change fails every page. The forced request
+is what production was validated on (D-09), so it is kept, byte-identical, for
+`FORCED_TOOL_CHOICE_MODELS`; any other model — including ones not yet released — takes the
+portable path, which every current model accepts: `auto` with `disable_parallel_tool_use`, the
+same strict tool, one instruction in the cached system block, `max_tokens` 4096 for thinking.
+A response with no tool call takes the existing repair attempt, then goes to review.
+*Evidence:* three full evals on `claude-opus-5-5` (low ×2, medium) — 100 % on every metric,
+172/172 first-attempt tool calls each, $3.63–3.72 against $4.67 for the Opus 5 baseline on the
+same branch. `docs/ANALYSIS-model-successor-2026-09.md`.
+*Also:* `claude-opus-5-5` added to the price table — a model missing from it estimates at $0.
+*Where:* `src/crr/classify/anthropic_classifier.py`, `src/crr/settings.py`, SPEC §7.2.
+
 ---
 
 ## Blocked (Claude Code appends here)
