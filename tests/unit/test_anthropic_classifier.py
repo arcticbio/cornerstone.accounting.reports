@@ -9,7 +9,10 @@ import pytest
 from anthropic import APIStatusError, RateLimitError
 
 from crr.classify.anthropic_classifier import (
+    AUTO_TOOL_INSTRUCTION,
     BACKOFF_SECONDS,
+    FORCED_TOOL_CHOICE_MODELS,
+    MAX_TOKENS_THINKING,
     TOOL_NAME,
     AnthropicClassifier,
     build_exemplar_blocks,
@@ -17,7 +20,7 @@ from crr.classify.anthropic_classifier import (
     build_tool,
     estimate_usd,
 )
-from crr.classify.prompts import Exemplar
+from crr.classify.prompts import Exemplar, render_system_prompt
 from crr.classify.protocol import PageInput, Usage
 from crr.config import load_config
 from crr.models import SourceDocument
@@ -80,8 +83,8 @@ VALID = {
 }
 
 
-def _settings() -> Settings:
-    return Settings(_env_file=None, anthropic_api_key="sk-test")  # type: ignore[call-arg]
+def _settings(model: str = "claude-opus-5") -> Settings:
+    return Settings(_env_file=None, anthropic_api_key="sk-test", model=model)  # type: ignore[call-arg]
 
 
 def _doc(pages: int = 2) -> SourceDocument:
@@ -310,6 +313,93 @@ def test_cost_estimate_uses_the_price_table() -> None:
     expected = price.input + price.cache_read + price.cache_write + price.output
     assert estimate_usd(usage, "claude-opus-5", settings) == pytest.approx(expected)
     assert estimate_usd(usage, "no-such-model", settings) == 0.0
+
+
+# -- models that reject forced tool use (claude-opus-5-5 and successors) ----------------------
+
+
+class _Text:
+    type = "text"
+    text = "It is an owner statement."
+
+
+def test_the_forced_prefix_is_exactly_the_rendered_prompt() -> None:
+    """Production's cached prefix must not move: the Opus 5 request stays byte-identical."""
+    assert build_system_blocks(SCHEMA, "v1")[0]["text"] == render_system_prompt(SCHEMA, "v1")
+
+
+def test_opus_5_5_steers_to_the_tool_instead_of_forcing_it(page_images: list[PageInput]) -> None:
+    """`claude-opus-5-5` 400s on `tool_choice: tool`; `auto` + `strict` is what it accepts."""
+    client = _FakeClient([_Response(VALID), _Response(VALID)])
+    AnthropicClassifier(_settings("claude-opus-5-5"), client=client).classify(  # type: ignore[arg-type]
+        _doc(), SCHEMA, page_images
+    )
+    first, second = client.messages.calls
+    assert first["tool_choice"] == {"type": "auto", "disable_parallel_tool_use": True}
+    assert first["tools"][0]["strict"] is True
+    # thinking cannot be switched off on this model and counts against max_tokens
+    assert first["max_tokens"] == MAX_TOKENS_THINKING
+    assert "thinking" not in first
+    assert first["output_config"] == {"effort": "low"}
+    system = first["system"][0]
+    assert system["text"].endswith(AUTO_TOOL_INSTRUCTION)
+    assert system["cache_control"] == {"type": "ephemeral", "ttl": "1h"}
+    assert first["system"] == second["system"]
+
+
+@pytest.mark.parametrize("model", sorted(FORCED_TOOL_CHOICE_MODELS))
+def test_models_known_to_accept_forcing_keep_the_forced_request(
+    model: str, page_images: list[PageInput]
+) -> None:
+    client = _FakeClient([_Response(VALID)])
+    AnthropicClassifier(_settings(model), client=client).classify(  # type: ignore[arg-type]
+        _doc(1), SCHEMA, page_images[:1]
+    )
+    call = client.messages.calls[0]
+    assert call["tool_choice"] == {"type": "tool", "name": TOOL_NAME}
+    assert call["max_tokens"] == 400
+    assert AUTO_TOOL_INSTRUCTION not in call["system"][0]["text"]
+
+
+def test_an_unknown_model_takes_the_portable_path(page_images: list[PageInput]) -> None:
+    """A successor model must work without a code change, so unknown means `auto`."""
+    client = _FakeClient([_Response(VALID)])
+    AnthropicClassifier(_settings("claude-opus-9"), client=client).classify(  # type: ignore[arg-type]
+        _doc(1), SCHEMA, page_images[:1]
+    )
+    assert client.messages.calls[0]["tool_choice"]["type"] == "auto"
+
+
+def test_a_prose_answer_under_auto_gets_the_repair_attempt(page_images: list[PageInput]) -> None:
+    """`auto` does not guarantee the call. A prose-only answer is repaired, not accepted."""
+    prose = _Response(None, stop_reason="end_turn")
+    prose.content = [_Text()]
+    client = _FakeClient([prose, _Response(VALID)])
+    result = AnthropicClassifier(
+        _settings("claude-opus-5-5"), client=client
+    ).classify(  # type: ignore[arg-type]
+        _doc(1), SCHEMA, page_images[:1]
+    )
+    assert result.pages[0].section_id == "owner_statement"
+    assert len(client.messages.calls) == 2
+    assert "rejected" in client.messages.calls[1]["messages"][0]["content"][-1]["text"]
+
+
+def test_thinking_that_exhausts_max_tokens_goes_to_review(page_images: list[PageInput]) -> None:
+    cut_off = _Response(None, stop_reason="max_tokens")
+    client = _FakeClient([cut_off, cut_off])
+    result = AnthropicClassifier(
+        _settings("claude-opus-5-5"), client=client
+    ).classify(  # type: ignore[arg-type]
+        _doc(1), SCHEMA, page_images[:1]
+    )
+    assert result.pages[0].section_id == "unknown"
+
+
+def test_opus_5_5_has_a_price() -> None:
+    """A model missing from the table estimates at $0 — a silent wrong number in every manifest."""
+    price = _settings().price_table["claude-opus-5-5"]
+    assert (price.input, price.cache_read, price.cache_write, price.output) == (4, 0.2, 8, 20)
 
 
 class _HttpResponse:

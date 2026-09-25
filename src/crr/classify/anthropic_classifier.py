@@ -13,7 +13,14 @@ import time
 from typing import Any
 
 from anthropic import Anthropic, APIStatusError, RateLimitError
-from anthropic.types import ImageBlockParam, Message, MessageParam, TextBlockParam, ToolParam
+from anthropic.types import (
+    ImageBlockParam,
+    Message,
+    MessageParam,
+    TextBlockParam,
+    ToolChoiceParam,
+    ToolParam,
+)
 from pydantic import ValidationError
 
 from crr.classify.prompts import (
@@ -32,7 +39,33 @@ from crr.settings import Settings
 log = get_logger(__name__)
 
 TOOL_NAME = "classify_page"
+#: Output ceiling on a forced call. Forced tool use runs without thinking, so ~200 tokens of
+#: tool input is all a page produces and 400 is ample.
 MAX_TOKENS = 400
+#: Output ceiling on an `auto` call. Models that reject forced tool use also think on every
+#: request (no way to switch it off), and thinking counts against `max_tokens`: a ceiling sized
+#: for the tool input alone would cut the call off before it is made, and every page would go
+#: to review. Billing is on tokens produced, not on this ceiling.
+MAX_TOKENS_THINKING = 4096
+#: Models known to accept `tool_choice: {"type": "tool"}`. Anything else — `claude-opus-5-5`,
+#: the Fable/Mythos 5.1 line, and any model released after this list was written — gets
+#: `auto` + `strict`, which every current model accepts. Unknown models take the portable path
+#: so that a successor model works without a code change; the forced path is kept for these
+#: because it is what production has been validated on (D-09).
+FORCED_TOOL_CHOICE_MODELS = frozenset(
+    {
+        "claude-opus-5",
+        "claude-sonnet-5",
+        "claude-haiku-4-5",
+        "claude-haiku-4-5-20251001",
+    }
+)
+#: Appended to the instructions when the tool cannot be forced. `auto` does not guarantee the
+#: call; a response without one is caught by `_parse` and gets the one repair attempt.
+AUTO_TOOL_INSTRUCTION = (
+    f"\n\n## Response\n\nRecord your answer by calling the `{TOOL_NAME}` tool exactly once. "
+    "Do not answer in prose."
+)
 UNKNOWN = "unknown"
 #: Backoff for the errors the SDK's own retries do not cover (SPEC §7.3).
 BACKOFF_SECONDS = (2, 4, 8, 16)
@@ -94,21 +127,34 @@ def _image_block(data_b64: str) -> ImageBlockParam:
     }
 
 
-def build_system_blocks(schema: SourceSchema, prompt_version: str) -> list[TextBlockParam]:
+def forces_tool_choice(model: str) -> bool:
+    """Whether the classifier forces its tool on `model`, or steers to it under `auto`."""
+    return model in FORCED_TOOL_CHOICE_MODELS
+
+
+def build_tool_choice(model: str) -> ToolChoiceParam:
+    if forces_tool_choice(model):
+        return {"type": "tool", "name": TOOL_NAME}
+    return {"type": "auto", "disable_parallel_tool_use": True}
+
+
+def build_system_blocks(
+    schema: SourceSchema, prompt_version: str, *, forced: bool = True
+) -> list[TextBlockParam]:
     """The cached instruction prefix: role, fingerprint, record scope, section catalogue.
 
     The Messages API's `system` field carries text blocks only, so the exemplar *images* sit
     at the head of the user turn instead (`build_exemplar_blocks`) rather than in the system
     prompt as SPEC §7.2 originally described. Both prefixes are per-document constants and
     both are cached, so the caching behaviour the spec asked for is unchanged.
+
+    `forced=False` appends the instruction to call the tool, for models where it cannot be
+    forced. The forced prefix is byte-identical to what production has always sent.
     """
-    return [
-        {
-            "type": "text",
-            "text": render_system_prompt(schema, prompt_version),
-            "cache_control": CACHE_CONTROL,
-        }
-    ]
+    text = render_system_prompt(schema, prompt_version)
+    if not forced:
+        text += AUTO_TOOL_INSTRUCTION
+    return [{"type": "text", "text": text, "cache_control": CACHE_CONTROL}]
 
 
 def build_exemplar_blocks(exemplars: list[Exemplar]) -> list[UserBlock]:
@@ -166,6 +212,7 @@ class AnthropicClassifier:
         self._exemplars = exemplars or []
         self.prompt_version = prompt_version
         self._client = client or Anthropic(api_key=settings.anthropic_api_key, max_retries=4)
+        self._forced = forces_tool_choice(settings.model)
 
     @property
     def name(self) -> str:
@@ -184,12 +231,12 @@ class AnthropicClassifier:
             try:
                 return self._client.messages.create(
                     model=self._settings.model,
-                    max_tokens=MAX_TOKENS,
+                    max_tokens=MAX_TOKENS if self._forced else MAX_TOKENS_THINKING,
                     output_config={"effort": self._settings.classifier_effort},
                     system=system,
                     messages=[message],
                     tools=[tool],
-                    tool_choice={"type": "tool", "name": TOOL_NAME},
+                    tool_choice=build_tool_choice(self._settings.model),
                 )
             except RateLimitError as exc:
                 last = exc
@@ -208,6 +255,10 @@ class AnthropicClassifier:
             # `unknown`, which sends the build to the review queue rather than to output/.
             log.warning("classify.refusal")
             return None
+        if response.stop_reason == "max_tokens":
+            # Thinking can use the whole ceiling before the tool call is written. Say so: the
+            # page otherwise goes to review looking like an ordinary missing call.
+            log.warning("classify.max_tokens")
         for block in response.content:
             if block.type == "tool_use" and block.name == TOOL_NAME:
                 return dict(block.input) if isinstance(block.input, dict) else None
@@ -254,7 +305,7 @@ class AnthropicClassifier:
         self, doc: SourceDocument, schema: SourceSchema, pages: list[PageInput]
     ) -> ClassificationResult:
         tool = build_tool(schema)
-        system = build_system_blocks(schema, self.prompt_version)
+        system = build_system_blocks(schema, self.prompt_version, forced=self._forced)
         exemplars = build_exemplar_blocks(self._exemplars)
         result = ClassificationResult()
         previous: PageClassification | None = None
@@ -329,6 +380,15 @@ class AnthropicClassifier:
         started = time.monotonic()
         response = self._call(system, user, tool)
         result.usage.add(self._usage(response, int((time.monotonic() - started) * 1000)))
+        details = getattr(response.usage, "output_tokens_details", None)
+        log.info(
+            "classify.call",
+            stop_reason=response.stop_reason,
+            output_tokens=response.usage.output_tokens,
+            # Output includes thinking. Forced calls never think; `auto` calls on a model that
+            # always thinks do, and this is where that cost shows.
+            thinking_tokens=getattr(details, "thinking_tokens", None),
+        )
         return self._parse(self._tool_input(response), doc_role, page)
 
 

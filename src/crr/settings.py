@@ -27,8 +27,10 @@ class ModelPrice(BaseModel):
 #: Built-in list price estimate, USD per MTok. Override with CRR_PRICE_TABLE_JSON when the
 #: published price list moves; the manifest records the estimate, never a billed amount.
 #: `cache_write` is the 1-hour-TTL rate (2x base input) because that is the TTL the classifier
-#: asks for; cache reads are 0.1x base input.
+#: asks for; cache reads are 0.1x base input — except on `claude-opus-5-5`, where they are 0.05x.
+#: A model missing from this table estimates at $0, so add its row before pointing CRR_MODEL at it.
 DEFAULT_PRICE_TABLE: dict[str, ModelPrice] = {
+    "claude-opus-5-5": ModelPrice(input=4.0, cache_read=0.2, cache_write=8.0, output=20.0),
     "claude-opus-5": ModelPrice(input=5.0, cache_read=0.5, cache_write=10.0, output=25.0),
     "claude-sonnet-5": ModelPrice(input=2.0, cache_read=0.2, cache_write=4.0, output=10.0),
     "claude-haiku-4-5": ModelPrice(input=1.0, cache_read=0.1, cache_write=2.0, output=5.0),
