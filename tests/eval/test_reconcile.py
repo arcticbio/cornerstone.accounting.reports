@@ -268,6 +268,26 @@ def test_non_pdfs_are_ignored_and_named(world: World) -> None:
     assert (world.month() / FOLDER["bs"] / "photo.jpg").is_file()  # never renamed or moved
 
 
+def test_equal_upload_times_do_not_rebuild_every_run(world: World) -> None:
+    """Two PDFs with the same upload time must settle on one winner. Breaking the tie on the
+    name as it stands let the loser's `SUPERSEDED` rename hand it the next run: a new version,
+    and a paid re-classification, every 30 minutes."""
+    world.upload("pm", "pm.pdf")
+    world.upload("pl", "pl.pdf")
+    world.upload("bs", "A.pdf", content=SOURCE["bs"].read_bytes() + b"\n%A\n")
+    world.upload("bs", "B.pdf", content=SOURCE["bs"].read_bytes() + b"\n%B\n")
+    world.later(minutes=61)
+    for _ in range(4):
+        world.run()
+        world.later(minutes=30)
+    assert world.state().latest.version == 1  # type: ignore[union-attr]
+    assert sorted(p.name for p in (world.month() / FOLDER["bs"]).iterdir()) == [
+        "B.pdf",
+        "SUPERSEDED - A.pdf",
+    ]
+    assert world.status() == "STATUS - Built v1 (current).txt"
+
+
 def test_failures_retry_then_stop_until_the_files_change(world: World) -> None:
     world.classifier.fail = True
     world.upload_all()

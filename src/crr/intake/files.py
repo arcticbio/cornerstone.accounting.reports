@@ -61,13 +61,17 @@ def is_superseded_name(name: str) -> bool:
 def choose(files: list[IntakeFile]) -> Choice:
     """The newest upload wins; every other PDF is set aside; non-PDFs are ignored.
 
-    Ties on upload time break on name then id, so two runs over the same folder always agree.
+    An exact tie on upload time — routine on local disk, where `cp -p` or unzip gives files
+    the same mtime — breaks on the name *without* the `SUPERSEDED - ` prefix, then on the id.
+    Nothing this function renames takes part: breaking on the name as it stands would let the
+    rename that marks the loser make it the next run's winner, and the folder would flip, and
+    rebuild, on every run.
     """
     pdfs = [f for f in files if f.is_pdf]
     ignored = tuple(sorted((f for f in files if not f.is_pdf), key=lambda f: f.name))
     if not pdfs:
         return Choice(current=None, ignored=ignored)
-    ordered = sorted(pdfs, key=lambda f: (f.uploaded_at, f.name, f.id), reverse=True)
+    ordered = sorted(pdfs, key=lambda f: (f.uploaded_at, strip_prefix(f.name), f.id), reverse=True)
     current, rest = ordered[0], tuple(ordered[1:])
     renames: list[tuple[IntakeFile, str]] = []
     if is_superseded_name(current.name):

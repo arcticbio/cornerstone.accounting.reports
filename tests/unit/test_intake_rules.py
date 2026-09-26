@@ -137,6 +137,30 @@ class TestChoose:
         a, b = pdf("a.pdf", 0), pdf("b.pdf", 0)
         assert choose([a, b]).current == choose([b, a]).current
 
+    @pytest.mark.parametrize("path_ids", [False, True], ids=["drive-ids", "path-ids"])
+    def test_a_tie_survives_the_renames_it_causes(self, path_ids: bool) -> None:
+        """The loser is renamed `SUPERSEDED - …`; the next run must still pick the same file.
+
+        With `path_ids` the id moves with the name, as LocalIntakeStore's does (it is the
+        file's path), so the id alone cannot be what keeps the answer stable.
+        """
+
+        def named(name: str, key: str) -> IntakeFile:
+            return IntakeFile(
+                id=f"bs/{name}" if path_ids else key, name=name, uploaded_at=T0, md5=key
+            )
+
+        files = [named("A.pdf", "a"), named("B.pdf", "b")]
+        winners = []
+        for _ in range(4):
+            choice = choose(files)
+            assert choice.current is not None
+            winners.append(choice.current.md5)
+            renamed = {f.md5: name for f, name in choice.renames}
+            files = [named(renamed.get(f.md5 or "", f.name), f.md5 or "") for f in files]
+        assert winners == ["b"] * 4
+        assert sorted(f.name for f in files) == ["B.pdf", SUPERSEDED_PREFIX + "A.pdf"]
+
     def test_repeated_prefixes_are_all_stripped(self) -> None:
         assert strip_prefix("SUPERSEDED - superseded - a.pdf") == "a.pdf"
 

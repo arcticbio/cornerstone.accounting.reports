@@ -950,6 +950,8 @@ Exactly one file per component (D-19). When a folder holds more than one PDF:
 - **The newest upload wins.** "Upload time" is the modified time of the file's *head revision* —
   when its current content arrived — not the file's `modifiedTime`, which a rename also changes.
   Uploading a new version of the same file (Drive → Manage versions) also counts as an upload.
+  An exact tie on upload time breaks on the name without the `SUPERSEDED - ` prefix, then on
+  the id: arbitrary, but stable, because nothing the system renames takes part in it.
 - Every other PDF in the folder is renamed `SUPERSEDED - <original name>`. Nothing is moved or
   deleted (D-14 still holds).
 - The prefix is the system's output, not its input: the winner is always computed from *all*
