@@ -22,7 +22,18 @@ property_managers:
     output_definition: cobalt-investor-report
     pm_source_filename: "05 PM Source - Cobalt Baseline.pdf"
 
-# Cornerstone component filenames are the same for every property.
+# One folder per input component inside each month folder (SPEC §18.3). The folder a file is
+# uploaded into declares what it is; its filename is never read (D-19). A property gets a
+# folder only for the components it uses — see `components:` on a property to override the
+# output definition's default (required | optional | not_used).
+component_folders:
+  pm_source:                          "1 - Property Manager Report"
+  cornerstone_balance_sheet:          "2 - Balance Sheet"
+  cornerstone_profit_loss_ytd:        "3 - Profit and Loss"
+  cornerstone_distribution_schedule:  "4 - Distribution Schedule"
+
+# Cornerstone component filenames are the same for every property. Read only by `crr build`
+# over the v1 `inputs/` layout (the June bundle); `crr reconcile` ignores filenames.
 cornerstone_files:
   cornerstone_balance_sheet:          "01 Cornerstone - Balance Sheet.pdf"
   cornerstone_profit_loss_ytd:        "02 Cornerstone - Profit and Loss YTD Comparison.pdf"

@@ -931,7 +931,9 @@ Exactly one file per component (D-19). When a folder holds more than one PDF:
 
 **Components per property.** Each output definition's `sources` gives the default: `required:
 true` → `required`, `required: false` → `optional`. A property may override any of them in
-`config/properties.yaml` with `components: {<source key>: required | optional | not_used}`.
+`config/properties.yaml` with `components: {<role>: required | optional | not_used}` — keyed by
+role (`cornerstone_distribution_schedule`), as `component_folders` is, not by the output
+definition's per-manager alias.
 `not_used` components get no folder.
 
 A property-month is **ready** when all of these hold:

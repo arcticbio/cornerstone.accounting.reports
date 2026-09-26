@@ -414,7 +414,7 @@ OCR included), and the image is pushed to GHCR as `:build-v1` and `:sha-<short>`
 
 Mirrors PLAN Phase 10; SPEC §18; D-17 – D-24.
 
-- [ ] Config: `component_folders` in `properties.yaml`; per-property `components` overrides. `validate-config` covers both.
+- [x] Config: `component_folders` in `properties.yaml`; per-property `components` overrides. `validate-config` covers both. Keyed by role, not by the output definition's alias — the aliases differ per manager and the roles do not (SPEC §18.5 amended). `ConfigBundle.components_for()` drops `not_used`; also rejects a folder named `output`/`SUPERSEDED…`, duplicates, and a property left with no components. 9 tests.
 - [ ] Repository: list a component folder with head-revision upload times and `md5Checksum`; rename to and from `SUPERSEDED - `; create the month/component/`output` skeleton; read the newest manifest and `attempts.json`; publish `vN` names. Both `GoogleDriveRepository` and `LocalFsRepository` (mtime stands in for upload time).
 - [ ] File choice (§18.4) and readiness (§18.5), pure, fully unit-tested: newest wins, prefix follows the winner, delete-newest reverts, settle window, optional components, `not_used`.
 - [ ] Fingerprint and versions (§18.7); manifest v2 fields; classification reuse from the previous manifest with its compatibility check.
