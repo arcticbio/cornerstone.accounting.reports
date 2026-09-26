@@ -414,7 +414,7 @@ OCR included), and the image is pushed to GHCR as `:build-v1` and `:sha-<short>`
 **Acceptance:** `README.md` → `docs/RUNBOOK.md` takes someone who has never seen the repository from "the exports arrived" to "the packages are in Drive", including what to do with a review outcome. The `v1.0.0` tag is the last task.
 
 
-## Phase 10 — Continuous intake (designed 2026-09-26, not started)
+## Phase 10 — Continuous intake (built 2026-09-26; at its STOP)
 
 Mirrors PLAN Phase 10; SPEC §18; D-17 – D-24.
 
@@ -449,6 +449,19 @@ Mirrors PLAN Phase 10; SPEC §18; D-17 – D-24.
 
   v6 downloaded back out of Drive: 8 pages, 6 bookmarks, title `Fort Grounds - Investor Report - September 2026`. The root `_STATUS - All properties.txt` reads `Fort Grounds - September 2026 - Built v6 (current)`. **Two defects found and fixed** (`aa2c8df`): a replaced component was listed twice in a version's history (`a | b - c` precedence), and a held newer file read as "waiting", which asks nothing of a reviewer. The July/August test months were trashed afterwards; **Fort Grounds / 2026-09 is left in place as a worked example** (v1–v6 and their status) — trash it before real September files go there.
 - [x] Docs: `RUNBOOK.md` rewritten around the new layout — a one-page "how to upload" for non-technical uploaders, and "how to read the status" for reviewers; `SETUP-GOOGLE-DRIVE.md`; banners in SPEC §6.1/§6.9/§13/§14 replaced by the amended text. The runbook's operating half is new: *How it works*, *For uploaders — one page* (written to be forwarded as is), *For reviewers* (every status headline, what it means, what to do; the root summary's *Last checked* as the liveness signal), the folder layout, on-demand runs, Azure and how to arm the schedule, and six new failure-mode rows. README, SETUP-GOOGLE-DRIVE, SPEC §11 (CLI) and §12 (settings) updated; the §6.1/§6.9/§13/§14 banners now say those sections describe `crr build`.
+
+**Acceptance, 2026-09-26:**
+- *Every rehearsal scenario produces its §18.8 status and no build it should not* — **met**, on
+  the live drive (table above), after the two defects it found were fixed.
+- *An unrelated PDF of any length costs at most `CRR_MAX_BUILD_USD`* — **met**: the ceiling is
+  checked before any model call and counts only pages that would be sent (test
+  `test_the_cost_ceiling_holds_and_reuse_lowers_the_estimate`).
+- *A run with nothing to build finishes in under a minute on Azure* — **37 s from this
+  container against the live drive; not yet measured on Azure** (needs a deploy — the STOP).
+- *Keyed eval unchanged at 100 %* — **met by construction**: `src/crr/classify`, `segment`,
+  `resolve`, `compose`, `config/schemas`, `config/outputs` and `eval/golden` are byte-identical
+  to `main`, and the prompt version is unchanged; the golden gate passes in the suite (542
+  tests), and the real-model rebuild of Fort Grounds matched golden (8 pages, 6 bookmarks).
 
 ## Eval results (append newest first)
 
