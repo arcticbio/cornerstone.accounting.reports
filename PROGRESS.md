@@ -84,6 +84,11 @@ identical to the golden-label build ($3.73). See `docs/ANALYSIS-model-successor-
    the 30-minute cron — one line in `infra/main.bicep` (RUNBOOK → *Running it on Azure*).
    Fort Grounds / 2026-09 in Drive holds the rehearsal's v1–v6: trash it before real September
    files arrive.
+   **Audited 2026-09-26** (Phase 10 → *Audit follow-ups* below): two defects that would have hit
+   unattended runs are fixed, with regression tests, on `claude/gracious-davinci-nnkdv1` —
+   PR #15 plus a merge of `main` (#16) plus the fixes. The live-Drive clean-up of September is
+   **waiting on the operator's permission**; findings 4–6 are open with recommended fixes and
+   are held as strict-xfail tests.
 
 1. ~~**B-08 — the two McCathren packages go to review on `cardinality_violation`.**~~
    **Fixed 2026-09-11, root-caused with a real-model run.** Not a labelling error: a re-run of
@@ -468,6 +473,73 @@ Mirrors PLAN Phase 10; SPEC §18; D-17 – D-24.
   `resolve`, `compose`, `config/schemas`, `config/outputs` and `eval/golden` are byte-identical
   to `main`, and the prompt version is unchanged; the golden gate passes in the suite (542
   tests), and the real-model rebuild of Fort Grounds matched golden (8 pages, 6 bookmarks).
+
+### Audit follow-ups (2026-09-26)
+
+An audit of PR #15 reproduced nine findings with probes run against the branch head `286dc89`.
+Every probe is now a test. This work is on `claude/gracious-davinci-nnkdv1`, which is PR #15's
+head plus a merge of `main` (#16 had made two docs lines conflict) plus the commits below.
+
+- [x] **1. A tie on upload time flipped the winner on every run** (`b6f5505`). `choose()` broke
+  ties on the file name and then renamed the loser `SUPERSEDED - …`, which changed the
+  tie-break: two PDFs uploaded at the same instant produced a new version, and a paid
+  re-classification, on every run. Ties now break on the name without the prefix, then the id.
+  SPEC §18.4 amended. The unit test now applies the renames between runs; an end-to-end test
+  runs four times over two equal-time Balance Sheets and gets one version.
+- [x] **2. One bad property-month stopped the whole run, on every run** (`9891fa9`). An index
+  the code could not read (a state.json with one unexpected key — what an older image meets
+  after a rollback), a folder named `2026-13 …`, or one Drive error ended the run; every month
+  after it went unchecked and the root summary was never written. Months are now checked in
+  isolation. A failing month gets `Could not be checked - will retry` (only over an existing
+  status), and the summary is always written, listing it. `reconcile` exits 1 after the rest is
+  done. Folders that only look like months are skipped. `RunAborted` keeps a missing API key a
+  run-level stop. SPEC §11/§18.3/§18.8/§18.9, RUNBOOK and README amended.
+- [x] **Probes kept as tests** (`6bde5d7`). NEEDS REVIEW publishing, `--period`, cross-month
+  drift, and the password, owner-password and zero-page cases now run; coverage had shown them
+  never executed. Two behaviours are pinned: `--force` reuses every unchanged label, and the
+  cost ceiling is per attempt.
+- [ ] **3. Live-Drive hygiene — waiting on permission.** September is a live month, and Fort
+  Grounds / 2026-09 still holds the rehearsal: five input PDFs that are byte-for-byte the June
+  bundle (the "revised" P&L is the June P&L plus 10 bytes), v1–v6, their manifests, state.json
+  and status. A real September upload there would be combined with June statements and
+  published as `v7 (current)`. All eight properties' `2026-09 September/inputs/` folders are
+  empty v1 leftovers that `reconcile` silently ignores. Inventoried and downloaded read-only
+  with every md5 verified. The planned change, which the session's permission policy stopped
+  before any write:
+  1. create `Cornerstone Reports - REHEARSAL (test data, not for investors)` beside the
+     production root in the shared drive, with `Missoula Property Management/Fort Grounds/`
+     inside it;
+  2. move the rehearsal's `2026-09 September` folder there intact, so file ids, md5s and its
+     `Built v6 (current)` state survive and it stays usable for rehearsals: point
+     `CRR_GDRIVE_ROOT_FOLDER_ID` at that folder;
+  3. delete the eight empty `inputs/` folders;
+  4. run a no-op `reconcile`, with builds made impossible, to recreate Fort Grounds' clean
+     September skeleton and refresh `_STATUS - All properties.txt`, which still reads
+     `Built v6`.
+- [ ] **4. Closed months are re-read on every run.** Each costs 3 Drive calls: 126 calls with no
+  history, 414 with a year of it (strict xfail
+  `test_a_no_op_run_does_not_grow_with_closed_history`). *Recommended:* only consider closing a
+  month within a grace period after its close date (`CRR_CLOSE_GRACE_DAYS`, say 14). Beyond
+  that it was closed by an earlier run, so skip it without a Drive call. Check the status by
+  name from one listing, not by downloading its body.
+- [ ] **5. Drive requests are not retried** (strict xfail `test_drive_requests_are_retried`).
+  *Recommended:* `execute(num_retries=5)` on every request in `GoogleDriveApi`, and the same on
+  `MediaIoBaseDownload.next_chunk`. googleapiclient then backs off on 5xx, 429 and rate-limit
+  403s. It is all in one file, the seam the fake replaces. Since fix 2, whatever still fails
+  after retries costs one month one run, not the run.
+- [ ] **6. A run landing between a build's publish and its state.json write publishes a
+  duplicate**, and the index keeps only one of the two (strict xfail
+  `test_a_run_landing_between_publish_and_commit_publishes_no_duplicate`). *Recommended:* a run
+  lease — one system file in the root, written, read back to confirm ownership, expiring after
+  the 1800 s replica timeout. A second execution finding a live lease exits 0 at once. That
+  closes this window and concurrent folder creation at month rollover, and keeps the duplicate
+  check as a backstop. Until then, do not run *Build a period* → `reconcile` while an Azure
+  execution is running.
+- [ ] Still open from the audit, documents only: D-20 names the wrong workflow for `--force`;
+  the README says "every 30 minutes" before the schedule is armed; the RUNBOOK's
+  "$0.60 per property-month" for `--force` is ≈$0 with reuse; PLAN's "at most
+  CRR_MAX_BUILD_USD" is per attempt; `azure-job.yml`'s `build (…)` option now starts a
+  reconcile run.
 
 ## Eval results (append newest first)
 

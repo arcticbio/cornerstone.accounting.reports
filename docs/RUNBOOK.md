@@ -245,8 +245,9 @@ lives in *Build a period* instead.
 an unwritable drive — or a month could not be checked, so a **Failed** execution is a real
 incident. A month that could not be checked never stops the others: they are all checked, the
 root summary is written with the problem listed under *Could not be checked on this run*, and
-only then does the run exit 1. Outcomes per month are in Drive, not in the exit code. Logs are in the portal: the resource group → `crr-logs` →
-**Logs**. Every line is JSON, and page text, tenant names and secrets are never among them.
+only then does the run exit 1. Outcomes per month are in Drive, not in the exit code. Logs are
+in the portal: the resource group → `crr-logs` → **Logs**. Every line is JSON, and page text,
+tenant names and secrets are never among them.
 
 ---
 
