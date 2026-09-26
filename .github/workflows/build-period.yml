@@ -1,14 +1,26 @@
 name: Build a period
 
-# Runs the published container against a period's inputs. This is the fallback host and the
-# first deployment surface (D-13): identical image, repo secrets, no infrastructure.
+# Runs the published container against Drive. This is the fallback host and the on-demand
+# surface (D-13, D-20): identical image, repo secrets, no infrastructure.
+#
+#   reconcile          what the Azure schedule runs: build every month whose files are ready
+#                      and have changed (SPEC §18). Safe to run at any time, alongside Azure.
+#   reconcile --force  also rebuild months whose files have NOT changed — after a code or
+#                      config change (D-20). Narrow it with period and property.
+#   build              the v1 command over the v1 `inputs/` layout; needs a period.
 
 on:
   workflow_dispatch:
     inputs:
-      period:
-        description: "Period id, e.g. 2026-09"
+      command:
+        description: "What to run"
         required: true
+        default: reconcile
+        type: choice
+        options: [reconcile, reconcile --force, build]
+      period:
+        description: "Period id, e.g. 2026-09 (required for build; optional for reconcile)"
+        required: false
         type: string
       property:
         description: "Property id (blank = every property)"
@@ -68,20 +80,32 @@ jobs:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
           GOOGLE_SERVICE_ACCOUNT_B64: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_B64 }}
           CRR_GDRIVE_ROOT_FOLDER_ID: ${{ vars.CRR_GDRIVE_ROOT_FOLDER_ID }}
+          COMMAND: ${{ inputs.command }}
+          PERIOD: ${{ inputs.period }}
+          PROPERTY: ${{ inputs.property }}
         run: |
           set +e
           mkdir -p work && chmod 777 work
-          args=(build --period "${{ inputs.period }}" --repo "${{ inputs.repo }}" \
-                --classifier "${{ inputs.classifier }}")
-          if [ -n "${{ inputs.property }}" ]; then
-            args+=(--property "${{ inputs.property }}")
-          fi
+          case "$COMMAND" in
+            build)
+              if [ -z "$PERIOD" ]; then
+                echo "::error title=build needs a period::Give a period, e.g. 2026-09."
+                echo "exit_code=1" >> "$GITHUB_OUTPUT"; exit 0
+              fi
+              args=(build) ;;
+            "reconcile --force") args=(reconcile --force) ;;
+            *) args=(reconcile) ;;
+          esac
+          args+=(--repo "${{ inputs.repo }}" --classifier "${{ inputs.classifier }}")
+          if [ -n "$PERIOD" ]; then args+=(--period "$PERIOD"); fi
+          if [ -n "$PROPERTY" ]; then args+=(--property "$PROPERTY"); fi
           docker run --rm \
             -v "$PWD/data:/data:ro" \
             -v "$PWD/work:/work" \
             -e CRR_WORK_DIR=/work \
             -e CRR_PUBLISH_ROOT=/work/published \
             -e CRR_BUNDLE_ROOT=/data/bundle/2026-06 \
+            -e CRR_INTAKE_ROOT=/work/intake \
             -e ANTHROPIC_API_KEY \
             -e GOOGLE_SERVICE_ACCOUNT_B64 \
             -e CRR_GDRIVE_ROOT_FOLDER_ID \
@@ -92,7 +116,7 @@ jobs:
         if: always()
         run: |
           mkdir -p artifacts
-          find work -name 'build-manifest.json' -o -name 'REVIEW.md' | while read -r f; do
+          find work -name 'build-manifest.json' -o -name 'REVIEW*.md' | while read -r f; do
             target="artifacts/$(echo "${f#work/}" | tr '/' '_')"
             cp "$f" "$target"
           done
@@ -102,7 +126,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: manifests-${{ inputs.period }}
+          name: manifests-${{ inputs.period || 'reconcile' }}
           path: artifacts/
           if-no-files-found: warn
           retention-days: 90
@@ -112,7 +136,7 @@ jobs:
         run: |
           code="${{ steps.build.outputs.exit_code }}"
           case "$code" in
-            0) echo "All properties built." ;;
+            0) echo "Done. For reconcile, each month's outcome is its STATUS file in Drive." ;;
             2) echo "::warning title=Review needed::One or more packages went to review/. Download the manifests artifact and read REVIEW.md." ;;
             *) echo "::error title=Build failed::crr exited $code"; exit 1 ;;
           esac

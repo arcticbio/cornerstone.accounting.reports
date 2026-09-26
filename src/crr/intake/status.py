@@ -113,7 +113,7 @@ def render_summary(lines: list[str], as_of: datetime) -> str:
         "",
         *lines,
         "",
-        f"Updated {_stamp(as_of)}. Open a property's month folder, then output/, for detail.",
+        f"Last checked {_stamp(as_of)}. Open a property's month folder, then output/, for detail.",
         "",
     ]
     return "\n".join(body)

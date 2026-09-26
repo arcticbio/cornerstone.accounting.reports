@@ -226,7 +226,7 @@ Tasks
 - [ ] Status files and root summary (§18.8): every row of the table has a test; bodies carry no page text, tenant names or figures (extend the log-capture test).
 - [ ] `crr reconcile` (§18.9) with `--property`, `--period`, `--force`, `--dry-run`; soft deadline; pre-publish re-list.
 - [ ] Verify against Azure docs and one real run: (a) whether a scheduled Container Apps Job execution starts while the previous one is running; (b) the monthly cost of 48 short runs a day. Record both in `QUESTIONS.md`.
-- [ ] Hosting (§18.10): Bicep cron and args; `azure-job.yml` gains `reconcile --force`; `build-period.yml` gains `reconcile`.
+- [ ] Hosting (§18.10): Bicep cron and args; `build-period.yml` gains `reconcile` and `reconcile --force` (the on-demand rebuild).
 - [ ] Rehearsal in Drive: seed a month in the new layout and walk it through every status — partial upload, settle, unopenable file held, built v1, replace one component, v2 with reuse, duplicate upload superseded, delete-newest revert, closed. Record each in `PROGRESS.md`.
 - [ ] Docs: `RUNBOOK.md` rewritten around the new layout — a one-page "how to upload" for non-technical uploaders, and "how to read the status" for reviewers; `SETUP-GOOGLE-DRIVE.md`; banners in SPEC §6.1/§6.9/§13/§14 replaced by the amended text.
 

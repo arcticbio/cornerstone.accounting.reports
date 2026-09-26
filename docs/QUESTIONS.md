@@ -242,6 +242,30 @@ The first run proved the setting direction and assumed the restoring one.
 
 ---
 
+**A-14 · Overlapping scheduled executions are assumed to run in parallel, and the design
+tolerates it.** (Phase 10, SPEC §18.10.) Microsoft's pages are not reachable from the build
+container; secondary sources agree that a Container Apps Job starts a new scheduled execution
+even while the previous one is still running — "both will run in parallel unless limits are
+set" ([Microsoft Q&A](https://learn.microsoft.com/en-us/answers/questions/2203090/behaviour-of-scheduled-job-(cron)-when-a-previous),
+[practical guide](https://yeongseon.github.io/azure-container-apps-practical-guide/platform/jobs/scheduled-jobs/)).
+Nothing in the design depends on the answer: `crr reconcile` stops starting builds after
+1200 s, the replica timeout is 1800 s, and a build re-reads the month's index just before
+publishing and discards itself if an overlapping run has published the same files — tested with
+a second run executing *inside* the first one's classification
+(`test_an_overlapping_run_that_published_the_same_files_wins`). *Confirm* on the first armed
+week by checking the execution history for overlaps.
+
+**A-15 · The 30-minute schedule costs about nothing on top of the builds.** (Phase 10.) The
+Consumption plan's free grant is 180,000 vCPU-s and 360,000 GiB-s per subscription per month,
+and jobs are billed per second of replica runtime
+([Billing in Azure Container Apps](https://learn.microsoft.com/en-us/azure/container-apps/billing)).
+At 2 vCPU / 4 GiB, 48 runs a day for 30 days is 1,440 runs; **if a run with nothing to build
+lasts 60 s, that is 172,800 vCPU-s and 345,600 GiB-s — just inside the grant**; at 30 s, half
+of it. The builds themselves add ~2 minutes of replica time each. The worst case beyond the grant
+is a few dollars a month at list price, against ~$0.60 of model calls per property build.
+*Confirm* the real no-op run time on Azure before arming; if it is well over 60 s, the options
+are a smaller replica (1 vCPU / 2 GiB halves it) or a business-hours cron.
+
 ## Blocked (Claude Code appends here)
 
 *(format: `B-nn · <what is needed> · <what is blocked> · <what continues meanwhile>`)*

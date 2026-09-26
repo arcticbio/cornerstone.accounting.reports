@@ -103,12 +103,34 @@ class Settings(BaseSettings):
     # -- cost ------------------------------------------------------------------------
     price_table_json: str | None = None
 
+    # -- continuous intake (SPEC §18) --------------------------------------------------
+    #: Where `crr reconcile --repo local` reads and writes; defaults to `<work_dir>/intake`.
+    intake_root: Path | None = None
+    #: Build only once nothing in a month's component folders has changed for this long.
+    settle_minutes: int = Field(default=60, ge=0)
+    #: A month is watched until this many days after its last day, then closed (D-23).
+    lookback_days: int = Field(default=42, ge=0)
+    #: Folders are prepared for the current month and this many months ahead.
+    folders_ahead: int = Field(default=1, ge=0)
+    #: A run stops *starting* builds after this long, so runs stay shorter than the schedule.
+    run_soft_deadline_s: int = Field(default=1200, ge=0)
+    #: A build whose estimated classification cost exceeds this is held, not run (D-24).
+    max_build_usd: float = Field(default=3.00, ge=0)
+    #: The per-page estimate behind that ceiling; measured at $0.0275 on the June corpus.
+    cost_per_page_usd: float = Field(default=0.03, ge=0)
+    #: After this many failures on the same files, a month stops being retried.
+    max_failed_attempts: int = Field(default=3, ge=1)
+
     @field_validator("min_confidence", "eval_min_page_accuracy", "eval_min_boundary_f1")
     @classmethod
     def _unit_interval(cls, v: float) -> float:
         if not 0.0 <= v <= 1.0:
             raise ValueError("must be between 0 and 1")
         return v
+
+    @property
+    def local_intake_root(self) -> Path:
+        return self.intake_root if self.intake_root is not None else self.work_dir / "intake"
 
     @property
     def local_publish_root(self) -> Path:

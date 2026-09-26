@@ -221,6 +221,84 @@
           ],
           "default": null,
           "title": "Ocr Rotated Pages"
+        },
+        "source_sha256": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Source Sha256"
+        },
+        "schema_sha256": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Schema Sha256"
+        },
+        "upload_name": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Upload Name"
+        },
+        "file_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "File Id"
+        },
+        "md5": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Md5"
+        },
+        "uploaded_at": {
+          "anyOf": [
+            {
+              "format": "date-time",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Uploaded At"
+        },
+        "reused_classification": {
+          "default": false,
+          "title": "Reused Classification",
+          "type": "boolean"
         }
       },
       "required": [
@@ -605,8 +683,11 @@
   "additionalProperties": false,
   "properties": {
     "manifest_version": {
-      "const": 1,
-      "default": 1,
+      "default": 2,
+      "enum": [
+        1,
+        2
+      ],
       "title": "Manifest Version",
       "type": "integer"
     },
@@ -723,6 +804,37 @@
       ],
       "default": null,
       "title": "Error"
+    },
+    "version": {
+      "anyOf": [
+        {
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Version"
+    },
+    "input_fingerprint": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Input Fingerprint"
+    },
+    "omitted_optional": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Omitted Optional",
+      "type": "array"
     }
   },
   "required": [

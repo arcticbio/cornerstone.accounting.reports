@@ -11,10 +11,16 @@ from crr.review.rules import EXPLANATIONS
 
 def render_review(manifest: BuildManifest) -> str:
     """A short document a human can act on without reading the manifest JSON."""
+    versioned = manifest.version is not None
+    where = (
+        f"was built as version {manifest.version}, marked NEEDS REVIEW,"
+        if versioned
+        else "was built but held back from `output/`"
+    )
     lines: list[str] = [
         f"# Review needed — {manifest.property.name}, {manifest.period}",
         "",
-        f"The package was built but held back from `output/` because of "
+        f"The package {where} because of "
         f"{len(manifest.review_reasons)} finding(s). Nothing was guessed: every item below is "
         "a decision the system declined to make on its own.",
         "",
@@ -58,11 +64,20 @@ def render_review(manifest: BuildManifest) -> str:
             f"| {source.role} | {source.pages} | {'yes' if source.has_text_layer else 'no'} | "
             f"{'yes' if source.ocr_applied else 'no'} | `{source.sha256[:12]}` |"
         )
-    lines.extend(
-        [
+    if versioned:
+        steps = [
+            "1. Open the NEEDS REVIEW PDF beside this file and check the pages listed above.",
+            "2. If the package is right, it can be used as it is.",
+            "3. If a file in one of the numbered folders is wrong, upload the right one: the "
+            "next version is built automatically.",
+            "4. If a label is wrong, the fix belongs in config — a schema's `visual_cues` or "
+            "the output definition's `flow`/`drop` — then a forced rebuild.",
             "",
-            "## What to do next",
-            "",
+            f"`manifests/v{manifest.version}.json` records every page label, the resolved "
+            "sections and the exact page plan.",
+        ]
+    else:
+        steps = [
             "1. Open the PDF beside this file and check the pages listed above.",
             "2. If the package is right, move it to `output/` by hand.",
             "3. If a label is wrong, the fix belongs in config — a schema's `visual_cues` or "
@@ -70,7 +85,6 @@ def render_review(manifest: BuildManifest) -> str:
             "",
             "`build-manifest.json` beside this file records every page label, the resolved "
             "sections and the exact page plan.",
-            "",
         ]
-    )
+    lines.extend(["", "## What to do next", "", *steps, ""])
     return "\n".join(lines)

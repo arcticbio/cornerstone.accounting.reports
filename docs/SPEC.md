@@ -1053,8 +1053,8 @@ the failure cap. It does not skip the completeness or open checks, nor the settl
 
 ### 18.10 Hosting changes
 
-- `infra/main.bicep`: cron `*/30 * * * *`; baked args `reconcile --repo gdrive --classifier
-  anthropic`; replica timeout 1800 s (the 1200 s soft deadline stops new work well before it);
+- `infra/main.bicep`: cron `*/30 * * * *` once armed; baked args `reconcile --repo gdrive
+  --classifier anthropic`; replica timeout 1800 s (the 1200 s soft deadline stops new work well before it);
   parallelism 1.
 - Whether Container Apps starts a scheduled execution while the previous one is still running
   is **to be verified** (Phase 10). The design is safe either way: the soft deadline keeps runs
@@ -1062,8 +1062,11 @@ the failure cap. It does not skip the completeness or open checks, nor the settl
 - Cost: a run with nothing to build lasts well under a minute. 48 a day is expected to sit near
   or inside the Container Apps consumption free grant — **to be verified against current Azure
   pricing** before the schedule is armed.
-- `azure-job.yml` gains `reconcile --force` (optional `property`, `period`) as the on-demand
-  rebuild. The deploy chain is unchanged: merge to `main` → `:build-v1` → `deploy.yml`.
+- `build-period.yml` (Actions) gains a `command` choice — `reconcile`, `reconcile --force`,
+  `build` — with optional `property` and `period`: `reconcile --force` is the on-demand rebuild.
+  Not `azure-job.yml`: `--args` cannot carry a multi-token list (A-13), and Actions runs the
+  identical image with nothing to restore. The job's cron default stays quarterly until Phase
+  10's STOP is cleared, so no redeploy can arm the 30-minute schedule by accident. The deploy chain is unchanged: merge to `main` → `:build-v1` → `deploy.yml`.
 - Settings added to §12: `CRR_SETTLE_MINUTES` 60, `CRR_LOOKBACK_DAYS` 42, `CRR_FOLDERS_AHEAD` 1,
   `CRR_RUN_SOFT_DEADLINE_S` 1200, `CRR_MAX_BUILD_USD` 3.00, `CRR_COST_PER_PAGE_USD` 0.03,
   `CRR_MAX_FAILED_ATTEMPTS` 3.

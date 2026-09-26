@@ -138,7 +138,7 @@ def build_property(
             render_images=getattr(classifier, "needs_page_images", True),
         )
         stages.time("preprocess", started)
-        manifest.inputs = [_input_ref(doc) for doc in documents]
+        manifest.inputs = [_input_ref(doc, config) for doc in documents]
 
         started = time.monotonic()
         classifications, usage, orientation_reasons = _classify(
@@ -299,6 +299,7 @@ def _preprocess(
                     "ocr_applied": True,
                     "ocr_version": result.version,
                     "ocr_rotated_pages": result.rotated_pages,
+                    "source_sha256": doc.source_sha256 or doc.sha256,
                 }
             )
         page_text = page_texts(current.path, max_chars=settings.page_text_chars)
@@ -439,7 +440,7 @@ def _config_refs(config: ConfigBundle, prop: Property) -> tuple[ConfigRef, Confi
     )
 
 
-def _input_ref(doc: SourceDocument) -> InputRef:
+def _input_ref(doc: SourceDocument, config: ConfigBundle) -> InputRef:
     return InputRef(
         role=doc.role,
         file=doc.path.name,
@@ -449,6 +450,8 @@ def _input_ref(doc: SourceDocument) -> InputRef:
         ocr_applied=doc.ocr_applied,
         ocr_version=doc.ocr_version,
         ocr_rotated_pages=doc.ocr_rotated_pages,
+        source_sha256=doc.source_sha256 or doc.sha256,
+        schema_sha256=config.sha256.get(f"schemas/{doc.schema_id}.yaml") or None,
     )
 
 

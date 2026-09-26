@@ -383,6 +383,125 @@ def build(
         raise typer.Exit(code=2)
 
 
+@app.command()
+def reconcile(
+    property_ids: Annotated[
+        list[str] | None, typer.Option("--property", help="Property id; repeatable")
+    ] = None,
+    period: Annotated[
+        str | None, typer.Option("--period", help="Only this month, e.g. 2026-09")
+    ] = None,
+    classifier: Annotated[str, typer.Option("--classifier", help="anthropic|golden")] = "anthropic",
+    repo: Annotated[str, typer.Option("--repo", help="local|gdrive")] = "local",
+    force: Annotated[
+        bool, typer.Option("--force", help="Rebuild even when the files have not changed")
+    ] = False,
+    dry_run: Annotated[
+        bool, typer.Option("--dry-run", help="Print every decision; write nothing")
+    ] = False,
+    work_dir: Annotated[Path | None, typer.Option("--work-dir")] = None,
+) -> None:
+    """Build every property-month whose files are ready and have changed (SPEC §18).
+
+    Prepares this month's and next month's folders, writes each month's status into its
+    `output/`, and builds a new version wherever the current files differ from the newest
+    build. Per-property outcomes are statuses, not exit codes: this exits 1 only when the run
+    itself cannot proceed (config, credentials, an unwritable repository).
+    """
+    from crr.config import ConfigError, load_config
+    from crr.intake.reconcile import Options, Reconciler
+    from crr.repository.protocol import RepositoryError
+    from crr.settings import Settings
+
+    settings = Settings()
+    if work_dir is not None:
+        settings = settings.model_copy(update={"work_dir": work_dir})
+    try:
+        bundle = load_config(settings.config_dir)
+    except ConfigError as exc:
+        typer.echo(f"config invalid:\n{exc}", err=True)
+        raise typer.Exit(code=1) from None
+
+    known = {e.id for e in bundle.properties.properties}
+    unknown = [p for p in property_ids or [] if p not in known]
+    if unknown:
+        typer.echo(f"unknown propert(ies): {', '.join(unknown)}", err=True)
+        raise typer.Exit(code=1)
+    if period is not None:
+        try:
+            bundle.properties.period_folder(period)
+        except ValueError as exc:
+            typer.echo(str(exc), err=True)
+            raise typer.Exit(code=1) from None
+
+    store = _make_intake_store(repo, settings, bundle)
+    if settings.publish_preflight and not dry_run:
+        try:
+            store.preflight_publish()
+        except RepositoryError as exc:
+            typer.echo(f"cannot publish to {store.name}: {exc}", err=True)
+            typer.echo("nothing was built; no model calls were made.", err=True)
+            raise typer.Exit(code=1) from None
+
+    engines: dict[str, object] = {}
+
+    def classifier_for(property_id: str):  # type: ignore[no-untyped-def]
+        if property_id not in engines:
+            engines[property_id] = _make_classifier(classifier, settings, property_id)
+        return engines[property_id]
+
+    reconciler = Reconciler(
+        config=bundle,
+        settings=settings,
+        store=store,
+        classifier_for=classifier_for,
+        arbiter=_make_orientation_arbiter(settings),
+    )
+    outcomes = reconciler.run(
+        Options(
+            property_ids=tuple(property_ids or ()),
+            period=period,
+            force=force,
+            dry_run=dry_run,
+        )
+    )
+    for o in outcomes:
+        if o.headline is None and not o.note:
+            continue
+        text = o.headline or ""
+        if o.note:
+            text = f"{text}  [{o.note}]".strip()
+        typer.echo(f"{o.property_id:<20} {o.period}  {text}")
+    usd = sum(o.usd for o in outcomes)
+    built = sum(1 for o in outcomes if o.version is not None and o.note != "duplicate")
+    typer.echo(f"{built} version(s) built" + (f", estimated ${usd:.2f}" if usd else ""))
+
+
+def _make_intake_store(kind: str, settings: Settings, bundle):  # type: ignore[no-untyped-def]
+    if kind == "local":
+        from crr.repository.intake_local import LocalIntakeStore
+
+        return LocalIntakeStore(settings.local_intake_root, bundle.properties)
+    if kind == "gdrive":
+        from crr.repository.drive_client import DriveError, GoogleDriveApi
+        from crr.repository.intake_drive import DriveIntakeStore
+
+        if not settings.google_service_account_b64:
+            typer.echo("GOOGLE_SERVICE_ACCOUNT_B64 is not set", err=True)
+            raise typer.Exit(code=1)
+        if not settings.gdrive_root_folder_id:
+            typer.echo("CRR_GDRIVE_ROOT_FOLDER_ID is not set", err=True)
+            raise typer.Exit(code=1)
+        try:
+            api = GoogleDriveApi.from_b64(settings.google_service_account_b64)
+        except DriveError as exc:
+            typer.echo(str(exc), err=True)
+            raise typer.Exit(code=1) from None
+        return DriveIntakeStore(api, settings.gdrive_root_folder_id, bundle.properties)
+    typer.echo(f"unknown repo {kind!r}; use local or gdrive", err=True)
+    raise typer.Exit(code=1)
+
+
 def _print_cost(results: list) -> None:  # type: ignore[type-arg]
     """Tokens and the USD estimate for the run (PLAN Phase 9). The estimate comes from the
     settings price table and is recorded in every manifest as `cost`."""
