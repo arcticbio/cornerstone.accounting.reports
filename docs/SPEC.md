@@ -283,7 +283,9 @@ Each stage is a pure function of its inputs plus the settings object, and writes
 
 ### 6.1 Fetch (`crr.repository`)
 
-> **Superseded in part by §18 (continuous intake) once PLAN Phase 10 lands.**
+> **Superseded in part by §18 (continuous intake, PLAN Phase 10).** What follows is the v1 contract,
+> still served by `crr build` over the `inputs/` layout; where it contradicts §18, §18 governs
+> `crr reconcile`.
 
 ```python
 class SourceRepository(Protocol):
@@ -426,7 +428,9 @@ Exit codes: 0 all `BUILT`; 2 any `NEEDS_REVIEW`; 1 any `FAILED`.
 
 ### 6.9 Publish
 
-> **Superseded in part by §18 (continuous intake) once PLAN Phase 10 lands.**
+> **Superseded in part by §18 (continuous intake, PLAN Phase 10).** What follows is the v1 contract,
+> still served by `crr build` over the `inputs/` layout; where it contradicts §18, §18 governs
+> `crr reconcile`.
 
 `BUILT` → `output/`; `NEEDS_REVIEW` → `review/` with the manifest and a `REVIEW.md` summarising
 the reasons in plain language; `FAILED` → nothing published, manifest written to `work/`.
@@ -720,6 +724,11 @@ crr build [--period 2026-06] [--property <id>]... [--classifier anthropic|golden
           [--repo local|gdrive] [--dry-run] [--work-dir work/]
           # --period defaults to the month just ended, so an unattended quarterly run
           # (the 20th of Jan/Apr/Jul/Oct closes Dec/Mar/Jun/Sep) needs no argument.
+crr reconcile [--repo local|gdrive] [--classifier anthropic|golden] [--property <id>]...
+              [--period YYYY-MM] [--force] [--dry-run] [--work-dir work/]
+          # continuous intake (§18.9): what the schedule runs; exits 0 unless the run itself
+          # cannot proceed
+crr preflight [--repo local|gdrive]       # prove a file can be written (§6.1)
 crr eval [--classifier anthropic|golden] [--pm <id>] [--gate]
 crr version
 ```
@@ -754,12 +763,22 @@ Never log page text or image bytes. Log document sha256s, not paths, at INFO.
 | `CRR_EVAL_MIN_BOUNDARY_F1` | `0.98` | per-manager gate |
 | `CRR_PRICE_TABLE_JSON` | built-in | override `{model: {input, cache_read, cache_write, output}}` USD per MTok |
 | `CRR_OCRMYPDF_BIN` | `ocrmypdf` | ocrmypdf entry point; an escape hatch for environments where the distribution's entry point is broken or off PATH |
+| `CRR_INTAKE_ROOT` | `<work_dir>/intake` | where `crr reconcile --repo local` reads and writes (§18) |
+| `CRR_SETTLE_MINUTES` | `60` | build only once nothing in a month's folders changed for this long (§18.5) |
+| `CRR_LOOKBACK_DAYS` | `42` | a month is watched until this many days after its last day (§18.3) |
+| `CRR_FOLDERS_AHEAD` | `1` | month folders are prepared this many months ahead (§18.3) |
+| `CRR_RUN_SOFT_DEADLINE_S` | `1200` | a run stops starting builds after this long (§18.9) |
+| `CRR_MAX_BUILD_USD` | `3.00` | a build estimated above this is held (§18.7) |
+| `CRR_COST_PER_PAGE_USD` | `0.03` | the per-page estimate behind that ceiling (§18.7) |
+| `CRR_MAX_FAILED_ATTEMPTS` | `3` | failures on the same files before retrying stops (§18.7) |
 
 ---
 
 ## 13. Google Drive layout
 
-> **Superseded in part by §18 (continuous intake) once PLAN Phase 10 lands.**
+> **Superseded in part by §18 (continuous intake, PLAN Phase 10).** What follows is the v1 contract,
+> still served by `crr build` over the `inputs/` layout; where it contradicts §18, §18 governs
+> `crr reconcile`.
 
 Mirror of the repo bundle, without `target/` and `reference/`:
 
@@ -788,7 +807,9 @@ with `--repo gdrive` skips properties whose `inputs/` is missing and reports the
 
 ## 14. Hosting
 
-> **Superseded in part by §18 (continuous intake) once PLAN Phase 10 lands.**
+> **Superseded in part by §18 (continuous intake, PLAN Phase 10).** What follows is the v1 contract,
+> still served by `crr build` over the `inputs/` layout; where it contradicts §18, §18 governs
+> `crr reconcile`.
 
 **Container:** `python:3.12-slim` + `tesseract-ocr tesseract-ocr-eng tesseract-ocr-osd ocrmypdf ghostscript`
 + `uv sync --frozen`. Entrypoint `crr`. **The image never contains `data/bundle/`** (tenant data);
@@ -843,10 +864,11 @@ the path to use until Azure is provisioned.
 
 ## 18. Continuous intake (v2 — Phase 10)
 
-**Status: designed 2026-09-26, not yet built.** When Phase 10 lands, this section supersedes the
+**Status: built 2026-09-26 (PLAN Phase 10) and rehearsed on the live drive.** It supersedes the
 parts of §6.1 (finding inputs by exact filename), §6.9 (the separate `review/` folder), §13
-(the `inputs/` layout) and §14 (the quarterly schedule) that it contradicts. Until then those
-sections describe what runs. Decisions D-17 – D-24.
+(the `inputs/` layout) and §14 (the quarterly schedule) that it contradicts; those sections
+still describe `crr build`. The 30-minute schedule is armed only once Phase 10's STOP is
+cleared (§18.10). Decisions D-17 – D-24.
 
 ### 18.1 Why
 

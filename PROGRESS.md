@@ -69,11 +69,15 @@ properties end to end.
 
 **Open, in the order it is worth doing.**
 
-0. **Phase 10 — continuous intake is designed and ready to build** (2026-09-26). The quarterly
-   cron is to be replaced by `crr reconcile` every 30 minutes: a folder per component, newest
-   upload wins, a build per change of input files, versions side by side in `output/`, a status
-   file whose name is the headline. SPEC §18, D-17 – D-24, PLAN Phase 10. Until it lands the
-   quarterly schedule stays armed (next fire 20 Oct 06:00 UTC).
+0. **Phase 10 — continuous intake is built and rehearsed on the live drive; it stops at its
+   STOP** (2026-09-26, branch `claude/eager-fermat-h7ub70`, not yet merged). `crr reconcile`: a
+   folder per component, newest upload wins, a new version per change of input files, versions
+   side by side in `output/`, a status file whose name is the headline. SPEC §18, D-17 – D-24,
+   PLAN Phase 10. **What is left is the operator's:** merge; deploy (the job then runs
+   `reconcile`, still on the quarterly cron); measure one no-op run on Azure (A-15); then arm
+   the 30-minute cron — one line in `infra/main.bicep` (RUNBOOK → *Running it on Azure*).
+   Fort Grounds / 2026-09 in Drive holds the rehearsal's v1–v6: trash it before real September
+   files arrive.
 
 1. ~~**B-08 — the two McCathren packages go to review on `cardinality_violation`.**~~
    **Fixed 2026-09-11, root-caused with a real-model run.** Not a labelling error: a re-run of
@@ -444,7 +448,7 @@ Mirrors PLAN Phase 10; SPEC §18; D-17 – D-24.
   | 13 | full 8-property run | first run 2 m 06 s (creates every property's Sep/Oct folders); **steady state with nothing to build: 37 s** from this container |
 
   v6 downloaded back out of Drive: 8 pages, 6 bookmarks, title `Fort Grounds - Investor Report - September 2026`. The root `_STATUS - All properties.txt` reads `Fort Grounds - September 2026 - Built v6 (current)`. **Two defects found and fixed** (`aa2c8df`): a replaced component was listed twice in a version's history (`a | b - c` precedence), and a held newer file read as "waiting", which asks nothing of a reviewer. The July/August test months were trashed afterwards; **Fort Grounds / 2026-09 is left in place as a worked example** (v1–v6 and their status) — trash it before real September files go there.
-- [ ] Docs: `RUNBOOK.md` rewritten around the new layout — a one-page "how to upload" for non-technical uploaders, and "how to read the status" for reviewers; `SETUP-GOOGLE-DRIVE.md`; banners in SPEC §6.1/§6.9/§13/§14 replaced by the amended text.
+- [x] Docs: `RUNBOOK.md` rewritten around the new layout — a one-page "how to upload" for non-technical uploaders, and "how to read the status" for reviewers; `SETUP-GOOGLE-DRIVE.md`; banners in SPEC §6.1/§6.9/§13/§14 replaced by the amended text. The runbook's operating half is new: *How it works*, *For uploaders — one page* (written to be forwarded as is), *For reviewers* (every status headline, what it means, what to do; the root summary's *Last checked* as the liveness signal), the folder layout, on-demand runs, Azure and how to arm the schedule, and six new failure-mode rows. README, SETUP-GOOGLE-DRIVE, SPEC §11 (CLI) and §12 (settings) updated; the §6.1/§6.9/§13/§14 banners now say those sections describe `crr build`.
 
 ## Eval results (append newest first)
 
