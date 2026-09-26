@@ -60,20 +60,30 @@ def built_headline(entry: VersionEntry) -> str:
     return f"Built v{entry.version} (current)"
 
 
-def _stale_headline(entry: VersionEntry) -> str:
+#: What the headline says about newer files while an older build still stands. "Waiting" asks
+#: nothing of anyone; "held" and "failed" mean someone should look (SPEC §18.8).
+_STALE = {
+    Kind.WAITING: "newer files waiting",
+    Kind.SETTLING: "newer files waiting",
+    Kind.HELD: "newer files held",
+    Kind.FAILED: "newer files failed, will retry",
+}
+
+
+def _stale_headline(entry: VersionEntry, kind: Kind) -> str:
     """The newest build still stands, but the files have moved on since."""
     base = (
         f"Needs review (v{entry.version})"
         if entry.status is BuildStatus.NEEDS_REVIEW
         else f"Built v{entry.version}"
     )
-    return f"{base} - newer files waiting"
+    return f"{base} - {_STALE[kind]}"
 
 
 def _pending(kind: Kind, headline: str, reason: str, state: MonthState, fp: str | None) -> Verdict:
     latest = state.latest
     if latest is not None:
-        return Verdict(kind, _stale_headline(latest), reason, fp)
+        return Verdict(kind, _stale_headline(latest, kind), reason, fp)
     return Verdict(kind, headline, reason, fp)
 
 

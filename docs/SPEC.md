@@ -1015,7 +1015,9 @@ from the folder listing:
 | `STATUS - Held - <reason>.txt` | a file does not open, or the build would exceed the cost ceiling; nothing built |
 | `STATUS - Built v2 (current).txt` | newest build is `BUILT` and reflects the current files |
 | `STATUS - Needs review (v2).txt` | newest build is `NEEDS_REVIEW` |
-| `STATUS - Built v2 - newer files waiting.txt` | v2 is good, but the files have changed since and the next build is pending (waiting, settling or held) |
+| `STATUS - Built v2 - newer files waiting.txt` | v2 stands, but the files have changed since and the next build is waiting (a required file missing, or settling) |
+| `STATUS - Built v2 - newer files held.txt` | … and a newer file cannot be opened, or would cost too much: someone should look |
+| `STATUS - Built v2 - newer files failed, will retry.txt` | … and building from them raised; the next run retries |
 | `STATUS - Failed 3 times, stopped retrying.txt` | §18.7 |
 | `STATUS - Closed 2026-11-11 (v2 is final).txt` | past the lookback window; later changes ignored |
 

@@ -257,9 +257,15 @@ class TestAfterwards:
         verdict = held("over the $3.00 limit", "detail", MonthState(), "fp")
         assert verdict.kind is Kind.HELD and verdict.headline == "Held - over the $3.00 limit"
 
-    def test_held_with_a_previous_build_keeps_it_visible(self) -> None:
+    def test_held_with_a_previous_build_keeps_it_visible_and_says_held(self) -> None:
         verdict = held("x", "detail", built(full()), "fp")
-        assert verdict.headline == "Built v1 - newer files waiting"
+        assert verdict.headline == "Built v1 - newer files held"
+
+    def test_a_failure_with_a_previous_build_says_so(self) -> None:
+        state = built(full())
+        state.attempts.append(Attempt(fingerprint="fp", at=T0, error="E"))
+        verdict = after_build(BuildStatus.FAILED, None, state, "fp", 3)
+        assert verdict.headline == "Built v1 - newer files failed, will retry"
 
     def test_a_first_failure_will_retry(self) -> None:
         state = MonthState(attempts=[Attempt(fingerprint="fp", at=T0, error="E")])
@@ -326,6 +332,7 @@ class TestStatusFile:
         assert 'ignored: "scan.jpg" - not a PDF' in body
         assert "Distribution Schedule: none - optional" in body
         assert "v2 - 2026-10-05 16:00 UTC - built - Balance Sheet replaced" in body
+        assert body.count("Balance Sheet replaced") == 1  # found by the Drive rehearsal
         assert "v1 - 2026-10-05 10:00 UTC - built - first build" in body
         assert body.index("v2 -") < body.index("v1 -")  # newest first
         assert "Changes after 2026-11-11 are ignored." in body

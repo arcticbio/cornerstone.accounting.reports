@@ -125,7 +125,7 @@ def _changes(previous: VersionEntry | None, entry: VersionEntry, labels: dict[st
     before = {i.role: i for i in previous.inputs}
     after = {i.role: i for i in entry.inputs}
     notes: list[str] = []
-    for role in [*labels, *sorted(set(before) | set(after) - set(labels))]:
+    for role in [*labels, *sorted((set(before) | set(after)) - set(labels))]:
         label = labels.get(role, role)
         old, new = before.get(role), after.get(role)
         if old is None and new is not None:
