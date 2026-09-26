@@ -218,24 +218,22 @@ documents are ready, and rebuilds when a document changes. Existing Drive trees 
 data: delete and re-seed them in the new layout as needed.
 
 Tasks
-- [ ] Config: `component_folders` in `properties.yaml`; per-property `components` overrides; `max_pages` per source in `config/outputs/*.yaml`; `identity` block (`title_any`, `entity`, optional `period`) in each source schema. `validate-config` covers all of it.
-- [ ] Arrival check (§18.6) as a pure function over page-1 text (text layer, else local OCR of page 1). **Gate:** passes all 31 June inputs in their true component and month; fails each one in a wrong component folder and in a wrong month. Committed as a test over the bundle.
+- [ ] Config: `component_folders` in `properties.yaml`; per-property `components` overrides. `validate-config` covers both.
 - [ ] Repository: list a component folder with head-revision upload times and `md5Checksum`; rename to and from `SUPERSEDED - `; create the month/component/`output` skeleton; read the newest manifest and `attempts.json`; publish `vN` names. Both `GoogleDriveRepository` and `LocalFsRepository` (mtime stands in for upload time).
 - [ ] File choice (§18.4) and readiness (§18.5), pure, fully unit-tested: newest wins, prefix follows the winner, delete-newest reverts, settle window, optional components, `not_used`.
 - [ ] Fingerprint and versions (§18.7); manifest v2 fields; classification reuse from the previous manifest with its compatibility check.
-- [ ] Cost ceiling and three-strike failure cap (§18.7).
+- [ ] Open check (§18.6), cost ceiling and three-strike failure cap (§18.7).
 - [ ] Status files and root summary (§18.8): every row of the table has a test; bodies carry no page text, tenant names or figures (extend the log-capture test).
 - [ ] `crr reconcile` (§18.9) with `--property`, `--period`, `--force`, `--dry-run`; soft deadline; pre-publish re-list.
-- [ ] Classifier `period_end` field and `period_mismatch` review reason (§18.6 item 4). Prompt version bump; **keyed eval must stay at 100 % on every metric before merge.**
 - [ ] Verify against Azure docs and one real run: (a) whether a scheduled Container Apps Job execution starts while the previous one is running; (b) the monthly cost of 48 short runs a day. Record both in `QUESTIONS.md`.
 - [ ] Hosting (§18.10): Bicep cron and args; `azure-job.yml` gains `reconcile --force`; `build-period.yml` gains `reconcile`.
-- [ ] Rehearsal in Drive: seed a month in the new layout and walk it through every status — partial upload, settle, wrong file held, correct file, built v1, replace one component, v2 with reuse, duplicate upload superseded, delete-newest revert, closed. Record each in `PROGRESS.md`.
+- [ ] Rehearsal in Drive: seed a month in the new layout and walk it through every status — partial upload, settle, unopenable file held, built v1, replace one component, v2 with reuse, duplicate upload superseded, delete-newest revert, closed. Record each in `PROGRESS.md`.
 - [ ] Docs: `RUNBOOK.md` rewritten around the new layout — a one-page "how to upload" for non-technical uploaders, and "how to read the status" for reviewers; `SETUP-GOOGLE-DRIVE.md`; banners in SPEC §6.1/§6.9/§13/§14 replaced by the amended text.
 
 Acceptance
 - On the rehearsal month, every scenario above produces the status in SPEC §18.8 and no build
   it should not.
-- An unrelated PDF of any length in any folder costs zero model tokens.
+- An unrelated PDF of any length in any folder costs at most `CRR_MAX_BUILD_USD`.
 - A run with nothing to build finishes in under a minute on Azure.
 - Keyed eval unchanged at 100 %.
 

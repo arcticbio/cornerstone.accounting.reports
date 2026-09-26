@@ -869,7 +869,7 @@ answers, in order:
 
 1. Do this month's folders exist? Create them if not (§18.3).
 2. Which file is the current one in each component folder? (§18.4)
-3. Is the package complete, settled and does every file pass its arrival check? (§18.5, §18.6)
+3. Is the package complete and settled, and does every file open? (§18.5, §18.6)
 4. Does the newest build in `output/` already reflect exactly these files? (§18.7)
 
 It builds only when 4 is no. Because every run recomputes the answer from what is in Drive,
@@ -894,8 +894,8 @@ sees the true state. The trigger never decides *what* to build.
               v1.json  v2.json  attempts.json
 ```
 
-- **The folder a file is in declares what the file is.** Filenames are never interpreted. The
-  model is never asked which component a file is. Folder names come from
+- **The folder a file is in declares what the file is**, and is trusted (§18.6). Filenames are
+  never interpreted. The model is never asked which component a file is. Folder names come from
   `config/properties.yaml` (`component_folders`, role → name); a property gets a folder only for
   the components it uses (§18.5).
 - **There is no `inputs/` folder and no `review/` folder.** Builds that need review are published
@@ -940,52 +940,33 @@ A property-month is **ready** when all of these hold:
 |---|---|---|
 | Complete | every `required` component has a current file | `Waiting for <components>` |
 | Settled | no PDF in any component folder has an upload time within the last `CRR_SETTLE_MINUTES` (60) | `Waiting for uploads to settle (last upload <time>)` |
-| Checked | every current file passes its arrival check (§18.6) | `Held - <reason>` |
+| Opens | every current file opens as a PDF (§18.6) | `Held - <reason>` |
 
 An `optional` component with no file is simply left out, and the status and manifest say the
 report was built without it. If it arrives later, the inputs have changed and the next run
 builds the next version.
 
-### 18.6 Arrival check — before any model call
+### 18.6 The folder is trusted
 
-Runs on the current file of every component, deterministically, at zero token cost. Fails **hold**
-the property-month with a plain-language status; nothing is built and nothing is spent.
+A file's component is whatever folder it is in, and its month is whatever month folder it is in
+(D-19). The system does not inspect content to confirm either: document formats, lengths and
+layouts vary between managers and will keep changing, and a content check tuned to today's
+formats would reject tomorrow's good files. Only two mechanical checks run, and a failure
+**holds** the property-month with a plain-language status:
 
-1. **Opens as a PDF**, not encrypted.
-2. **Page count ≤ `max_pages`** for its source (`config/outputs/*.yaml`, per source). Defaults
-   from the June evidence: QuickBooks reports 1 page → `max_pages: 5`; PM sources 15–26 pages →
-   `max_pages: 80`. This is the guard against an unrelated 300-page scan costing ~$9 to reject.
-3. **First-page identity.** Text layer of page 1, or local OCR of page 1 only when there is none
-   (McCathren scans). Matched against a new `identity` block in the source schema:
-   - `title_any`: regexes, at least one must match (e.g. `Balance Sheet`, `Owner Statement`);
-   - `entity`: the page must contain the property's `owning_entity`, `name`, or a record's
-     `pm_name` (normalised: case, whitespace, punctuation);
-   - `period` *(optional)*: a regex anchored to the line that states the period — not any date
-     on the page, since QuickBooks pages also print their generation date. When defined and
-     matched, the period's end month must equal the folder's month; when defined and not
-     matched, the file is held (`cannot find the report period`); when not defined, the period
-     is not checked on arrival.
+1. **Opens as a PDF**, not encrypted (`Held - "<name>" in Balance Sheet cannot be opened`).
+2. **Within the cost ceiling** (§18.7) — the only guard against an unrelated upload, and it
+   depends on nothing but page count.
 
-   What the June 2026 bundle supports (checked 2026-09-26):
+What this accepts, deliberately:
 
-   | Source | Title | Entity | Period on page 1 |
-   |---|---|---|---|
-   | QBO Balance Sheet | line 2 | line 1 | line 3, `As of Jun 30, 2026` |
-   | QBO P&L YTD Comparison | line 2 | line 1 | line 3, `April-June, 2026` |
-   | Distribution Schedule | grid header | — | **none** — a year grid; some show the prior year |
-   | Cobalt PM source | `Owner Statement` | line 1 | date range, `Jun 01, 2026 – Jun 30, 2026` |
-   | McCathren PM source | OCR `STATEMENT` | property name | OCR, `June 2026 STATEMENT` |
-   | Missoula PM source | footer | page body | **none** — page 1 shows only a print date |
-
-4. **Period for sources without one on page 1** (Missoula PM, Distribution Schedule): the
-   classifier's forced tool gains an optional `period_end` (`YYYY-MM` or null) that it reports
-   for any page stating a reporting period, at no extra call. A reported period that disagrees
-   with the folder is a new review reason, `period_mismatch`. The model can only send a build
-   to review this way; it never decides what a file is. A prompt change: eval before merge
-   (§7.5).
-
-The whole check must pass all 31 June inputs in their true folders, and fail each of them
-placed in a wrong-component or wrong-month folder, before it ships (PLAN Phase 10).
+- **A wrong document in a folder is built as if it were right.** The existing review gate (§6.8)
+  usually catches it downstream — pages the schema does not recognise are `unknown_page`,
+  sections missing from the flow are `missing_required` — so it tends to land as
+  `NEEDS REVIEW`, but that is a side effect, not a guarantee.
+- **A document for the wrong month is not detected.** The reviewer is the check. The manifest and
+  status name every file used and when it was uploaded, so the question is answerable from the
+  `output/` folder.
 
 ### 18.7 When to build, and versions
 
@@ -1027,7 +1008,7 @@ from the folder listing:
 |---|---|
 | `STATUS - Waiting for Balance Sheet, Profit and Loss.txt` | required components missing |
 | `STATUS - Waiting for uploads to settle.txt` | an upload in the last 60 minutes |
-| `STATUS - Held - <reason>.txt` | an arrival check failed; nothing built |
+| `STATUS - Held - <reason>.txt` | a file does not open, or the build would exceed the cost ceiling; nothing built |
 | `STATUS - Built v2 (current).txt` | newest build is `BUILT` and reflects the current files |
 | `STATUS - Needs review (v2).txt` | newest build is `NEEDS_REVIEW` |
 | `STATUS - Built v2 - newer files waiting.txt` | v2 is good, but the files have changed since and the next build is pending (waiting, settling or held) |
@@ -1053,7 +1034,7 @@ crr reconcile [--repo gdrive] [--classifier anthropic] [--property ID]... [--per
 2. Ensure folders (§18.3).
 3. Close any month newly past its window; write its final status.
 4. For each open property-month with files, **oldest month first**: choose files (§18.4) →
-   readiness (§18.5) → arrival check (§18.6) → fingerprint vs newest manifest (§18.7) → failure
+   readiness (§18.5) → opens (§18.6) → fingerprint vs newest manifest (§18.7) → failure
    cap → cost ceiling → build → **re-list `output/` and discard the build if a manifest with the
    same fingerprint appeared meanwhile** → publish `vN` → status.
 5. Stop *starting* builds after `CRR_RUN_SOFT_DEADLINE_S` (1200 s). Whatever is left is picked
@@ -1061,7 +1042,7 @@ crr reconcile [--repo gdrive] [--classifier anthropic] [--property ID]... [--per
 6. Write the root summary. Exit 0 — per-property outcomes are statuses, not exit codes.
 
 `--force` builds the selected property-months even when the fingerprint is unchanged and resets
-the failure cap. It does not skip the completeness or arrival checks, nor the settle window.
+the failure cap. It does not skip the completeness or open checks, nor the settle window.
 `--dry-run` prints every decision and writes nothing.
 
 `crr build` (§6) remains for development and one-off runs.
@@ -1090,8 +1071,11 @@ the failure cap. It does not skip the completeness or arrival checks, nor the se
   backstop. Its latency gain is erased by the 60-minute settle window.
 - **Logic Apps' Google Drive trigger.** Its connector needs an interactive OAuth consent, which
   breaks the automated GitHub → Azure deploy chain.
-- **Identifying components by content.** The folder is the declaration; content only confirms
-  it (§18.6).
+- **Identifying components by content.** The folder is the declaration (§18.6).
+- **Confirming the folder from content** — a first-page check of title, entity and period, and a
+  classifier-reported period for sources that print none on page 1. Designed 2026-09-26 and
+  withdrawn the same day: the June bundle showed page 1 states a period for only some sources,
+  and any content rule is tied to today's formats. Too fragile for the value (§18.6).
 - **An "I'm done" signal from uploaders** (marker files, a checklist sheet). Uploaders are
   non-technical and rarely involved; completeness plus a settle window infers the same thing
   with nothing extra to learn.

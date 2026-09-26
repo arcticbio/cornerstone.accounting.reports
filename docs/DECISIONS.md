@@ -107,7 +107,9 @@ of D-12; D-12's rule (review over guess) stands.
 **D-19 · A folder per component declares what a file is. One file per component. Filenames are
 never interpreted.**
 Uploaders may be anyone with Drive access and no technical background. The model is never asked
-which component a file is; a deterministic first-page check only confirms the folder's claim.
+which component a file is, and no content check second-guesses the folder: formats vary and
+will change, so any such check is fragile (withdrawn 2026-09-26, SPEC §18.11). A wrong or
+wrong-month document is built as given; the reviewer is the check.
 *Consequence:* no `inputs/` folder; the exact-filename rule of SPEC §6.1 goes.
 
 **D-20 · Only a change of input files triggers a build. Code and config changes do not;
@@ -130,7 +132,8 @@ ignored and the status says so.**
 The month is the one containing the source material; quarterly material goes in the quarter's
 last month. The system creates the current and next month's folders for every property.
 
-**D-24 · Only PDFs; nothing expensive happens to a file before zero-cost checks pass.**
-Page limit per source and first-page identity run before any model call; a per-build cost
-ceiling, a three-strike failure cap and a spend limit on the Anthropic workspace back them up.
-An unrelated upload costs no tokens.
+**D-24 · Only PDFs; spend is bounded by page count alone.**
+A file must open as a PDF; nothing else about its content is checked (D-19). Spend is bounded by
+a per-build cost ceiling (pages × a measured per-page rate), a three-strike failure cap and a
+spend limit on the Anthropic workspace — none of which depends on a document's format.
+An unrelated upload costs at most the ceiling, and the review gate usually flags it.
