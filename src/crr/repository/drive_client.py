@@ -22,7 +22,8 @@ log = get_logger(__name__)
 
 FOLDER_MIME = "application/vnd.google-apps.folder"
 SCOPES = ("https://www.googleapis.com/auth/drive",)
-_FIELDS = "files(id, name, mimeType, size, modifiedTime)"
+_FIELDS = "files(id, name, mimeType, size, modifiedTime, createdTime, md5Checksum)"
+PDF_MIME = "application/pdf"
 
 
 class DriveError(Exception):
@@ -36,6 +37,8 @@ class DriveFile:
     mime_type: str
     size: int | None = None
     modified_time: str | None = None
+    created_time: str | None = None
+    md5: str | None = None
 
     @property
     def is_folder(self) -> bool:
@@ -54,6 +57,15 @@ class DriveApi(Protocol):
     def create_folder(self, parent_id: str, name: str) -> DriveFile: ...
 
     def trash(self, file_id: str) -> None: ...
+
+    def rename(self, file_id: str, name: str) -> None: ...
+
+    def update_content(self, file_id: str, path: Path, name: str | None = None) -> None: ...
+
+    def head_revision_time(self, file_id: str) -> str | None:
+        """When the file's current content was uploaded (RFC 3339). A rename does not move it,
+        unlike the file's own `modifiedTime` (SPEC §18.4)."""
+        ...
 
 
 def credentials_from_b64(encoded: str) -> Any:
@@ -119,6 +131,8 @@ class GoogleDriveApi:
                     mime_type=item["mimeType"],
                     size=int(item["size"]) if item.get("size") else None,
                     modified_time=item.get("modifiedTime"),
+                    created_time=item.get("createdTime"),
+                    md5=item.get("md5Checksum"),
                 )
                 for item in response.get("files", [])
             )
@@ -186,3 +200,42 @@ class GoogleDriveApi:
         self._service.files().update(
             fileId=file_id, body={"trashed": True}, supportsAllDrives=True
         ).execute()
+
+    def rename(self, file_id: str, name: str) -> None:
+        self._service.files().update(
+            fileId=file_id, body={"name": name}, supportsAllDrives=True
+        ).execute()
+
+    def update_content(self, file_id: str, path: Path, name: str | None = None) -> None:
+        """Replace a file's content in place — for the system's own status, index and summary
+        files, which are rewritten rather than multiplied."""
+        from googleapiclient.http import MediaFileUpload
+
+        body = {"name": name} if name else {}
+        self._service.files().update(
+            fileId=file_id,
+            body=body,
+            media_body=MediaFileUpload(str(path)),
+            supportsAllDrives=True,
+        ).execute()
+
+    def head_revision_time(self, file_id: str) -> str | None:
+        times: list[str] = []
+        page_token: str | None = None
+        while True:
+            response = (
+                self._service.revisions()
+                .list(
+                    fileId=file_id,
+                    fields="nextPageToken, revisions(id, modifiedTime)",
+                    pageSize=200,
+                    pageToken=page_token,
+                )
+                .execute()
+            )
+            times.extend(
+                r["modifiedTime"] for r in response.get("revisions", []) if r.get("modifiedTime")
+            )
+            page_token = response.get("nextPageToken")
+            if not page_token:
+                return max(times) if times else None
