@@ -6,14 +6,17 @@ The clock is the test's: settling, closing and upload order are all driven by it
 
 from __future__ import annotations
 
+import io
 import json
 import os
 import shutil
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
 from typing import Any
+from unittest import mock
 
 import pytest
+from pypdf import PdfReader, PdfWriter
 
 from crr.classify.golden_classifier import GoldenClassifier
 from crr.classify.protocol import ClassificationResult, PageInput
@@ -432,3 +435,147 @@ def test_status_and_summary_never_carry_page_text(tmp_path: Path) -> None:
     allowed = {c.label for c in CONFIG.components_for("fort-grounds")} | {FORT.name}
     leaked = sorted(f for f in fragments - allowed if f in written)
     assert leaked == []
+
+
+# -- paths the scenarios above never reached (audit 2026-09-26) ---------------------------
+
+
+class Unsure(Counting):
+    """Golden labels, but the Balance Sheet at a confidence the review gate refuses."""
+
+    def classify(
+        self, doc: SourceDocument, schema: SourceSchema, pages: list[PageInput]
+    ) -> ClassificationResult:
+        result = super().classify(doc, schema, pages)
+        if doc.role == "cornerstone_balance_sheet":
+            result.pages = [label.model_copy(update={"confidence": 0.10}) for label in result.pages]
+        return result
+
+
+def test_a_build_that_needs_review_is_published_as_a_version_with_its_note(world: World) -> None:
+    world.classifier = Unsure()
+    world.upload_all()
+    world.later(minutes=61)
+    world.run()
+    assert world.output() == [
+        "Fort Grounds - Investor Report - September 2026 - v1 - NEEDS REVIEW.pdf",
+        "REVIEW - v1.md",
+        "STATUS - Needs review (v1).txt",
+        "manifests",
+    ]
+    note = (world.month() / "output" / "REVIEW - v1.md").read_text()
+    assert "was built as version 1, marked NEEDS REVIEW" in note
+    assert "| cornerstone_balance_sheet | 1 | 0.10 < 0.85 |" in note
+    # The review build consumes its files: nothing more is built until one of them changes.
+    calls = len(world.classifier.calls)
+    world.later(minutes=30)
+    world.run()
+    assert len(world.classifier.calls) == calls
+    # A corrected upload is the next version, built clean.
+    world.classifier = Counting()
+    world.upload("bs", "BS fixed.pdf", content=SOURCE["bs"].read_bytes() + b"\n%fixed\n")
+    world.later(minutes=61)
+    world.run()
+    assert world.status() == "STATUS - Built v2 (current).txt"
+
+
+def test_the_period_option_touches_only_that_month(world: World) -> None:
+    world.upload_all()
+    world.later(minutes=61)
+    world.run(period=PERIOD)
+    assert world.status() == "STATUS - Built v1 (current).txt"
+    months = sorted(p.name for p in world.month().parent.iterdir())
+    assert months == ["2026-09 September"]  # October and November were not prepared
+
+
+def test_page_count_drift_compares_with_the_previous_month(world: World) -> None:
+    """The v1 drift rule, fed from `output/manifests/` of the month before."""
+    world.upload_all()
+    world.later(minutes=61)
+    world.run()
+    october = world.store.month_dir(FORT, "2026-10")
+    for key in ("bs", "pl"):
+        (october / FOLDER[key]).mkdir(parents=True, exist_ok=True)
+        shutil.copy(SOURCE[key], october / FOLDER[key] / f"{key}.pdf")
+    writer = PdfWriter()
+    for page in PdfReader(str(SOURCE["pm"])).pages[:3]:  # 3 pages where September had 16
+        writer.add_page(page)
+    (october / FOLDER["pm"]).mkdir(parents=True, exist_ok=True)
+    with (october / FOLDER["pm"] / "pm.pdf").open("wb") as fh:
+        writer.write(fh)
+    for path in october.rglob("*.pdf"):
+        os.utime(path, (world.now.timestamp(),) * 2)
+    world.later(minutes=61)
+    world.run()
+    state = world.store.read_state(FORT, "2026-10")
+    assert state is not None and state.latest is not None
+    assert "page_count_drift" in state.latest.review_codes
+
+
+def _encrypted(source: Path, user: str) -> bytes:
+    writer = PdfWriter(clone_from=str(source))
+    writer.encrypt(user_password=user, owner_password="owner", algorithm="AES-128")
+    buffer = io.BytesIO()
+    writer.write(buffer)
+    return buffer.getvalue()
+
+
+def test_a_password_protected_file_is_held(world: World) -> None:
+    world.upload_all()
+    world.later(minutes=1)
+    world.upload("bs", "locked.pdf", content=_encrypted(SOURCE["bs"], "secret"))
+    world.later(minutes=61)
+    world.run()
+    assert world.status() == "STATUS - Held - Balance Sheet is password-protected.txt"
+    assert world.classifier.calls == []
+
+
+def test_a_file_restricted_only_by_an_owner_password_still_builds(world: World) -> None:
+    world.upload_all()
+    world.later(minutes=1)
+    world.upload("bs", "restricted.pdf", content=_encrypted(SOURCE["bs"], ""))
+    world.later(minutes=61)
+    world.run()
+    assert world.status() == "STATUS - Built v1 (current).txt"
+
+
+def test_a_pdf_with_no_pages_is_held(world: World) -> None:
+    world.upload_all()
+    buffer = io.BytesIO()
+    PdfWriter().write(buffer)
+    world.later(minutes=1)
+    world.upload("bs", "empty.pdf", content=buffer.getvalue())
+    world.later(minutes=61)
+    world.run()
+    assert world.status() == "STATUS - Held - Balance Sheet has no pages.txt"
+
+
+def test_force_rebuilds_but_reuses_every_unchanged_label(world: World) -> None:
+    """`--force` recomposes with the current code; it does not re-classify unchanged documents,
+    whose labels are reused like any others (SPEC §18.7). Only a schema, prompt-version or
+    model change re-classifies them."""
+    world.upload_all()
+    world.later(minutes=61)
+    world.run()
+    world.classifier.calls.clear()
+    world.run(force=True)
+    assert world.status() == "STATUS - Built v2 (current).txt"
+    assert world.classifier.calls == []
+    v2 = json.loads((world.month() / "output" / "manifests" / "v2.json").read_text())
+    assert all(i["reused_classification"] for i in v2["inputs"])
+
+
+def test_the_cost_ceiling_is_per_attempt(world: World) -> None:
+    """A failed attempt publishes no manifest, so a retry has nothing to reuse and classifies
+    every page again: up to `CRR_MAX_FAILED_ATTEMPTS` times `CRR_MAX_BUILD_USD` per set of files,
+    not one ceiling. Here the classification succeeds and the build fails after it."""
+    world.upload_all()
+    world.later(minutes=61)
+    with mock.patch("crr.pipeline.compose", side_effect=RuntimeError("compose failed")):
+        for _ in range(4):
+            world.run()
+            world.later(minutes=30)
+    assert world.status() == "STATUS - Failed 3 times, stopped retrying.txt"
+    assert sorted(world.classifier.calls) == sorted(
+        ["pm_source", "cornerstone_balance_sheet", "cornerstone_profit_loss_ytd"] * 3
+    )
