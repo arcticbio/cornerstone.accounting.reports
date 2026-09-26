@@ -423,7 +423,27 @@ Mirrors PLAN Phase 10; SPEC §18; D-17 – D-24.
 - [x] `crr reconcile` (§18.9) with `--property`, `--period`, `--force`, `--dry-run`; soft deadline; pre-publish re-list. `crr.intake.reconcile.Reconciler` runs the v1 pipeline unchanged through a staging adapter and publishes the result itself. The duplicate check is "a version appeared since this run read the index, with the same fingerprint" — proven by a test in which a second run executes *inside* the first one's classification. 13 end-to-end scenarios over real June files (`tests/eval/test_reconcile.py`). Smoke-tested from the CLI on a scratch tree: dry run → v1 → idempotent re-run.
 - [ ] Verify against Azure docs and one real run: (a) whether a scheduled Container Apps Job execution starts while the previous one is running; (b) the monthly cost of 48 short runs a day. Record both in `QUESTIONS.md`. **Docs half done (A-14, A-15):** overlapping executions run in parallel by default, and the design tolerates it; a 60 s no-op run × 48/day lands just inside the free grant. **Open:** the measured no-op run time on Azure — needs a deploy, so it waits for the STOP.
 - [x] Hosting (§18.10): Bicep cron and args; `azure-job.yml` gains `reconcile --force`; `build-period.yml` gains `reconcile`. The job now runs `crr reconcile --repo gdrive --classifier anthropic` with a 1800 s replica timeout, **but the cron default stays quarterly** — so no redeploy, including `Run the Azure job`'s automatic restore, can arm the 30-minute schedule before the STOP is cleared; arming is one reviewed line. `--force` went to `Build a period` (a `command` choice: `reconcile`, `reconcile --force`, `build`) rather than `azure-job.yml`: `az containerapp job update --args` cannot carry a multi-token list (A-13), and Actions runs the identical image with no job mutation to restore.
-- [ ] Rehearsal in Drive: seed a month in the new layout and walk it through every status — partial upload, settle, unopenable file held, built v1, replace one component, v2 with reuse, duplicate upload superseded, delete-newest revert, closed. Record each in `PROGRESS.md`.
+- [x] Rehearsal in Drive: seed a month in the new layout and walk it through every status — partial upload, settle, unopenable file held, built v1, replace one component, v2 with reuse, duplicate upload superseded, delete-newest revert, closed. Record each in `PROGRESS.md`. **Done 2026-09-26 on the live shared drive, Fort Grounds / 2026-09 September**, the uploader played through the Drive API with June files under new names:
+
+  | Step | What a person did | What `output/` said |
+  |---|---|---|
+  | 1 | nothing | folders for Sep and Oct created; no status |
+  | 2 | PM report only | `Waiting for Balance Sheet, Profit and Loss` |
+  | 3 | BS and P&L arrive | `Waiting for uploads to settle` (60 min) |
+  | 4 | — (settled) | `Built v1 (current)` — golden labels |
+  | 5 | — | nothing rebuilt |
+  | 6 | corrected BS uploaded | old one renamed `SUPERSEDED - Balance Sheet 9-30.pdf`; `Built v2 (current)` |
+  | 7 | a non-PDF named `.pdf` into P&L | `Built v2 - newer files waiting` → **fixed** to `… held` (see below) |
+  | 8 | that file deleted | old P&L un-marked; fingerprint equals v2's, so **no rebuild**: `Built v2 (current)` |
+  | 9 | corrected BS deleted | original BS un-marked; `Built v3 (current)` |
+  | 10 | Distribution Schedule arrives | `Built v4 (current)`, history "Distribution Schedule added" |
+  | 11 | upload into July (closed 09-11) | silently ignored — never had a status |
+  | 11 | August with a status, window passed | `Closed 2026-08-31 (nothing built)`, once; the next run does not look |
+  | 12 | **real model**, `--force` | `Built v5`: 19 calls, **$0.52**, 8 pages (= golden) |
+  | 12 | corrected P&L | `Built v6`: **1 call, $0.02** — PM, BS and Distribution labels reused |
+  | 13 | full 8-property run | first run 2 m 06 s (creates every property's Sep/Oct folders); **steady state with nothing to build: 37 s** from this container |
+
+  v6 downloaded back out of Drive: 8 pages, 6 bookmarks, title `Fort Grounds - Investor Report - September 2026`. The root `_STATUS - All properties.txt` reads `Fort Grounds - September 2026 - Built v6 (current)`. **Two defects found and fixed** (`aa2c8df`): a replaced component was listed twice in a version's history (`a | b - c` precedence), and a held newer file read as "waiting", which asks nothing of a reviewer. The July/August test months were trashed afterwards; **Fort Grounds / 2026-09 is left in place as a worked example** (v1–v6 and their status) — trash it before real September files go there.
 - [ ] Docs: `RUNBOOK.md` rewritten around the new layout — a one-page "how to upload" for non-technical uploaders, and "how to read the status" for reviewers; `SETUP-GOOGLE-DRIVE.md`; banners in SPEC §6.1/§6.9/§13/§14 replaced by the amended text.
 
 ## Eval results (append newest first)
