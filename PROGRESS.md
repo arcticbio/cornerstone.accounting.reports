@@ -69,6 +69,12 @@ properties end to end.
 
 **Open, in the order it is worth doing.**
 
+0. **Phase 10 — continuous intake is designed and ready to build** (2026-09-26). The quarterly
+   cron is to be replaced by `crr reconcile` every 30 minutes: a folder per component, newest
+   upload wins, a build per change of input files, versions side by side in `output/`, a status
+   file whose name is the headline. SPEC §18, D-17 – D-24, PLAN Phase 10. Until it lands the
+   quarterly schedule stays armed (next fire 20 Oct 06:00 UTC).
+
 1. ~~**B-08 — the two McCathren packages go to review on `cardinality_violation`.**~~
    **Fixed 2026-09-11, root-caused with a real-model run.** Not a labelling error: a re-run of
    Timber Place returned **23/23 correct labels**, continuations included. The split was the
@@ -403,6 +409,24 @@ OCR included), and the image is pushed to GHCR as `:build-v1` and `:sha-<short>`
 
 **Acceptance:** `README.md` → `docs/RUNBOOK.md` takes someone who has never seen the repository from "the exports arrived" to "the packages are in Drive", including what to do with a review outcome. The `v1.0.0` tag is the last task.
 
+
+## Phase 10 — Continuous intake (designed 2026-09-26, not started)
+
+Mirrors PLAN Phase 10; SPEC §18; D-17 – D-24.
+
+- [ ] Config: `component_folders` in `properties.yaml`; per-property `components` overrides; `max_pages` per source in `config/outputs/*.yaml`; `identity` block (`title_any`, `entity`, optional `period`) in each source schema. `validate-config` covers all of it.
+- [ ] Arrival check (§18.6) as a pure function over page-1 text (text layer, else local OCR of page 1). **Gate:** passes all 31 June inputs in their true component and month; fails each one in a wrong component folder and in a wrong month. Committed as a test over the bundle.
+- [ ] Repository: list a component folder with head-revision upload times and `md5Checksum`; rename to and from `SUPERSEDED - `; create the month/component/`output` skeleton; read the newest manifest and `attempts.json`; publish `vN` names. Both `GoogleDriveRepository` and `LocalFsRepository` (mtime stands in for upload time).
+- [ ] File choice (§18.4) and readiness (§18.5), pure, fully unit-tested: newest wins, prefix follows the winner, delete-newest reverts, settle window, optional components, `not_used`.
+- [ ] Fingerprint and versions (§18.7); manifest v2 fields; classification reuse from the previous manifest with its compatibility check.
+- [ ] Cost ceiling and three-strike failure cap (§18.7).
+- [ ] Status files and root summary (§18.8): every row of the table has a test; bodies carry no page text, tenant names or figures (extend the log-capture test).
+- [ ] `crr reconcile` (§18.9) with `--property`, `--period`, `--force`, `--dry-run`; soft deadline; pre-publish re-list.
+- [ ] Classifier `period_end` field and `period_mismatch` review reason (§18.6 item 4). Prompt version bump; **keyed eval must stay at 100 % on every metric before merge.**
+- [ ] Verify against Azure docs and one real run: (a) whether a scheduled Container Apps Job execution starts while the previous one is running; (b) the monthly cost of 48 short runs a day. Record both in `QUESTIONS.md`.
+- [ ] Hosting (§18.10): Bicep cron and args; `azure-job.yml` gains `reconcile --force`; `build-period.yml` gains `reconcile`.
+- [ ] Rehearsal in Drive: seed a month in the new layout and walk it through every status — partial upload, settle, wrong file held, correct file, built v1, replace one component, v2 with reuse, duplicate upload superseded, delete-newest revert, closed. Record each in `PROGRESS.md`.
+- [ ] Docs: `RUNBOOK.md` rewritten around the new layout — a one-page "how to upload" for non-technical uploaders, and "how to read the status" for reviewers; `SETUP-GOOGLE-DRIVE.md`; banners in SPEC §6.1/§6.9/§13/§14 replaced by the amended text.
 
 ## Eval results (append newest first)
 

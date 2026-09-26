@@ -283,6 +283,8 @@ Each stage is a pure function of its inputs plus the settings object, and writes
 
 ### 6.1 Fetch (`crr.repository`)
 
+> **Superseded in part by §18 (continuous intake) once PLAN Phase 10 lands.**
+
 ```python
 class SourceRepository(Protocol):
     def list_periods(self, property: Property) -> list[PeriodId]: ...
@@ -423,6 +425,8 @@ The build is `NEEDS_REVIEW` (never silently `BUILT`) when any of:
 Exit codes: 0 all `BUILT`; 2 any `NEEDS_REVIEW`; 1 any `FAILED`.
 
 ### 6.9 Publish
+
+> **Superseded in part by §18 (continuous intake) once PLAN Phase 10 lands.**
 
 `BUILT` → `output/`; `NEEDS_REVIEW` → `review/` with the manifest and a `REVIEW.md` summarising
 the reasons in plain language; `FAILED` → nothing published, manifest written to `work/`.
@@ -755,6 +759,8 @@ Never log page text or image bytes. Log document sha256s, not paths, at INFO.
 
 ## 13. Google Drive layout
 
+> **Superseded in part by §18 (continuous intake) once PLAN Phase 10 lands.**
+
 Mirror of the repo bundle, without `target/` and `reference/`:
 
 ```
@@ -781,6 +787,8 @@ with `--repo gdrive` skips properties whose `inputs/` is missing and reports the
 ---
 
 ## 14. Hosting
+
+> **Superseded in part by §18 (continuous intake) once PLAN Phase 10 lands.**
 
 **Container:** `python:3.12-slim` + `tesseract-ocr tesseract-ocr-eng tesseract-ocr-osd ocrmypdf ghostscript`
 + `uv sync --frozen`. Entrypoint `crr`. **The image never contains `data/bundle/`** (tenant data);
@@ -830,3 +838,260 @@ the path to use until Azure is provisioned.
 - Multi-period comparison or trend output.
 - A web UI. The manifest and `REVIEW.md` are the review surface.
 - Reproducing published-package features that have no source (D-03).
+
+---
+
+## 18. Continuous intake (v2 — Phase 10)
+
+**Status: designed 2026-09-26, not yet built.** When Phase 10 lands, this section supersedes the
+parts of §6.1 (finding inputs by exact filename), §6.9 (the separate `review/` folder), §13
+(the `inputs/` layout) and §14 (the quarterly schedule) that it contradicts. Until then those
+sections describe what runs. Decisions D-17 – D-24.
+
+### 18.1 Why
+
+A fixed schedule cannot serve the business. Each property should be built as soon as its
+documents are complete, which can be the 1st of the month or the 24th. Each component comes from
+a different person who cannot see the others' progress, and any component can arrive from
+anyone, in any order. A component edited after a build must produce a new build. Cadence
+(monthly, quarterly) is changing and must not be encoded in the schedule.
+
+The system produces builds for external review. **Release is not part of this product.** The only
+floor on what the system must communicate: a reviewer who browses to a property's `output/`
+folder can tell, without opening anything else, whether the newest report is trustworthy and if
+not, why.
+
+### 18.2 Model: a reconciler, not a trigger
+
+One command, `crr reconcile`, run every 30 minutes by the existing Container Apps Job. It holds
+no state between runs; it re-reads Drive every time. For every property-month still open it
+answers, in order:
+
+1. Do this month's folders exist? Create them if not (§18.3).
+2. Which file is the current one in each component folder? (§18.4)
+3. Is the package complete, settled and does every file pass its arrival check? (§18.5, §18.6)
+4. Does the newest build in `output/` already reflect exactly these files? (§18.7)
+
+It builds only when 4 is no. Because every run recomputes the answer from what is in Drive,
+missed runs, duplicate runs, crashed runs and restarts need no special handling: the next run
+sees the true state. The trigger never decides *what* to build.
+
+### 18.3 Layout and folder lifecycle
+
+```
+<root>/
+  _STATUS - All properties.txt                ← one line per property, current month (§18.8)
+  <PM folder>/<Property folder>/2026-09 September/
+      1 - Property Manager Report/            ← uploaders drop one PDF per folder, any filename
+      2 - Balance Sheet/
+      3 - Profit and Loss/
+      4 - Distribution Schedule/              ← only where the property uses it
+      output/
+          STATUS - Built v2 (current).txt
+          Fort Grounds - Investor Report - September 2026 - v1.pdf
+          Fort Grounds - Investor Report - September 2026 - v2.pdf
+          manifests/
+              v1.json  v2.json  attempts.json
+```
+
+- **The folder a file is in declares what the file is.** Filenames are never interpreted. The
+  model is never asked which component a file is. Folder names come from
+  `config/properties.yaml` (`component_folders`, role → name); a property gets a folder only for
+  the components it uses (§18.5).
+- **There is no `inputs/` folder and no `review/` folder.** Builds that need review are published
+  into `output/` beside the others, with `NEEDS REVIEW` in the filename (§18.8).
+- **Folders are created by the system.** Every run ensures, for every property, the folders for
+  the current month and the next month (`CRR_FOLDERS_AHEAD=1`). Monthly for every property
+  regardless of cadence: a quarterly property simply leaves two months in three empty, and an
+  empty month publishes nothing and no status.
+- **A month is open** from creation until 42 days after its last day (`CRR_LOOKBACK_DAYS=42`;
+  September closes 2026-11-11). The month is the one containing the source material; quarterly
+  material goes in the quarter's last month.
+- **A month is closed** after that. The first run past the window rewrites its status to
+  `STATUS - Closed <date> (vN is final).txt` (or `… (nothing built)`) and never reads it again.
+  Changes after closure are ignored, and the status says so.
+
+### 18.4 Choosing the file in each component folder
+
+Exactly one file per component (D-19). When a folder holds more than one PDF:
+
+- **The newest upload wins.** "Upload time" is the modified time of the file's *head revision* —
+  when its current content arrived — not the file's `modifiedTime`, which a rename also changes.
+  Uploading a new version of the same file (Drive → Manage versions) also counts as an upload.
+- Every other PDF in the folder is renamed `SUPERSEDED - <original name>`. Nothing is moved or
+  deleted (D-14 still holds).
+- The prefix is the system's output, not its input: the winner is always computed from *all*
+  PDFs in the folder, whatever their names. If someone deletes the newest file, the next run
+  picks the newest remaining one and strips its prefix. Going back to an older file therefore
+  takes one action: delete the newer one.
+- Non-PDFs (images, Google Docs, shortcuts, Office files) are ignored and listed in the status.
+  Files outside the component folders are ignored. Nothing below a component folder is read.
+
+### 18.5 When a package is ready
+
+**Components per property.** Each output definition's `sources` gives the default: `required:
+true` → `required`, `required: false` → `optional`. A property may override any of them in
+`config/properties.yaml` with `components: {<source key>: required | optional | not_used}`.
+`not_used` components get no folder.
+
+A property-month is **ready** when all of these hold:
+
+| Condition | Rule | Status while not met |
+|---|---|---|
+| Complete | every `required` component has a current file | `Waiting for <components>` |
+| Settled | no PDF in any component folder has an upload time within the last `CRR_SETTLE_MINUTES` (60) | `Waiting for uploads to settle (last upload <time>)` |
+| Checked | every current file passes its arrival check (§18.6) | `Held - <reason>` |
+
+An `optional` component with no file is simply left out, and the status and manifest say the
+report was built without it. If it arrives later, the inputs have changed and the next run
+builds the next version.
+
+### 18.6 Arrival check — before any model call
+
+Runs on the current file of every component, deterministically, at zero token cost. Fails **hold**
+the property-month with a plain-language status; nothing is built and nothing is spent.
+
+1. **Opens as a PDF**, not encrypted.
+2. **Page count ≤ `max_pages`** for its source (`config/outputs/*.yaml`, per source). Defaults
+   from the June evidence: QuickBooks reports 1 page → `max_pages: 5`; PM sources 15–26 pages →
+   `max_pages: 80`. This is the guard against an unrelated 300-page scan costing ~$9 to reject.
+3. **First-page identity.** Text layer of page 1, or local OCR of page 1 only when there is none
+   (McCathren scans). Matched against a new `identity` block in the source schema:
+   - `title_any`: regexes, at least one must match (e.g. `Balance Sheet`, `Owner Statement`);
+   - `entity`: the page must contain the property's `owning_entity`, `name`, or a record's
+     `pm_name` (normalised: case, whitespace, punctuation);
+   - `period` *(optional)*: a regex anchored to the line that states the period — not any date
+     on the page, since QuickBooks pages also print their generation date. When defined and
+     matched, the period's end month must equal the folder's month; when defined and not
+     matched, the file is held (`cannot find the report period`); when not defined, the period
+     is not checked on arrival.
+
+   What the June 2026 bundle supports (checked 2026-09-26):
+
+   | Source | Title | Entity | Period on page 1 |
+   |---|---|---|---|
+   | QBO Balance Sheet | line 2 | line 1 | line 3, `As of Jun 30, 2026` |
+   | QBO P&L YTD Comparison | line 2 | line 1 | line 3, `April-June, 2026` |
+   | Distribution Schedule | grid header | — | **none** — a year grid; some show the prior year |
+   | Cobalt PM source | `Owner Statement` | line 1 | date range, `Jun 01, 2026 – Jun 30, 2026` |
+   | McCathren PM source | OCR `STATEMENT` | property name | OCR, `June 2026 STATEMENT` |
+   | Missoula PM source | footer | page body | **none** — page 1 shows only a print date |
+
+4. **Period for sources without one on page 1** (Missoula PM, Distribution Schedule): the
+   classifier's forced tool gains an optional `period_end` (`YYYY-MM` or null) that it reports
+   for any page stating a reporting period, at no extra call. A reported period that disagrees
+   with the folder is a new review reason, `period_mismatch`. The model can only send a build
+   to review this way; it never decides what a file is. A prompt change: eval before merge
+   (§7.5).
+
+The whole check must pass all 31 June inputs in their true folders, and fail each of them
+placed in a wrong-component or wrong-month folder, before it ships (PLAN Phase 10).
+
+### 18.7 When to build, and versions
+
+**Input fingerprint** = the sorted list of `(source key, Drive file id, md5Checksum)` for the
+current files. Drive reports `md5Checksum` without a download, so an unchanged month costs one
+listing per folder. The manifest (§10) gains `inputs[].drive_file_id`, `inputs[].md5`,
+`inputs[].uploaded_at`, `input_fingerprint`, `version` and `omitted_optional[]`.
+
+A ready property-month is **built** when its fingerprint differs from the newest manifest in
+`output/manifests/`, whatever that manifest's status. A `needs_review` build consumes its
+fingerprint like any other: the same files are not rebuilt until one of them changes or a person
+forces it. **Code and config changes never trigger a build** (D-20); `--force` does.
+
+**Versions.** `N` = 1 + the highest `vN` already in `output/`. Filenames:
+`<Property> - Investor Report - <Month YYYY> - v<N>.pdf`, and
+`… - v<N> - NEEDS REVIEW.pdf` with `REVIEW - v<N>.md` beside it. Older versions stay where they
+are. Every build uses the code current at the time it runs.
+
+**Reuse.** A document whose `sha256`, schema `sha256`, model and `prompt_version` match an input
+in the previous manifest reuses that manifest's page classifications instead of re-classifying.
+Correcting a 1-page Balance Sheet does not re-classify a 26-page PM source.
+
+**Cost ceiling.** Before classifying, the estimated cost of the pages that will actually be sent
+(`pages × CRR_COST_PER_PAGE_USD`, default 0.03 from the measured $0.0275) must be below
+`CRR_MAX_BUILD_USD` (3.00). Otherwise: `Held - would cost about $X, over the $3.00 limit`.
+
+**Failures.** A `FAILED` build publishes no PDF. It appends `{fingerprint, at, error class}` to
+`output/manifests/attempts.json`. After `CRR_MAX_FAILED_ATTEMPTS` (3) failures on the same
+fingerprint, the reconciler stops retrying it: `STATUS - Failed 3 times, stopped retrying`. A
+new upload (new fingerprint) or `--force` resets it.
+
+### 18.8 Status — the review surface
+
+Each open property-month with any file in it has exactly one status file in `output/`, rewritten
+on every run whose outcome changed. **The name carries the headline**, so a reviewer reads it
+from the folder listing:
+
+| Name | Meaning |
+|---|---|
+| `STATUS - Waiting for Balance Sheet, Profit and Loss.txt` | required components missing |
+| `STATUS - Waiting for uploads to settle.txt` | an upload in the last 60 minutes |
+| `STATUS - Held - <reason>.txt` | an arrival check failed; nothing built |
+| `STATUS - Built v2 (current).txt` | newest build is `BUILT` and reflects the current files |
+| `STATUS - Needs review (v2).txt` | newest build is `NEEDS_REVIEW` |
+| `STATUS - Built v2 - newer files waiting.txt` | v2 is good, but the files have changed since and the next build is pending (waiting, settling or held) |
+| `STATUS - Failed 3 times, stopped retrying.txt` | §18.7 |
+| `STATUS - Closed 2026-11-11 (v2 is final).txt` | past the lookback window; later changes ignored |
+
+The body is plain text for a non-technical reader: per component, the file used (name, upload
+time), files set aside and why, what was left out, and a version history
+(`v2 · 2026-10-09 14:40 · Balance Sheet replaced (uploaded 2026-10-09 13:32)`). No page text,
+tenant names or figures (§16).
+
+`_STATUS - All properties.txt` at the root: one line per property for the newest open month
+with any files, e.g. `Fort Grounds · September 2026 · Built v2 (current)`.
+
+### 18.9 One run
+
+```
+crr reconcile [--repo gdrive] [--classifier anthropic] [--property ID]... [--period YYYY-MM]
+              [--force] [--dry-run]
+```
+
+1. Publish preflight (§6.1). On failure exit 1 — the only condition that fails the run.
+2. Ensure folders (§18.3).
+3. Close any month newly past its window; write its final status.
+4. For each open property-month with files, **oldest month first**: choose files (§18.4) →
+   readiness (§18.5) → arrival check (§18.6) → fingerprint vs newest manifest (§18.7) → failure
+   cap → cost ceiling → build → **re-list `output/` and discard the build if a manifest with the
+   same fingerprint appeared meanwhile** → publish `vN` → status.
+5. Stop *starting* builds after `CRR_RUN_SOFT_DEADLINE_S` (1200 s). Whatever is left is picked
+   up next run.
+6. Write the root summary. Exit 0 — per-property outcomes are statuses, not exit codes.
+
+`--force` builds the selected property-months even when the fingerprint is unchanged and resets
+the failure cap. It does not skip the completeness or arrival checks, nor the settle window.
+`--dry-run` prints every decision and writes nothing.
+
+`crr build` (§6) remains for development and one-off runs.
+
+### 18.10 Hosting changes
+
+- `infra/main.bicep`: cron `*/30 * * * *`; baked args `reconcile --repo gdrive --classifier
+  anthropic`; replica timeout 1800 s (the 1200 s soft deadline stops new work well before it);
+  parallelism 1.
+- Whether Container Apps starts a scheduled execution while the previous one is still running
+  is **to be verified** (Phase 10). The design is safe either way: the soft deadline keeps runs
+  shorter than the interval, and step 4's pre-publish re-list discards a duplicate.
+- Cost: a run with nothing to build lasts well under a minute. 48 a day is expected to sit near
+  or inside the Container Apps consumption free grant — **to be verified against current Azure
+  pricing** before the schedule is armed.
+- `azure-job.yml` gains `reconcile --force` (optional `property`, `period`) as the on-demand
+  rebuild. The deploy chain is unchanged: merge to `main` → `:build-v1` → `deploy.yml`.
+- Settings added to §12: `CRR_SETTLE_MINUTES` 60, `CRR_LOOKBACK_DAYS` 42, `CRR_FOLDERS_AHEAD` 1,
+  `CRR_RUN_SOFT_DEADLINE_S` 1200, `CRR_MAX_BUILD_USD` 3.00, `CRR_COST_PER_PAGE_USD` 0.03,
+  `CRR_MAX_FAILED_ATTEMPTS` 3.
+
+### 18.11 Considered and rejected
+
+- **Drive push notifications (`changes.watch`) to an endpoint that starts the job.** Adds an
+  always-on HTTPS endpoint, channel renewal (channels expire), and still needs polling as a
+  backstop. Its latency gain is erased by the 60-minute settle window.
+- **Logic Apps' Google Drive trigger.** Its connector needs an interactive OAuth consent, which
+  breaks the automated GitHub → Azure deploy chain.
+- **Identifying components by content.** The folder is the declaration; content only confirms
+  it (§18.6).
+- **An "I'm done" signal from uploaders** (marker files, a checklist sheet). Uploaders are
+  non-technical and rarely involved; completeness plus a settle window infers the same thing
+  with nothing extra to learn.
