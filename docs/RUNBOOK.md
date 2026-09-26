@@ -363,8 +363,10 @@ content, and `crr eval` is how you find out whether the change helped.
 ## When a model is deprecated
 
 Anthropic announces model deprecations with a retirement date. The runner pins its model in
-`CRR_MODEL` (default `claude-opus-5`), and every manifest records the exact model that produced
-its labels.
+`CRR_MODEL` (default `claude-opus-5-5`; `claude-opus-5` before 2026-09-26), and every manifest
+records the exact model that produced its labels. The classifier chooses between a forced tool
+call and `auto` from the model id (A-16), so a model that rejects forcing needs no code change;
+it does need a row in the price table, or every cost estimate reads $0.
 
 1. **Set the new model in a branch:** `CRR_MODEL=<new-model>`.
 2. **Run the full eval on both models** over all 31 golden documents, and put both reports in

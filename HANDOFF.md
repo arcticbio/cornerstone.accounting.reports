@@ -87,7 +87,7 @@ checkpoint asking for these two values.
    CRR_ANTHROPIC_API_KEY=sk-ant-…   # not ANTHROPIC_API_KEY — see docs/SETUP-CREDENTIALS.md
    GOOGLE_SERVICE_ACCOUNT_B64=…paste from clipboard…
    CRR_GDRIVE_ROOT_FOLDER_ID=…the folder id…
-   CRR_MODEL=claude-opus-5
+   CRR_MODEL=claude-opus-5-5
    ```
    Leave the two Google lines out if you skipped section 2b. (These variables are visible to any
    session in this environment. That is only you. The separate "API credentials" feature in the

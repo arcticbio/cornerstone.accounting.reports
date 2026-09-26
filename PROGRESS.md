@@ -57,6 +57,12 @@ Everything below this block is the historical build record._
 GHCR as `:build-v1`, republished by every push to `main`. The real model has built all eight
 properties end to end.
 
+**Model successor readiness (2026-09-25, branch `claude/gracious-dirac-t7w39j`).** The
+classifier now runs on `claude-opus-5-5`, which rejects the forced tool call v1 relies on
+(A-16). **The default is now `claude-opus-5-5`** (D-09 amended). Three full evals at 100 % on
+every metric ($3.63–3.72 against $4.67), and all eight properties built end to end page-for-page
+identical to the golden-label build ($3.73). See `docs/ANALYSIS-model-successor-2026-09.md`.
+
 **What the keyed runs established.**
 
 | | |

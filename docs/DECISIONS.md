@@ -53,6 +53,12 @@ No Git LFS, no history rewrite. The bundle is a test fixture and few-shot source
 Cost is ~$5 per quarterly run at this volume; the Sonnet saving is not worth a decision. Pin a
 dated snapshot when the API offers one and record it in every manifest. Batch API is not used
 (complexity for ~$2.50/run).
+*Amended 2026-09-26 (owner's decision, ahead of Opus 5's retirement):* the model is
+`claude-opus-5-5`. It rejects forced tool use, so the tool is forced only on models known to
+accept it and steered under `auto` + `strict` otherwise (A-16); everything else here stands.
+Validated before the switch: three full evals at 100 % on every metric, and an eight-property
+build page-for-page identical to the golden-label build (`docs/ANALYSIS-model-successor-2026-09.md`).
+The Drive rehearsal could not run — the `2026-08` rehearsal tree had been deleted as planned. ~$3.73 per quarterly run, from ~$4.72.
 
 **D-10 · Rendering with `pypdfium2` (Apache-2.0), composition with `pypdf`, OCR with `ocrmypdf`.**
 PyMuPDF rejected on AGPL. 150 DPI, long edge ≤ 1568 px. OCR output *is* the composed source, so

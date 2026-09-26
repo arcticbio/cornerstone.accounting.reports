@@ -240,7 +240,7 @@ If that lists folders, authentication and read access are fine and the problem i
 write path — which narrows it to Part 2 (role) or Part 4 (wrong folder).
 
 `crr build` and `crr reconcile` run this same check before they do anything else, so a real run will now stop in
-about a second rather than spending a full run's classification (~$4.72 across eight
+about a second rather than spending a full run's classification (~$3.73 across eight
 properties) and failing at the last step.
 
 ---
