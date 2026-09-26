@@ -406,10 +406,12 @@ def reconcile(
     Prepares this month's and next month's folders, writes each month's status into its
     `output/`, and builds a new version wherever the current files differ from the newest
     build. Per-property outcomes are statuses, not exit codes: this exits 1 only when the run
-    itself cannot proceed (config, credentials, an unwritable repository).
+    itself cannot proceed (config, credentials, an unwritable repository), or when a month
+    could not be checked — and then only after every other month has been.
     """
     from crr.config import ConfigError, load_config
-    from crr.intake.reconcile import Options, Reconciler
+    from crr.intake.decide import Kind
+    from crr.intake.reconcile import Options, Reconciler, RunAborted
     from crr.repository.protocol import RepositoryError
     from crr.settings import Settings
 
@@ -447,7 +449,10 @@ def reconcile(
 
     def classifier_for(property_id: str):  # type: ignore[no-untyped-def]
         if property_id not in engines:
-            engines[property_id] = _make_classifier(classifier, settings, property_id)
+            try:
+                engines[property_id] = _make_classifier(classifier, settings, property_id)
+            except typer.Exit as exc:  # a missing key is the run's problem, not the month's
+                raise RunAborted(f"the {classifier} classifier cannot be built") from exc
         return engines[property_id]
 
     reconciler = Reconciler(
@@ -457,14 +462,18 @@ def reconcile(
         classifier_for=classifier_for,
         arbiter=_make_orientation_arbiter(settings),
     )
-    outcomes = reconciler.run(
-        Options(
-            property_ids=tuple(property_ids or ()),
-            period=period,
-            force=force,
-            dry_run=dry_run,
+    try:
+        outcomes = reconciler.run(
+            Options(
+                property_ids=tuple(property_ids or ()),
+                period=period,
+                force=force,
+                dry_run=dry_run,
+            )
         )
-    )
+    except RunAborted as exc:
+        typer.echo(f"run stopped: {exc}", err=True)
+        raise typer.Exit(code=1) from None
     for o in outcomes:
         if o.headline is None and not o.note:
             continue
@@ -475,6 +484,12 @@ def reconcile(
     usd = sum(o.usd for o in outcomes)
     built = sum(1 for o in outcomes if o.version is not None and o.note != "duplicate")
     typer.echo(f"{built} version(s) built" + (f", estimated ${usd:.2f}" if usd else ""))
+    unchecked = [o for o in outcomes if o.kind is Kind.ERROR]
+    if unchecked:
+        # Every other month was checked and the summary written; exit 1 so the execution
+        # shows as failed and someone reads the log (SPEC §18.9 step 6).
+        typer.echo(f"{len(unchecked)} month(s) could not be checked; see the log", err=True)
+        raise typer.Exit(code=1)
 
 
 def _make_intake_store(kind: str, settings: Settings, bundle):  # type: ignore[no-untyped-def]

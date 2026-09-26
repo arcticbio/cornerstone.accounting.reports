@@ -28,6 +28,7 @@ class Kind(StrEnum):
     STOPPED = "stopped"  # failed too often on these files; not retried
     BUILD = "build"  # ready: build now
     CLOSED = "closed"  # past the lookback window
+    ERROR = "error"  # checking the month raised; nothing was decided; the next run retries
 
 
 @dataclass(frozen=True)

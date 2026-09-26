@@ -17,6 +17,8 @@ from crr.models import BuildStatus
 
 STATUS_PREFIX = "STATUS - "
 ROOT_SUMMARY = "_STATUS - All properties.txt"
+#: The headline when checking a month raised before anything was decided (SPEC §18.8, §18.9).
+UNCHECKED = "Could not be checked - will retry"
 
 
 def status_filename(headline: str) -> str:
@@ -103,15 +105,34 @@ def render_status(
     return "\n".join(lines)
 
 
+def render_unchecked(*, property_name: str, period_label: str, error: str) -> str:
+    """The body for `UNCHECKED`: nothing is known about the files, so none are listed."""
+    return "\n".join(
+        [
+            f"{property_name} - {period_label}",
+            f"Status: {UNCHECKED}",
+            "",
+            f"The last run could not check this month ({error}). Nothing was built, renamed or",
+            "published, and every other month was checked as usual. Every run tries again; if",
+            "this status stays, the job's logs say what is wrong.",
+            "",
+        ]
+    )
+
+
 def summary_line(property_name: str, period_label: str, headline: str) -> str:
     return f"{property_name} - {period_label} - {headline}"
 
 
-def render_summary(lines: list[str], as_of: datetime) -> str:
+def render_summary(lines: list[str], as_of: datetime, problems: list[str] | None = None) -> str:
     body = [
         "Investor report status - one line per property, newest month with any files",
         "",
         *lines,
+    ]
+    if problems:
+        body += ["", "Could not be checked on this run (every run retries):", *problems]
+    body += [
         "",
         f"Last checked {_stamp(as_of)}. Open a property's month folder, then output/, for detail.",
         "",

@@ -737,7 +737,7 @@ crr build [--period 2026-06] [--property <id>]... [--classifier anthropic|golden
 crr reconcile [--repo local|gdrive] [--classifier anthropic|golden] [--property <id>]...
               [--period YYYY-MM] [--force] [--dry-run] [--work-dir work/]
           # continuous intake (§18.9): what the schedule runs; exits 0 unless the run itself
-          # cannot proceed
+          # cannot proceed, or a month could not be checked (after checking all the others)
 crr preflight [--repo local|gdrive]       # prove a file can be written (§6.1)
 crr eval [--classifier anthropic|golden] [--pm <id>] [--gate]
 crr version
@@ -939,6 +939,8 @@ sees the true state. The trigger never decides *what* to build.
 - **A month is open** from creation until 42 days after its last day (`CRR_LOOKBACK_DAYS=42`;
   September closes 2026-11-11). The month is the one containing the source material; quarterly
   material goes in the quarter's last month.
+- A folder whose name only looks like a month (`2026-13 …`) is not one: it is ignored, with a
+  warning in the log, and never opened, prepared or closed.
 - **A month is closed** after that. The first run past the window rewrites its status to
   `STATUS - Closed <date> (vN is final).txt` (or `… (nothing built)`) and never reads it again.
   Changes after closure are ignored, and the status says so.
@@ -1054,6 +1056,7 @@ from the folder listing:
 | `STATUS - Built v2 - newer files failed, will retry.txt` | … and building from them raised; the next run retries |
 | `STATUS - Failed 3 times, stopped retrying.txt` | §18.7 |
 | `STATUS - Closed 2026-11-11 (v2 is final).txt` | past the lookback window; later changes ignored |
+| `STATUS - Could not be checked - will retry.txt` | checking the month raised before anything was decided (§18.9); nothing was built or changed. Written only over an existing status: a month that never showed one does not get one from an error |
 
 The body is plain text for a non-technical reader: per component, the file used (name, upload
 time), files set aside and why, what was left out, and a version history
@@ -1077,9 +1080,16 @@ crr reconcile [--repo gdrive] [--classifier anthropic] [--property ID]... [--per
    readiness (§18.5) → opens (§18.6) → fingerprint vs newest manifest (§18.7) → failure
    cap → cost ceiling → build → **re-list `output/` and discard the build if a manifest with the
    same fingerprint appeared meanwhile** → publish `vN` → status.
+   **Each property-month is checked in isolation.** Whatever raises while checking one —
+   anything outside the build, which §6.8 already contains: an index that cannot be read, a
+   store error — is that month's outcome, `Could not be checked - will retry`, and the run
+   moves on. Only a problem with the run itself (the classifier cannot be built) stops it.
 5. Stop *starting* builds after `CRR_RUN_SOFT_DEADLINE_S` (1200 s). Whatever is left is picked
    up next run.
-6. Write the root summary. Exit 0 — per-property outcomes are statuses, not exit codes.
+6. Write the root summary: a line per property, then every month that could not be checked.
+   Exit 0 — per-property outcomes are statuses, not exit codes — unless a month could not be
+   checked: then exit 1, after every other month is done and the summary written, so the
+   execution shows as failed and someone reads the log.
 
 `--force` builds the selected property-months even when the fingerprint is unchanged and resets
 the failure cap. It does not skip the completeness or open checks, nor the settle window.

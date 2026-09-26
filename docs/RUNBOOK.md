@@ -88,6 +88,7 @@ v2.pdf` and every earlier version — and **one** status file. Read its name fir
 | `STATUS - Failed (attempt 1 of 3), will retry.txt` | the build raised an error; it retries every 30 minutes | Nothing yet |
 | `STATUS - Failed 3 times, stopped retrying.txt` | it failed three times on the same files | See [failure modes](#failure-modes-and-what-to-do-about-them) |
 | `STATUS - Closed 2026-11-11 (v4 is final).txt` | the month is no longer watched; later changes are ignored | Nothing |
+| `STATUS - Could not be checked - will retry.txt` | the last run could not read this month; nothing was built or changed, and the other months were checked as usual | Nothing if it clears within the hour; if it stays, see [failure modes](#failure-modes-and-what-to-do-about-them) |
 
 The file's **body** lists, for each document, the file that was used and when it was uploaded,
 anything set aside or ignored and why, and a version history — `v2 - … - Balance Sheet
@@ -241,8 +242,10 @@ lives in *Build a period* instead.
 ### Reading the result
 
 `reconcile` exits 0 unless the run itself could not proceed — bad config, missing credentials,
-an unwritable drive — so a **Failed** execution is a real incident. Outcomes per month are in
-Drive, not in the exit code. Logs are in the portal: the resource group → `crr-logs` →
+an unwritable drive — or a month could not be checked, so a **Failed** execution is a real
+incident. A month that could not be checked never stops the others: they are all checked, the
+root summary is written with the problem listed under *Could not be checked on this run*, and
+only then does the run exit 1. Outcomes per month are in Drive, not in the exit code. Logs are in the portal: the resource group → `crr-logs` →
 **Logs**. Every line is JSON, and page text, tenant names and secrets are never among them.
 
 ---
@@ -251,7 +254,8 @@ Drive, not in the exit code. Logs are in the portal: the resource group → `crr
 
 | What you see | What it means | What to do |
 |---|---|---|
-| *Last checked* in `_STATUS - All properties.txt` is more than an hour old | The job is not running | Actions → *Run the Azure job* → `version`. If that fails, the job or its credentials are broken (`SETUP-AZURE.md`); meanwhile *Build a period* → `reconcile` does the same work. |
+| *Last checked* in `_STATUS - All properties.txt` is more than an hour old | Runs are not finishing | Look at the job's executions first. **Failed** ones: read their logs — the last lines say why. None at all: Actions → *Run the Azure job* → `version`; if that fails, the job or its credentials are broken (`SETUP-AZURE.md`). A `version` that succeeds proves only the job and its image, not a `reconcile` run: meanwhile *Build a period* → `reconcile` does the same work and prints the same error. |
+| `Could not be checked - will retry` on a month, or under *Could not be checked on this run* in the root summary, for more than an hour | Reading that month raises on every run. The log line `intake.month_failed` names the property, the month and the error class | `ValidationError` almost always means `output/manifests/state.json` was edited or replaced: restore its previous version in Drive (*Manage versions*), or delete it — the next run then builds the month again as its next version. Otherwise it is usually Drive itself; the other months are unaffected meanwhile. |
 | `Held - … cannot be opened` / `is password-protected` / `has no pages` | A file in that folder is not a usable PDF | Upload a readable PDF into the same folder; it becomes the newest and the build proceeds. |
 | `Held - would cost about $X, over the $3.00 limit` | The pages to classify exceed the per-build ceiling (`CRR_MAX_BUILD_USD`) | Almost always a wrong or oversized document in a folder. Replace it. If the document really is that long, raise `CRR_MAX_BUILD_USD` for the job. |
 | `Failed (attempt n of 3), will retry` | The build raised: API unavailable, OCR could not run, a PDF that opens but cannot be processed | Nothing yet — it retries every run. |

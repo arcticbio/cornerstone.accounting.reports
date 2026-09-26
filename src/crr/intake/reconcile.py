@@ -24,7 +24,7 @@ from crr.classify.orientation_check import OrientationArbiter
 from crr.classify.protocol import Classifier
 from crr.compose.composer import output_filename
 from crr.config.loader import Component, ConfigBundle
-from crr.intake.calendar import closes_on, is_open, months_to_prepare
+from crr.intake.calendar import closes_on, is_open, month_end, months_to_prepare, period_of
 from crr.intake.decide import (
     ComponentState,
     Kind,
@@ -40,9 +40,11 @@ from crr.intake.files import choose
 from crr.intake.reuse import ReusingClassifier, reusable_input
 from crr.intake.state import Attempt, InputSig, MonthState, VersionEntry
 from crr.intake.status import (
+    UNCHECKED,
     headline_of,
     render_status,
     render_summary,
+    render_unchecked,
     status_filename,
     summary_line,
 )
@@ -59,6 +61,14 @@ from crr.settings import Settings
 log = get_logger(__name__)
 
 ClassifierFactory = Callable[[str], Classifier]
+
+
+class RunAborted(Exception):
+    """A problem with the run, not with one month — the classifier cannot be built, say.
+
+    It stops the run. Anything else that goes wrong while checking a month is that month's
+    problem: it gets `UNCHECKED` and the run moves on (SPEC §18.9).
+    """
 
 
 @dataclass(frozen=True)
@@ -121,31 +131,51 @@ class Reconciler:
         outcomes: list[Outcome] = []
         open_months: list[_Month] = []
 
+        # Every property and every month is checked in isolation: whatever one of them raises
+        # is that month's problem (`UNCHECKED`), never the run's. Otherwise one bad month — an
+        # index someone edited, a folder named like a month that is not one — would stop every
+        # property after it, on every run, and the summary would never be written.
         for property_id in wanted:
             prop = self.config.properties.property(property_id).to_domain()
             components = self.config.components_for(property_id)
-            existing = set(self.store.list_months(prop))
+            try:
+                existing = self._months(prop)
+            except RunAborted:
+                raise
+            except Exception as exc:
+                outcomes.append(self._failed(prop, period_of(today), exc, options))
+                continue
             prepare = set(months_to_prepare(today, self.settings.folders_ahead))
             for period in sorted(existing | prepare):
                 if options.period and period != options.period:
                     continue
-                if is_open(period, today, self.settings.lookback_days):
-                    if not options.dry_run:
-                        self.store.ensure_month(prop, period, [c.folder for c in components])
-                    open_months.append(_Month(prop, period, components))
-                elif period in existing:
-                    closing = self._close(prop, period, components, options)
-                    if closing is not None:
-                        outcomes.append(closing)
+                try:
+                    if is_open(period, today, self.settings.lookback_days):
+                        if not options.dry_run:
+                            self.store.ensure_month(prop, period, [c.folder for c in components])
+                        open_months.append(_Month(prop, period, components))
+                    elif period in existing:
+                        closing = self._close(prop, period, components, options)
+                        if closing is not None:
+                            outcomes.append(closing)
+                except RunAborted:
+                    raise
+                except Exception as exc:
+                    outcomes.append(self._failed(prop, period, exc, options))
 
         # Oldest month first across every property: the month nearest its deadline goes first.
         open_months.sort(key=lambda m: (m.period, m.prop.id))
         latest_line: dict[str, tuple[PeriodId, str]] = {}
         for month in open_months:
             deadline_passed = self.monotonic() - started > self.settings.run_soft_deadline_s
-            outcome = self._month(month, now, options, deadline_passed)
+            try:
+                outcome = self._month(month, now, options, deadline_passed)
+            except RunAborted:
+                raise
+            except Exception as exc:
+                outcome = self._failed(month.prop, month.period, exc, options, opened=True)
             outcomes.append(outcome)
-            if outcome.headline:
+            if outcome.headline and outcome.kind is not Kind.ERROR:
                 label = self.config.properties.period_label(month.period)
                 line = summary_line(month.prop.name, label, outcome.headline)
                 previous = latest_line.get(month.prop.id)
@@ -158,8 +188,65 @@ class Reconciler:
                 for p in self.config.properties.properties
                 if p.id in latest_line
             ]
-            self.store.write_summary(render_summary(ordered, now))
+            names = {p.id: p.name for p in self.config.properties.properties}
+            problems = [
+                summary_line(
+                    names[o.property_id],
+                    self.config.properties.period_label(o.period),
+                    f"{UNCHECKED} ({o.note})",
+                )
+                for o in outcomes
+                if o.kind is Kind.ERROR
+            ]
+            self.store.write_summary(render_summary(ordered, now, problems))
         return outcomes
+
+    def _months(self, prop: Property) -> set[PeriodId]:
+        """The property's month folders, less any whose name only looks like a month."""
+        found = self.store.list_months(prop)
+        months = set(_real_months(found))
+        for bogus in sorted(set(found) - months):
+            log.warning("intake.month_folder_ignored", property=prop.id, period=bogus)
+        return months
+
+    def _failed(
+        self,
+        prop: Property,
+        period: PeriodId,
+        exc: Exception,
+        options: Options,
+        *,
+        opened: bool = False,
+    ) -> Outcome:
+        """Record that checking one month raised, and carry on with the rest of the run.
+
+        An open month that already shows a status gets `UNCHECKED`, so its `output/` does not
+        go on claiming a state nobody has checked. One that never showed a status is left
+        without one, as an empty month is: the root summary and the log carry the problem.
+        """
+        error = type(exc).__name__
+        log.error("intake.month_failed", property=prop.id, period=period, error=error)
+        if opened and not options.dry_run:
+            try:
+                if self.store.read_status(prop, period) is not None:
+                    self.store.write_status(
+                        prop,
+                        period,
+                        status_filename(UNCHECKED),
+                        render_unchecked(
+                            property_name=prop.name,
+                            period_label=self.config.properties.period_label(period),
+                            error=error,
+                        ),
+                    )
+            except Exception as again:  # the store may be what failed; the summary still says
+                log.error(
+                    "intake.status_unwritable",
+                    property=prop.id,
+                    period=period,
+                    error=type(again).__name__,
+                )
+        return Outcome(prop.id, period, Kind.ERROR, UNCHECKED, note=error)
 
     # -- one open month -------------------------------------------------------------------
     def _month(
@@ -438,15 +525,27 @@ class Reconciler:
             return None
 
     def previous_pm_pages(self, prop: Property, period: PeriodId) -> int | None:
-        """PM source pages from the newest version of an earlier month (the drift check)."""
-        for earlier in sorted(
-            (m for m in self.store.list_months(prop) if m < period), reverse=True
-        ):
-            state = self.store.read_state(prop, earlier)
-            latest = state.latest if state else None
-            if latest is None:
+        """PM source pages from the newest version of an earlier month (the drift check).
+
+        An earlier month that cannot be read is passed over rather than ending the search, so
+        one bad index does not blind the drift check for every month after it.
+        """
+        earlier_months = _real_months(self.store.list_months(prop))
+        for earlier in sorted((m for m in earlier_months if m < period), reverse=True):
+            try:
+                state = self.store.read_state(prop, earlier)
+                latest = state.latest if state else None
+                if latest is None:
+                    continue
+                data = self.store.read_manifest(prop, earlier, latest.version)
+            except Exception as exc:
+                log.warning(
+                    "intake.history_unreadable",
+                    property=prop.id,
+                    period=earlier,
+                    error=type(exc).__name__,
+                )
                 continue
-            data = self.store.read_manifest(prop, earlier, latest.version)
             for source in (data or {}).get("inputs", []):
                 if source.get("role") == "pm_source" and isinstance(source.get("pages"), int):
                     return int(source["pages"])
@@ -479,6 +578,19 @@ class _Staged:
 
     def previous_pm_pages(self, prop: Property, period: PeriodId, work_dir: Path) -> int | None:
         return self._owner.previous_pm_pages(prop, period)
+
+
+def _real_months(periods: list[PeriodId]) -> list[PeriodId]:
+    """Drop folder names that only look like a month — `2026-13 …`, `0000-01 …` — which the
+    stores report as candidates and which have no calendar month to open or close."""
+    out = []
+    for period in periods:
+        try:
+            month_end(period)
+        except ValueError:
+            continue
+        out.append(period)
+    return out
 
 
 def _open_problem(path: Path) -> tuple[str, str] | None:

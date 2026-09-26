@@ -28,8 +28,8 @@ uv run crr reconcile --repo gdrive --dry-run              # what every open mont
 
 `crr build` (the v1 command, over the June bundle's `inputs/` layout) exits **0** when every
 package built, **2** when any package needs review, **1** when any property failed. `crr
-reconcile` exits 0 unless the run itself cannot proceed: each month's outcome is its status
-file.
+reconcile` exits 0 unless the run itself cannot proceed, or a month could not be checked:
+each month's outcome is its status file.
 
 ## Where things are
 
