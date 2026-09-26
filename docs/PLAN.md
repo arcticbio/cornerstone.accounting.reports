@@ -219,7 +219,7 @@ data: delete and re-seed them in the new layout as needed.
 
 Tasks
 - [ ] Config: `component_folders` in `properties.yaml`; per-property `components` overrides. `validate-config` covers both.
-- [ ] Repository: list a component folder with head-revision upload times and `md5Checksum`; rename to and from `SUPERSEDED - `; create the month/component/`output` skeleton; read the newest manifest and `attempts.json`; publish `vN` names. Both `GoogleDriveRepository` and `LocalFsRepository` (mtime stands in for upload time).
+- [ ] Repository: list a component folder with head-revision upload times and `md5Checksum`; rename to and from `SUPERSEDED - `; create the month/component/`output` skeleton; read and write `state.json`; publish `vN` names. Both `GoogleDriveRepository` and `LocalFsRepository` (mtime stands in for upload time).
 - [ ] File choice (§18.4) and readiness (§18.5), pure, fully unit-tested: newest wins, prefix follows the winner, delete-newest reverts, settle window, optional components, `not_used`.
 - [ ] Fingerprint and versions (§18.7); manifest v2 fields; classification reuse from the previous manifest with its compatibility check.
 - [ ] Open check (§18.6), cost ceiling and three-strike failure cap (§18.7).

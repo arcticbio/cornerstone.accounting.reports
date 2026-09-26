@@ -891,7 +891,7 @@ sees the true state. The trigger never decides *what* to build.
           Fort Grounds - Investor Report - September 2026 - v1.pdf
           Fort Grounds - Investor Report - September 2026 - v2.pdf
           manifests/
-              v1.json  v2.json  attempts.json
+              v1.json  v2.json  state.json
 ```
 
 - **The folder a file is in declares what the file is**, and is trusted (§18.6). Filenames are
@@ -996,7 +996,9 @@ Correcting a 1-page Balance Sheet does not re-classify a 26-page PM source.
 `CRR_MAX_BUILD_USD` (3.00). Otherwise: `Held - would cost about $X, over the $3.00 limit`.
 
 **Failures.** A `FAILED` build publishes no PDF. It appends `{fingerprint, at, error class}` to
-`output/manifests/attempts.json`. After `CRR_MAX_FAILED_ATTEMPTS` (3) failures on the same
+the month's index, `output/manifests/state.json` — which also lists every published version
+(number, time, status, fingerprint, inputs) so a run decides and writes a status from one small
+download rather than every manifest. The `vN.json` manifests remain the record. After `CRR_MAX_FAILED_ATTEMPTS` (3) failures on the same
 fingerprint, the reconciler stops retrying it: `STATUS - Failed 3 times, stopped retrying`. A
 new upload (new fingerprint) or `--force` resets it.
 
