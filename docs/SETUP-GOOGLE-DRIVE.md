@@ -234,7 +234,7 @@ If that lists folders, authentication and read access are fine and the problem i
 write path — which narrows it to Part 2 (role) or Part 4 (wrong folder).
 
 `crr build` runs this same check before it does anything else, so a real run will now stop in
-about a second rather than spending a full run's classification (~$4.72 across eight
+about a second rather than spending a full run's classification (~$3.73 across eight
 properties) and failing at the last step.
 
 ---

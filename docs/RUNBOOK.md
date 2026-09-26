@@ -246,7 +246,7 @@ closes. One-time setup is [`SETUP-AZURE.md`](SETUP-AZURE.md).
 |---|---|---|
 | **version** | prints `crr 1.0.0` and exits | nothing |
 | **validate-config** | lists 4 schemas, 3 output definitions, 8 properties | nothing |
-| **build (the job's own scheduled arguments, unchanged)** | the full eight-property keyed build on the month just ended — exactly what the cron does | **~$4.72** |
+| **build (the job's own scheduled arguments, unchanged)** | the full eight-property keyed build on the month just ended — exactly what the cron does | **~$3.73** |
 | **wait_minutes** | how long to wait before giving up on the execution | `20` |
 
 Run the first two after any deploy; they touch neither Drive nor the model.
@@ -388,8 +388,10 @@ content, and `crr eval` is how you find out whether the change helped.
 ## When a model is deprecated
 
 Anthropic announces model deprecations with a retirement date. The runner pins its model in
-`CRR_MODEL` (default `claude-opus-5`), and every manifest records the exact model that produced
-its labels.
+`CRR_MODEL` (default `claude-opus-5-5`; `claude-opus-5` before 2026-09-26), and every manifest
+records the exact model that produced its labels. The classifier chooses between a forced tool
+call and `auto` from the model id (A-16), so a model that rejects forcing needs no code change;
+it does need a row in the price table, or every cost estimate reads $0.
 
 1. **Set the new model in a branch:** `CRR_MODEL=<new-model>`.
 2. **Run the full eval on both models** over all 31 golden documents, and put both reports in

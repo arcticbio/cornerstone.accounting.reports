@@ -57,7 +57,7 @@ class Settings(BaseSettings):
         str | None,
         Field(validation_alias=AliasChoices("CRR_ANTHROPIC_API_KEY", "ANTHROPIC_API_KEY")),
     ] = None
-    model: str = "claude-opus-5"
+    model: str = "claude-opus-5-5"
     min_confidence: float = 0.85
     max_parallel_docs: int = 2
     #: `output_config.effort` for the classifier. Page classification is a perceptual call on

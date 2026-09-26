@@ -240,7 +240,7 @@ The first run proved the setting direction and assumed the restoring one.
 *Where:* `.github/workflows/azure-job.yml`, `.github/workflows/deploy.yml` (`workflow_call`),
 `docs/SETUP-AZURE.md` step 7, `docs/RUNBOOK.md`.
 
-**A-14 · The classifier forces its tool only on models known to accept it; every other model
+**A-16 · The classifier forces its tool only on models known to accept it; every other model
 gets `auto` + `strict`.**
 *Why:* `claude-opus-5-5`, the successor to the model v1 ships on, rejects
 `tool_choice: {"type": "tool"}` with a 400 (confirmed live 2026-09-25) and cannot disable

@@ -17,9 +17,11 @@ def _no_ambient_classifier_key(monkeypatch: pytest.MonkeyPatch) -> None:
         monkeypatch.delenv(var, raising=False)
 
 
-def test_defaults_match_spec() -> None:
+def test_defaults_match_spec(monkeypatch: pytest.MonkeyPatch) -> None:
+    # The cloud session environment sets CRR_MODEL; the default is what is under test here.
+    monkeypatch.delenv("CRR_MODEL", raising=False)
     s = Settings(_env_file=None)  # type: ignore[call-arg]
-    assert s.model == "claude-opus-5"
+    assert s.model == "claude-opus-5-5"
     assert s.min_confidence == 0.85
     assert s.render_dpi == 150
     assert s.repo == "local"

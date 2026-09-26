@@ -5,7 +5,7 @@ Why this exists: `claude-opus-5` (and `claude-sonnet-5`) will be retired. This r
 environment variable on the day and not an incident. It does **not** switch production:
 `Settings.model` still defaults to `claude-opus-5`.
 
-Branch `claude/gracious-dirac-t7w39j`. Code: A-14 in `QUESTIONS.md`, SPEC §7.2.
+Branch `claude/gracious-dirac-t7w39j`. Code: A-16 in `QUESTIONS.md`, SPEC §7.2.
 
 ## What breaks, and what was changed
 
@@ -17,6 +17,23 @@ Branch `claude/gracious-dirac-t7w39j`. Code: A-14 in `QUESTIONS.md`, SPEC §7.2.
 | Default effort `medium` (was `high`) | Classifier: none — it sends `low` explicitly. Arbiter: sends none, so it runs at `medium` | None needed — arbiter measured at 12/12 at the default |
 | Broader safety classifiers (`bio`, `reasoning_extraction`) | A decline → `unknown` → review (D-12) | None; zero declines in 3 × 172 pages |
 | Thinking blocks bound to model/conversation | None — one single-turn request per page, nothing replayed | None |
+
+## Final validation, 2026-09-26 (spend limit lifted)
+
+**All eight properties built end to end on `claude-opus-5-5`** (`crr build --period 2026-06
+--repo local`): exit 0, 8/8 `ok`, 0 to review, 172 calls, **$3.73**, no warnings, no
+`max_tokens` stops. Every output PDF was then compared page by page with the same build run on
+the golden labels — page count, extracted text, rotation, page size, bookmarks (title and
+target page) and `/Title`: **all eight identical** (Bridgewater 24, Salmon Crossing 18,
+River Falls 29, Timber Place 25, Fort Grounds 8, Lolo Peak 8, Mullan Crossing 8, WayPointe 10).
+The comparison was checked against two planted faults — a swapped package and page 5 of Timber
+Place turned 180° — and reported both.
+
+**Drive rehearsal — not run.** The `2026-08` rehearsal tree it was to use had been deleted from
+Drive, as PROGRESS said to do, and the only periods left are the real `2026-06` and the ones the
+continuous-intake work (branch `claude/eager-fermat-h7ub70`, Phase 10) is rehearsing in. Nothing
+was published into those. The Drive code path is unchanged by this work and was last proven on
+the production host on 2026-09-11; the model call is the same code on every host.
 
 ## Results — 31 documents, 172 golden pages, June 2026 bundle
 

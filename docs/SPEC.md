@@ -456,10 +456,10 @@ Implementations:
 ### 7.2 Anthropic classifier — call structure
 
 One request per page, sequential per document (prior-page context is a dependency). Model from
-`settings.model` (default `claude-opus-5`; pin a dated snapshot if the API lists one and record
+`settings.model` (default `claude-opus-5-5` since 2026-09-26, was `claude-opus-5` — D-09; pin a dated snapshot if the API lists one and record
 the exact id in the manifest). `max_tokens=400`.
 
-**Models that reject forced tool use (A-14).** `claude-opus-5-5` — and, by assumption, the
+**Models that reject forced tool use (A-16).** `claude-opus-5-5` — and, by assumption, the
 models after it — returns a 400 on `tool_choice: {"type": "tool"}` and cannot turn thinking
 off. The classifier forces the tool only on the models listed in
 `FORCED_TOOL_CHOICE_MODELS` (`claude-opus-5`, `claude-sonnet-5`, `claude-haiku-4-5`); on every
@@ -741,7 +741,7 @@ Never log page text or image bytes. Log document sha256s, not paths, at INFO.
 |---|---|---|
 | `CRR_ANTHROPIC_API_KEY` | — | classifier key. Preferred name: Claude Code on the web reserves the unprefixed `ANTHROPIC_API_KEY` and strips it from the session container |
 | `ANTHROPIC_API_KEY` | — | fallback, read only when `CRR_ANTHROPIC_API_KEY` is unset (local shells, GitHub Actions, Azure). Either one satisfies `--classifier anthropic` |
-| `CRR_MODEL` | `claude-opus-5` | classifier model id |
+| `CRR_MODEL` | `claude-opus-5-5` | classifier model id |
 | `CRR_MIN_CONFIDENCE` | `0.85` | review gate |
 | `CRR_RENDER_DPI` | `150` | |
 | `CRR_ORIENTATION_CHECK` | `true` | run the §7.6 cross-check before the composer rotates a page |
