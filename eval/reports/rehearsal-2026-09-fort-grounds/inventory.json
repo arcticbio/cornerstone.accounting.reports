@@ -1,0 +1,257 @@
+{
+  "what": "Phase 10 continuous-intake rehearsal, Fort Grounds / 2026-09 September, v1-v6",
+  "captured": "2026-09-26 (inventory and md5-verified download); re-verified 2026-09-28",
+  "drive_folder_id": "1dTWfuJedAR_YoLCtu0yuddRewcK4FQRM",
+  "items": [
+    {
+      "path": "2026-09 September/output",
+      "id": "1vLRVfDPEOn-An0akSyuPcrldpVu2sRuc",
+      "mimeType": "application/vnd.google-apps.folder",
+      "size": null,
+      "md5Checksum": null,
+      "createdTime": "2026-09-26T01:44:19.806Z",
+      "modifiedTime": "2026-09-26T01:44:19.806Z"
+    },
+    {
+      "path": "2026-09 September/output/STATUS - Built v6 (current).txt",
+      "id": "1iJiU6IioKBnJfUbWrrd079lBcpGPzQC5",
+      "mimeType": "text/plain",
+      "size": "1455",
+      "md5Checksum": "9571cad712e13e25dd78def2739a5f4a",
+      "createdTime": "2026-09-26T01:44:45.349Z",
+      "modifiedTime": "2026-09-26T01:55:36.995Z"
+    },
+    {
+      "path": "2026-09 September/output/Fort Grounds - Investor Report - September 2026 - v6.pdf",
+      "id": "17rzUtaYXyyyfRiQZz8HuAEoJ7ZsnsdjR",
+      "mimeType": "application/pdf",
+      "size": "233105",
+      "md5Checksum": "8c5d7d32302fb65b537d378648ebd6d4",
+      "createdTime": "2026-09-26T01:53:31.184Z",
+      "modifiedTime": "2026-09-26T01:53:31.184Z"
+    },
+    {
+      "path": "2026-09 September/output/Fort Grounds - Investor Report - September 2026 - v5.pdf",
+      "id": "18qon5CP606wzJmE0iTnut_ADDiqU7IHv",
+      "mimeType": "application/pdf",
+      "size": "233105",
+      "md5Checksum": "de3e8c7693f418330edeb6fca1e5df4c",
+      "createdTime": "2026-09-26T01:52:27.075Z",
+      "modifiedTime": "2026-09-26T01:52:27.075Z"
+    },
+    {
+      "path": "2026-09 September/output/Fort Grounds - Investor Report - September 2026 - v4.pdf",
+      "id": "16JZNC5uOU1Ny0EdbCIu_E8-UoWrNQ-OE",
+      "mimeType": "application/pdf",
+      "size": "233105",
+      "md5Checksum": "2af406276ca2053a9b2949e8c21bf4a9",
+      "createdTime": "2026-09-26T01:47:29.053Z",
+      "modifiedTime": "2026-09-26T01:47:29.053Z"
+    },
+    {
+      "path": "2026-09 September/output/Fort Grounds - Investor Report - September 2026 - v3.pdf",
+      "id": "1947HFhzU6QBXlo0SMIbs-7jnanl1MAIZ",
+      "mimeType": "application/pdf",
+      "size": "125542",
+      "md5Checksum": "d6cac0c82c0e539f0047f3457abf1df9",
+      "createdTime": "2026-09-26T01:47:04.604Z",
+      "modifiedTime": "2026-09-26T01:47:04.604Z"
+    },
+    {
+      "path": "2026-09 September/output/Fort Grounds - Investor Report - September 2026 - v2.pdf",
+      "id": "1AuvMS5VDaLjBL-_sXxY_B93nfgKg9cxn",
+      "mimeType": "application/pdf",
+      "size": "125542",
+      "md5Checksum": "37e9eb86178102aada2eb65b32c525f6",
+      "createdTime": "2026-09-26T01:46:03.469Z",
+      "modifiedTime": "2026-09-26T01:46:03.469Z"
+    },
+    {
+      "path": "2026-09 September/output/manifests",
+      "id": "1BIiCaFj_m6ZUbDuOszzhjQct00iaMcaV",
+      "mimeType": "application/vnd.google-apps.folder",
+      "size": null,
+      "md5Checksum": null,
+      "createdTime": "2026-09-26T01:45:28.096Z",
+      "modifiedTime": "2026-09-26T01:45:28.096Z"
+    },
+    {
+      "path": "2026-09 September/output/manifests/state.json",
+      "id": "1vswVWyEtWj7z5LFI2472TglLUV7Dpu9F",
+      "mimeType": "application/json",
+      "size": "7733",
+      "md5Checksum": "8edb838a412e58da4b127583bcd34ea0",
+      "createdTime": "2026-09-26T01:45:31.681Z",
+      "modifiedTime": "2026-09-26T01:53:36.703Z"
+    },
+    {
+      "path": "2026-09 September/output/manifests/v6.json",
+      "id": "1xe72WL9XGxh_fSW-o4CT0YFo9VfmX36v",
+      "mimeType": "application/json",
+      "size": "18786",
+      "md5Checksum": "ab363e0bb0ad42421174ca29134dd6f5",
+      "createdTime": "2026-09-26T01:53:33.207Z",
+      "modifiedTime": "2026-09-26T01:53:33.207Z"
+    },
+    {
+      "path": "2026-09 September/output/manifests/v5.json",
+      "id": "1wrXK6OQ_q9-ZKweDI6Qh-qdJOxUUVRll",
+      "mimeType": "application/json",
+      "size": "18789",
+      "md5Checksum": "e87b458440686c8e8841a22fd6457792",
+      "createdTime": "2026-09-26T01:52:29.066Z",
+      "modifiedTime": "2026-09-26T01:52:29.066Z"
+    },
+    {
+      "path": "2026-09 September/output/manifests/v4.json",
+      "id": "1T-qFMwYMrCacHG74G-nAgyVH816agoas",
+      "mimeType": "application/json",
+      "size": "16751",
+      "md5Checksum": "ed3cb13df35e3b1aa581bb79152b71fe",
+      "createdTime": "2026-09-26T01:47:30.994Z",
+      "modifiedTime": "2026-09-26T01:47:30.994Z"
+    },
+    {
+      "path": "2026-09 September/output/manifests/v3.json",
+      "id": "1Qep_yv4n3YRdB5VrFQ7WxT1jDMO8cEpW",
+      "mimeType": "application/json",
+      "size": "15145",
+      "md5Checksum": "6df22ebfe1df6ac96f0fabba16aec6ba",
+      "createdTime": "2026-09-26T01:47:06.503Z",
+      "modifiedTime": "2026-09-26T01:47:06.503Z"
+    },
+    {
+      "path": "2026-09 September/output/manifests/v2.json",
+      "id": "1BSm1wmBiPQdTM4IN9te9_xViKBZK10bu",
+      "mimeType": "application/json",
+      "size": "15155",
+      "md5Checksum": "10e9cd5b0db44466eb3a9c55e0185ed5",
+      "createdTime": "2026-09-26T01:46:05.564Z",
+      "modifiedTime": "2026-09-26T01:46:05.564Z"
+    },
+    {
+      "path": "2026-09 September/output/manifests/v1.json",
+      "id": "1TbpTgNWU9eqBhO_hmH-kBb7Lob8oT0m9",
+      "mimeType": "application/json",
+      "size": "15147",
+      "md5Checksum": "4056999c53cd8f17b8aab1bf66715a9e",
+      "createdTime": "2026-09-26T01:45:29.630Z",
+      "modifiedTime": "2026-09-26T01:45:29.630Z"
+    },
+    {
+      "path": "2026-09 September/output/Fort Grounds - Investor Report - September 2026 - v1.pdf",
+      "id": "1gHr-MFCw8P-22mL6j4p4v5lDy2Zhm47z",
+      "mimeType": "application/pdf",
+      "size": "125542",
+      "md5Checksum": "7ce1bf865f9deddc5442a6e1b9510e92",
+      "createdTime": "2026-09-26T01:45:26.741Z",
+      "modifiedTime": "2026-09-26T01:45:26.741Z"
+    },
+    {
+      "path": "2026-09 September/4 - Distribution Schedule",
+      "id": "1K6tl5jJpaLzGYpXpk6X1i7vmXSw7sfqa",
+      "mimeType": "application/vnd.google-apps.folder",
+      "size": null,
+      "md5Checksum": null,
+      "createdTime": "2026-09-26T01:44:18.580Z",
+      "modifiedTime": "2026-09-26T01:44:18.580Z"
+    },
+    {
+      "path": "2026-09 September/4 - Distribution Schedule/Distributions 2026.pdf",
+      "id": "1LdCWXCaBmfjfnumtW8joRIcWWfyPVU7s",
+      "mimeType": "application/pdf",
+      "size": "107663",
+      "md5Checksum": "bf77ef48796b4420228c8d725cdd964f",
+      "createdTime": "2026-09-26T01:47:17.153Z",
+      "modifiedTime": "2026-09-26T01:47:17.153Z",
+      "reconstruct": {
+        "from": "data/bundle/2026-06/Missoula Property Management/Fort Grounds/2026-06 June/inputs/03 Cornerstone - Investor Distribution Schedule.pdf"
+      }
+    },
+    {
+      "path": "2026-09 September/3 - Profit and Loss",
+      "id": "1Zs8L1LuOzzi3hlsHfnimr4dWZ2IsfHLG",
+      "mimeType": "application/vnd.google-apps.folder",
+      "size": null,
+      "md5Checksum": null,
+      "createdTime": "2026-09-26T01:44:17.292Z",
+      "modifiedTime": "2026-09-26T01:44:17.292Z"
+    },
+    {
+      "path": "2026-09 September/3 - Profit and Loss/SUPERSEDED - P&L YTD.pdf",
+      "id": "1jHyfnszZcAe7TNXGM8PuWnf_ptMPWD1c",
+      "mimeType": "application/pdf",
+      "size": "31827",
+      "md5Checksum": "6c40e59dc313bc16632cf7dc9791fe0e",
+      "createdTime": "2026-09-26T01:44:53.169Z",
+      "modifiedTime": "2026-09-26T01:52:46.469Z",
+      "reconstruct": {
+        "from": "data/bundle/2026-06/Missoula Property Management/Fort Grounds/2026-06 June/inputs/02 Cornerstone - Profit and Loss YTD Comparison.pdf"
+      }
+    },
+    {
+      "path": "2026-09 September/3 - Profit and Loss/P&L YTD revised.pdf",
+      "id": "1RVS79ckq9dtemiJ4yqcgSIu1ziNy2W-M",
+      "mimeType": "application/pdf",
+      "size": "31837",
+      "md5Checksum": "f07b06322d426352bac3376b01913ac5",
+      "createdTime": "2026-09-26T01:52:36.631Z",
+      "modifiedTime": "2026-09-26T01:52:36.631Z",
+      "reconstruct": {
+        "from": "data/bundle/2026-06/Missoula Property Management/Fort Grounds/2026-06 June/inputs/02 Cornerstone - Profit and Loss YTD Comparison.pdf",
+        "append_hex": "0a25726576697365640a"
+      }
+    },
+    {
+      "path": "2026-09 September/2 - Balance Sheet",
+      "id": "1bWMwhsCPgTtOBUSjIH_-_mulvxEJ-LOo",
+      "mimeType": "application/vnd.google-apps.folder",
+      "size": null,
+      "md5Checksum": null,
+      "createdTime": "2026-09-26T01:44:16.033Z",
+      "modifiedTime": "2026-09-26T01:44:16.033Z"
+    },
+    {
+      "path": "2026-09 September/2 - Balance Sheet/Balance Sheet 9-30.pdf",
+      "id": "1Y-KhYFPH1aknqGHU9MFD45dprAUswQ4y",
+      "mimeType": "application/pdf",
+      "size": "33643",
+      "md5Checksum": "2afe786194a9c6982a4d95a2fb2b46f8",
+      "createdTime": "2026-09-26T01:44:50.732Z",
+      "modifiedTime": "2026-09-26T01:46:58.028Z",
+      "reconstruct": {
+        "from": "data/bundle/2026-06/Missoula Property Management/Fort Grounds/2026-06 June/inputs/01 Cornerstone - Balance Sheet.pdf"
+      }
+    },
+    {
+      "path": "2026-09 September/1 - Property Manager Report",
+      "id": "19QO3irVJQMmTupueioQ6WaTkti_dferZ",
+      "mimeType": "application/vnd.google-apps.folder",
+      "size": null,
+      "md5Checksum": null,
+      "createdTime": "2026-09-26T01:44:14.696Z",
+      "modifiedTime": "2026-09-26T01:44:14.696Z"
+    },
+    {
+      "path": "2026-09 September/1 - Property Manager Report/Sept owner packet.pdf",
+      "id": "1epCx5UIpDCSKswLHNsS_CCQKmixNujzY",
+      "mimeType": "application/pdf",
+      "size": "193587",
+      "md5Checksum": "919b5b3e1cb9e8d25cf49f1de385bc86",
+      "createdTime": "2026-09-26T01:44:37.369Z",
+      "modifiedTime": "2026-09-26T01:44:37.369Z",
+      "reconstruct": {
+        "from": "data/bundle/2026-06/Missoula Property Management/Fort Grounds/2026-06 June/inputs/05 PM Source - Missoula PM Baseline.pdf"
+      }
+    },
+    {
+      "path": "2026-09 September/inputs",
+      "id": "1ky5laI9knJDST6tVOZZhh-HFd-zUElsJ",
+      "mimeType": "application/vnd.google-apps.folder",
+      "size": null,
+      "md5Checksum": null,
+      "createdTime": "2026-09-11T04:27:35.551Z",
+      "modifiedTime": "2026-09-11T04:27:35.551Z"
+    }
+  ]
+}
