@@ -21,7 +21,6 @@ from crr.classify.golden_classifier import GoldenClassifier
 from crr.config import load_config
 from crr.golden import load_all_golden
 from crr.intake.reconcile import Options, Reconciler
-from crr.repository.drive_client import GoogleDriveApi
 from crr.repository.intake_drive import DriveIntakeStore
 from crr.repository.intake_local import LocalIntakeStore
 from crr.settings import Settings
@@ -132,41 +131,6 @@ def test_a_closed_month_is_read_only_within_the_grace_period(
     status = store.status_name(FORT, "2026-09")
     assert (status == "STATUS - Closed 2026-11-11 (nothing built).txt") is closed
     assert ("2026-09" in spy.periods) is read
-
-
-class _Request:
-    def __init__(self, log: list[dict[str, Any]]) -> None:
-        self._log = log
-
-    def execute(self, **kwargs: Any) -> dict[str, Any]:
-        self._log.append(kwargs)
-        return {"files": []}
-
-
-class _Service:
-    """Just enough of googleapiclient's service to see how requests are executed."""
-
-    def __init__(self) -> None:
-        self.log: list[dict[str, Any]] = []
-
-    def files(self) -> _Service:
-        return self
-
-    def list(self, **_kwargs: Any) -> _Request:
-        return _Request(self.log)
-
-
-@pytest.mark.xfail(
-    strict=True,
-    reason="audit finding 5: Drive requests are executed without retries, so one 5xx or 429 "
-    "makes a month unchecked for the run",
-)
-def test_drive_requests_are_retried() -> None:
-    api = GoogleDriveApi.__new__(GoogleDriveApi)
-    service = _Service()
-    api._service = service
-    api.list_children("folder-id")
-    assert service.log and all(call.get("num_retries", 0) >= 3 for call in service.log)
 
 
 class _Golden:

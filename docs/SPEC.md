@@ -814,6 +814,13 @@ Mirror of the repo bundle, without `target/` and `reference/`:
 A period is "ready to build" when `inputs/` contains the PM source file. `crr build --period X`
 with `--repo gdrive` skips properties whose `inputs/` is missing and reports them.
 
+**Requests** (both layouts). Every Drive request is retried up to 5 times, with randomised
+exponential backoff (at most ~31 s), on a 5xx, a 429, a rate-limit 403, or a connection that
+dropped or timed out. Folder creation is the exception, because `files.create` is not
+idempotent: a retry after a lost response would leave two folders with one name. After a
+transient failure it looks in the parent first, and returns the folder if the failed attempt
+did in fact create it (`crr.repository.drive_client`).
+
 ---
 
 ## 14. Hosting
