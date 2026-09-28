@@ -233,7 +233,8 @@ Tasks
 Acceptance
 - On the rehearsal month, every scenario above produces the status in SPEC §18.8 and no build
   it should not.
-- An unrelated PDF of any length in any folder costs at most `CRR_MAX_BUILD_USD`.
+- An unrelated PDF of any length in any folder costs at most `CRR_MAX_BUILD_USD` per attempt,
+  and at most `CRR_MAX_FAILED_ATTEMPTS` attempts are made on the same files.
 - A run with nothing to build finishes in under a minute on Azure.
 - Keyed eval unchanged at 100 %.
 

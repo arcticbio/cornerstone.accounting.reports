@@ -1065,8 +1065,9 @@ from the folder listing:
 | `STATUS - Built v2 (current).txt` | newest build is `BUILT` and reflects the current files |
 | `STATUS - Needs review (v2).txt` | newest build is `NEEDS_REVIEW` |
 | `STATUS - Built v2 - newer files waiting.txt` | v2 stands, but the files have changed since and the next build is waiting (a required file missing, or settling) |
-| `STATUS - Built v2 - newer files held.txt` | … and a newer file cannot be opened, or would cost too much: someone should look |
+| `STATUS - Built v2 - newer files held.txt` | … and a newer file cannot be opened, or would cost too much: someone should look (each of these three reads `Needs review (v2) - …` when the standing build needs review) |
 | `STATUS - Built v2 - newer files failed, will retry.txt` | … and building from them raised; the next run retries |
+| `STATUS - Failed (attempt 1 of 3), will retry.txt` | building raised and no earlier version stands; the next run retries |
 | `STATUS - Failed 3 times, stopped retrying.txt` | §18.7 |
 | `STATUS - Closed 2026-11-11 (v2 is final).txt` | past the lookback window; later changes ignored |
 | `STATUS - Could not be checked - will retry.txt` | checking the month raised before anything was decided (§18.9); nothing was built or changed. Written only over an existing status: a month that never showed one does not get one from an error |

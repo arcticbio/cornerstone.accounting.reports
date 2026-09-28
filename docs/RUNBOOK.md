@@ -155,6 +155,9 @@ it is more than an hour old, the job has stopped running** — see
   changes. Its own files — the status, `state.json`, the root summary — are rewritten in place.
 - The v1 `inputs/` folders of earlier periods are ignored by `reconcile`; `crr build` still
   reads them.
+- **Two system files sit at the root**: `_STATUS - All properties.txt`, the summary, and
+  `_LEASE - reconcile run (do not edit).json`, which says which run is working, so that only
+  one does at a time. Neither is anyone's to edit.
 
 ### Rehearsing without touching a real month
 
@@ -186,8 +189,9 @@ CPA and Cornerstone representatives to the whole drive.
 ## Running it on demand from GitHub Actions
 
 Actions runs the identical container with the secrets already in the repository (D-13). It is
-safe to run at any time, including while Azure is running: a build that finds another run has
-just published the same files discards itself.
+safe to run at any time, including while Azure is running: only one run works at a time. A run
+that finds another holding the run lease prints `nothing done: another run (<host>) holds the
+lease until <time>` and exits green — run it again after that time.
 
 1. **Actions** → **Build a period** → **Run workflow**.
 2. Fill in:
@@ -206,8 +210,10 @@ just published the same files discards itself.
    its status file in Drive.
 
 `reconcile --force` still waits for required files and for uploads to settle; it only drops the
-"nothing changed" and "failed three times" checks. Narrow it with **period** and **property**:
-forcing every open month of every property costs about $0.60 per property-month built.
+"nothing changed" and "failed three times" checks. It recomposes with the current code but
+re-uses the page labels of every document that has not changed, so it costs almost nothing in
+model calls; only a schema, prompt-version or model change re-classifies. Narrow it with
+**period** and **property** anyway: every forced month becomes a new version.
 
 ### What the run needs to exist
 
@@ -242,7 +248,7 @@ Drive rehearsal; at 48 runs a day that sits within the Container Apps free grant
 |---|---|---|
 | **version** | prints `crr 1.0.0` and exits | nothing |
 | **validate-config** | lists 4 schemas, 3 output definitions, 8 properties | nothing |
-| **build (the job's own scheduled arguments, unchanged)** | one `reconcile` run, exactly what the schedule does | only what is ready to build |
+| **scheduled (the job's own arguments, unchanged: one reconcile run)** | one `reconcile` run, exactly what the schedule does | only what is ready to build |
 | **wait_minutes** | how long to wait before giving up on the execution | `20` |
 
 The first two set the job's arguments, start it, print its logs and then **put the scheduled
@@ -266,6 +272,7 @@ tenant names and secrets are never among them.
 
 | What you see | What it means | What to do |
 |---|---|---|
+| `nothing done: another run (<host>) holds the lease until <time>` | Another run is working; only one works at a time | Nothing: run again after that time. A run that crashed leaves its lease to lapse at that time (30 minutes at most). |
 | *Last checked* in `_STATUS - All properties.txt` is more than an hour old | Runs are not finishing | Look at the job's executions first. **Failed** ones: read their logs — the last lines say why. None at all: Actions → *Run the Azure job* → `version`; if that fails, the job or its credentials are broken (`SETUP-AZURE.md`). A `version` that succeeds proves only the job and its image, not a `reconcile` run: meanwhile *Build a period* → `reconcile` does the same work and prints the same error. |
 | `Could not be checked - will retry` on a month, or under *Could not be checked on this run* in the root summary, for more than an hour | Reading that month raises on every run. The log line `intake.month_failed` names the property, the month and the error class | `ValidationError` almost always means `output/manifests/state.json` was edited or replaced: restore its previous version in Drive (*Manage versions*), or delete it — the next run then builds the month again as its next version. Otherwise it is usually Drive itself; the other months are unaffected meanwhile. |
 | `Held - … cannot be opened` / `is password-protected` / `has no pages` | A file in that folder is not a usable PDF | Upload a readable PDF into the same folder; it becomes the newest and the build proceeds. |

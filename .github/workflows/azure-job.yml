@@ -1,12 +1,12 @@
 name: Run the Azure job
 
 # Starts the deployed Container Apps Job on demand, waits for it, prints its logs, and puts the
-# job's arguments back the way the quarterly schedule needs them (docs/SETUP-AZURE.md step 7).
+# job's arguments back the way the schedule needs them (docs/SETUP-AZURE.md step 7).
 #
 # Why a workflow rather than two commands in a terminal: `--args` does not work on
 # `az containerapp job start` (it fails ContainerAppImageRequired, and adding --image drops the
 # job's environment variables — azure-cli#27521, azure-container-apps#1360). The arguments have
-# to be set *on the job* first, which mutates the definition the quarterly cron runs. Doing that
+# to be set *on the job* first, which mutates the definition the schedule runs. Doing that
 # by hand means remembering to undo it.
 #
 # Two things the first live run taught, both now designed around rather than worked around:
@@ -32,7 +32,7 @@ on:
         options:
           - version
           - validate-config
-          - build (the job's own scheduled arguments, unchanged)
+          - scheduled (the job's own arguments, unchanged: one reconcile run)
       wait_minutes:
         description: "How long to wait for the execution before giving up on it"
         required: true
@@ -124,9 +124,10 @@ jobs:
           SCHEDULED: ${{ steps.scheduled.outputs.args }}
         run: |
           set -euo pipefail
-          if [ "${COMMAND#build}" != "$COMMAND" ]; then
-            # The scheduled build. The job already holds the right arguments — or it does not,
-            # in which case starting it would prove nothing and spend ~$4.72 doing so.
+          if [ "${COMMAND#scheduled}" != "$COMMAND" ]; then
+            # The scheduled run: one reconcile pass, exactly what the schedule does. The job
+            # already holds the right arguments — or it does not, and then starting it would
+            # prove nothing.
             if [ "$CURRENT" != "$SCHEDULED" ]; then
               echo "::error title=The job is not holding the scheduled arguments::It has 'crr $CURRENT', not 'crr $SCHEDULED' — an earlier manual start did not restore them. This run will repair the job and stop without starting it; dispatch again afterwards."
               echo "start=false" >> "$GITHUB_OUTPUT"
@@ -289,7 +290,7 @@ jobs:
           echo "The job is holding: crr $now"
           echo "The schedule wants: crr $scheduled"
           [ "$now" = "$scheduled" ] || {
-            echo "::error title=The job is NOT back to its scheduled arguments::It is holding 'crr $now'. The quarterly cron runs whatever is configured — run the Deploy to Azure workflow (Preview unticked) to reset it from infra/main.bicep."
+            echo "::error title=The job is NOT back to its scheduled arguments::It is holding 'crr $now'. The schedule runs whatever is configured — run the Deploy to Azure workflow (Preview unticked) to reset it from infra/main.bicep."
             exit 1
           }
-          echo "::notice title=Restored::The quarterly cron will run 'crr $scheduled'."
+          echo "::notice title=Restored::The schedule will run 'crr $scheduled'."

@@ -10,7 +10,8 @@ after that is deterministic: a page plan resolved from a per-manager output defi
 with `pypdf`, and a manifest recording exactly what was built from what. When a page is
 ambiguous the package is marked for review rather than guessed.
 
-Nobody starts a build. `crr reconcile` runs every 30 minutes over a shared drive: people drop
+Nobody starts a build. `crr reconcile` is built to run every 30 minutes over a shared drive
+(until that schedule is armed on Azure, it runs quarterly and on demand): people drop
 each document into its own numbered folder under the property and month, and each property is
 built — as a new version beside the old ones — as soon as its files are complete and have
 settled, and again whenever one of them changes. A status file in each month's `output/` says,

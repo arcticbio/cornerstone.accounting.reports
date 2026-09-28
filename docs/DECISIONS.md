@@ -119,7 +119,7 @@ wrong-month document is built as given; the reviewer is the check.
 *Consequence:* no `inputs/` folder; the exact-filename rule of SPEC §6.1 goes.
 
 **D-20 · Only a change of input files triggers a build. Code and config changes do not;
-`--force` (from the GitHub `Run the Azure job` workflow) rebuilds on demand. Every build uses the
+`--force` (from the GitHub `Build a period` workflow) rebuilds on demand. Every build uses the
 code current at the time it runs.**
 Otherwise every merge to `main` would issue new versions of every open month.
 

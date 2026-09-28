@@ -35,7 +35,7 @@ on:
         default: true
         type: boolean
       schedule_enabled:
-        description: "Arm the quarterly cron (untick to deploy the job without a schedule)"
+        description: "Arm the schedule (untick to deploy the job without one)"
         required: true
         default: true
         type: boolean
