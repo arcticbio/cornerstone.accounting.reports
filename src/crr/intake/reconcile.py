@@ -14,7 +14,7 @@ import tempfile
 import time
 from collections.abc import Callable
 from dataclasses import dataclass, field
-from datetime import UTC, datetime
+from datetime import UTC, date, datetime, timedelta
 from pathlib import Path
 from typing import Any
 
@@ -154,7 +154,7 @@ class Reconciler:
                         if not options.dry_run:
                             self.store.ensure_month(prop, period, [c.folder for c in components])
                         open_months.append(_Month(prop, period, components))
-                    elif period in existing:
+                    elif period in existing and self._recently_closed(period, today):
                         closing = self._close(prop, period, components, options)
                         if closing is not None:
                             outcomes.append(closing)
@@ -201,6 +201,14 @@ class Reconciler:
             self.store.write_summary(render_summary(ordered, now, problems))
         return outcomes
 
+    def _recently_closed(self, period: PeriodId, today: date) -> bool:
+        """Past its window by no more than the grace period: the only closed months a run
+        reads, to write their final status. Anything older was closed by an earlier run — runs
+        are every 30 minutes — and is never read again, so a no-op run does not grow with
+        history (SPEC §18.3)."""
+        closes = closes_on(period, self.settings.lookback_days)
+        return today <= closes + timedelta(days=self.settings.close_grace_days)
+
     def _months(self, prop: Property) -> set[PeriodId]:
         """The property's month folders, less any whose name only looks like a month."""
         found = self.store.list_months(prop)
@@ -228,7 +236,7 @@ class Reconciler:
         log.error("intake.month_failed", property=prop.id, period=period, error=error)
         if opened and not options.dry_run:
             try:
-                if self.store.read_status(prop, period) is not None:
+                if self.store.status_name(prop, period) is not None:
                     self.store.write_status(
                         prop,
                         period,
@@ -270,7 +278,7 @@ class Reconciler:
             max_failed_attempts=self.settings.max_failed_attempts,
             force=options.force,
         )
-        if verdict.kind is Kind.NONE and self.store.read_status(prop, period) is not None:
+        if verdict.kind is Kind.NONE and self.store.status_name(prop, period) is not None:
             # Everything uploaded was deleted again. A stale status must not outlive the files.
             missing = [c.label for c in month.components if c.requirement == "required"]
             verdict = Verdict(
@@ -327,8 +335,8 @@ class Reconciler:
         self, prop: Property, period: PeriodId, components: tuple[Component, ...], options: Options
     ) -> Outcome | None:
         """Write the final status once. A month nobody ever used stays silent."""
-        current = self.store.read_status(prop, period)
-        if current is None or headline_of(current[0]).startswith("Closed "):
+        current = self.store.status_name(prop, period)
+        if current is None or headline_of(current).startswith("Closed "):
             return None
         month = _Month(prop, period, components)
         month.states = self._look(month)

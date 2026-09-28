@@ -153,6 +153,15 @@ class LocalIntakeStore:
                 return entry.name, entry.read_text()
         return None
 
+    def status_name(self, prop: Property, period: PeriodId) -> str | None:
+        output = self._output(prop, period)
+        if not output.is_dir():
+            return None
+        names = sorted(
+            e.name for e in output.iterdir() if e.is_file() and is_status_filename(e.name)
+        )
+        return names[0] if names else None
+
     def write_status(self, prop: Property, period: PeriodId, filename: str, body: str) -> bool:
         output = self._output(prop, period)
         output.mkdir(parents=True, exist_ok=True)

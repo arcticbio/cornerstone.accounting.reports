@@ -112,6 +112,9 @@ class Settings(BaseSettings):
     settle_minutes: int = Field(default=60, ge=0)
     #: A month is watched until this many days after its last day, then closed (D-23).
     lookback_days: int = Field(default=42, ge=0)
+    #: A closed month is read — to write its final status — only this many days past its
+    #: window. Older ones were closed by an earlier run and are never read again (SPEC §18.3).
+    close_grace_days: int = Field(default=14, ge=1)
     #: Folders are prepared for the current month and this many months ahead.
     folders_ahead: int = Field(default=1, ge=0)
     #: A run stops *starting* builds after this long, so runs stay shorter than the schedule.

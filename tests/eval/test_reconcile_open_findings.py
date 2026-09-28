@@ -81,13 +81,57 @@ def _no_op_calls(closed_months: int, work: Path) -> int:
     return sum(api.calls.values())
 
 
-@pytest.mark.xfail(
-    strict=True,
-    reason="audit finding 4: every closed month is re-read on every run (3 Drive calls each), "
-    "so a no-op run grows with history",
-)
 def test_a_no_op_run_does_not_grow_with_closed_history(tmp_path: Path) -> None:
+    """Finding 4: every closed month used to cost 3 Drive calls on every run, forever."""
     assert _no_op_calls(12, tmp_path / "b") == _no_op_calls(0, tmp_path / "a")
+
+
+class _CallsByPeriod:
+    """Which months a local store was asked about."""
+
+    def __init__(self, inner: LocalIntakeStore) -> None:
+        self.inner = inner
+        self.periods: set[str] = set()
+
+    def __getattr__(self, name: str) -> Any:
+        attr = getattr(self.inner, name)
+
+        def recorded(*args: Any, **kwargs: Any) -> Any:
+            self.periods.update(a for a in args if isinstance(a, str) and a[:2] == "20")
+            return attr(*args, **kwargs)
+
+        return recorded if callable(attr) else attr
+
+
+@pytest.mark.parametrize(
+    ("today", "closed", "read"),
+    [
+        (datetime(2026, 11, 12, 6, 0, tzinfo=UTC), True, True),  # 1 day past: closed now
+        (datetime(2026, 11, 25, 6, 0, tzinfo=UTC), True, True),  # 14 days past: still in grace
+        (datetime(2026, 11, 26, 6, 0, tzinfo=UTC), False, False),  # 15 days: never read again
+    ],
+    ids=["just-closed", "last-day-of-grace", "past-grace"],
+)
+def test_a_closed_month_is_read_only_within_the_grace_period(
+    tmp_path: Path, today: datetime, closed: bool, read: bool
+) -> None:
+    """September closes 2026-11-11; its final status is written by a run within 14 days of
+    that, and after that nobody reads the month again (SPEC §18.3)."""
+    store = LocalIntakeStore(tmp_path / "drive", CONFIG.properties)
+    store.ensure_month(FORT, "2026-09", [])
+    store.write_status(FORT, "2026-09", "STATUS - Built v1 (current).txt", "v1")
+    spy = _CallsByPeriod(store)
+    Reconciler(
+        config=CONFIG,
+        settings=Settings(work_dir=tmp_path / "w", _env_file=None),  # type: ignore[call-arg]
+        store=spy,  # type: ignore[arg-type]
+        classifier_for=lambda _pid: None,  # type: ignore[arg-type,return-value]
+        clock=lambda: today,
+        monotonic=lambda: 0.0,
+    ).run(Options(property_ids=("fort-grounds",)))
+    status = store.status_name(FORT, "2026-09")
+    assert (status == "STATUS - Closed 2026-11-11 (nothing built).txt") is closed
+    assert ("2026-09" in spy.periods) is read
 
 
 class _Request:

@@ -164,6 +164,23 @@ def test_there_is_only_ever_one_status_file(h: Harness) -> None:
     assert h.store.read_status(FORT, PERIOD) == ("STATUS - Built v1 (current).txt", "b")
 
 
+def test_the_status_name_comes_from_one_listing(h: Harness) -> None:
+    """What the reconciler asks every run of empty and closing months: the name alone, so a
+    status file is never downloaded just to learn it exists (SPEC §18.3)."""
+    assert h.store.status_name(FORT, PERIOD) is None
+    h.store.ensure_month(FORT, PERIOD, FOLDERS)
+    assert h.store.status_name(FORT, PERIOD) is None
+    h.store.write_status(FORT, PERIOD, "STATUS - Built v1 (current).txt", "body")
+    drive = getattr(h, "drive", None)
+    if drive is not None:
+        downloads: list[str] = []
+        real = drive.download
+        drive.download = lambda fid, dest: downloads.append(fid) or real(fid, dest)
+    assert h.store.status_name(FORT, PERIOD) == "STATUS - Built v1 (current).txt"
+    if drive is not None:
+        assert downloads == []
+
+
 def test_the_summary_is_replaced_only_when_it_changes(h: Harness) -> None:
     assert h.store.write_summary("one")
     assert not h.store.write_summary("one")

@@ -776,6 +776,7 @@ Never log page text or image bytes. Log document sha256s, not paths, at INFO.
 | `CRR_INTAKE_ROOT` | `<work_dir>/intake` | where `crr reconcile --repo local` reads and writes (§18) |
 | `CRR_SETTLE_MINUTES` | `60` | build only once nothing in a month's folders changed for this long (§18.5) |
 | `CRR_LOOKBACK_DAYS` | `42` | a month is watched until this many days after its last day (§18.3) |
+| `CRR_CLOSE_GRACE_DAYS` | `14` | a closed month is read, to write its final status, only this long past its window (§18.3) |
 | `CRR_FOLDERS_AHEAD` | `1` | month folders are prepared this many months ahead (§18.3) |
 | `CRR_RUN_SOFT_DEADLINE_S` | `1200` | a run stops starting builds after this long (§18.9) |
 | `CRR_MAX_BUILD_USD` | `3.00` | a build estimated above this is held (§18.7) |
@@ -942,8 +943,11 @@ sees the true state. The trigger never decides *what* to build.
 - A folder whose name only looks like a month (`2026-13 …`) is not one: it is ignored, with a
   warning in the log, and never opened, prepared or closed.
 - **A month is closed** after that. The first run past the window rewrites its status to
-  `STATUS - Closed <date> (vN is final).txt` (or `… (nothing built)`) and never reads it again.
-  Changes after closure are ignored, and the status says so.
+  `STATUS - Closed <date> (vN is final).txt` (or `… (nothing built)`). A month is read for this
+  only within `CRR_CLOSE_GRACE_DAYS` (14) of its window's end — runs are every 30 minutes, so
+  the first of them closes it — and never again after that, so a run with nothing to do costs
+  the same however long the history. A job stopped for longer than the grace period leaves such
+  a month's last status as it was. Changes after closure are ignored, and the status says so.
 
 ### 18.4 Choosing the file in each component folder
 
@@ -1113,7 +1117,7 @@ the failure cap. It does not skip the completeness or open checks, nor the settl
   Not `azure-job.yml`: `--args` cannot carry a multi-token list (A-13), and Actions runs the
   identical image with nothing to restore. The job's cron default stays quarterly until Phase
   10's STOP is cleared, so no redeploy can arm the 30-minute schedule by accident. The deploy chain is unchanged: merge to `main` → `:build-v1` → `deploy.yml`.
-- Settings added to §12: `CRR_SETTLE_MINUTES` 60, `CRR_LOOKBACK_DAYS` 42, `CRR_FOLDERS_AHEAD` 1,
+- Settings added to §12: `CRR_SETTLE_MINUTES` 60, `CRR_LOOKBACK_DAYS` 42, `CRR_CLOSE_GRACE_DAYS` 14, `CRR_FOLDERS_AHEAD` 1,
   `CRR_RUN_SOFT_DEADLINE_S` 1200, `CRR_MAX_BUILD_USD` 3.00, `CRR_COST_PER_PAGE_USD` 0.03,
   `CRR_MAX_FAILED_ATTEMPTS` 3.
 

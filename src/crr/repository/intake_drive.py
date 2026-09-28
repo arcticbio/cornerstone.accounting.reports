@@ -150,6 +150,16 @@ class DriveIntakeStore(GoogleDriveRepository):
                 return f.name, self._download_text(f.id)
         return None
 
+    def status_name(self, prop: Property, period: PeriodId) -> str | None:
+        output = self._month(prop, period, OUTPUT)
+        if output is None:
+            return None
+        self._forget(output.id)
+        names = sorted(
+            f.name for f in self._list(output.id) if not f.is_folder and is_status_filename(f.name)
+        )
+        return names[0] if names else None
+
     def write_status(self, prop: Property, period: PeriodId, filename: str, body: str) -> bool:
         output = self._month(prop, period, OUTPUT, create=True)
         assert output is not None

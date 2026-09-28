@@ -71,6 +71,10 @@ class IntakeStore(Protocol):
         """(filename, body) of the status file in `output/`, if there is one."""
         ...
 
+    def status_name(self, prop: Property, period: PeriodId) -> str | None:
+        """The status file's name in `output/`, from one listing; its body is not read."""
+        ...
+
     def write_status(self, prop: Property, period: PeriodId, filename: str, body: str) -> bool:
         """Make `filename` the one status file, with `body`. Returns False if it already was."""
         ...
