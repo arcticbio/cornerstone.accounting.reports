@@ -10,6 +10,17 @@ would have been combined with its June statements, so it was moved out of the pr
 on 2026-09-28. This directory keeps what git may hold. The originals — PDFs included — are in
 Drive, unchanged and with the same file ids; `inventory.json` lists them.
 
+**Where the originals are.** Shared drive *Cornerstone Investor Reports* →
+`Cornerstone Reports - REHEARSAL (test data, not for investors)`
+(folder id `1eGZGlv5IGVd7OGM0-_2jcDfa56FkwAlz`) →
+`Missoula Property Management/Fort Grounds/2026-09 September`. The folder was moved whole, so
+all 25 items keep their ids and md5s (the empty v1 `inputs/` folder listed in
+`inventory.json` was deleted rather than moved). That folder is a runner root of its own:
+with `CRR_GDRIVE_ROOT_FOLDER_ID=1eGZGlv5IGVd7OGM0-_2jcDfa56FkwAlz`,
+`crr reconcile --repo gdrive --property fort-grounds --dry-run` reads the month as
+`Built v6 (current)`, exactly as it stood. `drive-operations-2026-09-28.json` logs every change
+made to Drive in the clean-up, with ids.
+
 | Here | What it is |
 |---|---|
 | `inventory.json` | every file and folder as it stood: Drive id, size, md5, times; and for each input, how to rebuild it byte for byte from `data/bundle/2026-06` |

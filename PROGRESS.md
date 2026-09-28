@@ -82,13 +82,13 @@ identical to the golden-label build ($3.73). See `docs/ANALYSIS-model-successor-
    PLAN Phase 10. **What is left is the operator's:** merge; deploy (the job then runs
    `reconcile`, still on the quarterly cron); measure one no-op run on Azure (A-15); then arm
    the 30-minute cron — one line in `infra/main.bicep` (RUNBOOK → *Running it on Azure*).
-   Fort Grounds / 2026-09 in Drive holds the rehearsal's v1–v6: trash it before real September
-   files arrive.
+   The rehearsal's Fort Grounds / 2026-09 v1–v6 moved out of the production root on 2026-09-28
+   into a separate rehearsal root; September is clean in production (Audit follow-ups, item 3).
    **Audited 2026-09-26** (Phase 10 → *Audit follow-ups* below): two defects that would have hit
    unattended runs are fixed, with regression tests, on `claude/gracious-davinci-nnkdv1` —
    PR #15 plus a merge of `main` (#16) plus the fixes. The live-Drive clean-up of September is
-   **waiting on the operator's permission**; findings 4–6 are open with recommended fixes and
-   are held as strict-xfail tests.
+   **done** (2026-09-28, approved by the operator); findings 4–6 are open with recommended fixes
+   and are held as strict-xfail tests.
 
 1. ~~**B-08 — the two McCathren packages go to review on `cardinality_violation`.**~~
    **Fixed 2026-09-11, root-caused with a real-model run.** Not a labelling error: a re-run of
@@ -264,6 +264,8 @@ Drive skeleton already exists (folders only), so a real September run writes int
 | 2026-09-11 | post-v1 | **Phase 8 complete.** `crr version` ran on Azure and its logs say `crr 1.0.0` (`crr-quarterly-94admd0`). Took three runs: `--job-execution-name` is not a flag, `--args` cannot set a multi-token list (the restore left the cron on `version` — repaired), `--tail` is capped at 300. The restore is now a call to `deploy.yml` with a verification job after it (A-13). | `validate-config`, then the `build` option against the seeded `2026-08` data (~$4.72) |
 | 2026-09-11 | post-v1 | `validate-config` on Azure: `4 schema(s), 3 output definition(s), 8 propert(ies)`, identical to a local run line for line — the config in the image matches `main`. | The full build |
 | 2026-09-11 | post-v1 | **The production host built a full quarter, clean.** `crr-quarterly-ectvlit`, exit 0, **8/8 built, 0 to review**, $4.78. Every published PDF downloaded back out of Drive and checked: page counts match golden exactly, bookmarks and titles correct. B-08 confirmed fixed in production. | Delete the `2026-08` rehearsal tree; load September's real inputs |
+| 2026-09-26 | 10 | Phase 10 built and rehearsed on the live drive (PR #15), then audited: nine findings, each reproduced by a probe | Fix what unattended runs would hit |
+| 2026-09-28 | 10 | Audit follow-ups on `claude/gracious-davinci-nnkdv1`: main (#16) merged in; tie-break and month-isolation defects fixed; probes kept as tests (563 passed, 3 strict xfail); September cleaned in Drive, the rehearsal moved whole to its own root | Findings 4–6; land the branch in PR #15; merge |
 
 ## Phase 0 — Repository hygiene and scaffold
 
@@ -458,7 +460,7 @@ Mirrors PLAN Phase 10; SPEC §18; D-17 – D-24.
   | 12 | corrected P&L | `Built v6`: **1 call, $0.02** — PM, BS and Distribution labels reused |
   | 13 | full 8-property run | first run 2 m 06 s (creates every property's Sep/Oct folders); **steady state with nothing to build: 37 s** from this container |
 
-  v6 downloaded back out of Drive: 8 pages, 6 bookmarks, title `Fort Grounds - Investor Report - September 2026`. The root `_STATUS - All properties.txt` reads `Fort Grounds - September 2026 - Built v6 (current)`. **Two defects found and fixed** (`aa2c8df`): a replaced component was listed twice in a version's history (`a | b - c` precedence), and a held newer file read as "waiting", which asks nothing of a reviewer. The July/August test months were trashed afterwards; **Fort Grounds / 2026-09 is left in place as a worked example** (v1–v6 and their status) — trash it before real September files go there.
+  v6 downloaded back out of Drive: 8 pages, 6 bookmarks, title `Fort Grounds - Investor Report - September 2026`. The root `_STATUS - All properties.txt` reads `Fort Grounds - September 2026 - Built v6 (current)`. **Two defects found and fixed** (`aa2c8df`): a replaced component was listed twice in a version's history (`a | b - c` precedence), and a held newer file read as "waiting", which asks nothing of a reviewer. The July/August test months were trashed afterwards; **Fort Grounds / 2026-09 was left in place as a worked example** (v1–v6 and their status); on 2026-09-28 it moved, whole, to the rehearsal root — see *Audit follow-ups*, item 3.
 - [x] Docs: `RUNBOOK.md` rewritten around the new layout — a one-page "how to upload" for non-technical uploaders, and "how to read the status" for reviewers; `SETUP-GOOGLE-DRIVE.md`; banners in SPEC §6.1/§6.9/§13/§14 replaced by the amended text. The runbook's operating half is new: *How it works*, *For uploaders — one page* (written to be forwarded as is), *For reviewers* (every status headline, what it means, what to do; the root summary's *Last checked* as the liveness signal), the folder layout, on-demand runs, Azure and how to arm the schedule, and six new failure-mode rows. README, SETUP-GOOGLE-DRIVE, SPEC §11 (CLI) and §12 (settings) updated; the §6.1/§6.9/§13/§14 banners now say those sections describe `crr build`.
 
 **Acceptance, 2026-09-26:**
@@ -498,24 +500,33 @@ head plus a merge of `main` (#16 had made two docs lines conflict) plus the comm
   drift, and the password, owner-password and zero-page cases now run; coverage had shown them
   never executed. Two behaviours are pinned: `--force` reuses every unchanged label, and the
   cost ceiling is per attempt.
-- [ ] **3. Live-Drive hygiene — waiting on permission.** September is a live month, and Fort
-  Grounds / 2026-09 still holds the rehearsal: five input PDFs that are byte-for-byte the June
-  bundle (the "revised" P&L is the June P&L plus 10 bytes), v1–v6, their manifests, state.json
-  and status. A real September upload there would be combined with June statements and
-  published as `v7 (current)`. All eight properties' `2026-09 September/inputs/` folders are
-  empty v1 leftovers that `reconcile` silently ignores. Inventoried and downloaded read-only
-  with every md5 verified. The planned change, which the session's permission policy stopped
-  before any write:
-  1. create `Cornerstone Reports - REHEARSAL (test data, not for investors)` beside the
-     production root in the shared drive, with `Missoula Property Management/Fort Grounds/`
-     inside it;
-  2. move the rehearsal's `2026-09 September` folder there intact, so file ids, md5s and its
-     `Built v6 (current)` state survive and it stays usable for rehearsals: point
-     `CRR_GDRIVE_ROOT_FOLDER_ID` at that folder;
-  3. delete the eight empty `inputs/` folders;
-  4. run a no-op `reconcile`, with builds made impossible, to recreate Fort Grounds' clean
-     September skeleton and refresh `_STATUS - All properties.txt`, which still reads
-     `Built v6`.
+- [x] **3. Live-Drive hygiene — done 2026-09-28**, approved by the operator. September was a
+  live month still holding the rehearsal: five input PDFs byte-identical to the June bundle
+  (the "revised" P&L is the June P&L plus `\n%revised\n`), v1–v6, manifests, state.json and
+  status. A real September upload would have been combined with June statements and
+  published as `v7 (current)`. Drive was re-verified against the 2026-09-26 inventory first
+  (26/26 items identical). Then, in order:
+  1. **The record went to git before Drive was touched** (`ca76a15`,
+     `eval/reports/rehearsal-2026-09-fort-grounds/`): inventory with ids and md5s, how to
+     rebuild each input from the bundle, status, state.json and v1–v6 manifests (model-written
+     `evidence` replaced by a marker), from a download whose every file matched Drive's md5.
+  2. Created `Cornerstone Reports - REHEARSAL (test data, not for investors)`
+     (`1eGZGlv5IGVd7OGM0-_2jcDfa56FkwAlz`) beside the production root in the shared drive,
+     with `Missoula Property Management/Fort Grounds/` inside it.
+  3. Trashed the eight empty `2026-09 September/inputs/` folders (v1 leftovers that
+     `reconcile` ignores silently; restorable from Drive's trash for 30 days).
+  4. Moved the rehearsal month there whole: 25/25 items with their ids and md5s. Pointed at
+     that root, `reconcile --dry-run` reads it as `Built v6 (current)`: it is a working
+     rehearsal environment (RUNBOOK → *Rehearsing without touching a real month*).
+  5. On the production root, a write-blocked dry run showed all 16 open property-months empty.
+     A real `reconcile` pass in which a build was impossible then recreated Fort Grounds'
+     September skeleton (the month, four numbered folders, `output/`) and rewrote the root
+     summary, which had still read `Built v6`.
+
+  Verified afterwards: every property's September and October hold exactly the four numbered
+  folders and `output/`, with no files; the root holds the three manager folders and the
+  summary. Every Drive write is logged, with ids, in
+  `eval/reports/rehearsal-2026-09-fort-grounds/drive-operations-2026-09-28.json`.
 - [ ] **4. Closed months are re-read on every run.** Each costs 3 Drive calls: 126 calls with no
   history, 414 with a year of it (strict xfail
   `test_a_no_op_run_does_not_grow_with_closed_history`). *Recommended:* only consider closing a

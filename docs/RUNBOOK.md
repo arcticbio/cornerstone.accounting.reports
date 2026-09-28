@@ -156,6 +156,17 @@ it is more than an hour old, the job has stopped running** — see
 - The v1 `inputs/` folders of earlier periods are ignored by `reconcile`; `crr build` still
   reads them.
 
+### Rehearsing without touching a real month
+
+Never rehearse in the production root: every month in it is either closed or live, and a file
+left in a live month is built into the next real version as if someone had uploaded it. The
+shared drive holds a second root for this, beside the production one —
+`Cornerstone Reports - REHEARSAL (test data, not for investors)`, folder id
+`1eGZGlv5IGVd7OGM0-_2jcDfa56FkwAlz`. Point `CRR_GDRIVE_ROOT_FOLDER_ID` at it for the run
+(locally, or in a scratch environment); the runner then prepares and builds there exactly as
+it would in production. It holds the Phase 10 rehearsal, Fort Grounds / 2026-09 v1–v6, as it
+stood; its record in git is `eval/reports/rehearsal-2026-09-fort-grounds/`.
+
 ### Access
 
 The runner authenticates as a Google service account (`GOOGLE_SERVICE_ACCOUNT_B64`) and sees
