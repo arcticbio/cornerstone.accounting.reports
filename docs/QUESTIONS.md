@@ -264,12 +264,14 @@ container; secondary sources agree that a Container Apps Job starts a new schedu
 even while the previous one is still running — "both will run in parallel unless limits are
 set" ([Microsoft Q&A](https://learn.microsoft.com/en-us/answers/questions/2203090/behaviour-of-scheduled-job-(cron)-when-a-previous),
 [practical guide](https://yeongseon.github.io/azure-container-apps-practical-guide/platform/jobs/scheduled-jobs/)).
-Nothing in the design depends on the answer: `crr reconcile` stops starting builds after
-1200 s, the replica timeout is 1800 s, and a build re-reads the month's index just before
-publishing and discards itself if an overlapping run has published the same files — tested with
-a second run executing *inside* the first one's classification
-(`test_an_overlapping_run_that_published_the_same_files_wins`). *Confirm* on the first armed
-week by checking the execution history for overlaps.
+Nothing in the design depends on the answer. Since 2026-09-28 a **run lease** (SPEC §18.9
+step 0) keeps a second execution out while one works: it finds the lease and exits 0 at once.
+Behind that, `crr reconcile` stops starting builds after 1200 s, the replica timeout is 1800 s,
+and a build re-reads the month's index just before publishing and discards itself if an
+overlapping run published the same files. Before the lease, the audit showed that re-read left a
+window: a run landing between a build's publish and its index write published a duplicate
+(`tests/eval/test_reconcile_operations.py`). *Confirm* on the first armed week: overlapping
+executions in the history should each log `intake.lease_held` and do nothing.
 
 **A-15 · The 30-minute schedule costs about nothing on top of the builds.** (Phase 10.) The
 Consumption plan's free grant is 180,000 vCPU-s and 360,000 GiB-s per subscription per month,

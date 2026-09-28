@@ -119,6 +119,9 @@ class Settings(BaseSettings):
     folders_ahead: int = Field(default=1, ge=0)
     #: A run stops *starting* builds after this long, so runs stay shorter than the schedule.
     run_soft_deadline_s: int = Field(default=1200, ge=0)
+    #: The run lease lapses this long after it was taken, if a crashed run never released
+    #: it: the job's replica timeout, so a crash holds up at most one scheduled run (§18.9).
+    run_lease_s: int = Field(default=1800, ge=60)
     #: A build whose estimated classification cost exceeds this is held, not run (D-24).
     max_build_usd: float = Field(default=3.00, ge=0)
     #: The per-page estimate behind that ceiling; measured at $0.0275 on the June corpus.

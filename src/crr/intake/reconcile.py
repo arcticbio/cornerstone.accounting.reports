@@ -10,8 +10,10 @@ and publishes the result as the next version.
 from __future__ import annotations
 
 import shutil
+import socket
 import tempfile
 import time
+import uuid
 from collections.abc import Callable
 from dataclasses import dataclass, field
 from datetime import UTC, date, datetime, timedelta
@@ -37,6 +39,7 @@ from crr.intake.decide import (
     held,
 )
 from crr.intake.files import choose
+from crr.intake.lease import Lease, parse
 from crr.intake.reuse import ReusingClassifier, reusable_input
 from crr.intake.state import Attempt, InputSig, MonthState, VersionEntry
 from crr.intake.status import (
@@ -61,6 +64,17 @@ from crr.settings import Settings
 log = get_logger(__name__)
 
 ClassifierFactory = Callable[[str], Classifier]
+
+
+class LeaseHeld(Exception):
+    """Another run holds the lease, so this one does nothing (SPEC §18.9 step 0)."""
+
+    def __init__(self, holder: Lease) -> None:
+        super().__init__(
+            f"another run ({holder.host or 'unknown host'}) holds the lease "
+            f"until {holder.expires_at:%Y-%m-%d %H:%M UTC}"
+        )
+        self.holder = holder
 
 
 class RunAborted(Exception):
@@ -112,6 +126,7 @@ class Reconciler:
         arbiter: OrientationArbiter | None = None,
         clock: Callable[[], datetime] = lambda: datetime.now(UTC),
         monotonic: Callable[[], float] = time.monotonic,
+        sleep: Callable[[float], None] = time.sleep,
     ) -> None:
         self.config = config
         self.settings = settings
@@ -120,10 +135,68 @@ class Reconciler:
         self.arbiter = arbiter
         self.clock = clock
         self.monotonic = monotonic
+        self.sleep = sleep
+        self._lease: Lease | None = None
 
     # -- the run ---------------------------------------------------------------------------
     def run(self, options: Options | None = None) -> list[Outcome]:
+        """One pass over every open month. Takes the run lease first, so two runs never
+        work at once; raises `LeaseHeld`, having done nothing, when another run has it. A dry
+        run writes nothing and takes no lease."""
         options = options or Options()
+        if options.dry_run:
+            return self._run(options)
+        self._lease = self._acquire_lease()
+        try:
+            return self._run(options)
+        finally:
+            self._release_lease()
+
+    # -- the lease --------------------------------------------------------------------------
+    def _acquire_lease(self) -> Lease:
+        now = self.clock()
+        held = parse(self.store.read_lease())
+        if held is not None and held.held_at(now):
+            log.info("intake.lease_held", host=held.host, until=held.expires_at.isoformat())
+            raise LeaseHeld(held)
+        mine = Lease(
+            owner=uuid.uuid4().hex,
+            host=socket.gethostname(),
+            acquired_at=now,
+            expires_at=now + timedelta(seconds=self.settings.run_lease_s),
+        )
+        self.store.write_lease(mine.model_dump_json(indent=2))
+        if self.store.lease_settle_s:
+            self.sleep(self.store.lease_settle_s)  # let a near-simultaneous writer land
+        back = parse(self.store.read_lease())
+        if back is None or back.owner != mine.owner:
+            log.info("intake.lease_lost_race")
+            raise LeaseHeld(back or mine)
+        log.info("intake.lease_acquired", until=mine.expires_at.isoformat())
+        return mine
+
+    def _still_leased(self) -> bool:
+        """Checked before each build: a run whose lease was taken over — it outlived its
+        expiry, say — starts nothing more."""
+        if self._lease is None:
+            return True
+        current = parse(self.store.read_lease())
+        return current is not None and current.owner == self._lease.owner
+
+    def _release_lease(self) -> None:
+        lease, self._lease = self._lease, None
+        if lease is None:
+            return
+        try:
+            current = parse(self.store.read_lease())
+            if current is not None and current.owner == lease.owner:
+                released = lease.model_copy(update={"released_at": self.clock()})
+                self.store.write_lease(released.model_dump_json(indent=2))
+        except Exception as exc:  # it lapses on its own at expires_at
+            log.warning("intake.lease_release_failed", error=type(exc).__name__)
+
+    # -- the run ----------------------------------------------------------------------------
+    def _run(self, options: Options) -> list[Outcome]:
         started = self.monotonic()
         now = self.clock()
         today = now.date()
@@ -295,6 +368,11 @@ class Reconciler:
             if deadline_passed:
                 # Leave the status as it is; the next run starts this build (SPEC §18.9 step 5).
                 outcome.note = "deferred to the next run"
+                outcome.headline = None
+                return outcome
+            if not self._still_leased():
+                log.warning("intake.lease_taken_over", property=prop.id, period=period)
+                outcome.note = "deferred: another run holds the lease"
                 outcome.headline = None
                 return outcome
             verdict, outcome = self._build(month, verdict, now)

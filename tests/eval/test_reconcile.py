@@ -385,12 +385,35 @@ def test_the_root_summary_has_a_line_per_active_property(tmp_path: Path) -> None
     assert "Timber Place" not in summary  # nothing uploaded there
 
 
+class _LeaseBlind:
+    """A store whose first look at the run lease finds none — a run that got in although the
+    first still worked: its lease had lapsed, say. Everything else is the real store."""
+
+    def __init__(self, inner: LocalIntakeStore) -> None:
+        self._inner = inner
+        self._looked = False
+
+    def __getattr__(self, name: str) -> Any:
+        return getattr(self._inner, name)
+
+    def read_lease(self) -> str | None:
+        if not self._looked:
+            self._looked = True
+            return None
+        return self._inner.read_lease()
+
+
 def test_an_overlapping_run_that_published_the_same_files_wins(tmp_path: Path) -> None:
-    """Two runs building the same month at once publish one version, not two (§18.9)."""
+    """Two runs building the same month at once publish one version, not two (§18.9).
+
+    The run lease keeps a second run out; this is the backstop behind it, for a run that gets
+    in anyway. It publishes; the first run's re-read before publishing sees that and discards
+    its own identical build."""
     world = World(tmp_path)
     world.upload_all()
     world.later(minutes=61)
     other = World(tmp_path)  # a second run over the same folders, started meanwhile
+    other.store = _LeaseBlind(other.store)  # type: ignore[assignment]
     other.now = world.now
     inner = world.classifier
     ran_other = []

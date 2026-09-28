@@ -16,6 +16,7 @@ from typing import Any
 import pytest
 
 from crr.config import load_config
+from crr.intake.lease import LEASE_FILE
 from crr.intake.state import MonthState, VersionEntry
 from crr.models import BuildStatus
 from crr.repository.intake_drive import DriveIntakeStore
@@ -179,6 +180,26 @@ def test_the_status_name_comes_from_one_listing(h: Harness) -> None:
     assert h.store.status_name(FORT, PERIOD) == "STATUS - Built v1 (current).txt"
     if drive is not None:
         assert downloads == []
+
+
+def test_the_run_lease_round_trips_in_place(h: Harness) -> None:
+    assert h.store.read_lease() is None
+    h.store.write_lease("first")
+    h.store.write_lease("second")
+    assert h.store.read_lease() == "second"
+
+
+def test_drive_keeps_one_lease_when_two_runs_created_it(tmp_path: Path) -> None:
+    """Drive allows one name twice: two runs creating the lease at the same instant leave two
+    copies. Both are the system's own; the next write keeps the first by id, trashes the rest."""
+    drive = FakeDrive()
+    store = DriveIntakeStore(drive, drive.root_id, CONFIG.properties)
+    first = drive.add_file(drive.root_id, LEASE_FILE, b"a", mime="application/json")
+    second = drive.add_file(drive.root_id, LEASE_FILE, b"b", mime="application/json")
+    store.write_lease("mine")
+    assert store.read_lease() == "mine"
+    assert drive.names_in(drive.root_id) == [LEASE_FILE]
+    assert drive.deleted == [max(first, second)]
 
 
 def test_the_summary_is_replaced_only_when_it_changes(h: Harness) -> None:

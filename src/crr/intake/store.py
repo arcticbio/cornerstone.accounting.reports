@@ -23,6 +23,9 @@ MANIFESTS = "manifests"
 
 class IntakeStore(Protocol):
     name: str
+    #: Seconds to wait between writing the run lease and reading it back, so that a
+    #: concurrent writer's write is visible (SPEC §18.9). Zero where writes are immediate.
+    lease_settle_s: float
 
     def preflight_publish(self) -> None:
         """Prove a file can be written before anything is spent (SPEC §6.1)."""
@@ -81,4 +84,12 @@ class IntakeStore(Protocol):
 
     def write_summary(self, body: str) -> bool:
         """Replace the root summary. Returns False if it already said exactly this."""
+        ...
+
+    def read_lease(self) -> str | None:
+        """The run lease's text at the root, if there is one (`crr.intake.lease`)."""
+        ...
+
+    def write_lease(self, text: str) -> None:
+        """Make `text` the one run lease at the root, replacing it in place."""
         ...

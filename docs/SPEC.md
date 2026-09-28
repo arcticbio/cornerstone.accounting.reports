@@ -779,6 +779,7 @@ Never log page text or image bytes. Log document sha256s, not paths, at INFO.
 | `CRR_CLOSE_GRACE_DAYS` | `14` | a closed month is read, to write its final status, only this long past its window (§18.3) |
 | `CRR_FOLDERS_AHEAD` | `1` | month folders are prepared this many months ahead (§18.3) |
 | `CRR_RUN_SOFT_DEADLINE_S` | `1200` | a run stops starting builds after this long (§18.9) |
+| `CRR_RUN_LEASE_S` | `1800` | a crashed run's lease lapses after this long — the replica timeout (§18.9) |
 | `CRR_MAX_BUILD_USD` | `3.00` | a build estimated above this is held (§18.7) |
 | `CRR_COST_PER_PAGE_USD` | `0.03` | the per-page estimate behind that ceiling (§18.7) |
 | `CRR_MAX_FAILED_ATTEMPTS` | `3` | failures on the same files before retrying stops (§18.7) |
@@ -921,6 +922,7 @@ sees the true state. The trigger never decides *what* to build.
 ```
 <root>/
   _STATUS - All properties.txt                ← one line per property, current month (§18.8)
+  _LEASE - reconcile run (do not edit).json   ← which run holds the run lease (§18.9)
   <PM folder>/<Property folder>/2026-09 September/
       1 - Property Manager Report/            ← uploaders drop one PDF per folder, any filename
       2 - Balance Sheet/
@@ -1084,6 +1086,13 @@ crr reconcile [--repo gdrive] [--classifier anthropic] [--property ID]... [--per
               [--force] [--dry-run]
 ```
 
+0. **Take the run lease** (`crr.intake.lease`): read the lease file at the root; if another run
+   holds it and it has not lapsed, do nothing and exit 0, saying which host holds it until
+   when. Otherwise write this run's lease, wait a moment (3 s on Drive), and read it back:
+   only the run whose write is read back goes on. A crashed run's lease lapses after
+   `CRR_RUN_LEASE_S` (1800 s, the replica timeout); a damaged lease file is treated as none.
+   A dry run takes no lease. Before each build the run checks the lease is still its own, and
+   starts nothing more if it is not.
 1. Publish preflight (§6.1). On failure exit 1 — the only condition that fails the run.
 2. Ensure folders (§18.3).
 3. Close any month newly past its window; write its final status.
@@ -1098,6 +1107,7 @@ crr reconcile [--repo gdrive] [--classifier anthropic] [--property ID]... [--per
 5. Stop *starting* builds after `CRR_RUN_SOFT_DEADLINE_S` (1200 s). Whatever is left is picked
    up next run.
 6. Write the root summary: a line per property, then every month that could not be checked.
+   Release the lease.
    Exit 0 — per-property outcomes are statuses, not exit codes — unless a month could not be
    checked: then exit 1, after every other month is done and the summary written, so the
    execution shows as failed and someone reads the log.
@@ -1113,9 +1123,11 @@ the failure cap. It does not skip the completeness or open checks, nor the settl
 - `infra/main.bicep`: cron `*/30 * * * *` once armed; baked args `reconcile --repo gdrive
   --classifier anthropic`; replica timeout 1800 s (the 1200 s soft deadline stops new work well before it);
   parallelism 1.
-- Whether Container Apps starts a scheduled execution while the previous one is still running
-  is **to be verified** (Phase 10). The design is safe either way: the soft deadline keeps runs
-  shorter than the interval, and step 4's pre-publish re-list discards a duplicate.
+- Container Apps starts a scheduled execution even while the previous one is still running
+  (A-14), and *Build a period* runs the same image from Actions alongside it. Only one of them
+  works at a time: the run lease (§18.9 step 0) sends the second away at once, the soft
+  deadline keeps runs shorter than the interval, and step 4's pre-publish re-list discards a
+  duplicate from any run that got in regardless.
 - Cost: a run with nothing to build lasts well under a minute. 48 a day is expected to sit near
   or inside the Container Apps consumption free grant — **to be verified against current Azure
   pricing** before the schedule is armed.

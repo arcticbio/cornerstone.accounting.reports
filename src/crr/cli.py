@@ -411,7 +411,7 @@ def reconcile(
     """
     from crr.config import ConfigError, load_config
     from crr.intake.decide import Kind
-    from crr.intake.reconcile import Options, Reconciler, RunAborted
+    from crr.intake.reconcile import LeaseHeld, Options, Reconciler, RunAborted
     from crr.repository.protocol import RepositoryError
     from crr.settings import Settings
 
@@ -474,6 +474,10 @@ def reconcile(
     except RunAborted as exc:
         typer.echo(f"run stopped: {exc}", err=True)
         raise typer.Exit(code=1) from None
+    except LeaseHeld as exc:
+        # Not a failure: the run that holds it does the work (SPEC §18.9 step 0).
+        typer.echo(f"nothing done: {exc}")
+        return
     for o in outcomes:
         if o.headline is None and not o.note:
             continue

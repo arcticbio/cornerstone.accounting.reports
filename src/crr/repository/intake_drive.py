@@ -17,6 +17,7 @@ from typing import Any
 
 from crr.config.properties import PropertyRegistry
 from crr.intake.files import IntakeFile
+from crr.intake.lease import LEASE_FILE
 from crr.intake.state import STATE_FILE, MonthState
 from crr.intake.status import ROOT_SUMMARY, is_status_filename
 from crr.intake.store import MANIFESTS, OUTPUT
@@ -35,6 +36,9 @@ def parse_time(value: str) -> datetime:
 
 
 class DriveIntakeStore(GoogleDriveRepository):
+    #: Long enough for a near-simultaneous writer's lease to be the one read back.
+    lease_settle_s = 3.0
+
     def __init__(self, api: DriveApi, root_folder_id: str, registry: PropertyRegistry) -> None:
         super().__init__(api, root_folder_id, registry)
 
@@ -193,6 +197,31 @@ class DriveIntakeStore(GoogleDriveRepository):
             return False
         self._write_text(root, ROOT_SUMMARY, body)
         return True
+
+    def read_lease(self) -> str | None:
+        leases = self._leases()
+        return self._download_text(leases[0].id) if leases else None
+
+    def write_lease(self, text: str) -> None:
+        """Replace the lease in place. Two runs creating it at the same instant can leave two
+        copies (Drive allows one name twice); both are the system's own, so all but the first
+        by id are trashed, and every run reads and writes that same first one."""
+        leases = self._leases()
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / LEASE_FILE
+            path.write_text(text)
+            if leases:
+                self._api.update_content(leases[0].id, path)
+                for extra in leases[1:]:
+                    self._api.trash(extra.id)
+            else:
+                self._api.upload(self._root, path, name=LEASE_FILE)
+        self._forget(self._root)
+
+    def _leases(self) -> list[DriveFile]:
+        self._forget(self._root)
+        found = [f for f in self._list(self._root) if not f.is_folder and f.name == LEASE_FILE]
+        return sorted(found, key=lambda f: f.id)
 
     # -- helpers -------------------------------------------------------------------------
     def _read_text(self, folder: DriveFile | None, name: str) -> str | None:

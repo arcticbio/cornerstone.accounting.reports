@@ -20,6 +20,7 @@ from typing import Any
 
 from crr.config.properties import PropertyRegistry
 from crr.intake.files import IntakeFile
+from crr.intake.lease import LEASE_FILE
 from crr.intake.state import STATE_FILE, MonthState
 from crr.intake.status import ROOT_SUMMARY, is_status_filename
 from crr.intake.store import MANIFESTS, OUTPUT
@@ -34,6 +35,7 @@ _PERIOD_DIR = re.compile(r"^(\d{4})-(\d{2})\b")
 
 class LocalIntakeStore:
     name = "local"
+    lease_settle_s = 0.0  # a local write is visible at once
 
     def __init__(self, root: Path, registry: PropertyRegistry) -> None:
         self.root = root
@@ -180,6 +182,14 @@ class LocalIntakeStore:
         self.root.mkdir(parents=True, exist_ok=True)
         path.write_text(body)
         return True
+
+    def read_lease(self) -> str | None:
+        path = self.root / LEASE_FILE
+        return path.read_text() if path.is_file() else None
+
+    def write_lease(self, text: str) -> None:
+        self.root.mkdir(parents=True, exist_ok=True)
+        (self.root / LEASE_FILE).write_text(text)
 
 
 def _free(folder: Path, name: str) -> Path:
