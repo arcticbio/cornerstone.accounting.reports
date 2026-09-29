@@ -10,7 +10,7 @@ from crr.config.models import SourceSchema
 from crr.intake.reuse import ReusingClassifier
 from crr.manifest import BuildManifest, ClassifierBlock, ConfigBlock, ConfigRef, InputRef
 from crr.manifest.model import PropertyBlock
-from crr.models import BuildStatus, Orientation, PageClassification, SourceDocument
+from crr.models import BuildStatus, Orientation, PageClassification, ReviewReason, SourceDocument
 
 CONFIG = load_config(Path("config"))
 SCHEMA = CONFIG.schemas["cornerstone-qbo"]
@@ -135,3 +135,28 @@ def test_a_manifest_without_a_label_for_every_page_is_not_trusted() -> None:
 def test_a_v1_manifest_without_source_hashes_falls_back_to_sha256() -> None:
     previous = _previous(ref={"source_sha256": None, "sha256": "uploaded-sha"})
     assert _classify(previous, _doc(sha="uploaded-sha", source=None))[0].calls == 0
+
+
+def _uncertain(role: str, page: int) -> ReviewReason:
+    return ReviewReason(code="orientation_uncertain", doc_role=role, page=page, detail="open")
+
+
+def test_reused_labels_carry_only_their_own_open_orientation_questions() -> None:
+    """Live-test capacity note: reused labels skip the orientation cross-check, and what it left
+    open on these bytes is raised again (SPEC §18.7)."""
+    previous = _previous()
+    previous.review_reasons = [
+        _uncertain(ROLE, 2),
+        _uncertain("pm_source", 7),  # another document's question stays with that document
+        ReviewReason(code="missing_required", doc_role=ROLE, detail="not an orientation matter"),
+    ]
+    _, wrapper, _ = _classify(previous)
+    carried = wrapper.carried_orientation_reasons(ROLE)
+    assert carried is not None and [(r.doc_role, r.page) for r in carried] == [(ROLE, 2)]
+
+
+def test_labels_made_afresh_are_cross_checked_as_usual() -> None:
+    _, wrapper, _ = _classify(_previous(), _doc(source="new-upload"))
+    assert wrapper.carried_orientation_reasons(ROLE) is None
+    _, clean, _ = _classify(_previous())
+    assert clean.carried_orientation_reasons(ROLE) == []  # reused, nothing left open

@@ -26,7 +26,7 @@ from crr.golden import load_all_golden
 from crr.intake.decide import Kind
 from crr.intake.reconcile import Options, Reconciler
 from crr.intake.state import MonthState
-from crr.models import SourceDocument
+from crr.models import ReviewReason, SourceDocument
 from crr.repository.intake_local import LocalIntakeStore
 from crr.settings import Settings
 
@@ -83,9 +83,8 @@ class World:
         self.classifier = Counting(settings.pop("classifier_name", "golden"))
         self.settings = Settings(
             work_dir=tmp_path / "work",
-            orientation_check=False,
             _env_file=None,  # type: ignore[call-arg]
-            **settings,
+            **{"orientation_check": False, **settings},
         )
         self.soft_deadline_passed = False
 
@@ -384,6 +383,79 @@ def test_a_forced_rebuild_republishes_a_deleted_report(world: World) -> None:
     (world.month() / "output" / next(n for n in world.output() if n.endswith(" - v1.pdf"))).unlink()
     world.run(force=True)
     assert world.status() == "STATUS - Built v2 (current).txt"
+
+
+class _OrientationCheck:
+    """Stands in for the OSD cross-check: records which documents it was run on, and leaves
+    one page of the PM report unsettled when asked to."""
+
+    def __init__(self, *, unsettled_pm_page: int | None = None) -> None:
+        self.checked: list[str] = []
+        self.unsettled_pm_page = unsettled_pm_page
+
+    def __call__(
+        self, labels: list[Any], pdf: Path, *, doc_role: str, dpi: int, arbiter: Any
+    ) -> tuple[list[Any], list[ReviewReason]]:
+        self.checked.append(doc_role)
+        if doc_role == "pm_source" and self.unsettled_pm_page is not None:
+            reason = ReviewReason(
+                code="orientation_uncertain",
+                doc_role=doc_role,
+                page=self.unsettled_pm_page,
+                detail="classifier says upright, OSD says rotated_180 (confidence 0.40)",
+            )
+            return labels, [reason]
+        return labels, []
+
+
+def _cross_checked_world(tmp_path: Path, check: _OrientationCheck, monkeypatch: Any) -> World:
+    world = World(tmp_path, orientation_check=True)
+    world.classifier.needs_page_images = True  # as the real classifier: pages are rendered
+    monkeypatch.setattr("crr.pipeline.apply_orientation_check", check)
+    return world
+
+
+def test_reused_labels_are_not_cross_checked_again(tmp_path: Path, monkeypatch: Any) -> None:
+    """Live-test capacity note: in the 12:00 crunch, sixteen one-call rebuilds spent most of
+    their time re-running the orientation cross-check over 259 pages of reused labels."""
+    check = _OrientationCheck()
+    world = _cross_checked_world(tmp_path, check, monkeypatch)
+    world.upload_all()
+    world.later(minutes=61)
+    world.run()
+    assert sorted(check.checked) == [
+        "cornerstone_balance_sheet",
+        "cornerstone_profit_loss_ytd",
+        "pm_source",
+    ]
+    check.checked.clear()
+    world.upload("bs", "bs corrected.pdf", content=SOURCE["bs"].read_bytes() + b"\n%x\n")
+    world.later(minutes=61)
+    world.run()
+    assert check.checked == ["cornerstone_balance_sheet"]  # the PM report and P&L were reused
+    assert world.status() == "STATUS - Built v2 (current).txt"
+
+
+def test_an_unsettled_page_is_raised_again_when_its_labels_are_reused(
+    tmp_path: Path, monkeypatch: Any
+) -> None:
+    check = _OrientationCheck(unsettled_pm_page=3)
+    world = _cross_checked_world(tmp_path, check, monkeypatch)
+    world.upload_all()
+    world.later(minutes=61)
+    world.run()
+    assert world.status() == "STATUS - Needs review (v1).txt"
+    check.checked.clear()
+    world.upload("bs", "bs corrected.pdf", content=SOURCE["bs"].read_bytes() + b"\n%x\n")
+    world.later(minutes=61)
+    world.run()
+    assert "pm_source" not in check.checked  # not re-checked …
+    assert world.status() == "STATUS - Needs review (v2).txt"  # … and still not settled
+    v2 = world.store.read_manifest(FORT, PERIOD, 2)
+    assert v2 is not None
+    assert [(r["code"], r["doc_role"], r["page"]) for r in v2["review_reasons"]] == [
+        ("orientation_uncertain", "pm_source", 3)
+    ]
 
 
 def test_force_rebuilds_unchanged_files(world: World) -> None:

@@ -356,14 +356,21 @@ def _classify(
         # properties that is ~172 pages of work for a result that is known in advance. The
         # eval harness draws the same line for the same reason.
         if settings.orientation_check and getattr(classifier, "needs_page_images", True):
-            checked, reasons = apply_orientation_check(
-                checked,
-                doc.path,
-                doc_role=doc.role,
-                dpi=settings.osd_dpi,
-                arbiter=arbiter,
-            )
-            orientation_reasons.extend(reasons)
+            # Labels carried over for identical bytes were cross-checked when they were made;
+            # only what that check left open is raised again (SPEC §7.6, §18.7).
+            carried_for = getattr(classifier, "carried_orientation_reasons", None)
+            carried = carried_for(doc.role) if carried_for is not None else None
+            if carried is not None:
+                orientation_reasons.extend(carried)
+            else:
+                checked, reasons = apply_orientation_check(
+                    checked,
+                    doc.path,
+                    doc_role=doc.role,
+                    dpi=settings.osd_dpi,
+                    arbiter=arbiter,
+                )
+                orientation_reasons.extend(reasons)
         labels.extend(checked)
     return labels, usage, orientation_reasons
 

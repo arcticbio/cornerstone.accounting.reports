@@ -12,7 +12,7 @@ from crr.classify.protocol import ClassificationResult, Classifier, PageInput, U
 from crr.config.models import SourceSchema
 from crr.log import get_logger
 from crr.manifest.model import BuildManifest, InputRef
-from crr.models import SourceDocument
+from crr.models import ReviewReason, SourceDocument
 
 log = get_logger(__name__)
 
@@ -70,6 +70,23 @@ class ReusingClassifier:
 
     def identity(self) -> tuple[str, str | None, str | None]:
         return self.name, self._model, self.prompt_version
+
+    def carried_orientation_reasons(self, role: str) -> list[ReviewReason] | None:
+        """For a document whose labels were carried over, what the orientation cross-check
+        left open when it ran on these same bytes; None when the labels are new.
+
+        The stored labels are the cross-checked ones — corrections already applied — so the
+        check need not run again (a 400 DPI render and a tesseract pass per page, and an arbiter
+        call per disagreement). What it could not settle must still go to a human, so it is
+        raised again rather than dropped.
+        """
+        if role not in self.reused or self._previous is None:
+            return None
+        return [
+            r.model_copy()
+            for r in self._previous.review_reasons
+            if r.code == "orientation_uncertain" and r.doc_role == role
+        ]
 
     def classify(
         self, doc: SourceDocument, schema: SourceSchema, pages: list[PageInput]

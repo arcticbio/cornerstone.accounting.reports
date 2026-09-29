@@ -606,6 +606,10 @@ If the arbiter is absent (no key, or a golden build) or does not return a single
 classifier's label stands and the build raises `orientation_uncertain` (§6.8). Nothing is
 guessed: an unsettled page goes to a human (D-12).
 
+The check runs on labels made afresh. Labels carried over from the previous version for the same
+bytes (§18.7, *Reuse*) were checked when they were made; they are not checked again, and what
+that check left unsettled is raised again.
+
 The same holds when OSD itself cannot be asked — no `tesseract`, no `tesseract-ocr-osd`, an
 unparseable answer. A check that was asked for and could not run is not a check that passed, so
 a page the classifier calls non-upright raises `orientation_uncertain` rather than being turned
@@ -1052,7 +1056,12 @@ are. Every build uses the code current at the time it runs.
 
 **Reuse.** A document whose `sha256`, schema `sha256`, model and `prompt_version` match an input
 in the previous manifest reuses that manifest's page classifications instead of re-classifying.
-Correcting a 1-page Balance Sheet does not re-classify a 26-page PM source.
+Correcting a 1-page Balance Sheet does not re-classify a 26-page PM source. Nor does it cross-check
+the reused pages' orientation again (§7.6): the stored labels are the cross-checked ones, made
+from these same bytes, so the check's corrections are already in them. Whatever it left open —
+each `orientation_uncertain` the previous build raised for that document — is raised again, so
+an unsettled page still goes to a human. (Added after the live test of 2026-09-29, where sixteen
+one-call rebuilds took 19 min 38 s, most of it re-running the check over 259 reused pages.)
 
 **Cost ceiling.** Before classifying, the estimated cost of the pages that will actually be sent
 (`pages × CRR_COST_PER_PAGE_USD`, default 0.03 from the measured $0.0275) must be below
