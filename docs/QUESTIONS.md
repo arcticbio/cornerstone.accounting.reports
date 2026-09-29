@@ -273,25 +273,49 @@ window: a run landing between a build's publish and its index write published a 
 (`tests/eval/test_reconcile_operations.py`). *Confirm* on the first armed week: overlapping
 executions in the history should each log `intake.lease_held` and do nothing.
 
-**A-15 · The 30-minute schedule costs about nothing on top of the builds.** (Phase 10.) The
-Consumption plan's free grant is 180,000 vCPU-s and 360,000 GiB-s per subscription per month,
-and jobs are billed per second of replica runtime
+**A-15 · The 30-minute schedule costs between nothing and a few dollars a month; the first
+armed day's bill says which.** (Phase 10.) The Consumption plan's free grant is 180,000 vCPU-s
+and 360,000 GiB-s per subscription per month, and a job is charged "for the amount of resources
+allocated to each replica while it's running", at the active rate
 ([Billing in Azure Container Apps](https://learn.microsoft.com/en-us/azure/container-apps/billing)).
-At 2 vCPU / 4 GiB, 48 runs a day for 30 days is 1,440 runs; **if a run with nothing to build
-lasts 60 s, that is 172,800 vCPU-s and 345,600 GiB-s — just inside the grant**; at 30 s, half
-of it. The builds themselves add ~2 minutes of replica time each. The worst case beyond the grant
-is a few dollars a month at list price, against ~$0.60 of model calls per property build.
-*Confirm* the real no-op run time on Azure before arming; if it is well over 60 s, the options
-are a smaller replica (1 vCPU / 2 GiB halves it) or a business-hours cron.
-*Measured 2026-09-29, not yet on Azure:* a real `crr reconcile` with nothing to build took
-**48.8 s** against the production drive from a session container — preflight, the run lease
-(3 s of it is the lease's settle) and interpreter start-up included. That is 140,500 vCPU-s and
-281,100 GiB-s a month at 48 runs a day, **78 % of the grant**, leaving ~40 builds' worth of
-headroom (a build measured 226-278 s on Timber Place, the slowest property, OCR included). It
-no longer grows with history: the audit found every closed month added 3 Drive calls to every
-run, fixed 2026-09-28 (SPEC §18.3). Model calls are the real cost: $0.62 for Timber Place on
-`claude-opus-5-5`, $0.02 for a one-page correction. Azure adds the container's start and image
-pull, which only a run there can measure.
+At 2 vCPU / 4 GiB, 48 runs a day for 30 days is 1,440 runs.
+
+*Measured on Azure 2026-09-29:* execution `crr-quarterly-e8diyyh`, the image from `main` at
+`34351e2`, started by *Run the Azure job* → `scheduled`
+([run 36504263073](https://github.com/arcticbio/cornerstone.accounting.reports/actions/runs/36504263073)).
+Exit 0, nothing built; nothing in Drive changed but the lease and the summary's *Last checked*.
+
+| UTC | Event | The time before it |
+|---|---|---|
+| 00:41:11 | execution started | |
+| 00:41:50.0 | first log line, `repository.preflight_ok` | 39 s: ~35 s of Azure scheduling the replica and pulling the image, ~2 s of Python start-up, then the preflight's upload and delete |
+| 00:41:57.6 | `intake.lease_acquired` | 7.6 s, 3 s of it the lease's settle |
+| 00:42:44 | lease released | 46 s: 16 open property-months checked, ~135 Drive calls one after another |
+| 00:42:47.1 | `0 version(s) built`, exit 0 | |
+| by 00:42:58 | `Succeeded` | the workflow polls every 20 s |
+
+So a run with nothing to build is **~60 s of process and ~100 s of execution**. From a session
+container the same run took 48.8 s: Drive round trips are ~20 % slower from Azure (~0.34 s
+each), and the replica's start is new. A run logs three lines, so Log Analytics is negligible.
+
+What it costs at list price ($0.000024 per vCPU-s, $0.000003 per GiB-s):
+
+| If Azure bills | A month of no-op runs | Share of the grant | Beyond it |
+|---|---|---|---|
+| the process, ~60 s | 172,800 vCPU-s, 345,600 GiB-s | 96 % | $0; builds past the first ~12 cost ~$0.02 each |
+| the execution, ~100 s | 288,000 vCPU-s, 576,000 GiB-s | 160 % | **≈ $3.25 a month**, plus ~$0.02 a build |
+
+The grant is per subscription: if other Container Apps there already use it, all of it bills —
+about $5.20 a month at 60 s, $8.65 at 100 s. The model calls cost more: ~$0.60 per property
+build, ~$5 a month for eight properties built once. Microsoft does not say whether the replica's
+start is billed. *Confirm* on the first armed day with no builds: Cost Management's Container
+Apps vCPU-seconds for that day, divided by 96 (48 runs × 2 vCPU), is the billed seconds per run.
+
+Three levers, if it matters, cheapest first. An hourly cron (`0 * * * *`) halves the runs and
+stays inside the grant even at 100 s (80 %); after the 60-minute settle a build then waits up to
+an hour instead of half an hour. A 1 vCPU / 2 GiB replica halves the rate too, but builds (OCR)
+slow down and would need testing at that size. Checking the properties in parallel would cut the
+46 s pass to about 10 s, though the ~35 s start stays; that is a code change.
 
 ## Blocked (Claude Code appends here)
 

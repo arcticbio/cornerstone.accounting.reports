@@ -260,9 +260,10 @@ hand, keeps its own contract (SPEC §6.8): 0 built, 2 needs review, 1 failed.
 ## Step 9 — Turn the schedule on
 
 Continuous intake runs every 30 minutes, `*/30 * * * *`. Until PLAN Phase 10's STOP is cleared —
-a no-op run measured on Azure and its monthly cost checked (QUESTIONS A-15) — the template's
-default stays the quarterly `0 6 20 1,4,7,10 *` (06:00 UTC on the 20th of January, April, July
-and October), so that no deploy can arm the 30-minute schedule by accident. **To arm it**, change
+the owner's decision, now that a no-op run has been measured on Azure (~100 s, between $0 and
+≈ $3.25 a month at 48 a day: QUESTIONS A-15) — the template's default stays the quarterly
+`0 6 20 1,4,7,10 *` (06:00 UTC on the 20th of January, April, July and October), so that no
+deploy can arm the 30-minute schedule by accident. **To arm it**, change
 the `cronExpression` default in `infra/main.bicep` to `'*/30 * * * *'`, merge, and run the
 deploy workflow with *Preview* unticked (`docs/RUNBOOK.md` → *Running it on Azure*).
 

@@ -1129,9 +1129,10 @@ the failure cap. It does not skip the completeness or open checks, nor the settl
   works at a time: the run lease (§18.9 step 0) sends the second away at once, the soft
   deadline keeps runs shorter than the interval, and step 4's pre-publish re-list discards a
   duplicate from any run that got in regardless.
-- Cost: a run with nothing to build lasts well under a minute. 48 a day is expected to sit near
-  or inside the Container Apps consumption free grant — **to be verified against current Azure
-  pricing** before the schedule is armed.
+- Cost: a run with nothing to build measured ~60 s of process and ~100 s of execution on Azure,
+  ~35 s of it the replica starting (A-15). 48 a day is 96–160 % of the Container Apps free grant,
+  depending on which of the two Azure bills: between $0 and ≈ $3.25 a month at list price, less
+  than the model calls of one full build of every property ($4.78).
 - `build-period.yml` (Actions) gains a `command` choice — `reconcile`, `reconcile --force`,
   `build` — with optional `property` and `period`: `reconcile --force` is the on-demand rebuild.
   Not `azure-job.yml`: `--args` cannot carry a multi-token list (A-13), and Actions runs the

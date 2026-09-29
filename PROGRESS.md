@@ -4,7 +4,7 @@ Single source of truth for build state. Claude Code ticks tasks here after each 
 commits. Humans read this to see where things stand. Mirrors `docs/PLAN.md`; if they diverge,
 PLAN.md defines the work and this file records what has been done.
 
-**Continuous intake (Phase 10) is built, audited, fixed and live-tested; its release to `main` is a PR from `claude/gracious-davinci-nnkdv1`** — see "Pick up here", item 0.
+**Continuous intake (Phase 10) is released to `main` ([#17](https://github.com/arcticbio/cornerstone.accounting.reports/pull/17)), deployed to Azure and measured there — a run with nothing to build is ~100 s of execution, $0 to ≈ $3.25 a month at 48 a day. The job runs `reconcile` on the quarterly cron until the owner arms the 30-minute schedule (PLAN Phase 10's STOP)** — see "Pick up here", item 0.
 
 **Branch:** `main` — v1 landed there via [#1](https://github.com/arcticbio/cornerstone.accounting.reports/pull/1) (built on the session branch `claude/gifted-lamport-wwgenm`; D-15 — every reference to `build/v1` in these documents means the release line, now `main`) · **Current phase:** 9 (complete) · **Tag:** `v1.0.0` pushed · **Last session note:** B-08 fixed; real-model eval run over all 172 pages and now **100 % on every metric**; the orientation defect it surfaced fixed — a page was shipping upside down — and the 59 % record score it reported traced to the metric, not the classifier. #7 merged to `main`; this branch merged it back cleanly. **B-09 is resolved: the production publish path works end to end.** **B-04 is resolved: Azure is
 deployed, audited and armed**, a rehearsal period (`2026-08`) is seeded in Drive, and
@@ -89,10 +89,15 @@ identical to the golden-label build ($3.73). See `docs/ANALYSIS-model-successor-
    follow-ups* and *Live test* below). All nine findings are closed on
    `claude/gracious-davinci-nnkdv1` — PR #15, a merge of `main` (#16), then the fixes — which is
    the release candidate: 588 tests pass, 0 xfail, and it has run for real against the
-   production drive and the production model. **What is left:** merge the release PR; *Deploy to
-   Azure* (the live what-if already shows exactly `build → reconcile` and `3600 → 1800 s`, cron
-   untouched); *Run the Azure job* → `scheduled` to measure a no-op run on Azure (A-15); then
-   arm `*/30` — one reviewed line in `infra/main.bicep` (PLAN Phase 10's STOP).
+   production drive and the production model. **Released 2026-09-29:** merged to `main` as #17,
+   deployed ([run 36503944061](https://github.com/arcticbio/cornerstone.accounting.reports/actions/runs/36503944061):
+   `build → reconcile`, `3600 → 1800 s`, cron untouched) and measured on Azure — ~60 s of
+   process, ~100 s of execution, $0 to ≈ $3.25 a month at 48 runs a day (A-15; Phase 10 →
+   *Released and measured on Azure*). **What is left is the owner's decision:** arm `*/30` — one
+   reviewed line in `infra/main.bicep` and a deploy (PLAN Phase 10's STOP) — or an hourly cron,
+   which stays inside the free grant whatever Azure bills. `main`'s *Run the Azure job* →
+   `scheduled` option does not dispatch until `aa4201d` lands (its label was a YAML mapping);
+   the measurement ran from the session branch.
 
 1. ~~**B-08 — the two McCathren packages go to review on `cardinality_violation`.**~~
    **Fixed 2026-09-11, root-caused with a real-model run.** Not a labelling error: a re-run of
@@ -271,6 +276,7 @@ Drive skeleton already exists (folders only), so a real September run writes int
 | 2026-09-26 | 10 | Phase 10 built and rehearsed on the live drive (PR #15), then audited: nine findings, each reproduced by a probe | Fix what unattended runs would hit |
 | 2026-09-28 | 10 | Audit follow-ups on `claude/gracious-davinci-nnkdv1`: main (#16) merged in; tie-break and month-isolation defects fixed; probes kept as tests (563 passed, 3 strict xfail); September cleaned in Drive, the rehearsal moved whole to its own root | Findings 4–6; land the branch in PR #15; merge |
 | 2026-09-29 | 10 | Findings 4–6 fixed (close-grace window, Drive retries, run lease) and every document brought up to date; the release candidate live-tested in the production environment — Azure what-if, production no-op and lease race, real-model builds in the rehearsal root on both models — 588 passed, 0 xfail | Merge the release PR; deploy; measure on Azure; arm |
+| 2026-09-29 | 10 | Released (#17), deployed, and a no-op run measured on Azure: ~60 s of process, ~100 s of execution, $0 to ≈ $3.25 a month at 48 a day (A-15). `azure-job.yml`'s `scheduled` option fixed (it did not dispatch from `main`) and its exit-code note rewritten for `reconcile` | The owner's decision: arm `*/30`, or hourly |
 
 ## Phase 0 — Repository hygiene and scaffold
 
@@ -443,7 +449,7 @@ Mirrors PLAN Phase 10; SPEC §18; D-17 – D-24.
 - [x] Open check (§18.6), cost ceiling and three-strike failure cap (§18.7). The ceiling counts only the pages that will actually be sent, so reuse lowers it; it applies to any classifier named `anthropic*` and is zero for golden.
 - [x] Status files and root summary (§18.8): every row of the table has a test; bodies carry no page text, tenant names or figures (extend the log-capture test). The page-text check extracts every line of 12+ characters from the input PDFs and asserts none reaches a status or the summary. The summary's "Last checked" line changes every run on purpose: it is the reviewer's only sign the job is still alive.
 - [x] `crr reconcile` (§18.9) with `--property`, `--period`, `--force`, `--dry-run`; soft deadline; pre-publish re-list. `crr.intake.reconcile.Reconciler` runs the v1 pipeline unchanged through a staging adapter and publishes the result itself. The duplicate check is "a version appeared since this run read the index, with the same fingerprint" — proven by a test in which a second run executes *inside* the first one's classification. 13 end-to-end scenarios over real June files (`tests/eval/test_reconcile.py`). Smoke-tested from the CLI on a scratch tree: dry run → v1 → idempotent re-run.
-- [ ] Verify against Azure docs and one real run: (a) whether a scheduled Container Apps Job execution starts while the previous one is running; (b) the monthly cost of 48 short runs a day. Record both in `QUESTIONS.md`. **Docs half done (A-14, A-15):** overlapping executions run in parallel by default — and since 2026-09-28 the run lease sends the second away, proven live on the production drive; a no-op run measured **48.8 s** against production from a session container (78 % of the free grant at 48/day). **Open:** the same measurement on Azure — needs the merge and a deploy, so it waits for the STOP.
+- [x] Verify against Azure docs and one real run: (a) whether a scheduled Container Apps Job execution starts while the previous one is running; (b) the monthly cost of 48 short runs a day. Record both in `QUESTIONS.md`. **(a), A-14:** overlapping executions run in parallel by default, and since 2026-09-28 the run lease sends the second away (proven live on the production drive). **(b), A-15, measured on Azure 2026-09-29** (`crr-quarterly-e8diyyh`): a run with nothing to build is ~60 s of process and ~100 s of execution, ~35 s of it Azure starting the replica. At 48 runs a day that is 96–160 % of the free grant, depending on whether the replica's start is billed: $0 to ≈ $3.25 a month at list price.
 - [x] Hosting (§18.10): Bicep cron and args; `azure-job.yml` gains `reconcile --force`; `build-period.yml` gains `reconcile`. The job now runs `crr reconcile --repo gdrive --classifier anthropic` with a 1800 s replica timeout, **but the cron default stays quarterly** — so no redeploy, including `Run the Azure job`'s automatic restore, can arm the 30-minute schedule before the STOP is cleared; arming is one reviewed line. `--force` went to `Build a period` (a `command` choice: `reconcile`, `reconcile --force`, `build`) rather than `azure-job.yml`: `az containerapp job update --args` cannot carry a multi-token list (A-13), and Actions runs the identical image with no job mutation to restore.
 - [x] Rehearsal in Drive: seed a month in the new layout and walk it through every status — partial upload, settle, unopenable file held, built v1, replace one component, v2 with reuse, duplicate upload superseded, delete-newest revert, closed. Record each in `PROGRESS.md`. **Done 2026-09-26 on the live shared drive, Fort Grounds / 2026-09 September**, the uploader played through the Drive API with June files under new names:
 
@@ -474,10 +480,13 @@ Mirrors PLAN Phase 10; SPEC §18; D-17 – D-24.
 - *An unrelated PDF of any length costs at most `CRR_MAX_BUILD_USD`* — **met**: the ceiling is
   checked before any model call and counts only pages that would be sent (test
   `test_the_cost_ceiling_holds_and_reuse_lowers_the_estimate`).
-- *A run with nothing to build finishes in under a minute on Azure* — **37 s from this
-  container against the live drive; not yet measured on Azure** (needs a deploy — the STOP).
-  Re-measured 2026-09-29 with the run lease and preflight: **48.8 s** against production, flat
-  with history since fix 4.
+- *A run with nothing to build finishes in under a minute on Azure* — **not met with any
+  margin.** Measured on Azure 2026-09-29: the run's own log spans **57 s** (preflight to exit),
+  the process ~60 s, the execution **~100 s** — ~35 s of Azure starting the replica before the
+  first line (A-15). From a session container it was 37 s on 2026-09-26 and 48.8 s with the
+  lease and preflight on 2026-09-29, flat with history since fix 4. What the line protected was
+  the cost, and that is $0 to ≈ $3.25 a month; checking the properties in parallel would bring
+  the process near 25 s if the line itself matters.
 - *Keyed eval unchanged at 100 %* — **met by construction**: `src/crr/classify`, `segment`,
   `resolve`, `compose`, `config/schemas`, `config/outputs` and `eval/golden` are byte-identical
   to `main`, and the prompt version is unchanged; the golden gate passes in the suite (542
@@ -589,6 +598,31 @@ Model spend for all of it: **$1.44**. The rehearsal root now holds Timber Place 
 beside Fort Grounds' v1–v6; the production root gained only its lease file and a refreshed
 summary. Why step 9: this container sets `CRR_MODEL=claude-opus-5`, while the Azure job sets no
 model and so runs the default, `claude-opus-5-5`.
+
+### Released and measured on Azure (2026-09-29)
+
+| # | What | Result |
+|---|---|---|
+| 1 | Release PR merged to `main` ([#17](https://github.com/arcticbio/cornerstone.accounting.reports/pull/17), `34351e2`) | CI green, `:build-v1` republished ([run 36503470455](https://github.com/arcticbio/cornerstone.accounting.reports/actions/runs/36503470455)) |
+| 2 | *Deploy to Azure* from `main`, *Preview* unticked ([run 36503944061](https://github.com/arcticbio/cornerstone.accounting.reports/actions/runs/36503944061)) | `crr-quarterly` now runs `reconcile --repo gdrive --classifier anthropic`, replica timeout 1800 s; **cron still quarterly** — nothing armed |
+| 3 | *Run the Azure job* → `scheduled` ([run 36504263073](https://github.com/arcticbio/cornerstone.accounting.reports/actions/runs/36504263073)) | `crr-quarterly-e8diyyh`: **Succeeded**, exit 0, `0 version(s) built`; the arguments were not mutated, so no restore ran |
+| 4 | The production root, read back afterwards | the lease names replica `crr-quarterly-e8diyyh-9nfxz`, acquired 00:41:50, released 00:42:44; the summary says *Last checked 2026-09-29 00:41 UTC*; nothing else changed |
+
+The timeline of step 3, from the execution's own logs:
+
+| UTC | Event | Time before it |
+|---|---|---|
+| 00:41:11 | execution started | |
+| 00:41:50.0 | `repository.preflight_ok`, the first log line | 39 s — ~35 s of Azure starting the replica and pulling the image, then Python and the preflight |
+| 00:41:57.6 | `intake.lease_acquired` | 7.6 s (3 s settle) |
+| 00:42:47.1 | `0 version(s) built`, exit 0 | 49.5 s — 16 open months, ~135 Drive calls one after another, lease released at 00:42:44 |
+| by 00:42:58 | `Succeeded` | polled every 20 s |
+
+**~60 s of process, ~100 s of execution.** What that costs at 48 runs a day — $0 if Azure bills
+the process, ≈ $3.25 a month if it bills the whole execution — and the three levers that reduce
+it are in QUESTIONS A-15. Finding the step-3 option broken on `main` (its label held `: `, so
+YAML read a mapping and dispatch refused it) is why the run came from the session branch; fixed
+in `aa4201d` with a test that fails on the old file.
 
 ## Eval results (append newest first)
 
