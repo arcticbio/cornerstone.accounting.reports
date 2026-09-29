@@ -157,6 +157,21 @@ def decide(
     return Verdict(Kind.BUILD, None, "Ready to build.", fp)
 
 
+def report_missing(entry: VersionEntry, fp: str | None) -> Verdict:
+    """The files have not changed since the standing version, but its PDF has gone from
+    `output/` — moved, renamed or deleted by someone. Say so rather than `(current)`."""
+    review = entry.status is BuildStatus.NEEDS_REVIEW
+    base = f"Needs review (v{entry.version})" if review else f"Built v{entry.version}"
+    return Verdict(
+        Kind.REVIEW if review else Kind.CURRENT,
+        f"{base} - report file missing",
+        f'v{entry.version} was published as "{entry.output_file}", but no file of that name is '
+        "in this output folder now. If it was removed by mistake, restore it from the shared "
+        "drive's Trash; a forced rebuild publishes the same files again as a new version.",
+        fp,
+    )
+
+
 def deferred(state: MonthState, fp: str | None) -> Verdict:
     """A `BUILD` verdict the run had no time left to start (SPEC §18.9 step 5). Saying so beats
     leaving the last status up: it would still read "Waiting for uploads to settle"."""

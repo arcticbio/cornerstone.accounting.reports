@@ -1079,6 +1079,7 @@ from the folder listing:
 | `STATUS - Ready - building on the next run.txt` | ready, but this run reached its time limit before starting the build (§18.9 step 5); the next run builds it |
 | `STATUS - Built v2 (current).txt` | newest build is `BUILT` and reflects the current files |
 | `STATUS - Needs review (v2).txt` | newest build is `NEEDS_REVIEW` |
+| `STATUS - Built v2 - report file missing.txt` | the files have not changed since v2, but v2's PDF is no longer in `output/` — moved, renamed or deleted (checked by name on every run; `Needs review (v2) - …` likewise). Nothing is rebuilt on its own: restore the file, or force a rebuild |
 | `STATUS - Built v2 - newer files waiting.txt` | v2 stands, but the files have changed since and the next build is waiting (a required file missing, or settling) |
 | `STATUS - Built v2 - newer files held.txt` | … and a newer file cannot be opened, or would cost too much: someone should look (each of these three reads `Needs review (v2) - …` when the standing build needs review) |
 | `STATUS - Built v2 - newer files failed, will retry.txt` | … and building from them raised; the next run retries |

@@ -357,6 +357,35 @@ def test_a_deferred_update_keeps_the_version_that_stands_in_its_status(world: Wo
     assert world.status() == "STATUS - Built v2 (current).txt"
 
 
+def test_a_report_deleted_from_output_is_named_in_the_status(world: World) -> None:
+    """Live-test finding F3: a reviewer trashed the published v1 and the status went on saying
+    `Built v1 (current)` for a report nobody could find."""
+    world.upload_all()
+    world.later(minutes=61)
+    world.run()
+    pdf = next(n for n in world.output() if n.endswith(" - v1.pdf"))
+    kept = (world.month() / "output" / pdf).read_bytes()
+    (world.month() / "output" / pdf).unlink()
+    calls = len(world.classifier.calls)
+    world.run()
+    assert world.status() == "STATUS - Built v1 - report file missing.txt"
+    assert f'"{pdf}"' in world.body() and "Trash" in world.body()
+    assert len(world.classifier.calls) == calls  # nothing is rebuilt on its own
+
+    (world.month() / "output" / pdf).write_bytes(kept)  # restored from the Trash
+    world.run()
+    assert world.status() == "STATUS - Built v1 (current).txt"
+
+
+def test_a_forced_rebuild_republishes_a_deleted_report(world: World) -> None:
+    world.upload_all()
+    world.later(minutes=61)
+    world.run()
+    (world.month() / "output" / next(n for n in world.output() if n.endswith(" - v1.pdf"))).unlink()
+    world.run(force=True)
+    assert world.status() == "STATUS - Built v2 (current).txt"
+
+
 def test_force_rebuilds_unchanged_files(world: World) -> None:
     world.upload_all()
     world.later(minutes=61)

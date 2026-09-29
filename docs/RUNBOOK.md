@@ -76,6 +76,7 @@ v2.pdf` and every earlier version — and **one** status file. Read its name fir
 |---|---|---|
 | `STATUS - Built v2 (current).txt` | v2 was built from exactly the files now in the folders | Collect v2 |
 | `STATUS - Needs review (v2).txt` | v2 was built, but something was ambiguous and the system declined to guess | Read `REVIEW - v2.md`, check the pages it names — [below](#handling-a-review) |
+| `STATUS - Built v2 - report file missing.txt` | v2's PDF is no longer in `output/` — someone moved, renamed or deleted it | Restore it from the shared drive's Trash (or put its name back); or *Build a period* → `reconcile --force` to publish the same files again as v3 |
 | `STATUS - Waiting for Balance Sheet, Profit and Loss.txt` | a required document has not arrived | Nothing, or chase whoever owes it |
 | `STATUS - Waiting for uploads to settle.txt` | something was uploaded in the last hour | Nothing; it builds on its own |
 | `STATUS - Ready - building on the next run.txt` | everything is here and settled; the last run was busy and ran out of time | Nothing; the next run, within 30 minutes, builds it |

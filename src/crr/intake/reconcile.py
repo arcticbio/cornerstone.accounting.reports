@@ -38,6 +38,7 @@ from crr.intake.decide import (
     decide,
     deferred,
     held,
+    report_missing,
 )
 from crr.intake.files import choose
 from crr.intake.lease import Lease, parse
@@ -378,6 +379,8 @@ class Reconciler:
                 "Waiting for " + ", ".join(missing),
                 "Nothing is in this month's folders any more.",
             )
+        if verdict.kind in (Kind.CURRENT, Kind.REVIEW):
+            verdict = self._report_still_there(month, verdict)
         outcome = Outcome(prop.id, period, verdict.kind, verdict.headline)
 
         if verdict.build:
@@ -402,6 +405,25 @@ class Reconciler:
         if verdict.headline is not None and not options.dry_run:
             self._write_status(month, verdict)
         return outcome
+
+    def _report_still_there(self, month: _Month, verdict: Verdict) -> Verdict:
+        """Nothing changed since the standing version; check its PDF is still in `output/`.
+
+        One listing of `output/` per month that has a version, on every run — the price of a
+        status that does not claim a report nobody can find (live-test finding F3).
+        """
+        latest = month.state.latest
+        if latest is None or latest.output_file in self.store.output_names(
+            month.prop, month.period
+        ):
+            return verdict
+        log.warning(
+            "intake.report_missing",
+            property=month.prop.id,
+            period=month.period,
+            version=latest.version,
+        )
+        return report_missing(latest, verdict.fingerprint)
 
     def _look(self, month: _Month) -> tuple[ComponentState, ...]:
         return tuple(
