@@ -170,3 +170,22 @@ are in `evaluation.md` (from `eval/live/evaluate.py`).
   Timber Place still waiting on their 09:10/09:31 uploads, as predicted. S1's correction
   withdrawn at 10:10 (the revised Balance Sheet trashed). 44 met, 3 late, 0 missed, 3
   withdrawn, 21 pending; $8.13; 106/123 actions, 0 failed.
+- **10:47** · Watchdog. The 10:30 run `crr-quarterly-29844630` (10:30:23–10:34:32) built Fort
+  Grounds September **v4** — the revised Balance Sheet trashed at 10:10, so the month is back
+  on v2's files and a new version says so (1 call: v3's index did not hold the original
+  sheet's labels; $0.018) — and Lolo Peak September **v1**, its first build, with the
+  schedule moved in from October (8/6 = golden, 18 calls, $0.36). Timber Place September's
+  password-protected Balance Sheet is `Built v1 - newer files held`. All three met.
+  **One prediction of mine was wrong: River Falls October was not built at 10:30.** The run
+  judges every month's settle window against one clock, the time it *started* (10:30:23 —
+  `now` is taken once in `Reconciler._run`), not the time it reaches the month. The Balance
+  Sheet uploaded at 09:31:12 was 59 min 11 s old by that clock, so the month waited. My
+  09:24 revision assumed the clock at the time the run reached River Falls. The system is
+  consistent (a file uploaded during a run is never "settled" by it); SPEC §18.5 only says
+  "within the last 60 minutes" without saying from when — a one-line doc clarification for
+  the report (F5). R1's reissue at 10:45 now restarts this month's settle, so its v2 comes
+  at 12:00 with the reissued Balance Sheet; O6 at 10:30 will score MISSED as a wrong
+  prediction. For stakeholders the rule reads: a report is built by the first run starting
+  60+ minutes after the month's last upload — 60 to 90 minutes, plus the build.
+  47 met, 3 late, 0 missed, 1 not yet (O6), 3 withdrawn, 17 pending; $8.50; 107/123 actions,
+  0 failed. The S5 protected file was trashed on time at 10:40; R1 (16 reissues) starts 10:45.
