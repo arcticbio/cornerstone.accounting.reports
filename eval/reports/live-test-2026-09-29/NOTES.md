@@ -214,3 +214,19 @@ are in `evaluation.md` (from `eval/live/evaluate.py`).
   held the lease since 12:00:22 and is still building at 12:14 (sixteen months due, each one
   new Balance Sheet to classify, the rest reused). Its soft deadline stops new builds from
   12:20:22; anything left goes to 12:30. Conductor healthy; results at the next check.
+- **12:22** · **R1 passed: sixteen rebuilds in one run, all golden, 31 cents.** The 12:00 run
+  `crr-quarterly-29844720` (12:00:22–12:20:00, 19 min 38 s) rebuilt every month, September's
+  eight then October's, each with the reissued Balance Sheet: one model call apiece (two for
+  River Falls October, whose corrected P&L had never been built), everything else reused —
+  17 calls, $0.31, 259 pages, every shape exactly golden (Lolo Peak October 7/5: its schedule
+  moved to September). River Falls October's v2 carries both of the day's corrections. The
+  last build started at 12:19:08, 77 s inside the 1200 s soft deadline, so nothing deferred;
+  sixteen one-file rebuilds are about what one run holds. Where the time went: the classify
+  step 567 s — almost all the orientation cross-check over 259 pages of reused labels, not the
+  17 calls — preprocess 210 s (OCR of the two scanned reports, ~70 s and ~95 s; October's
+  identical bytes then hit the run's OCR cache in 9–11 s), and ~400 s of Drive I/O.
+  **Capacity note for the report:** on Azure's CPU a scanned report costs ~70–95 s of OCR
+  per build and the orientation check ~1.5 s a page even when nothing is classified afresh;
+  skipping that check for labels reused on identical bytes would roughly halve a crunch
+  like this one. Predictions: all 16 R1 met — **64 met, 3 late, 1 missed (O6, my wrong
+  settle-clock prediction), 3 withdrawn; every prediction scored.** $8.81 spent.

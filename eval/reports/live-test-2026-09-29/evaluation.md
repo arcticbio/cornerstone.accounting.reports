@@ -1,4 +1,4 @@
-Scored 71 predictions — late: 3, met: 48, not yet: 1, pending: 16, withdrawn: 3
+Scored 71 predictions — MISSED: 1, late: 3, met: 64, withdrawn: 3
 
 | Scenario | Property | Month | Tick | Expected | v | Actual | v | Verdict | Note |
 |---|---|---|---|---|---|---|---|---|---|
@@ -46,7 +46,7 @@ Scored 71 predictions — late: 3, met: 48, not yet: 1, pending: 16, withdrawn: 
 | O6 | river-falls | 2026-10 | 07:30 | Built v1 (current) | 1 | Built v1 (current) | 1 | **met** |  |
 | O6 | river-falls | 2026-10 | 09:00 | Built v2 (current) | 2 | Built v1 - newer files waiting | 1 | **withdrawn** | the corrected P&L — withdrawn: the 09:00 run was displaced by O5b; the 09:31 Balance Sheet lands before the 09:30 run reaches it |
 | O6 | river-falls | 2026-10 | 09:30 | Built v1 - newer files waiting | 1 | Built v1 - newer files waiting | 1 | **met** | added 09:25 |
-| O6 | river-falls | 2026-10 | 10:30 | Built v2 (current) | 2 | Built v1 - newer files waiting | 1 | **not yet** | both corrections, added |
+| O6 | river-falls | 2026-10 | 10:30 | Built v2 (current) | 2 | Built v1 - newer files waiting | 1 | **MISSED** | both corrections, added |
 | O7 | bridgewater | 2026-10 | 07:30 | Built v1 (current) | 1 | Built v1 (current) | 1 | **met** |  |
 | O7 | bridgewater | 2026-10 | 09:00 | Built v2 (current) | 2 | Built v1 - newer files waiting | 1 | **late** | Ben's, the newer, wins |
 | O8 | salmon-crossing | 2026-10 | 07:30 | Built v1 (current) | 1 | Built v1 (current) | 1 | **met** |  |
@@ -57,19 +57,19 @@ Scored 71 predictions — late: 3, met: 48, not yet: 1, pending: 16, withdrawn: 
 | A2 | lolo-peak-village | folder:2026-08 | 06:30 | - | 0 | - | 0 | **met** | a proper 2026-08 August appears beside it; the file is never read |
 | A3 | mullan-crossing | folder:August 2026 | 06:30 | - | 0 | - | 0 | **met** | ignored entirely |
 | J1 | waypointe | folder:2026-07 July | 06:30 | - | 0 | - | 0 | **met** | closed: never read |
-| R1 | fort-grounds | 2026-09 | 12:00 | - | - | - | - | **pending** | rebuilt with the reissued Balance Sheet |
-| R1 | lolo-peak-village | 2026-09 | 12:00 | - | - | - | - | **pending** | rebuilt with the reissued Balance Sheet |
-| R1 | mullan-crossing | 2026-09 | 12:00 | - | - | - | - | **pending** | rebuilt with the reissued Balance Sheet |
-| R1 | waypointe | 2026-09 | 12:00 | - | - | - | - | **pending** | rebuilt with the reissued Balance Sheet |
-| R1 | timber-place | 2026-09 | 12:00 | - | - | - | - | **pending** | rebuilt with the reissued Balance Sheet |
-| R1 | river-falls | 2026-09 | 12:00 | - | - | - | - | **pending** | rebuilt with the reissued Balance Sheet |
-| R1 | bridgewater | 2026-09 | 12:00 | - | - | - | - | **pending** | rebuilt with the reissued Balance Sheet |
-| R1 | salmon-crossing | 2026-09 | 12:00 | - | - | - | - | **pending** | rebuilt with the reissued Balance Sheet |
-| R1 | fort-grounds | 2026-10 | 12:00 | - | - | - | - | **pending** | rebuilt with the reissued Balance Sheet |
-| R1 | lolo-peak-village | 2026-10 | 12:00 | - | - | - | - | **pending** | rebuilt with the reissued Balance Sheet |
-| R1 | mullan-crossing | 2026-10 | 12:00 | - | - | - | - | **pending** | rebuilt with the reissued Balance Sheet |
-| R1 | waypointe | 2026-10 | 12:00 | - | - | - | - | **pending** | rebuilt with the reissued Balance Sheet |
-| R1 | timber-place | 2026-10 | 12:00 | - | - | - | - | **pending** | rebuilt with the reissued Balance Sheet |
-| R1 | river-falls | 2026-10 | 12:00 | - | - | - | - | **pending** | rebuilt with the reissued Balance Sheet |
-| R1 | bridgewater | 2026-10 | 12:00 | - | - | - | - | **pending** | rebuilt with the reissued Balance Sheet |
-| R1 | salmon-crossing | 2026-10 | 12:00 | - | - | - | - | **pending** | rebuilt with the reissued Balance Sheet |
+| R1 | fort-grounds | 2026-09 | 12:00 | - | - | Built v5 (current) | 5 | **met** | rebuilt with the reissued Balance Sheet |
+| R1 | lolo-peak-village | 2026-09 | 12:00 | - | - | Built v2 (current) | 2 | **met** | rebuilt with the reissued Balance Sheet |
+| R1 | mullan-crossing | 2026-09 | 12:00 | - | - | Built v2 (current) | 2 | **met** | rebuilt with the reissued Balance Sheet |
+| R1 | waypointe | 2026-09 | 12:00 | - | - | Built v3 (current) | 3 | **met** | rebuilt with the reissued Balance Sheet |
+| R1 | timber-place | 2026-09 | 12:00 | - | - | Built v2 (current) | 2 | **met** | rebuilt with the reissued Balance Sheet |
+| R1 | river-falls | 2026-09 | 12:00 | - | - | Built v2 (current) | 2 | **met** | rebuilt with the reissued Balance Sheet |
+| R1 | bridgewater | 2026-09 | 12:00 | - | - | Built v3 (current) | 3 | **met** | rebuilt with the reissued Balance Sheet |
+| R1 | salmon-crossing | 2026-09 | 12:00 | - | - | Built v3 (current) | 3 | **met** | rebuilt with the reissued Balance Sheet |
+| R1 | fort-grounds | 2026-10 | 12:00 | - | - | Built v2 (current) | 2 | **met** | rebuilt with the reissued Balance Sheet |
+| R1 | lolo-peak-village | 2026-10 | 12:00 | - | - | Built v3 (current) | 3 | **met** | rebuilt with the reissued Balance Sheet |
+| R1 | mullan-crossing | 2026-10 | 12:00 | - | - | Built v3 (current) | 3 | **met** | rebuilt with the reissued Balance Sheet |
+| R1 | waypointe | 2026-10 | 12:00 | - | - | Built v2 (current) | 2 | **met** | rebuilt with the reissued Balance Sheet |
+| R1 | timber-place | 2026-10 | 12:00 | - | - | Built v4 (current) | 4 | **met** | rebuilt with the reissued Balance Sheet |
+| R1 | river-falls | 2026-10 | 12:00 | - | - | Built v2 (current) | 2 | **met** | rebuilt with the reissued Balance Sheet |
+| R1 | bridgewater | 2026-10 | 12:00 | - | - | Built v3 (current) | 3 | **met** | rebuilt with the reissued Balance Sheet |
+| R1 | salmon-crossing | 2026-10 | 12:00 | - | - | Built v3 (current) | 3 | **met** | rebuilt with the reissued Balance Sheet |
