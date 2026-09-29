@@ -143,3 +143,28 @@ A file must open as a PDF; nothing else about its content is checked (D-19). Spe
 a per-build cost ceiling (pages × a measured per-page rate), a three-strike failure cap and a
 spend limit on the Anthropic workspace — none of which depends on a document's format.
 An unrelated upload costs at most the ceiling, and the review gate usually flags it.
+
+**D-25 · The folder also declares which property a file belongs to. A report filed under the
+wrong property is built as that property's; nothing checks the name.**
+Owner decision, 2026-09-29, after the production live test built Salmon Crossing's September
+report from Bridgewater's owner report (finding F1). Managers name a property their own way
+(`405 - Salmon Crossing - 2000 SW Salmon Ave Redmond, OR 97756`, `Timber Place by the Lake
+(1000)`, `Lolo Peak Village LP`), scans garble names, and names change: a check that the pages
+name the property would hold genuine reports and push stakeholders to change how they work. As
+for a wrong or wrong-month document (D-19), the reviewer is the check; the right upload replaces
+it with the next version. *Consequence:* no property-identity check. The one place a name is
+matched is the Rent Manager schema's `Property:` line, which must split WayPointe's report
+between its two records (SPEC §5 rule 3); as a side effect it also sends a Missoula report whose entity
+name matches no configured record to review (`unresolved_record`) until `config/properties.yaml`
+is updated.
+
+**D-26 · The settle window is 30 minutes (was 60).**
+Owner decision, 2026-09-29, after the production live test. A month is built by the first run
+that starts 30 minutes after its last upload, so on the 30-minute schedule a report appears 30 to
+60 minutes after the last file instead of 60 to 90. The cost of settling too early is a version
+that the next upload supersedes, and the live test showed those are cheap and plain: a one-file
+follow-up reuses every other label (about 2 cents), numbers continue, and the newest is marked
+current. Thirty minutes still covers someone uploading several files one after another.
+*Consequence:* `CRR_SETTLE_MINUTES` defaults to 30. Revisit after the first real month-end: every
+version's index entry records its inputs' upload times, so how often a version was superseded
+within the hour can be counted.

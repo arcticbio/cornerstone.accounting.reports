@@ -14,7 +14,9 @@ from crr.intake.decide import (
     after_build,
     closed,
     decide,
+    deferred,
     held,
+    report_missing,
 )
 from crr.intake.files import SUPERSEDED_PREFIX, IntakeFile, choose, strip_prefix
 from crr.intake.state import Attempt, InputSig, MonthState, VersionEntry, fingerprint
@@ -365,3 +367,31 @@ class TestStatusFile:
 @pytest.mark.parametrize("minutes", [0, 59])
 def test_settle_boundary(minutes: int) -> None:
     assert run(full(), now=T0 + timedelta(minutes=minutes)).kind is Kind.SETTLING
+
+
+# -- live-test findings F2 and F3 (2026-09-29) --------------------------------------------
+@pytest.mark.parametrize(
+    ("status", "headline", "kind"),
+    [
+        (BuildStatus.BUILT, "Built v2 - report file missing", Kind.CURRENT),
+        (BuildStatus.NEEDS_REVIEW, "Needs review (v2) - report file missing", Kind.REVIEW),
+    ],
+)
+def test_a_missing_report_keeps_the_standing_versions_kind(
+    status: BuildStatus, headline: str, kind: Kind
+) -> None:
+    entry = built((), version=2, status=status).latest
+    assert entry is not None
+    verdict = report_missing(entry, "fp")
+    assert (verdict.headline, verdict.kind, verdict.build) == (headline, kind, False)
+    assert '"x - v2.pdf"' in verdict.reason
+
+
+def test_a_deferred_build_names_the_next_run() -> None:
+    assert deferred(MonthState(), "fp").headline == "Ready - building on the next run"
+    standing = built((), version=3, status=BuildStatus.NEEDS_REVIEW)
+    assert (
+        deferred(standing, "fp").headline
+        == "Needs review (v3) - newer files ready, building next run"
+    )
+    assert deferred(standing, "fp").kind is Kind.READY

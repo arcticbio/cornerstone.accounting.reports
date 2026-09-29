@@ -59,7 +59,8 @@ ones. Whatever the answer, it rewrites one status file whose **name** says where
 4. **To replace a file, upload the new one into the same folder.** You do not need to delete the
    old one: the newest upload is used, and the older one is renamed `SUPERSEDED - …`.
 5. **To go back to an older file, delete the newer one.** The older one is used again.
-6. That is all. A report is built about an hour after the last upload. Open `output/` to see
+6. That is all. A report is built 30 to 60 minutes after the last upload, plus a minute or two
+   to build. Open `output/` to see
    the status file, whose name says what is happening.
 
 Only PDFs are used. Photos, Word or Excel files are ignored (and the status says so). If a PDF
@@ -76,12 +77,15 @@ v2.pdf` and every earlier version — and **one** status file. Read its name fir
 |---|---|---|
 | `STATUS - Built v2 (current).txt` | v2 was built from exactly the files now in the folders | Collect v2 |
 | `STATUS - Needs review (v2).txt` | v2 was built, but something was ambiguous and the system declined to guess | Read `REVIEW - v2.md`, check the pages it names — [below](#handling-a-review) |
+| `STATUS - Built v2 - report file missing.txt` | v2's PDF is no longer in `output/` — someone moved, renamed or deleted it | Restore it from the shared drive's Trash (or put its name back); or *Build a period* → `reconcile --force` to publish the same files again as v3 |
 | `STATUS - Waiting for Balance Sheet, Profit and Loss.txt` | a required document has not arrived | Nothing, or chase whoever owes it |
-| `STATUS - Waiting for uploads to settle.txt` | something was uploaded in the last hour | Nothing; it builds on its own |
+| `STATUS - Waiting for uploads to settle.txt` | something was uploaded in the last 30 minutes | Nothing; it builds on its own |
+| `STATUS - Ready - building on the next run.txt` | everything is here and settled; the last run was busy and ran out of time | Nothing; the next run, within 30 minutes, builds it |
 | `STATUS - Held - Balance Sheet cannot be opened.txt` | a file is not a readable PDF, or is password-protected | Ask for a readable PDF in that folder |
 | `STATUS - Held - would cost about $4.10, over the $3.00 limit.txt` | a file is far longer than it should be — usually the wrong document | Check each folder holds the right file |
 | `STATUS - Built v2 - newer files waiting.txt` | v2 stands; newer files are waiting (missing or settling) | v2 is still usable; the next version is coming |
 | `STATUS - Built v2 - newer files held.txt` | v2 stands; a newer file is held (see the body) | As for *Held* above |
+| `STATUS - Built v2 - newer files ready, building next run.txt` | v2 stands; the newer files are ready and the next run builds them | v2 is still usable; the next version comes within 30 minutes |
 | `STATUS - Failed (attempt 1 of 3), will retry.txt` | the build raised an error; it retries every 30 minutes | Nothing yet |
 | `STATUS - Failed 3 times, stopped retrying.txt` | it failed three times on the same files | See [failure modes](#failure-modes-and-what-to-do-about-them) |
 | `STATUS - Closed 2026-11-11 (v4 is final).txt` | the month is no longer watched; later changes are ignored | Nothing |
@@ -252,7 +256,7 @@ and ≈ $3.25 a month, depending on whether Azure bills the replica's start (A-1
 run *Deploy to Azure* with *Preview* unticked. Every deploy applies that default, including the
 restore *Run the Azure job* performs, so a hand edit in the portal lasts only until the next
 one. An hourly cron, `0 * * * *`, stays inside the free grant whatever Azure bills; after the
-60-minute settle a build then waits up to an hour rather than half an hour. **To pause it**, run
+30-minute settle a build then waits up to 90 minutes rather than an hour. **To pause it**, run
 *Deploy to Azure* with *Arm the schedule* unticked: the cron parks on 31 February, manual starts
 still work, and *Run the Azure job* keeps it paused.
 

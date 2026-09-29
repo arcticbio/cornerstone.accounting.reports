@@ -606,6 +606,10 @@ If the arbiter is absent (no key, or a golden build) or does not return a single
 classifier's label stands and the build raises `orientation_uncertain` (§6.8). Nothing is
 guessed: an unsettled page goes to a human (D-12).
 
+The check runs on labels made afresh. Labels carried over from the previous version for the same
+bytes (§18.7, *Reuse*) were checked when they were made; they are not checked again, and what
+that check left unsettled is raised again.
+
 The same holds when OSD itself cannot be asked — no `tesseract`, no `tesseract-ocr-osd`, an
 unparseable answer. A check that was asked for and could not run is not a check that passed, so
 a page the classifier calls non-upright raises `orientation_uncertain` rather than being turned
@@ -774,7 +778,7 @@ Never log page text or image bytes. Log document sha256s, not paths, at INFO.
 | `CRR_PRICE_TABLE_JSON` | built-in | override `{model: {input, cache_read, cache_write, output}}` USD per MTok |
 | `CRR_OCRMYPDF_BIN` | `ocrmypdf` | ocrmypdf entry point; an escape hatch for environments where the distribution's entry point is broken or off PATH |
 | `CRR_INTAKE_ROOT` | `<work_dir>/intake` | where `crr reconcile --repo local` reads and writes (§18) |
-| `CRR_SETTLE_MINUTES` | `60` | build only once nothing in a month's folders changed for this long (§18.5) |
+| `CRR_SETTLE_MINUTES` | `30` | build only once nothing in a month's folders changed for this long (§18.5; 60 until 2026-09-29, D-26) |
 | `CRR_LOOKBACK_DAYS` | `42` | a month is watched until this many days after its last day (§18.3) |
 | `CRR_CLOSE_GRACE_DAYS` | `14` | a closed month is read, to write its final status, only this long past its window (§18.3) |
 | `CRR_FOLDERS_AHEAD` | `1` | month folders are prepared this many months ahead (§18.3) |
@@ -990,15 +994,15 @@ A property-month is **ready** when all of these hold:
 | Condition | Rule | Status while not met |
 |---|---|---|
 | Complete | every `required` component has a current file | `Waiting for <components>` |
-| Settled | no PDF in any component folder has an upload time within the last `CRR_SETTLE_MINUTES` (60) | `Waiting for uploads to settle (last upload <time>)` |
+| Settled | no PDF in any component folder has an upload time within the last `CRR_SETTLE_MINUTES` (30) | `Waiting for uploads to settle (last upload <time>)` |
 | Opens | every current file opens as a PDF (§18.6) | `Held - <reason>` |
 
-"The last 60 minutes" is measured from the moment the run starts: one clock for every month in
-the run, so a file uploaded while a run is working is never settled by that run. A month is
-therefore built by the first run that *starts* at least 60 minutes after its last upload — on
-the 30-minute schedule, 60 to 90 minutes after the last file, plus the build. (Made explicit
-after the live test of 2026-09-29, where a file 59 min 11 s old at the run's start waited for
-the next run, as the code intends.)
+"The last `CRR_SETTLE_MINUTES`" is measured from the moment the run starts: one clock for every
+month in the run, so a file uploaded while a run is working is never settled by that run. A month
+is therefore built by the first run that *starts* at least 30 minutes after its last upload — on
+the 30-minute schedule, 30 to 60 minutes after the last file, plus the build. (Made explicit
+after the live test of 2026-09-29, where — with the window then at 60 minutes — a file 59 min
+11 s old at the run's start waited for the next run, as the code intends.)
 
 An `optional` component with no file is simply left out, and the status and manifest say the
 report was built without it. If it arrives later, the inputs have changed and the next run
@@ -1025,6 +1029,13 @@ What this accepts, deliberately:
 - **A document for the wrong month is not detected.** The reviewer is the check. The manifest and
   status name every file used and when it was uploaded, so the question is answerable from the
   `output/` folder.
+- **A document for the wrong property is built as that property's report** (D-25). Managers
+  name properties their own way, scans garble names and names change, so a name check would hold
+  good reports. The reviewer is the check, as for the wrong month. Rent Manager reports are the
+  exception by construction: their `Property:` line is matched to split WayPointe's two records
+  (§5 rule 3), so a Missoula report for another entity usually lands as `NEEDS REVIEW`
+  (`unresolved_record`) — a side effect, not a guarantee. Cobalt's and McCathren's schemas
+  carry no record qualifier, and neither do Cornerstone's own files.
 
 ### 18.7 When to build, and versions
 
@@ -1045,7 +1056,12 @@ are. Every build uses the code current at the time it runs.
 
 **Reuse.** A document whose `sha256`, schema `sha256`, model and `prompt_version` match an input
 in the previous manifest reuses that manifest's page classifications instead of re-classifying.
-Correcting a 1-page Balance Sheet does not re-classify a 26-page PM source.
+Correcting a 1-page Balance Sheet does not re-classify a 26-page PM source. Nor does it cross-check
+the reused pages' orientation again (§7.6): the stored labels are the cross-checked ones, made
+from these same bytes, so the check's corrections are already in them. Whatever it left open —
+each `orientation_uncertain` the previous build raised for that document — is raised again, so
+an unsettled page still goes to a human. (Added after the live test of 2026-09-29, where sixteen
+one-call rebuilds took 19 min 38 s, most of it re-running the check over 259 reused pages.)
 
 **Cost ceiling.** Before classifying, the estimated cost of the pages that will actually be sent
 (`pages × CRR_COST_PER_PAGE_USD`, default 0.03 from the measured $0.0275) must be below
@@ -1067,13 +1083,16 @@ from the folder listing:
 | Name | Meaning |
 |---|---|
 | `STATUS - Waiting for Balance Sheet, Profit and Loss.txt` | required components missing |
-| `STATUS - Waiting for uploads to settle.txt` | an upload in the last 60 minutes |
+| `STATUS - Waiting for uploads to settle.txt` | an upload in the last 30 minutes |
 | `STATUS - Held - <reason>.txt` | a file does not open, or the build would exceed the cost ceiling; nothing built |
+| `STATUS - Ready - building on the next run.txt` | ready, but this run reached its time limit before starting the build (§18.9 step 5); the next run builds it |
 | `STATUS - Built v2 (current).txt` | newest build is `BUILT` and reflects the current files |
 | `STATUS - Needs review (v2).txt` | newest build is `NEEDS_REVIEW` |
+| `STATUS - Built v2 - report file missing.txt` | the files have not changed since v2, but v2's PDF is no longer in `output/` — moved, renamed or deleted (checked by name on every run; `Needs review (v2) - …` likewise). Nothing is rebuilt on its own: restore the file, or force a rebuild |
 | `STATUS - Built v2 - newer files waiting.txt` | v2 stands, but the files have changed since and the next build is waiting (a required file missing, or settling) |
 | `STATUS - Built v2 - newer files held.txt` | … and a newer file cannot be opened, or would cost too much: someone should look (each of these three reads `Needs review (v2) - …` when the standing build needs review) |
 | `STATUS - Built v2 - newer files failed, will retry.txt` | … and building from them raised; the next run retries |
+| `STATUS - Built v2 - newer files ready, building next run.txt` | … and they are ready, but this run ran out of time before building them (§18.9 step 5) |
 | `STATUS - Failed (attempt 1 of 3), will retry.txt` | building raised and no earlier version stands; the next run retries |
 | `STATUS - Failed 3 times, stopped retrying.txt` | §18.7 |
 | `STATUS - Closed 2026-11-11 (v2 is final).txt` | past the lookback window; later changes ignored |
@@ -1117,7 +1136,10 @@ crr reconcile [--repo gdrive] [--classifier anthropic] [--property ID]... [--per
    store error — is that month's outcome, `Could not be checked - will retry`, and the run
    moves on. Only a problem with the run itself (the classifier cannot be built) stops it.
 5. Stop *starting* builds after `CRR_RUN_SOFT_DEADLINE_S` (1200 s). Whatever is left is picked
-   up next run.
+   up next run, and its status says so — `Ready - building on the next run`, or `Built v2 -
+   newer files ready, building next run` — rather than keeping the headline of an earlier run.
+   (Until 2026-09-29 the status was left as it was: a month deferred by the October crunch of
+   the live test went on reading `Waiting for uploads to settle` for a run after it had settled.)
 6. Write the root summary: a line per property, then every month that could not be checked.
    Release the lease.
    Exit 0 — per-property outcomes are statuses, not exit codes — unless a month could not be
@@ -1151,7 +1173,7 @@ the failure cap. It does not skip the completeness or open checks, nor the settl
   owner cleared Phase 10's STOP on 2026-09-29, so that no redeploy could arm the 30-minute
   schedule by accident. The deploy chain is unchanged: merge to `main` → `:build-v1` →
   `deploy.yml`.
-- Settings added to §12: `CRR_SETTLE_MINUTES` 60, `CRR_LOOKBACK_DAYS` 42, `CRR_CLOSE_GRACE_DAYS` 14, `CRR_FOLDERS_AHEAD` 1,
+- Settings added to §12: `CRR_SETTLE_MINUTES` 60 (30 since 2026-09-29, D-26), `CRR_LOOKBACK_DAYS` 42, `CRR_CLOSE_GRACE_DAYS` 14, `CRR_FOLDERS_AHEAD` 1,
   `CRR_RUN_SOFT_DEADLINE_S` 1200, `CRR_MAX_BUILD_USD` 3.00, `CRR_COST_PER_PAGE_USD` 0.03,
   `CRR_MAX_FAILED_ATTEMPTS` 3.
 
@@ -1159,7 +1181,8 @@ the failure cap. It does not skip the completeness or open checks, nor the settl
 
 - **Drive push notifications (`changes.watch`) to an endpoint that starts the job.** Adds an
   always-on HTTPS endpoint, channel renewal (channels expire), and still needs polling as a
-  backstop. Its latency gain is erased by the 60-minute settle window.
+  backstop. Its latency gain — at most one 30-minute interval, on top of the settle window it
+  must still wait out — does not pay for an always-on endpoint.
 - **Logic Apps' Google Drive trigger.** Its connector needs an interactive OAuth consent, which
   breaks the automated GitHub → Azure deploy chain.
 - **Identifying components by content.** The folder is the declaration (§18.6).

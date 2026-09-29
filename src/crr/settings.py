@@ -109,7 +109,7 @@ class Settings(BaseSettings):
     #: Where `crr reconcile --repo local` reads and writes; defaults to `<work_dir>/intake`.
     intake_root: Path | None = None
     #: Build only once nothing in a month's component folders has changed for this long.
-    settle_minutes: int = Field(default=60, ge=0)
+    settle_minutes: int = Field(default=30, ge=0)
     #: A month is watched until this many days after its last day, then closed (D-23).
     lookback_days: int = Field(default=42, ge=0)
     #: A closed month is read — to write its final status — only this many days past its
