@@ -207,3 +207,6 @@ are in `evaluation.md` (from `eval/live/evaluate.py`).
   and the rename did not restart the settle (it changes `modified`, not the upload time), as
   that same run built. At 11:00:57 it went back to `SUPERSEDED` for R1's reissue: files are
   marked superseded on sight, before the newer one settles.
+- **11:42** · Watchdog. The 11:30 run `crr-quarterly-29844690` (11:30:22–11:31:57, 1 min 35 s)
+  built nothing: every month is still waiting on R1's reissues, which settle 11:45–11:47. The
+  sixteen rebuilds are due in the 12:00 run. $8.50; conductor healthy; 13/16 ticks.
