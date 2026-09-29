@@ -41,3 +41,19 @@ are in `evaluation.md` (from `eval/live/evaluate.py`).
   Bridgewater): whichever months the run had not yet reached will see those files before
   building, which is realistic and will show in the O-scenario scores. 92/123 actions, 0
   failed; $2.39 spent.
+- **08:15** · **The October crunch, and the deferral working as designed.** The 07:30 run
+  `crr-quarterly-29844450` (lease 07:30:24–07:50:41) started seven October builds back to back
+  — Bridgewater 24/8, Fort Grounds 8/6, Lolo Peak 8/6, River Falls 29/13, Salmon Crossing 18/8,
+  Timber Place 25/13 (all exactly golden) and Mullan Crossing's half report as **Needs review**
+  (3 p, `missing_required`), as predicted. (`built_at` is when each build *started*.) Timber
+  Place's OCR build ran from 07:46:46 to ~07:50:40; by then the 1200 s soft deadline had
+  passed, so WayPointe October — settled since 07:07 — was deferred and built by the 08:00 run
+  (10/8, golden). No duplicate anywhere. The 08:00 run `crr-quarterly-29844480`
+  (08:00:23–08:07:27) also built Fort Grounds' hand-made **August** (7 p / 5 bm, no schedule)
+  and Lolo Peak October **v2 for $0** — the schedule moved away to September, every page's
+  labels reused. $6.23 spent; 94/123 actions, 0 failed.
+  **Finding F2 (minor) — a deferred month keeps a stale status.** While deferred, WayPointe
+  October still read `Waiting for uploads to settle`, though its files had settled 40 minutes
+  earlier (§18.9 step 5 leaves the status as it is). A reviewer checking at 07:55 would be
+  misled for one run. Proposed fix: write `Ready - building on the next run` for a month the
+  soft deadline defers.
