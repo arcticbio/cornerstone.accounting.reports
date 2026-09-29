@@ -297,6 +297,8 @@ Exit 0, nothing built; nothing in Drive changed but the lease and the summary's 
 So a run with nothing to build is **~60 s of process and ~100 s of execution**. From a session
 container the same run took 48.8 s: Drive round trips are ~20 % slower from Azure (~0.34 s
 each), and the replica's start is new. A run logs three lines, so Log Analytics is negligible.
+Since 2026-09-29's follow-up a run with nothing to build skips the preflight's upload and
+delete (SPEC §18.9 step 1), about 2 s and 2 Drive calls less than measured here.
 
 What it costs at list price ($0.000024 per vCPU-s, $0.000003 per GiB-s):
 

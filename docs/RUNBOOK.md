@@ -155,10 +155,11 @@ it is more than an hour old, the job has stopped running** — see
 - **Two system files sit at the root**: `_STATUS - All properties.txt`, the summary, and
   `_LEASE - reconcile run (do not edit).json`, which says which run is working, so that only
   one does at a time. Neither is anyone's to edit.
-- **The shared drive's Trash collects one `.crr-preflight-…` file per run**, about 48 a day.
-  Before it spends anything, each run proves it can write by uploading a 3-byte file to the
-  root and trashing it (SPEC §6.1): the service account may trash files but not delete them.
-  Drive deletes each for good after 30 days. Leave them there.
+- **The shared drive's Trash collects one `.crr-preflight-…` file per run that builds.**
+  Before its first build, such a run proves it can write by uploading a 3-byte file to the
+  root and trashing it (SPEC §6.1, §18.9): the service account may trash files but not delete
+  them. A run with nothing to build writes none. Drive deletes each for good after 30 days.
+  Leave them there.
 
 ### Rehearsing without touching a real month
 
@@ -193,6 +194,13 @@ Actions runs the identical container with the secrets already in the repository 
 safe to run at any time, including while Azure is running: only one run works at a time. A run
 that finds another holding the run lease prints `nothing done: another run (<host>) holds the
 lease until <time>` and exits green — run it again after that time.
+
+**Mind the half hour.** The lease covers every property, so a manual run that takes it in the
+minutes before :00 or :30 makes that scheduled run stand down for *all* eight properties, and
+their builds wait another 30 minutes (the live test of 2026-09-29 did this on purpose: a forced
+build of one property at 08:59 held back five builds until 09:30). Start a manual run once the
+half-hour run has finished — the root summary's *Last checked* line moves when it does — and
+not in the last few minutes before the next one.
 
 1. **Actions** → **Build a period** → **Run workflow**.
 2. Fill in:

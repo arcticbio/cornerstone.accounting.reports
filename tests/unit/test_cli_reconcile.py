@@ -5,6 +5,7 @@ from __future__ import annotations
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
 
+import pytest
 from typer.testing import CliRunner
 
 from crr.cli import app
@@ -64,3 +65,19 @@ def test_a_run_that_finds_another_holding_the_lease_does_nothing(tmp_path: Path)
     assert result.exit_code == 0, result.output
     assert "nothing done: another run (crr-quarterly-abc12) holds the lease until" in result.stdout
     assert sorted(p.name for p in root.iterdir()) == [LEASE_FILE]
+
+
+def test_a_run_with_nothing_to_build_writes_no_probe(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """The write check runs once, just before a run's first build (SPEC §18.9) — not at the
+    start of every run, where it left a trashed probe in the shared drive 48 times a day."""
+    probes: list[str] = []
+    monkeypatch.setattr(LocalIntakeStore, "preflight_publish", lambda self: probes.append("p"))
+    result = runner.invoke(
+        app,
+        ["reconcile", "--repo", "local", "--classifier", "golden", "--work-dir", str(tmp_path)],
+        env={"CRR_INTAKE_ROOT": str(tmp_path / "intake")},
+    )
+    assert result.exit_code == 0, result.output
+    assert probes == []

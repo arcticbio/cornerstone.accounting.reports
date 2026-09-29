@@ -1,0 +1,701 @@
+{
+ "tag": "20260929-0600",
+ "taken": "2026-09-29T06:01:53Z",
+ "tick": "2026-09-29T06:00:00Z",
+ "offset": 30,
+ "run_observed": true,
+ "lease": {
+  "host": "crr-quarterly-29844360-vsqxz",
+  "acquired": "2026-09-29T06:00:23Z",
+  "released": "2026-09-29T06:01:35Z",
+  "expires": "2026-09-29T06:30:23Z"
+ },
+ "summary": [
+  "Investor report status - one line per property, newest month with any files",
+  "",
+  "Fort Grounds - September 2026 - Waiting for uploads to settle",
+  "Lolo Peak Village - September 2026 - Waiting for Balance Sheet, Profit and Loss",
+  "Mullan Crossing - September 2026 - Waiting for Balance Sheet, Profit and Loss",
+  "WayPointe - September 2026 - Waiting for uploads to settle",
+  "Timber Place - September 2026 - Waiting for uploads to settle",
+  "River Falls - September 2026 - Waiting for uploads to settle",
+  "Bridgewater - September 2026 - Waiting for uploads to settle",
+  "Salmon Crossing - September 2026 - Waiting for uploads to settle",
+  "",
+  "Last checked 2026-09-29 06:00 UTC. Open a property's month folder, then output/, for detail."
+ ],
+ "root_files": [
+  "Cobalt Properties Group",
+  "McCathren Management and Real Estate Services",
+  "Missoula Property Management",
+  "_LEASE - reconcile run (do not edit).json",
+  "_STATUS - All properties.txt"
+ ],
+ "properties": {
+  "fort-grounds": {
+   "months": {
+    "2026-09 September": {
+     "components": {
+      "4 - Distribution Schedule": [],
+      "3 - Profit and Loss": [
+       {
+        "name": "Fort Grounds P&L YTD Sep 2026.pdf",
+        "id": "1RcdfHpUMEXrtxWaI7gAMQfOqW9kYt1Gi",
+        "mime": "application/pdf",
+        "md5": "6c40e59dc313bc16632cf7dc9791fe0e",
+        "created": "2026-09-29T05:36:10.165Z",
+        "modified": "2026-09-29T05:36:10.165Z",
+        "size": 31827
+       }
+      ],
+      "2 - Balance Sheet": [
+       {
+        "name": "Fort Grounds Balance Sheet Sep 2026.pdf",
+        "id": "14QG_9IIewMibiM1wtutsZwMEX8NcPqX2",
+        "mime": "application/pdf",
+        "md5": "2afe786194a9c6982a4d95a2fb2b46f8",
+        "created": "2026-09-29T05:35:09.691Z",
+        "modified": "2026-09-29T05:35:09.691Z",
+        "size": 33643
+       }
+      ],
+      "1 - Property Manager Report": [
+       {
+        "name": "Fort Grounds Owner Report Sep 2026.pdf",
+        "id": "1kvr-qKfZYyMItaoYC4a6dOOfjelH54yz",
+        "mime": "application/pdf",
+        "md5": "919b5b3e1cb9e8d25cf49f1de385bc86",
+        "created": "2026-09-29T05:35:06.402Z",
+        "modified": "2026-09-29T05:35:06.402Z",
+        "size": 193587
+       }
+      ]
+     },
+     "loose": [],
+     "output": {
+      "status": [
+       "Waiting for uploads to settle"
+      ],
+      "pdfs": [],
+      "reviews": [],
+      "other": []
+     },
+     "state": null
+    },
+    "2026-10 October": {
+     "components": {
+      "4 - Distribution Schedule": [],
+      "3 - Profit and Loss": [],
+      "2 - Balance Sheet": [],
+      "1 - Property Manager Report": []
+     },
+     "loose": [],
+     "output": {
+      "status": [],
+      "pdfs": [],
+      "reviews": [],
+      "other": []
+     },
+     "state": null
+    },
+    "2026-06 June": {
+     "components": {},
+     "loose": [],
+     "output": null,
+     "state": null,
+     "other_folders": [
+      "inputs"
+     ]
+    }
+   },
+   "loose": []
+  },
+  "lolo-peak-village": {
+   "months": {
+    "2026-10 October": {
+     "components": {
+      "4 - Distribution Schedule": [],
+      "3 - Profit and Loss": [],
+      "2 - Balance Sheet": [],
+      "1 - Property Manager Report": []
+     },
+     "loose": [],
+     "output": {
+      "status": [],
+      "pdfs": [],
+      "reviews": [],
+      "other": []
+     },
+     "state": null
+    },
+    "2026-09 September": {
+     "components": {
+      "4 - Distribution Schedule": [],
+      "3 - Profit and Loss": [],
+      "2 - Balance Sheet": [],
+      "1 - Property Manager Report": [
+       {
+        "name": "Lolo Peak Village Owner Report Sep 2026.pdf",
+        "id": "1cG9Ogcs9xgZWofhzeYkMwRaXMtT5x1as",
+        "mime": "application/pdf",
+        "md5": "10cc5d90f9897507d4b79118b8b6f860",
+        "created": "2026-09-29T05:35:12.728Z",
+        "modified": "2026-09-29T05:35:12.728Z",
+        "size": 177991
+       }
+      ]
+     },
+     "loose": [],
+     "output": {
+      "status": [
+       "Waiting for Balance Sheet, Profit and Loss"
+      ],
+      "pdfs": [],
+      "reviews": [],
+      "other": []
+     },
+     "state": null
+    },
+    "2026-06 June": {
+     "components": {},
+     "loose": [],
+     "output": null,
+     "state": null,
+     "other_folders": [
+      "inputs"
+     ]
+    }
+   },
+   "loose": []
+  },
+  "mullan-crossing": {
+   "months": {
+    "2026-10 October": {
+     "components": {
+      "4 - Distribution Schedule": [],
+      "3 - Profit and Loss": [],
+      "2 - Balance Sheet": [],
+      "1 - Property Manager Report": []
+     },
+     "loose": [],
+     "output": {
+      "status": [],
+      "pdfs": [],
+      "reviews": [],
+      "other": []
+     },
+     "state": null
+    },
+    "2026-09 September": {
+     "components": {
+      "4 - Distribution Schedule": [],
+      "3 - Profit and Loss": [],
+      "2 - Balance Sheet": [],
+      "1 - Property Manager Report": [
+       {
+        "name": "Mullan Crossing Owner Report Sep 2026.pdf",
+        "id": "1xoxhNZbaoa9b5oqHhMF-fnX3jVCtoEOg",
+        "mime": "application/pdf",
+        "md5": "cc7a957625e2e96c4874e667635ff284",
+        "created": "2026-09-29T05:35:15.593Z",
+        "modified": "2026-09-29T05:35:15.593Z",
+        "size": 201617
+       }
+      ]
+     },
+     "loose": [],
+     "output": {
+      "status": [
+       "Waiting for Balance Sheet, Profit and Loss"
+      ],
+      "pdfs": [],
+      "reviews": [],
+      "other": []
+     },
+     "state": null
+    },
+    "2026-06 June": {
+     "components": {},
+     "loose": [],
+     "output": null,
+     "state": null,
+     "other_folders": [
+      "inputs"
+     ]
+    }
+   },
+   "loose": []
+  },
+  "waypointe": {
+   "months": {
+    "2026-10 October": {
+     "components": {
+      "4 - Distribution Schedule": [],
+      "3 - Profit and Loss": [],
+      "2 - Balance Sheet": [],
+      "1 - Property Manager Report": []
+     },
+     "loose": [],
+     "output": {
+      "status": [],
+      "pdfs": [],
+      "reviews": [],
+      "other": []
+     },
+     "state": null
+    },
+    "2026-09 September": {
+     "components": {
+      "4 - Distribution Schedule": [
+       {
+        "name": "WayPointe Distribution Schedule Sep 2026.pdf",
+        "id": "1M4ElDDtDg-KN-kBagTr6D4aI1WVhW6mp",
+        "mime": "application/pdf",
+        "md5": "a6632aac215dbe7ec9bcc0cd56a7509f",
+        "created": "2026-09-29T05:36:15.969Z",
+        "modified": "2026-09-29T05:36:15.969Z",
+        "size": 211281
+       }
+      ],
+      "3 - Profit and Loss": [
+       {
+        "name": "WayPointe P&L YTD Sep 2026.pdf",
+        "id": "1ZTxDjW-vdrWKjhqbSL76Tp-LyNx7D7oh",
+        "mime": "application/pdf",
+        "md5": "a916190d85f1c3dd324a30dd4d0d096c",
+        "created": "2026-09-29T05:36:13.323Z",
+        "modified": "2026-09-29T05:36:13.323Z",
+        "size": 31896
+       }
+      ],
+      "2 - Balance Sheet": [
+       {
+        "name": "WayPointe Balance Sheet Sep 2026.pdf",
+        "id": "13IXMjLjXtQG9OUhD2DfPN_yrXUYknAGw",
+        "mime": "application/pdf",
+        "md5": "bb57400f1524171b8febe4871c7178c4",
+        "created": "2026-09-29T05:35:22.959Z",
+        "modified": "2026-09-29T05:35:22.959Z",
+        "size": 31701
+       }
+      ],
+      "1 - Property Manager Report": [
+       {
+        "name": "WayPointe Owner Report Sep 2026.pdf",
+        "id": "1SX7vEFYL7x0pz4kExZIwF7xm7ca-Gpnl",
+        "mime": "application/pdf",
+        "md5": "1910c38a5f45fd4b8a1c4decad66d19e",
+        "created": "2026-09-29T05:35:18.526Z",
+        "modified": "2026-09-29T05:35:18.526Z",
+        "size": 179103
+       }
+      ]
+     },
+     "loose": [],
+     "output": {
+      "status": [
+       "Waiting for uploads to settle"
+      ],
+      "pdfs": [],
+      "reviews": [],
+      "other": []
+     },
+     "state": null
+    },
+    "2026-06 June": {
+     "components": {},
+     "loose": [],
+     "output": null,
+     "state": null,
+     "other_folders": [
+      "inputs"
+     ]
+    }
+   },
+   "loose": []
+  },
+  "timber-place": {
+   "months": {
+    "2026-10 October": {
+     "components": {
+      "4 - Distribution Schedule": [],
+      "3 - Profit and Loss": [],
+      "2 - Balance Sheet": [],
+      "1 - Property Manager Report": []
+     },
+     "loose": [],
+     "output": {
+      "status": [],
+      "pdfs": [],
+      "reviews": [],
+      "other": []
+     },
+     "state": null
+    },
+    "2026-09 September": {
+     "components": {
+      "4 - Distribution Schedule": [],
+      "3 - Profit and Loss": [
+       {
+        "name": "Timber Place P&L YTD Sep 2026.pdf",
+        "id": "1Qq7qtsWtqDbpQQeTsrJiO_USy06n_4fn",
+        "mime": "application/pdf",
+        "md5": "b93468ac94f691775e2ad032c82fcaf1",
+        "created": "2026-09-29T05:36:18.768Z",
+        "modified": "2026-09-29T05:36:18.768Z",
+        "size": 32029
+       }
+      ],
+      "2 - Balance Sheet": [
+       {
+        "name": "Timber Place Balance Sheet Sep 2026.pdf",
+        "id": "12sYaUUJterVZLYONDwx3D0tIobkwph5W",
+        "mime": "application/pdf",
+        "md5": "34c84b9b2b298bbd2d90a18a99779599",
+        "created": "2026-09-29T05:35:29.290Z",
+        "modified": "2026-09-29T05:35:29.290Z",
+        "size": 33751
+       }
+      ],
+      "1 - Property Manager Report": [
+       {
+        "name": "Timber Place Owner Report Sep 2026.pdf",
+        "id": "1CxU71SQQY5DsFIlOb88Uw1T3KLQuSALx",
+        "mime": "application/pdf",
+        "md5": "e29c1ea8a207b1ab41794d85713ae356",
+        "created": "2026-09-29T05:35:26.275Z",
+        "modified": "2026-09-29T05:35:26.275Z",
+        "size": 1396232
+       }
+      ]
+     },
+     "loose": [],
+     "output": {
+      "status": [
+       "Waiting for uploads to settle"
+      ],
+      "pdfs": [],
+      "reviews": [],
+      "other": []
+     },
+     "state": null
+    },
+    "2026-06 June": {
+     "components": {},
+     "loose": [],
+     "output": null,
+     "state": null,
+     "other_folders": [
+      "inputs"
+     ]
+    }
+   },
+   "loose": []
+  },
+  "river-falls": {
+   "months": {
+    "2026-10 October": {
+     "components": {
+      "4 - Distribution Schedule": [],
+      "3 - Profit and Loss": [],
+      "2 - Balance Sheet": [],
+      "1 - Property Manager Report": []
+     },
+     "loose": [],
+     "output": {
+      "status": [],
+      "pdfs": [],
+      "reviews": [],
+      "other": []
+     },
+     "state": null
+    },
+    "2026-09 September": {
+     "components": {
+      "4 - Distribution Schedule": [
+       {
+        "name": "River Falls Distribution Schedule Sep 2026.pdf",
+        "id": "1ZBiUZmYexoo2KEXTwsE8dVkdpBKrBkwJ",
+        "mime": "application/pdf",
+        "md5": "54b3eaebbdaa134144cd29ac797fda91",
+        "created": "2026-09-29T05:36:27.422Z",
+        "modified": "2026-09-29T05:36:27.422Z",
+        "size": 213801
+       }
+      ],
+      "3 - Profit and Loss": [
+       {
+        "name": "River Falls P&L YTD Sep 2026.pdf",
+        "id": "1fSRDv2MllQqppRQhcrSu8SU3mljICRLi",
+        "mime": "application/pdf",
+        "md5": "a79af3709f06fb425c7f8d13afca7bf6",
+        "created": "2026-09-29T05:36:24.640Z",
+        "modified": "2026-09-29T05:36:24.640Z",
+        "size": 32992
+       }
+      ],
+      "2 - Balance Sheet": [
+       {
+        "name": "River Falls Balance Sheet Sep 2026.pdf",
+        "id": "1ZoL7Cfaxu5kePo1yNPy2iKKl352dzx1C",
+        "mime": "application/pdf",
+        "md5": "c03ca398ddd5f772dd809c8bec694066",
+        "created": "2026-09-29T05:36:21.548Z",
+        "modified": "2026-09-29T05:36:21.548Z",
+        "size": 34915
+       }
+      ],
+      "1 - Property Manager Report": [
+       {
+        "name": "Photo of rent roll.jpg",
+        "id": "1MVWPFR6DaxlJCfTkRGtswwECBe1aqW0N",
+        "mime": "image/jpeg",
+        "md5": "870e07841eb01b05efe9e02009a00316",
+        "created": "2026-09-29T05:35:42.485Z",
+        "modified": "2026-09-29T05:35:42.485Z",
+        "size": 14001
+       },
+       {
+        "name": "Notes for Cornerstone.docx",
+        "id": "1S3_l3gkmUniLaPLcDhm7UcXaEewCNy9O",
+        "mime": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+        "md5": "08c76b8963e08c8d9a39eb8f76542515",
+        "created": "2026-09-29T05:35:37.610Z",
+        "modified": "2026-09-29T05:35:37.610Z",
+        "size": 47
+       },
+       {
+        "name": "River Falls Sept owner package.pdf",
+        "id": "1N1VexO8Kz3bl0gNDOay61ic2YO6Ig0Ut",
+        "mime": "application/pdf",
+        "md5": "6a1fb7cd0fea6c763c22c5c145e7f636",
+        "created": "2026-09-29T05:35:32.568Z",
+        "modified": "2026-09-29T05:35:32.568Z",
+        "size": 57755
+       }
+      ]
+     },
+     "loose": [],
+     "output": {
+      "status": [
+       "Waiting for uploads to settle"
+      ],
+      "pdfs": [],
+      "reviews": [],
+      "other": []
+     },
+     "state": null
+    },
+    "2026-06 June": {
+     "components": {},
+     "loose": [],
+     "output": null,
+     "state": null,
+     "other_folders": [
+      "inputs"
+     ]
+    }
+   },
+   "loose": []
+  },
+  "bridgewater": {
+   "months": {
+    "2026-10 October": {
+     "components": {
+      "4 - Distribution Schedule": [],
+      "3 - Profit and Loss": [],
+      "2 - Balance Sheet": [],
+      "1 - Property Manager Report": []
+     },
+     "loose": [],
+     "output": {
+      "status": [],
+      "pdfs": [],
+      "reviews": [],
+      "other": []
+     },
+     "state": null
+    },
+    "2026-09 September": {
+     "components": {
+      "4 - Distribution Schedule": [
+       {
+        "name": "Bridgewater Distribution Schedule Sep 2026.pdf",
+        "id": "1mIoE4T6x1cDtdAGGcSBJTJKV3AgcjUAg",
+        "mime": "application/pdf",
+        "md5": "9adecfd98c20a12ee6dbc7a820ae202d",
+        "created": "2026-09-29T05:36:33.195Z",
+        "modified": "2026-09-29T05:36:33.195Z",
+        "size": 468117
+       }
+      ],
+      "3 - Profit and Loss": [
+       {
+        "name": "Bridgewater P&L YTD Sep 2026.pdf",
+        "id": "1xAKJyIMRBq6y780A5b5EVyoGPBQXEOxc",
+        "mime": "application/pdf",
+        "md5": "495452d5f5794a9e460a0a9b6d50eef9",
+        "created": "2026-09-29T05:36:30.208Z",
+        "modified": "2026-09-29T05:36:30.208Z",
+        "size": 54574
+       }
+      ],
+      "2 - Balance Sheet": [
+       {
+        "name": "Bridgewater Balance Sheet Sep 2026.pdf",
+        "id": "1t22bcaC9Ziam9TtAG64gWM6nbYQRm0oJ",
+        "mime": "application/pdf",
+        "md5": "495452d5f5794a9e460a0a9b6d50eef9",
+        "created": "2026-09-29T05:35:48.417Z",
+        "modified": "2026-09-29T05:35:48.417Z",
+        "size": 54574
+       }
+      ],
+      "1 - Property Manager Report": [
+       {
+        "name": "Bridgewater Owner Report Sep 2026.pdf",
+        "id": "1d6Df6oOCZ8OZPZeMuns4bbRLLYsJ63it",
+        "mime": "application/pdf",
+        "md5": "8eaf96f293d88b72675f04f13a117b74",
+        "created": "2026-09-29T05:35:45.389Z",
+        "modified": "2026-09-29T05:35:45.389Z",
+        "size": 387179
+       }
+      ]
+     },
+     "loose": [],
+     "output": {
+      "status": [
+       "Waiting for uploads to settle"
+      ],
+      "pdfs": [],
+      "reviews": [],
+      "other": []
+     },
+     "state": null
+    },
+    "2026-06 June": {
+     "components": {},
+     "loose": [],
+     "output": null,
+     "state": null,
+     "other_folders": [
+      "inputs"
+     ]
+    }
+   },
+   "loose": []
+  },
+  "salmon-crossing": {
+   "months": {
+    "2026-10 October": {
+     "components": {
+      "4 - Distribution Schedule": [],
+      "3 - Profit and Loss": [],
+      "2 - Balance Sheet": [],
+      "1 - Property Manager Report": []
+     },
+     "loose": [],
+     "output": {
+      "status": [],
+      "pdfs": [],
+      "reviews": [],
+      "other": []
+     },
+     "state": null
+    },
+    "2026-09 September": {
+     "components": {
+      "4 - Distribution Schedule": [
+       {
+        "name": "Salmon Crossing Distribution Schedule Sep 2026.pdf",
+        "id": "1Yk4FNzo1OIKA4szGFmx6e1xdocquimwk",
+        "mime": "application/pdf",
+        "md5": "8ed7855ff9129ab82ec5371b2250a293",
+        "created": "2026-09-29T05:36:41.087Z",
+        "modified": "2026-09-29T05:36:41.087Z",
+        "size": 211437
+       }
+      ],
+      "3 - Profit and Loss": [
+       {
+        "name": "Salmon Crossing P&L YTD Sep 2026.pdf",
+        "id": "1l-j2u3oKLC3S-Ij_QbsSOklk26w9stlJ",
+        "mime": "application/pdf",
+        "md5": "2c031bf08dc8e8ebb777cbd2b99819e5",
+        "created": "2026-09-29T05:36:38.408Z",
+        "modified": "2026-09-29T05:36:38.408Z",
+        "size": 54034
+       }
+      ],
+      "2 - Balance Sheet": [
+       {
+        "name": "Salmon Crossing Balance Sheet Sep 2026.pdf",
+        "id": "1yvBNXcag9YmWFJiZ6KhR47mit5bPjDDG",
+        "mime": "application/pdf",
+        "md5": "4f0b12bb48987fed55694a4a06e87dcd",
+        "created": "2026-09-29T05:36:35.708Z",
+        "modified": "2026-09-29T05:36:35.708Z",
+        "size": 56335
+       }
+      ],
+      "1 - Property Manager Report": [
+       {
+        "name": "Salmon Crossing Owner Report Sep 2026.pdf",
+        "id": "1GpYO8yVPf9cxQ0zI_26rF4HjEzOY0SvZ",
+        "mime": "application/pdf",
+        "md5": "8eaf96f293d88b72675f04f13a117b74",
+        "created": "2026-09-29T05:35:52.149Z",
+        "modified": "2026-09-29T05:35:52.149Z",
+        "size": 387179
+       }
+      ]
+     },
+     "loose": [
+      {
+       "name": "Balance Sheet (dropped in the month folder).pdf",
+       "id": "12wqbpIjFai0xtPqiuOGcBAija-5aybfh",
+       "mime": "application/pdf",
+       "md5": "4f0b12bb48987fed55694a4a06e87dcd",
+       "created": "2026-09-29T05:36:43.831Z",
+       "modified": "2026-09-29T05:36:43.831Z",
+       "size": 56335
+      }
+     ],
+     "output": {
+      "status": [
+       "Waiting for uploads to settle"
+      ],
+      "pdfs": [
+       "Distribution (dropped in output).pdf"
+      ],
+      "reviews": [],
+      "other": []
+     },
+     "state": null
+    },
+    "2026-06 June": {
+     "components": {},
+     "loose": [],
+     "output": null,
+     "state": null,
+     "other_folders": [
+      "inputs"
+     ]
+    }
+   },
+   "loose": [
+    {
+     "name": "P&L (dropped in the property folder).pdf",
+     "id": "1XNa1KJYRxla9gAUgQQ4Zur-vUU5VF8Xz",
+     "mime": "application/pdf",
+     "md5": "2c031bf08dc8e8ebb777cbd2b99819e5",
+     "created": "2026-09-29T05:36:46.128Z",
+     "modified": "2026-09-29T05:36:46.128Z",
+     "size": 54034
+    }
+   ]
+  }
+ },
+ "spent_usd": 0
+}

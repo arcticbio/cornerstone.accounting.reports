@@ -1,0 +1,236 @@
+# Live test 2026-09-29 — watchdog notes
+
+Times UTC. B = 05:30. Each note is written by a half-hourly watchdog; the scored predictions
+are in `evaluation.md` (from `eval/live/evaluate.py`).
+
+- **06:15** · Conductor healthy (pid 420). 72/123 stakeholder actions done, 0 failed:
+  September wave at 05:35 (29), October wave at 06:05, hand-made August/July folders at
+  06:10. Runs observed: 05:30 `crr-quarterly-29844330` (lease 05:30:24–05:31:16) and 06:00
+  `crr-quarterly-29844360` (06:00:23–06:01:35), both on the tick. 3/3 predictions due met:
+  settling / waiting-for statuses exactly as SPEC §18.8 names them. $0 spent (nothing has
+  settled yet). The one PDF in Salmon Crossing's September `output/` is the test's deliberate
+  drop there, not a version.
+- **06:43** · Conductor healthy; 76/123 actions, 0 failed. 06:30 run `crr-quarterly-29844390`
+  (lease 06:30:23–06:32:15, 1 m 52 s: more months with files to read). 8/8 predictions due
+  met. Hand-made folders behave as the code said they would: Fort Grounds' `2026-08 August`
+  got its component folders and `output/` from the run (no status — its only file was dropped
+  loose in the month folder); beside Lolo Peak's person-made `2026-08` the run created a
+  proper `2026-08 August`, and the file in `2026-08` is never read; Mullan Crossing's
+  `August 2026` and WayPointe's closed `2026-07 July` were left untouched (no `output/`).
+  Every October month is settling. First builds are due in the 07:00 run.
+- **07:20** · First builds. The 07:00 run `crr-quarterly-29844420` held the lease 07:00:24–07:14:57
+  (14.5 min, inside the 20-min soft deadline) and built five September packages on
+  `claude-opus-5-5`, $2.39 in all: Fort Grounds v1 (7 p / 5 bm — golden 8/6 less the absent
+  optional schedule, $0.40), WayPointe v1 (10/8 = golden, $0.36), Timber Place v1 (25/13 =
+  golden, OCR, $0.60), Bridgewater v1 **Needs review** (the P&L in the Balance Sheet folder:
+  `unmapped_section`, `missing_required`; $0.54) and Salmon Crossing v1 **Built (current)**
+  from Bridgewater's report (24 p / 8 bm — Bridgewater's shape, golden is 18/8; $0.49).
+  River Falls held at the cost ceiling ($3.69 > $3.00), no model call. 15/15 predictions due
+  met; 82/123 actions, 0 failed.
+  **Finding F1 — another property's report is built as current, not flagged.** SPEC §18.6
+  accepts that the folder is trusted, but a whole PM report for the wrong property passing
+  the review gate is the case a reviewer is least likely to catch: the status says
+  `Built v1 (current)`. Proposed fix: a review reason when no page's record label matches
+  one of the property's configured `records[].pm_name` (the classifier already reads the
+  `Property:` header per page), so it lands as `Needs review` instead.
+- **07:43** · The 07:30 run `crr-quarterly-29844450` is still building at 07:43 (lease since
+  07:30:24): October's eight properties all became ready together, the crunch by design. Its
+  soft deadline (no new build after 20 min) should end it by ~07:56. The +130 actions ran at
+  07:40 *during* that run (October: a schedule moved out of Lolo Peak, the whole Mullan
+  Crossing report, a rename, a Google Doc, a shortcut, two Balance Sheets seconds apart at
+  Bridgewater): whichever months the run had not yet reached will see those files before
+  building, which is realistic and will show in the O-scenario scores. 92/123 actions, 0
+  failed; $2.39 spent.
+- **08:15** · **The October crunch, and the deferral working as designed.** The 07:30 run
+  `crr-quarterly-29844450` (lease 07:30:24–07:50:41) started seven October builds back to back
+  — Bridgewater 24/8, Fort Grounds 8/6, Lolo Peak 8/6, River Falls 29/13, Salmon Crossing 18/8,
+  Timber Place 25/13 (all exactly golden) and Mullan Crossing's half report as **Needs review**
+  (3 p, `missing_required`), as predicted. (`built_at` is when each build *started*.) Timber
+  Place's OCR build ran from 07:46:46 to ~07:50:40; by then the 1200 s soft deadline had
+  passed, so WayPointe October — settled since 07:07 — was deferred and built by the 08:00 run
+  (10/8, golden). No duplicate anywhere. The 08:00 run `crr-quarterly-29844480`
+  (08:00:23–08:07:27) also built Fort Grounds' hand-made **August** (7 p / 5 bm, no schedule)
+  and Lolo Peak October **v2 for $0** — the schedule moved away to September, every page's
+  labels reused. $6.23 spent; 94/123 actions, 0 failed.
+  **Finding F2 (minor) — a deferred month keeps a stale status.** While deferred, WayPointe
+  October still read `Waiting for uploads to settle`, though its files had settled 40 minutes
+  earlier (§18.9 step 5 leaves the status as it is). A reviewer checking at 07:55 would be
+  misled for one run. Proposed fix: write `Ready - building on the next run` for a month the
+  soft deadline defers.
+- **08:31** · Operator step O5a: *Run the Azure job* → `scheduled` dispatched on `main` at 08:31:49
+  ([run 36543294733](https://github.com/arcticbio/cornerstone.accounting.reports/actions/runs/36543294733))
+  while the 08:30 scheduled run holds the lease. Expected: the manual execution finds the
+  lease held and exits 0 with "nothing done". Result to follow from its logs.
+- **08:36** · **O5a passed: two executions at once, one works.** The manual execution
+  `crr-quarterly-h1oj2wx` (started 08:32:09) logged at 08:32:33 `intake.lease_held`
+  `host=crr-quarterly-29844510-65mjq` and printed `nothing done: another run
+  (crr-quarterly-29844510-65mjq) holds the lease until 2026-09-29 09:00 UTC`, then exited 0
+  (Succeeded) — while the 08:30 scheduled run went on building. This is QUESTIONS A-14's
+  first-week check, confirmed live on Azure: overlapping executions each see the lease and the
+  second does nothing.
+- **08:44** · The 08:30 run `crr-quarterly-29844510` (08:30:24–08:40:45) built four September
+  versions, all exactly golden, corrections for cents: Bridgewater v2 with the right Balance
+  Sheet (24/8, $0.017, 1 call, PM/P&L/schedule reused — the `Needs review` cleared), Fort
+  Grounds v2 with the schedule (8/6, $0.022), River Falls v1 from the right report (29/13,
+  $0.68) and Salmon Crossing v2 from its own report (18/8, $0.29, 15 calls). 35 predictions
+  met, 1 late (the deferral), 0 missed; $7.24 spent; 100/123 actions, 0 failed.
+  WayPointe September's "Update existing" with identical bytes (07:28) never disturbed the
+  status — it read `Built v1 (current)` at 08:00 while the new revision was still settling, so
+  an unchanged fingerprint outranks the settle window. Timber Place September's text file
+  named `.pdf` is `Built v1 - newer files held`.
+  **Finding F3 (minor) — a deleted published version goes unnoticed.** A reviewer trashed
+  Salmon Crossing's October v1 at 08:10; the status still says `Built v1 (current)` for a
+  report that no longer exists (predicted, per §18.7: nothing re-reads `output/`'s PDFs).
+  Proposed fix: when the current version's PDF is missing, say so in the status
+  (`Built v1 - report file missing`) so a reviewer knows to restore it from Trash.
+- **08:59** · Operator step O5b: *Build a period* → `reconcile --force`, `timber-place`,
+  `2026-10`, dispatched on `main` at 08:58:54
+  ([run 36546168639](https://github.com/arcticbio/cornerstone.accounting.reports/actions/runs/36546168639)),
+  racing the 09:00 scheduled run for the lease. Result to follow.
+- **09:08** · **O5b: the forced build won the race — and displaced the whole 09:00 run.**
+  Run 36546168639 took the lease at 08:59:17 (host `5cced9db4683`, the runner's container),
+  OCR'd Timber Place's scanned report, reused all three stored classifications (no model
+  call), published `Built v2 (current)` (25 pages, 13 bookmarks, as v1) at 09:01:08, released
+  the lease at 09:01:12 and exited 0. The lease shows no Azure run after it, so the 09:00
+  scheduled execution — starting about 09:00:20, while the forced run held the lease — did
+  nothing, as O5a showed it does. By design, then: one operator's forced build of one property
+  stood the scheduled run down for all eight, so the builds due at 09:00 (S2, S5, O3, O6, O7)
+  land at 09:30 and will score "late". Operator guidance for the RUNBOOK: dispatch a manual
+  run a few minutes after :00/:30 has finished, never just before.
+  The 09:30 prediction for O5 is amended from v2 to v3 before O5c runs (the plan's own note
+  for O5c: "v3 if O5b already built v2"). Note on the image: `:build-v1` on `main` still
+  probes at start (`repository.preflight_ok` 08:59:16) — the follow-up ec061b7 is not
+  deployed, deliberately; the system under test stays fixed tonight.
+- **09:14** · Watchdog: conductor alive (pid 420), 103/123 actions, 0 failed, $7.24. 09:10 acts
+  done on time: S2's second upload of Lolo Peak Village's owner report under the same name, and
+  S5's password-protected Balance Sheet into Timber Place September. The 09:00 tick is still
+  open by design — the only lease since 08:30 is O5b's, taken before the tick — so its
+  snapshot will be taken after O5c's run releases the lease (about 09:18), and will reflect
+  that run, not a scheduled one.
+- **09:17** · Operator step O5c: *Build a period* → `reconcile --force`, `timber-place`,
+  `2026-10`, dispatched on `main` at 09:17:18 with the lease free (released 09:01:12)
+  ([run 36548185639](https://github.com/arcticbio/cornerstone.accounting.reports/actions/runs/36548185639)).
+  Expected: v3 by reuse (O5b made v2). Result to follow.
+- **09:20** · **O5c passed: a forced rebuild alone, v3 by reuse.** Run 36548185639 took the
+  lease at 09:17:45 (host `6f4fcffad146`), reused all three stored classifications (no model
+  call), published `Built v3 (current)` (25 pages, 13 bookmarks — identical in shape to v1 and
+  v2) at 09:19:31 and released the lease at 09:19:35; the job took 2 min 20 s from dispatch,
+  exit 0. Two forced rebuilds, both on stored labels: an operator can re-publish a month at
+  no model cost. Aside for the report: both forced runs spent ~35 s between reusing the
+  report's labels and the Balance Sheet's (09:18:44→09:19:19; 09:00:14→09:00:49) — not the
+  model; worth a look at what the reuse path does per page for a 23-page scanned report.
+- **09:21** · The ~35 s aside, explained: it is the orientation cross-check
+  (`pipeline._classify` → `apply_orientation_check`: a 400 DPI render and a tesseract OSD pass
+  per page, ~1.5 s a page), which runs on reused labels as well as fresh ones. Correct, and
+  cheap next to a model call; a possible later saving is to skip it when the labels are
+  reused for identical bytes. Not a defect.
+- **09:24** · **Predictions revised before the 09:30 run, because O5b displaced 09:00.** The
+  09:00 snapshot (taken after O5c) confirms the scheduled run did nothing: River Falls and
+  Bridgewater October still `newer files waiting`, Mullan Crossing October still `Needs
+  review (v1)`. O3 and O7 simply land at 09:30 and will score "late". Three 09:00 predictions
+  became unreachable, because later uploads restarted their months' settle before any run
+  could see them — so they are **withdrawn** (shown in the table, not scored), and the
+  outcomes that follow are predicted instead, each committed before its tick:
+  S2 Lolo Peak September (the 09:10 re-upload: `Waiting for uploads to settle` at 09:30, first
+  build **v1** at 10:30 — the 10:30 prediction amended from v2); S5 Timber Place September
+  (`Built v1 - newer files waiting` at 09:30 with the protected file settling); O6 River
+  Falls October (`newer files waiting` at 09:30; one v2 with both corrections at 10:30 —
+  tight: the 10:30 run must reach River Falls after the 09:31 file settles at ~10:31).
+  One plan error caught at the same time: S5 at 11:00 predicted `Built v1 (current)`, but
+  R1 reissues that month's Balance Sheet at 10:45, so it will be `Built v1 - newer files
+  waiting`; amended. `evaluate.py` shows withdrawn rows with their reason.
+- **09:43** · Watchdog. The 09:30 run `crr-quarterly-29844570` (09:30:23–09:37:30) caught up
+  on the displaced 09:00 work: Mullan Crossing September v1 with the corrected P&L (8 p / 6 bm
+  = golden, 20 calls, $0.46), Bridgewater October v2 with Ben's Balance Sheet — the later of
+  two uploaded seconds apart (24/8, 1 call, $0.017, the rest reused) — and Mullan Crossing
+  October v2 from the complete report, its `Needs review` cleared (8/6 = golden, 17 calls,
+  $0.36; Balance Sheet, P&L and schedule reused). River Falls October saw the Balance Sheet
+  uploaded at 09:31:12 — mid-run, before the run reached it — and waited, as predicted. Every
+  09:30 prediction met, the revised ones included; O3 and O7 score "late". Build order is
+  month-major (September's builds first, then October's, each alphabetical by property), which
+  gives the 10:30 run more margin to reach River Falls October after 10:31. 41 met, 3 late,
+  0 missed, 3 withdrawn, 24 pending; $8.07 spent; 105/123 actions, 0 failed. Watchdogs through
+  12:42 and the 13:08 report are all scheduled.
+- **09:46** · F1 looked into, for the report. The existing record check cannot catch it for
+  this company: a `per_record` section maps each page's `Property:` qualifier to the
+  property's `records[].pm_name` and flags `unresolved_record` when none matches — but every
+  section of the Cobalt schema (Bridgewater, Salmon Crossing) is `cardinality: one` with
+  "record_qualifier is always null" (`config/schemas/cobalt.yaml`), so no page is ever
+  matched against the property. The fix belongs one level up: an identity check on the text
+  the pipeline already extracts (OCR'd when scanned) — at least one page of the PM report
+  must name the property (its `pm_name`, or an alias configured per property), else a
+  `property_mismatch` review reason. Validated against the eight June samples before it
+  ships, so it cannot flag a genuine report.
+- **10:13** · Watchdog. The 10:00 run `crr-quarterly-29844600` (10:00:23–10:04:28) built three
+  one-file corrections for about 2 cents each, one model call apiece, everything else reused:
+  Fort Grounds September v3 with the revised Balance Sheet (8/6), WayPointe September v2 from
+  Drive's "Update existing" with changed bytes (10/8), and Salmon Crossing October v2 with the
+  corrected P&L (18/8) — numbered v2 although a reviewer had deleted v1's PDF, since versions
+  come from the month's index, not from `output/`. All golden. River Falls, Lolo Peak and
+  Timber Place still waiting on their 09:10/09:31 uploads, as predicted. S1's correction
+  withdrawn at 10:10 (the revised Balance Sheet trashed). 44 met, 3 late, 0 missed, 3
+  withdrawn, 21 pending; $8.13; 106/123 actions, 0 failed.
+- **10:44** · Watchdog. The 10:30 run `crr-quarterly-29844630` (10:30:23–10:34:32) built Fort
+  Grounds September **v4** — the revised Balance Sheet trashed at 10:10, so the month is back
+  on v2's files and a new version says so (1 call: v3's index did not hold the original
+  sheet's labels; $0.018) — and Lolo Peak September **v1**, its first build, with the
+  schedule moved in from October (8/6 = golden, 18 calls, $0.36). Timber Place September's
+  password-protected Balance Sheet is `Built v1 - newer files held`. All three met.
+  **One prediction of mine was wrong: River Falls October was not built at 10:30.** The run
+  judges every month's settle window against one clock, the time it *started* (10:30:23 —
+  `now` is taken once in `Reconciler._run`), not the time it reaches the month. The Balance
+  Sheet uploaded at 09:31:12 was 59 min 11 s old by that clock, so the month waited. My
+  09:24 revision assumed the clock at the time the run reached River Falls. The system is
+  consistent (a file uploaded during a run is never "settled" by it); SPEC §18.5 only says
+  "within the last 60 minutes" without saying from when — a one-line doc clarification for
+  the report (F5). R1's reissue at 10:45 now restarts this month's settle, so its v2 comes
+  at 12:00 with the reissued Balance Sheet; O6 at 10:30 will score MISSED as a wrong
+  prediction. For stakeholders the rule reads: a report is built by the first run starting
+  60+ minutes after the month's last upload — 60 to 90 minutes, plus the build.
+  47 met, 3 late, 0 missed, 1 not yet (O6), 3 withdrawn, 17 pending; $8.50; 107/123 actions,
+  0 failed. The S5 protected file was trashed on time at 10:40; R1 (16 reissues) starts 10:45.
+- **11:24** · Watchdog (the 11:12 trigger fired 12 minutes late). R1 done: Cornerstone
+  accounting reissued all 16 Balance Sheets, September and October, between 10:45:14 and
+  10:47:03 — every stakeholder action in the plan is now performed, 123/123, none failed. The
+  11:00 run `crr-quarterly-29844660` (11:00:23–11:03:05) built nothing and put all sixteen
+  months on `Built vN - newer files waiting`, exactly: the reissues settle from 11:45 to
+  11:47, so the 12:00 run faces sixteen rebuilds at once — the soft deadline's real test.
+  S5's amended 11:00 prediction met. 48 met, 3 late, 0 missed, 1 not yet (O6), 3 withdrawn,
+  16 pending; $8.50.
+- **11:25** · Names in Drive, checked in the snapshots. Lolo Peak September's same-name
+  re-upload (Drive's "Keep both"): the 09:30 run renamed the 05:35 copy `SUPERSEDED - Lolo Peak
+  Village Owner Report Sep 2026.pdf` and v1's index cites the 09:10 copy by file id — the
+  identical bytes told apart correctly. The schedule moved in from October keeps its
+  `… Oct 2026.pdf` name and is used, as the trusted folder says (§18.6). A withdrawn
+  correction restores the old name: Fort Grounds' original Balance Sheet, `SUPERSEDED` while
+  the REVISED one was newest, was renamed back at 10:30:49 by the run that built v4 from it —
+  and the rename did not restart the settle (it changes `modified`, not the upload time), as
+  that same run built. At 11:00:57 it went back to `SUPERSEDED` for R1's reissue: files are
+  marked superseded on sight, before the newer one settles.
+- **11:42** · Watchdog. The 11:30 run `crr-quarterly-29844690` (11:30:22–11:31:57, 1 min 35 s)
+  built nothing: every month is still waiting on R1's reissues, which settle 11:45–11:47. The
+  sixteen rebuilds are due in the 12:00 run. $8.50; conductor healthy; 13/16 ticks.
+- **12:14** · Watchdog. The R1 crunch is under way: the 12:00 run `crr-quarterly-29844720` has
+  held the lease since 12:00:22 and is still building at 12:14 (sixteen months due, each one
+  new Balance Sheet to classify, the rest reused). Its soft deadline stops new builds from
+  12:20:22; anything left goes to 12:30. Conductor healthy; results at the next check.
+- **12:22** · **R1 passed: sixteen rebuilds in one run, all golden, 31 cents.** The 12:00 run
+  `crr-quarterly-29844720` (12:00:22–12:20:00, 19 min 38 s) rebuilt every month, September's
+  eight then October's, each with the reissued Balance Sheet: one model call apiece (two for
+  River Falls October, whose corrected P&L had never been built), everything else reused —
+  17 calls, $0.31, 259 pages, every shape exactly golden (Lolo Peak October 7/5: its schedule
+  moved to September). River Falls October's v2 carries both of the day's corrections. The
+  last build started at 12:19:08, 77 s inside the 1200 s soft deadline, so nothing deferred;
+  sixteen one-file rebuilds are about what one run holds. Where the time went: the classify
+  step 567 s — almost all the orientation cross-check over 259 pages of reused labels, not the
+  17 calls — preprocess 210 s (OCR of the two scanned reports, ~70 s and ~95 s; October's
+  identical bytes then hit the run's OCR cache in 9–11 s), and ~400 s of Drive I/O.
+  **Capacity note for the report:** on Azure's CPU a scanned report costs ~70–95 s of OCR
+  per build and the orientation check ~1.5 s a page even when nothing is classified afresh;
+  skipping that check for labels reused on identical bytes would roughly halve a crunch
+  like this one. Predictions: all 16 R1 met — **64 met, 3 late, 1 missed (O6, my wrong
+  settle-clock prediction), 3 withdrawn; every prediction scored.** $8.81 spent.
+- **12:43** · Watchdog. Steady state: the 12:30 run `crr-quarterly-29844750` (12:30:24–12:32:10,
+  1 min 46 s) built nothing, and all seventeen months with a status (sixteen September and
+  October, plus Fort Grounds' hand-made August) read `Built vN (current)`. $8.81 spent in
+  all; 15/16 ticks. The 13:00 run is the last; then the report and the cleanup.

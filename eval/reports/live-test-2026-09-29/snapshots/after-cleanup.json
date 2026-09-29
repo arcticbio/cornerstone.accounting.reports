@@ -1,0 +1,394 @@
+{
+ "tag": "after-cleanup",
+ "taken": "2026-09-29T13:34:30Z",
+ "lease": {
+  "host": "crr-quarterly-29844810-vg7s6",
+  "acquired": "2026-09-29T13:30:27Z",
+  "released": "2026-09-29T13:34:15Z",
+  "expires": "2026-09-29T14:00:27Z"
+ },
+ "summary": [
+  "Investor report status - one line per property, newest month with any files",
+  "",
+  "",
+  "Last checked 2026-09-29 13:30 UTC. Open a property's month folder, then output/, for detail."
+ ],
+ "root_files": [
+  "Cobalt Properties Group",
+  "McCathren Management and Real Estate Services",
+  "Missoula Property Management",
+  "_LEASE - reconcile run (do not edit).json",
+  "_STATUS - All properties.txt"
+ ],
+ "properties": {
+  "fort-grounds": {
+   "months": {
+    "2026-10 October": {
+     "components": {
+      "4 - Distribution Schedule": [],
+      "3 - Profit and Loss": [],
+      "2 - Balance Sheet": [],
+      "1 - Property Manager Report": []
+     },
+     "loose": [],
+     "output": {
+      "status": [],
+      "pdfs": [],
+      "reviews": [],
+      "other": []
+     },
+     "state": null
+    },
+    "2026-09 September": {
+     "components": {
+      "4 - Distribution Schedule": [],
+      "3 - Profit and Loss": [],
+      "2 - Balance Sheet": [],
+      "1 - Property Manager Report": []
+     },
+     "loose": [],
+     "output": {
+      "status": [],
+      "pdfs": [],
+      "reviews": [],
+      "other": []
+     },
+     "state": null
+    },
+    "2026-06 June": {
+     "components": {},
+     "loose": [],
+     "output": null,
+     "state": null,
+     "other_folders": [
+      "inputs"
+     ]
+    }
+   },
+   "loose": []
+  },
+  "lolo-peak-village": {
+   "months": {
+    "2026-10 October": {
+     "components": {
+      "4 - Distribution Schedule": [],
+      "3 - Profit and Loss": [],
+      "2 - Balance Sheet": [],
+      "1 - Property Manager Report": []
+     },
+     "loose": [],
+     "output": {
+      "status": [],
+      "pdfs": [],
+      "reviews": [],
+      "other": []
+     },
+     "state": null
+    },
+    "2026-09 September": {
+     "components": {
+      "4 - Distribution Schedule": [],
+      "3 - Profit and Loss": [],
+      "2 - Balance Sheet": [],
+      "1 - Property Manager Report": []
+     },
+     "loose": [],
+     "output": {
+      "status": [],
+      "pdfs": [],
+      "reviews": [],
+      "other": []
+     },
+     "state": null
+    },
+    "2026-06 June": {
+     "components": {},
+     "loose": [],
+     "output": null,
+     "state": null,
+     "other_folders": [
+      "inputs"
+     ]
+    }
+   },
+   "loose": []
+  },
+  "mullan-crossing": {
+   "months": {
+    "2026-10 October": {
+     "components": {
+      "4 - Distribution Schedule": [],
+      "3 - Profit and Loss": [],
+      "2 - Balance Sheet": [],
+      "1 - Property Manager Report": []
+     },
+     "loose": [],
+     "output": {
+      "status": [],
+      "pdfs": [],
+      "reviews": [],
+      "other": []
+     },
+     "state": null
+    },
+    "2026-09 September": {
+     "components": {
+      "4 - Distribution Schedule": [],
+      "3 - Profit and Loss": [],
+      "2 - Balance Sheet": [],
+      "1 - Property Manager Report": []
+     },
+     "loose": [],
+     "output": {
+      "status": [],
+      "pdfs": [],
+      "reviews": [],
+      "other": []
+     },
+     "state": null
+    },
+    "2026-06 June": {
+     "components": {},
+     "loose": [],
+     "output": null,
+     "state": null,
+     "other_folders": [
+      "inputs"
+     ]
+    }
+   },
+   "loose": []
+  },
+  "waypointe": {
+   "months": {
+    "2026-10 October": {
+     "components": {
+      "4 - Distribution Schedule": [],
+      "3 - Profit and Loss": [],
+      "2 - Balance Sheet": [],
+      "1 - Property Manager Report": []
+     },
+     "loose": [],
+     "output": {
+      "status": [],
+      "pdfs": [],
+      "reviews": [],
+      "other": []
+     },
+     "state": null
+    },
+    "2026-09 September": {
+     "components": {
+      "4 - Distribution Schedule": [],
+      "3 - Profit and Loss": [],
+      "2 - Balance Sheet": [],
+      "1 - Property Manager Report": []
+     },
+     "loose": [],
+     "output": {
+      "status": [],
+      "pdfs": [],
+      "reviews": [],
+      "other": []
+     },
+     "state": null
+    },
+    "2026-06 June": {
+     "components": {},
+     "loose": [],
+     "output": null,
+     "state": null,
+     "other_folders": [
+      "inputs"
+     ]
+    }
+   },
+   "loose": []
+  },
+  "timber-place": {
+   "months": {
+    "2026-10 October": {
+     "components": {
+      "4 - Distribution Schedule": [],
+      "3 - Profit and Loss": [],
+      "2 - Balance Sheet": [],
+      "1 - Property Manager Report": []
+     },
+     "loose": [],
+     "output": {
+      "status": [],
+      "pdfs": [],
+      "reviews": [],
+      "other": []
+     },
+     "state": null
+    },
+    "2026-09 September": {
+     "components": {
+      "4 - Distribution Schedule": [],
+      "3 - Profit and Loss": [],
+      "2 - Balance Sheet": [],
+      "1 - Property Manager Report": []
+     },
+     "loose": [],
+     "output": {
+      "status": [],
+      "pdfs": [],
+      "reviews": [],
+      "other": []
+     },
+     "state": null
+    },
+    "2026-06 June": {
+     "components": {},
+     "loose": [],
+     "output": null,
+     "state": null,
+     "other_folders": [
+      "inputs"
+     ]
+    }
+   },
+   "loose": []
+  },
+  "river-falls": {
+   "months": {
+    "2026-10 October": {
+     "components": {
+      "4 - Distribution Schedule": [],
+      "3 - Profit and Loss": [],
+      "2 - Balance Sheet": [],
+      "1 - Property Manager Report": []
+     },
+     "loose": [],
+     "output": {
+      "status": [],
+      "pdfs": [],
+      "reviews": [],
+      "other": []
+     },
+     "state": null
+    },
+    "2026-09 September": {
+     "components": {
+      "4 - Distribution Schedule": [],
+      "3 - Profit and Loss": [],
+      "2 - Balance Sheet": [],
+      "1 - Property Manager Report": []
+     },
+     "loose": [],
+     "output": {
+      "status": [],
+      "pdfs": [],
+      "reviews": [],
+      "other": []
+     },
+     "state": null
+    },
+    "2026-06 June": {
+     "components": {},
+     "loose": [],
+     "output": null,
+     "state": null,
+     "other_folders": [
+      "inputs"
+     ]
+    }
+   },
+   "loose": []
+  },
+  "bridgewater": {
+   "months": {
+    "2026-10 October": {
+     "components": {
+      "4 - Distribution Schedule": [],
+      "3 - Profit and Loss": [],
+      "2 - Balance Sheet": [],
+      "1 - Property Manager Report": []
+     },
+     "loose": [],
+     "output": {
+      "status": [],
+      "pdfs": [],
+      "reviews": [],
+      "other": []
+     },
+     "state": null
+    },
+    "2026-09 September": {
+     "components": {
+      "4 - Distribution Schedule": [],
+      "3 - Profit and Loss": [],
+      "2 - Balance Sheet": [],
+      "1 - Property Manager Report": []
+     },
+     "loose": [],
+     "output": {
+      "status": [],
+      "pdfs": [],
+      "reviews": [],
+      "other": []
+     },
+     "state": null
+    },
+    "2026-06 June": {
+     "components": {},
+     "loose": [],
+     "output": null,
+     "state": null,
+     "other_folders": [
+      "inputs"
+     ]
+    }
+   },
+   "loose": []
+  },
+  "salmon-crossing": {
+   "months": {
+    "2026-10 October": {
+     "components": {
+      "4 - Distribution Schedule": [],
+      "3 - Profit and Loss": [],
+      "2 - Balance Sheet": [],
+      "1 - Property Manager Report": []
+     },
+     "loose": [],
+     "output": {
+      "status": [],
+      "pdfs": [],
+      "reviews": [],
+      "other": []
+     },
+     "state": null
+    },
+    "2026-09 September": {
+     "components": {
+      "4 - Distribution Schedule": [],
+      "3 - Profit and Loss": [],
+      "2 - Balance Sheet": [],
+      "1 - Property Manager Report": []
+     },
+     "loose": [],
+     "output": {
+      "status": [],
+      "pdfs": [],
+      "reviews": [],
+      "other": []
+     },
+     "state": null
+    },
+    "2026-06 June": {
+     "components": {},
+     "loose": [],
+     "output": null,
+     "state": null,
+     "other_folders": [
+      "inputs"
+     ]
+    }
+   },
+   "loose": []
+  }
+ },
+ "spent_usd": 8.8143
+}

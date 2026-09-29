@@ -993,6 +993,13 @@ A property-month is **ready** when all of these hold:
 | Settled | no PDF in any component folder has an upload time within the last `CRR_SETTLE_MINUTES` (60) | `Waiting for uploads to settle (last upload <time>)` |
 | Opens | every current file opens as a PDF (§18.6) | `Held - <reason>` |
 
+"The last 60 minutes" is measured from the moment the run starts: one clock for every month in
+the run, so a file uploaded while a run is working is never settled by that run. A month is
+therefore built by the first run that *starts* at least 60 minutes after its last upload — on
+the 30-minute schedule, 60 to 90 minutes after the last file, plus the build. (Made explicit
+after the live test of 2026-09-29, where a file 59 min 11 s old at the run's start waited for
+the next run, as the code intends.)
+
 An `optional` component with no file is simply left out, and the status and manifest say the
 report was built without it. If it arrives later, the inputs have changed and the next run
 builds the next version.
@@ -1094,12 +1101,16 @@ crr reconcile [--repo gdrive] [--classifier anthropic] [--property ID]... [--per
    `CRR_RUN_LEASE_S` (1800 s, the replica timeout); a damaged lease file is treated as none.
    A dry run takes no lease. Before each build the run checks the lease is still its own, and
    starts nothing more if it is not.
-1. Publish preflight (§6.1). On failure exit 1 — the only condition that fails the run.
+1. Publish preflight (§6.1), deferred to the moment before the run's first build (step 4) and
+   run at most once: a run with nothing to build writes no probe. On failure the run stops,
+   exit 1, before any model call. (Until 2026-09-29 it ran first in every run, and the
+   30-minute schedule left 48 trashed probes a day in the shared drive.)
 2. Ensure folders (§18.3).
 3. Close any month newly past its window; write its final status.
 4. For each open property-month with files, **oldest month first**: choose files (§18.4) →
    readiness (§18.5) → opens (§18.6) → fingerprint vs newest manifest (§18.7) → failure
-   cap → cost ceiling → build → **re-list `output/` and discard the build if a manifest with the
+   cap → cost ceiling → publish preflight, once per run (step 1) → build → **re-list
+   `output/` and discard the build if a manifest with the
    same fingerprint appeared meanwhile** → publish `vN` → status.
    **Each property-month is checked in isolation.** Whatever raises while checking one —
    anything outside the build, which §6.8 already contains: an index that cannot be read, a
