@@ -210,3 +210,7 @@ are in `evaluation.md` (from `eval/live/evaluate.py`).
 - **11:42** · Watchdog. The 11:30 run `crr-quarterly-29844690` (11:30:22–11:31:57, 1 min 35 s)
   built nothing: every month is still waiting on R1's reissues, which settle 11:45–11:47. The
   sixteen rebuilds are due in the 12:00 run. $8.50; conductor healthy; 13/16 ticks.
+- **12:14** · Watchdog. The R1 crunch is under way: the 12:00 run `crr-quarterly-29844720` has
+  held the lease since 12:00:22 and is still building at 12:14 (sixteen months due, each one
+  new Balance Sheet to classify, the rest reused). Its soft deadline stops new builds from
+  12:20:22; anything left goes to 12:30. Conductor healthy; results at the next check.
