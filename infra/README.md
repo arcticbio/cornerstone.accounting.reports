@@ -15,7 +15,7 @@ parts this file assumes are already done. What follows is the reference for the 
 |---|---|
 | Log Analytics workspace | where the job's stdout/stderr land, 90-day retention |
 | Container Apps Environment | the compute the job runs in |
-| Container Apps Job | schedule trigger (quarterly until PLAN Phase 10's STOP is cleared, then `*/30 * * * *`), 2 vCPU / 4 GiB, 1800 s timeout, 1 retry |
+| Container Apps Job | schedule trigger `*/30 * * * *` (armed 2026-09-29; quarterly before PLAN Phase 10's STOP was cleared), 2 vCPU / 4 GiB, 1800 s timeout, 1 retry |
 
 It does **not** create the Key Vault or the secrets. It references an existing vault, because a
 secret in a template is a secret in source control and in every deployment log.

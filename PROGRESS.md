@@ -4,7 +4,7 @@ Single source of truth for build state. Claude Code ticks tasks here after each 
 commits. Humans read this to see where things stand. Mirrors `docs/PLAN.md`; if they diverge,
 PLAN.md defines the work and this file records what has been done.
 
-**Continuous intake (Phase 10) is released to `main` ([#17](https://github.com/arcticbio/cornerstone.accounting.reports/pull/17)), deployed to Azure and measured there — a run with nothing to build is ~100 s of execution, $0 to ≈ $3.25 a month at 48 a day. The job runs `reconcile` on the quarterly cron until the owner arms the 30-minute schedule (PLAN Phase 10's STOP)** — see "Pick up here", item 0.
+**Continuous intake (Phase 10) runs every 30 minutes on Azure.** Released to `main` ([#17](https://github.com/arcticbio/cornerstone.accounting.reports/pull/17)), measured on Azure (~100 s per run with nothing to build, $0 to ≈ $3.25 a month at 48 a day) and **armed on 2026-09-29 by the owner's decision, clearing PLAN Phase 10's STOP** — see "Pick up here", item 0.
 
 **Branch:** `main` — v1 landed there via [#1](https://github.com/arcticbio/cornerstone.accounting.reports/pull/1) (built on the session branch `claude/gifted-lamport-wwgenm`; D-15 — every reference to `build/v1` in these documents means the release line, now `main`) · **Current phase:** 9 (complete) · **Tag:** `v1.0.0` pushed · **Last session note:** B-08 fixed; real-model eval run over all 172 pages and now **100 % on every metric**; the orientation defect it surfaced fixed — a page was shipping upside down — and the 59 % record score it reported traced to the metric, not the classifier. #7 merged to `main`; this branch merged it back cleanly. **B-09 is resolved: the production publish path works end to end.** **B-04 is resolved: Azure is
 deployed, audited and armed**, a rehearsal period (`2026-08`) is seeded in Drive, and
@@ -93,11 +93,16 @@ identical to the golden-label build ($3.73). See `docs/ANALYSIS-model-successor-
    deployed ([run 36503944061](https://github.com/arcticbio/cornerstone.accounting.reports/actions/runs/36503944061):
    `build → reconcile`, `3600 → 1800 s`, cron untouched) and measured on Azure — ~60 s of
    process, ~100 s of execution, $0 to ≈ $3.25 a month at 48 runs a day (A-15; Phase 10 →
-   *Released and measured on Azure*). **What is left is the owner's decision:** arm `*/30` — one
-   reviewed line in `infra/main.bicep` and a deploy (PLAN Phase 10's STOP) — or an hourly cron,
-   which stays inside the free grant whatever Azure bills. `main`'s *Run the Azure job* →
-   `scheduled` option does not dispatch until `aa4201d` lands (its label was a YAML mapping);
-   the measurement ran from the session branch.
+   *Released and measured on Azure*). **Armed 2026-09-29:** the owner chose every 30 minutes,
+   clearing PLAN Phase 10's STOP; `infra/main.bicep`'s `cronExpression` default is now
+   `*/30 * * * *`, and the deploy from `main` after the activation PR puts it on the job. The
+   same PR lands `aa4201d`, without which `main`'s *Run the Azure job* → `scheduled` option
+   does not dispatch. **Watch in the first week:** overlapping executions should each log
+   `intake.lease_held` and do nothing (A-14); Cost Management's Container Apps vCPU-seconds for
+   the first full day with no builds, divided by 96, is the billed seconds per run (A-15); the
+   shared drive's Trash collects ~48 `.crr-preflight-…` probes a day, which Drive deletes after
+   30 days (RUNBOOK → *The folders in Drive*). A follow-up could preflight only before a run's
+   first build, which would leave a run with nothing to build no probe at all.
 
 1. ~~**B-08 — the two McCathren packages go to review on `cardinality_violation`.**~~
    **Fixed 2026-09-11, root-caused with a real-model run.** Not a labelling error: a re-run of
@@ -277,6 +282,7 @@ Drive skeleton already exists (folders only), so a real September run writes int
 | 2026-09-28 | 10 | Audit follow-ups on `claude/gracious-davinci-nnkdv1`: main (#16) merged in; tie-break and month-isolation defects fixed; probes kept as tests (563 passed, 3 strict xfail); September cleaned in Drive, the rehearsal moved whole to its own root | Findings 4–6; land the branch in PR #15; merge |
 | 2026-09-29 | 10 | Findings 4–6 fixed (close-grace window, Drive retries, run lease) and every document brought up to date; the release candidate live-tested in the production environment — Azure what-if, production no-op and lease race, real-model builds in the rehearsal root on both models — 588 passed, 0 xfail | Merge the release PR; deploy; measure on Azure; arm |
 | 2026-09-29 | 10 | Released (#17), deployed, and a no-op run measured on Azure: ~60 s of process, ~100 s of execution, $0 to ≈ $3.25 a month at 48 a day (A-15). `azure-job.yml`'s `scheduled` option fixed (it did not dispatch from `main`) and its exit-code note rewritten for `reconcile` | The owner's decision: arm `*/30`, or hourly |
+| 2026-09-29 | 10 | **The owner armed the 30-minute schedule** (PLAN Phase 10's STOP cleared). Activation PR: `cronExpression` default `*/30 * * * *`, the pin test moved with it, a guard that *Run the Azure job* still recognises a paused schedule, and every document that said "until armed" | Merge; deploy from `main`; check the first scheduled executions |
 
 ## Phase 0 — Repository hygiene and scaffold
 
@@ -438,7 +444,7 @@ OCR included), and the image is pushed to GHCR as `:build-v1` and `:sha-<short>`
 **Acceptance:** `README.md` → `docs/RUNBOOK.md` takes someone who has never seen the repository from "the exports arrived" to "the packages are in Drive", including what to do with a review outcome. The `v1.0.0` tag is the last task.
 
 
-## Phase 10 — Continuous intake (built 2026-09-26; at its STOP)
+## Phase 10 — Continuous intake (built 2026-09-26; armed 2026-09-29)
 
 Mirrors PLAN Phase 10; SPEC §18; D-17 – D-24.
 
@@ -450,7 +456,7 @@ Mirrors PLAN Phase 10; SPEC §18; D-17 – D-24.
 - [x] Status files and root summary (§18.8): every row of the table has a test; bodies carry no page text, tenant names or figures (extend the log-capture test). The page-text check extracts every line of 12+ characters from the input PDFs and asserts none reaches a status or the summary. The summary's "Last checked" line changes every run on purpose: it is the reviewer's only sign the job is still alive.
 - [x] `crr reconcile` (§18.9) with `--property`, `--period`, `--force`, `--dry-run`; soft deadline; pre-publish re-list. `crr.intake.reconcile.Reconciler` runs the v1 pipeline unchanged through a staging adapter and publishes the result itself. The duplicate check is "a version appeared since this run read the index, with the same fingerprint" — proven by a test in which a second run executes *inside* the first one's classification. 13 end-to-end scenarios over real June files (`tests/eval/test_reconcile.py`). Smoke-tested from the CLI on a scratch tree: dry run → v1 → idempotent re-run.
 - [x] Verify against Azure docs and one real run: (a) whether a scheduled Container Apps Job execution starts while the previous one is running; (b) the monthly cost of 48 short runs a day. Record both in `QUESTIONS.md`. **(a), A-14:** overlapping executions run in parallel by default, and since 2026-09-28 the run lease sends the second away (proven live on the production drive). **(b), A-15, measured on Azure 2026-09-29** (`crr-quarterly-e8diyyh`): a run with nothing to build is ~60 s of process and ~100 s of execution, ~35 s of it Azure starting the replica. At 48 runs a day that is 96–160 % of the free grant, depending on whether the replica's start is billed: $0 to ≈ $3.25 a month at list price.
-- [x] Hosting (§18.10): Bicep cron and args; `azure-job.yml` gains `reconcile --force`; `build-period.yml` gains `reconcile`. The job now runs `crr reconcile --repo gdrive --classifier anthropic` with a 1800 s replica timeout, **but the cron default stays quarterly** — so no redeploy, including `Run the Azure job`'s automatic restore, can arm the 30-minute schedule before the STOP is cleared; arming is one reviewed line. `--force` went to `Build a period` (a `command` choice: `reconcile`, `reconcile --force`, `build`) rather than `azure-job.yml`: `az containerapp job update --args` cannot carry a multi-token list (A-13), and Actions runs the identical image with no job mutation to restore.
+- [x] Hosting (§18.10): Bicep cron and args; `azure-job.yml` gains `reconcile --force`; `build-period.yml` gains `reconcile`. The job now runs `crr reconcile --repo gdrive --classifier anthropic` with a 1800 s replica timeout, **but the cron default stays quarterly** — so no redeploy, including `Run the Azure job`'s automatic restore, can arm the 30-minute schedule before the STOP is cleared; arming is one reviewed line (made on 2026-09-29: *The STOP, cleared* below). `--force` went to `Build a period` (a `command` choice: `reconcile`, `reconcile --force`, `build`) rather than `azure-job.yml`: `az containerapp job update --args` cannot carry a multi-token list (A-13), and Actions runs the identical image with no job mutation to restore.
 - [x] Rehearsal in Drive: seed a month in the new layout and walk it through every status — partial upload, settle, unopenable file held, built v1, replace one component, v2 with reuse, duplicate upload superseded, delete-newest revert, closed. Record each in `PROGRESS.md`. **Done 2026-09-26 on the live shared drive, Fort Grounds / 2026-09 September**, the uploader played through the Drive API with June files under new names:
 
   | Step | What a person did | What `output/` said |
@@ -491,6 +497,11 @@ Mirrors PLAN Phase 10; SPEC §18; D-17 – D-24.
   `resolve`, `compose`, `config/schemas`, `config/outputs` and `eval/golden` are byte-identical
   to `main`, and the prompt version is unchanged; the golden gate passes in the suite (542
   tests), and the real-model rebuild of Fort Grounds matched golden (8 pages, 6 bookmarks).
+
+**The STOP, cleared 2026-09-29.** Given the rehearsal, the live test and the Azure measurement
+(~100 s per run with nothing to build; $0 to ≈ $3.25 a month at 48 a day, A-15), the owner
+chose to arm the 30-minute schedule rather than an hourly one. `cronExpression` defaults to
+`*/30 * * * *` in `infra/main.bicep`, pinned by `test_the_schedule_runs_reconcile_every_30_minutes`.
 
 ### Audit follow-ups (2026-09-26)
 

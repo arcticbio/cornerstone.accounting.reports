@@ -31,12 +31,13 @@ param googleSecretName string = 'google-service-account-b64'
 @description('Drive folder id that holds the property-manager folders. Not a secret.')
 param gdriveRootFolderId string
 
-// Continuous intake (SPEC §18, D-17) runs every 30 minutes: '*/30 * * * *'. The default stays
-// quarterly until PLAN Phase 10's STOP is cleared, so that no redeploy — including the restore
-// that `Run the Azure job` performs — can arm the 30-minute schedule by accident. Arming it is
-// changing this one default, reviewed like any other change.
-@description('Schedule, UTC. Continuous intake: */30 * * * *. Default: quarterly, until armed.')
-param cronExpression string = '0 6 20 1,4,7,10 *'
+// Continuous intake (SPEC §18, D-17) runs every 30 minutes. Armed 2026-09-29, when the owner
+// cleared PLAN Phase 10's STOP after a run with nothing to build was measured on Azure
+// (QUESTIONS A-15). Every deploy, including the restore that `Run the Azure job` performs,
+// applies this default, so a change of cadence is a change here, reviewed like any other.
+// `scheduleEnabled=false` parks the job without a schedule.
+@description('Schedule, UTC. Continuous intake: every 30 minutes.')
+param cronExpression string = '*/30 * * * *'
 
 @description('Set false to deploy the job without arming the schedule.')
 param scheduleEnabled bool = true

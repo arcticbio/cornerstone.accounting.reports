@@ -36,9 +36,6 @@ ones. Whatever the answer, it rewrites one status file whose **name** says where
 - **Release is not part of the system.** It produces reports for people to review and send.
 - **A month is watched until 42 days after it ends** (September → 11 November), then closed.
 
-> **Until the 30-minute schedule is armed** (PLAN Phase 10's STOP), the Azure job still fires
-> quarterly. Run it on demand from Actions meanwhile: *Build a period* → `reconcile`.
-
 ---
 
 ## For uploaders — one page
@@ -158,6 +155,10 @@ it is more than an hour old, the job has stopped running** — see
 - **Two system files sit at the root**: `_STATUS - All properties.txt`, the summary, and
   `_LEASE - reconcile run (do not edit).json`, which says which run is working, so that only
   one does at a time. Neither is anyone's to edit.
+- **The shared drive's Trash collects one `.crr-preflight-…` file per run**, about 48 a day.
+  Before it spends anything, each run proves it can write by uploading a 3-byte file to the
+  root and trashing it (SPEC §6.1): the service account may trash files but not delete them.
+  Drive deletes each for good after 30 days. Leave them there.
 
 ### Rehearsing without touching a real month
 
@@ -233,16 +234,19 @@ The Azure Container Apps Job is the production host. It runs **the same image** 
 secrets: `crr reconcile --repo gdrive --classifier anthropic`, no other arguments. One-time
 setup is [`SETUP-AZURE.md`](SETUP-AZURE.md).
 
-**The schedule.** Continuous intake means every 30 minutes, `*/30 * * * *`. The template's
-default is still the quarterly `0 6 20 1,4,7,10 *` until PLAN Phase 10's STOP is cleared, so
-that no redeploy — including the automatic restore below — can arm it by accident. **To arm
-it**, change the `cronExpression` default in `infra/main.bicep` to `'*/30 * * * *'`, merge, and
-run *Deploy to Azure* with *Preview* unticked. A run with nothing to build, measured on Azure
-on 2026-09-29, is ~60 s of process and ~100 s of execution: ~35 s of Azure starting the replica,
-then preflight, lease and 16 open months checked. It no longer grows with history. At 48 runs a
-day that is between $0 and ≈ $3.25 a month, depending on whether Azure bills the replica's start
-(A-15). An hourly cron, `0 * * * *`, halves that and stays inside the free grant. After the
-60-minute settle, a build then waits up to an hour rather than half an hour.
+**The schedule.** Every 30 minutes, `*/30 * * * *`: armed on 2026-09-29, when the owner
+cleared PLAN Phase 10's STOP. A run with nothing to build, measured on Azure that day, is ~60 s
+of process and ~100 s of execution: ~35 s of Azure starting the replica, then preflight, lease
+and 16 open months checked. It does not grow with history. At 48 runs a day that is between $0
+and ≈ $3.25 a month, depending on whether Azure bills the replica's start (A-15).
+
+**To change the cadence**, change the `cronExpression` default in `infra/main.bicep`, merge, and
+run *Deploy to Azure* with *Preview* unticked. Every deploy applies that default, including the
+restore *Run the Azure job* performs, so a hand edit in the portal lasts only until the next
+one. An hourly cron, `0 * * * *`, stays inside the free grant whatever Azure bills; after the
+60-minute settle a build then waits up to an hour rather than half an hour. **To pause it**, run
+*Deploy to Azure* with *Arm the schedule* unticked: the cron parks on 31 February, manual starts
+still work, and *Run the Azure job* keeps it paused.
 
 ### Starting it by hand
 

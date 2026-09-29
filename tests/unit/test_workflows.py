@@ -174,11 +174,20 @@ class TestInfrastructure:
         assert "secretRef: 'google-service-account-b64'" in self.bicep
         assert "sk-ant" not in self.bicep
 
-    def test_the_schedule_runs_reconcile_and_stays_quarterly_until_armed(self) -> None:
-        """PLAN Phase 10 STOP: no redeploy may arm the 30-minute schedule by default."""
+    def test_the_schedule_runs_reconcile_every_30_minutes(self) -> None:
+        """Armed 2026-09-29, when the owner cleared PLAN Phase 10's STOP. Every deploy applies
+        this default, so a change of cadence is a change to this line."""
         assert "'reconcile'" in self.bicep
-        assert "param cronExpression string = '0 6 20 1,4,7,10 *'" in self.bicep
+        assert "param cronExpression string = '*/30 * * * *'" in self.bicep
         assert "'--force'" not in self.bicep
+
+    def test_a_manual_run_recognises_the_parked_schedule(self) -> None:
+        """Run the Azure job carries a paused schedule through its restore by recognising the
+        cron the template parks it on. If the two drift apart, a smoke test re-arms a job
+        someone paused."""
+        parked = "scheduleEnabled ? cronExpression : '0 0 31 2 *'"
+        assert parked in self.bicep
+        assert '[ "$cron" = "0 0 31 2 *" ]' in (WORKFLOWS / "azure-job.yml").read_text()
 
     def test_the_scheduled_run_needs_no_period_argument(self) -> None:
         """A-07: the runner defaults to the month just ended."""
