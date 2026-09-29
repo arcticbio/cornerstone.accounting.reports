@@ -237,8 +237,11 @@ setup is [`SETUP-AZURE.md`](SETUP-AZURE.md).
 default is still the quarterly `0 6 20 1,4,7,10 *` until PLAN Phase 10's STOP is cleared, so
 that no redeploy — including the automatic restore below — can arm it by accident. **To arm
 it**, change the `cronExpression` default in `infra/main.bicep` to `'*/30 * * * *'`, merge, and
-run *Deploy to Azure* with *Preview* unticked. A run with nothing to build took 37 s in the
-Drive rehearsal; at 48 runs a day that sits within the Container Apps free grant (A-15).
+run *Deploy to Azure* with *Preview* unticked. A run with nothing to build took 49 s against
+the production drive on 2026-09-29 — measured from a session container, preflight and run
+lease included — and it no longer grows with history; at 48 runs a day that is about 78 % of
+the Container Apps free grant (A-15). Measure one on Azure before arming (*Run the Azure job* →
+`scheduled`): Azure adds the container's start.
 
 ### Starting it by hand
 

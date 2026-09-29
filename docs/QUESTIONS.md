@@ -283,6 +283,15 @@ of it. The builds themselves add ~2 minutes of replica time each. The worst case
 is a few dollars a month at list price, against ~$0.60 of model calls per property build.
 *Confirm* the real no-op run time on Azure before arming; if it is well over 60 s, the options
 are a smaller replica (1 vCPU / 2 GiB halves it) or a business-hours cron.
+*Measured 2026-09-29, not yet on Azure:* a real `crr reconcile` with nothing to build took
+**48.8 s** against the production drive from a session container — preflight, the run lease
+(3 s of it is the lease's settle) and interpreter start-up included. That is 140,500 vCPU-s and
+281,100 GiB-s a month at 48 runs a day, **78 % of the grant**, leaving ~40 builds' worth of
+headroom (a build measured 226-278 s on Timber Place, the slowest property, OCR included). It
+no longer grows with history: the audit found every closed month added 3 Drive calls to every
+run, fixed 2026-09-28 (SPEC §18.3). Model calls are the real cost: $0.62 for Timber Place on
+`claude-opus-5-5`, $0.02 for a one-page correction. Azure adds the container's start and image
+pull, which only a run there can measure.
 
 ## Blocked (Claude Code appends here)
 
