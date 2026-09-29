@@ -111,3 +111,11 @@ are in `evaluation.md` (from `eval/live/evaluate.py`).
   `2026-10`, dispatched on `main` at 09:17:18 with the lease free (released 09:01:12)
   ([run 36548185639](https://github.com/arcticbio/cornerstone.accounting.reports/actions/runs/36548185639)).
   Expected: v3 by reuse (O5b made v2). Result to follow.
+- **09:20** · **O5c passed: a forced rebuild alone, v3 by reuse.** Run 36548185639 took the
+  lease at 09:17:45 (host `6f4fcffad146`), reused all three stored classifications (no model
+  call), published `Built v3 (current)` (25 pages, 13 bookmarks — identical in shape to v1 and
+  v2) at 09:19:31 and released the lease at 09:19:35; the job took 2 min 20 s from dispatch,
+  exit 0. Two forced rebuilds, both on stored labels: an operator can re-publish a month at
+  no model cost. Aside for the report: both forced runs spent ~35 s between reusing the
+  report's labels and the Balance Sheet's (09:18:44→09:19:19; 09:00:14→09:00:49) — not the
+  model; worth a look at what the reuse path does per page for a 23-page scanned report.
