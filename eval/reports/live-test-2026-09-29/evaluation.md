@@ -40,7 +40,7 @@ Scored 67 predictions — late: 1, met: 35, pending: 31
 | O4 | waypointe | 2026-10 | 07:30 | Built v1 (current) | 1 | Waiting for uploads to settle | 0 | **late** |  |
 | O4 | waypointe | 2026-10 | 08:00 | Built v1 (current) | 1 | Built v1 (current) | 1 | **met** | rename/Doc/shortcut: no build |
 | O5 | timber-place | 2026-10 | 07:30 | Built v1 (current) | 1 | Built v1 (current) | 1 | **met** |  |
-| O5 | timber-place | 2026-10 | 09:30 | Built v2 (current) | 2 | - | - | **pending** | the operator's forced rebuild |
+| O5 | timber-place | 2026-10 | 09:30 | Built v3 (current) | 3 | - | - | **pending** | two forced rebuilds, v2 and v3 |
 | O6 | river-falls | 2026-10 | 07:30 | Built v1 (current) | 1 | Built v1 (current) | 1 | **met** |  |
 | O6 | river-falls | 2026-10 | 09:00 | Built v2 (current) | 2 | - | - | **pending** | the corrected P&L |
 | O7 | bridgewater | 2026-10 | 07:30 | Built v1 (current) | 1 | Built v1 (current) | 1 | **met** |  |

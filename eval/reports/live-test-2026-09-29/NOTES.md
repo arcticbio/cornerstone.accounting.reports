@@ -101,3 +101,9 @@ are in `evaluation.md` (from `eval/live/evaluate.py`).
   for O5c: "v3 if O5b already built v2"). Note on the image: `:build-v1` on `main` still
   probes at start (`repository.preflight_ok` 08:59:16) — the follow-up ec061b7 is not
   deployed, deliberately; the system under test stays fixed tonight.
+- **09:14** · Watchdog: conductor alive (pid 420), 103/123 actions, 0 failed, $7.24. 09:10 acts
+  done on time: S2's second upload of Lolo Peak Village's owner report under the same name, and
+  S5's password-protected Balance Sheet into Timber Place September. The 09:00 tick is still
+  open by design — the only lease since 08:30 is O5b's, taken before the tick — so its
+  snapshot will be taken after O5c's run releases the lease (about 09:18), and will reflect
+  that run, not a scheduled one.
