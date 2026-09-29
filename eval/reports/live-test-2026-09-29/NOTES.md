@@ -124,7 +124,7 @@ are in `evaluation.md` (from `eval/live/evaluate.py`).
   per page, ~1.5 s a page), which runs on reused labels as well as fresh ones. Correct, and
   cheap next to a model call; a possible later saving is to skip it when the labels are
   reused for identical bytes. Not a defect.
-- **09:26** · **Predictions revised before the 09:30 run, because O5b displaced 09:00.** The
+- **09:24** · **Predictions revised before the 09:30 run, because O5b displaced 09:00.** The
   09:00 snapshot (taken after O5c) confirms the scheduled run did nothing: River Falls and
   Bridgewater October still `newer files waiting`, Mullan Crossing October still `Needs
   review (v1)`. O3 and O7 simply land at 09:30 and will score "late". Three 09:00 predictions
