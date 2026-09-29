@@ -57,3 +57,7 @@ are in `evaluation.md` (from `eval/live/evaluate.py`).
   earlier (§18.9 step 5 leaves the status as it is). A reviewer checking at 07:55 would be
   misled for one run. Proposed fix: write `Ready - building on the next run` for a month the
   soft deadline defers.
+- **08:31** · Operator step O5a: *Run the Azure job* → `scheduled` dispatched on `main` at 08:31:49
+  ([run 36543294733](https://github.com/arcticbio/cornerstone.accounting.reports/actions/runs/36543294733))
+  while the 08:30 scheduled run holds the lease. Expected: the manual execution finds the
+  lease held and exits 0 with "nothing done". Result to follow from its logs.
