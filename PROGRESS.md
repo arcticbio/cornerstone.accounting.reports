@@ -111,13 +111,15 @@ identical to the golden-label build ($3.73). See `docs/ANALYSIS-model-successor-
    one golden-shaped except the deliberately wrong inputs; 64 of 68 scored predictions met (3
    late, 1 wrong about the settle clock, 3 withdrawn mid-test); $8.81 of model spend. A-14's
    overlap check passed live (a manual execution during a scheduled one logged
-   `intake.lease_held` and did nothing). **Open from it:** F1 — a report built from *another
-   property's* owner report is published as current (the Cobalt schema has no per-page record
-   check; proposed: a property-identity check on the page text) — fix before stakeholders
-   upload; F2 (a deferred month's stale status) and F3 (a deleted published PDF unnoticed),
-   both minor; F4 and F5 are documented (RUNBOOK: mind the half hour for manual runs; SPEC
-   §18.5: the settle clock is the run's start). The test months were moved to the rehearsal
-   root afterwards; production holds only June and the empty months the schedule prepares.
+   `intake.lease_held` and did nothing). **Its findings, all closed:** F1 — a report filed under
+   *another property* is built as that property's — is **accepted by design** (owner decision,
+   D-25, SPEC §18.6: the folder declares the property, as it declares component and month; a
+   name check would hold genuine reports); F2 (a deferred month's stale status), F3 (a deleted
+   published PDF unnoticed) and the capacity note (reused labels were cross-checked for
+   orientation again) are fixed in the follow-up PR; F4 and F5 were documented in #20. The
+   probe change (ec061b7) is live: the first runs after #20 merged left no probe. The test
+   months were moved to the rehearsal root afterwards; production holds only June and the
+   empty months the schedule prepares.
 
 1. ~~**B-08 — the two McCathren packages go to review on `cardinality_violation`.**~~
    **Fixed 2026-09-11, root-caused with a real-model run.** Not a labelling error: a re-run of
