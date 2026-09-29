@@ -170,7 +170,7 @@ are in `evaluation.md` (from `eval/live/evaluate.py`).
   Timber Place still waiting on their 09:10/09:31 uploads, as predicted. S1's correction
   withdrawn at 10:10 (the revised Balance Sheet trashed). 44 met, 3 late, 0 missed, 3
   withdrawn, 21 pending; $8.13; 106/123 actions, 0 failed.
-- **10:47** · Watchdog. The 10:30 run `crr-quarterly-29844630` (10:30:23–10:34:32) built Fort
+- **10:44** · Watchdog. The 10:30 run `crr-quarterly-29844630` (10:30:23–10:34:32) built Fort
   Grounds September **v4** — the revised Balance Sheet trashed at 10:10, so the month is back
   on v2's files and a new version says so (1 call: v3's index did not hold the original
   sheet's labels; $0.018) — and Lolo Peak September **v1**, its first build, with the
