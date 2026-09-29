@@ -124,3 +124,18 @@ are in `evaluation.md` (from `eval/live/evaluate.py`).
   per page, ~1.5 s a page), which runs on reused labels as well as fresh ones. Correct, and
   cheap next to a model call; a possible later saving is to skip it when the labels are
   reused for identical bytes. Not a defect.
+- **09:26** · **Predictions revised before the 09:30 run, because O5b displaced 09:00.** The
+  09:00 snapshot (taken after O5c) confirms the scheduled run did nothing: River Falls and
+  Bridgewater October still `newer files waiting`, Mullan Crossing October still `Needs
+  review (v1)`. O3 and O7 simply land at 09:30 and will score "late". Three 09:00 predictions
+  became unreachable, because later uploads restarted their months' settle before any run
+  could see them — so they are **withdrawn** (shown in the table, not scored), and the
+  outcomes that follow are predicted instead, each committed before its tick:
+  S2 Lolo Peak September (the 09:10 re-upload: `Waiting for uploads to settle` at 09:30, first
+  build **v1** at 10:30 — the 10:30 prediction amended from v2); S5 Timber Place September
+  (`Built v1 - newer files waiting` at 09:30 with the protected file settling); O6 River
+  Falls October (`newer files waiting` at 09:30; one v2 with both corrections at 10:30 —
+  tight: the 10:30 run must reach River Falls after the 09:31 file settles at ~10:31).
+  One plan error caught at the same time: S5 at 11:00 predicted `Built v1 (current)`, but
+  R1 reissues that month's Balance Sheet at 10:45, so it will be `Built v1 - newer files
+  waiting`; amended. `evaluate.py` shows withdrawn rows with their reason.

@@ -96,7 +96,9 @@ def evaluate() -> list[dict[str, Any]]:
     rows = []
     for e in plan.EXPECTS:
         at = snaps.get(e.by)
-        if at is None:
+        if e.withdrawn:  # unreachable once the run changed course; shown, never scored
+            verdict, facts = "withdrawn", month_facts(at, e.prop, e.period) if at else None
+        elif at is None:
             verdict, facts = "pending", None
         else:
             facts = month_facts(at, e.prop, e.period)
@@ -122,7 +124,7 @@ def evaluate() -> list[dict[str, Any]]:
                 "actual": (facts or {}).get("status") or "-",
                 "act_v": (facts or {}).get("versions", "-"),
                 "verdict": verdict,
-                "note": e.note,
+                "note": f"{e.note} — withdrawn: {e.withdrawn}" if e.withdrawn else e.note,
             }
         )
     return rows

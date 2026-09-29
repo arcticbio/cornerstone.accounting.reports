@@ -77,6 +77,8 @@ class Expect:
     status: str | None = None
     versions: int | None = None
     note: str = ""
+    #: Set when the run made this prediction unreachable before its tick came; the reason.
+    withdrawn: str = ""
 
 
 def _full_set(sid: str, at: float, prop: str, period: str, *, ds: bool = True) -> list[Act]:
@@ -911,6 +913,8 @@ ACTS: list[Act] = [
 # What SPEC §18 says should be true, written before the run. Each is checked against the
 # snapshot taken after the run at tick `by`. A build that a busy run defers (§18.9 step 5) is
 # scored "late" when it lands by `by + 60`, not wrong.
+DISPLACED = "the 09:00 run was displaced by O5b"
+
 EXPECTS: list[Expect] = [
     Expect("S1", "fort-grounds", SEP, 30, "Waiting for uploads to settle", 0),
     Expect("S1", "fort-grounds", SEP, 90, "Built v1 (current)", 1, "without the optional schedule"),
@@ -925,8 +929,19 @@ EXPECTS: list[Expect] = [
     Expect("S2", "lolo-peak-village", SEP, 30, "Waiting for Balance Sheet, Profit and Loss", 0),
     Expect("S2", "lolo-peak-village", SEP, 90, "Waiting for Profit and Loss", 0),
     Expect("S2", "lolo-peak-village", SEP, 150, "Waiting for uploads to settle", 0),
-    Expect("S2", "lolo-peak-village", SEP, 210, "Built v1 (current)", 1, "incl. schedule moved in"),
-    Expect("S2", "lolo-peak-village", SEP, 300, "Built v2 (current)", 2, "identical re-upload"),
+    Expect(
+        "S2",
+        "lolo-peak-village",
+        SEP,
+        210,
+        "Built v1 (current)",
+        1,
+        "incl. schedule moved in",
+        withdrawn=f"{DISPLACED}, and the 09:10 re-upload restarted the settle",
+    ),
+    Expect("S2", "lolo-peak-village", SEP, 240, "Waiting for uploads to settle", 0, "added 09:25"),
+    # Amended 09:25 from v2: with no v1 at 09:00, the build after the re-upload settles is v1.
+    Expect("S2", "lolo-peak-village", SEP, 300, "Built v1 (current)", 1, "first build, re-upload"),
     Expect("S3", "mullan-crossing", SEP, 30, "Waiting for Balance Sheet, Profit and Loss", 0),
     Expect("S3", "mullan-crossing", SEP, 60, "Waiting for Profit and Loss", 0),
     Expect("S3", "mullan-crossing", SEP, 210, "Waiting for uploads to settle", 0, "never settled"),
@@ -936,9 +951,21 @@ EXPECTS: list[Expect] = [
     Expect("S4", "waypointe", SEP, 270, "Built v2 (current)", 2, "changed bytes as a new version"),
     Expect("S5", "timber-place", SEP, 90, "Built v1 (current)", 1, "scanned source, OCR"),
     Expect("S5", "timber-place", SEP, 180, "Built v1 - newer files held", 1, "non-PDF held"),
-    Expect("S5", "timber-place", SEP, 210, "Built v1 (current)", 1, "deleted: v1 again, no build"),
+    Expect(
+        "S5",
+        "timber-place",
+        SEP,
+        210,
+        "Built v1 (current)",
+        1,
+        "deleted: v1 again, no build",
+        withdrawn=f"{DISPLACED}; the protected file (09:10) is in play by 09:30",
+    ),
+    Expect("S5", "timber-place", SEP, 240, "Built v1 - newer files waiting", 1, "added 09:25"),
     Expect("S5", "timber-place", SEP, 300, "Built v1 - newer files held", 1, "protected PDF held"),
-    Expect("S5", "timber-place", SEP, 330, "Built v1 (current)", 1, "deleted: v1 again"),
+    # Amended 09:25 from "Built v1 (current)": a plan error — R1 reissues this month's Balance
+    # Sheet at 10:45, so at 11:00 a newer file is still settling.
+    Expect("S5", "timber-place", SEP, 330, "Built v1 - newer files waiting", 1, "R1 settling"),
     Expect("S6", "river-falls", SEP, 90, "Held - would cost about", 0, "ceiling, no model call"),
     Expect("S6", "river-falls", SEP, 120, "Waiting for uploads to settle", 0),
     Expect("S6", "river-falls", SEP, 180, "Built v1 (current)", 1, "the right report"),
@@ -961,7 +988,20 @@ EXPECTS: list[Expect] = [
         "O5", "timber-place", OCT, 240, "Built v3 (current)", 3, "two forced rebuilds, v2 and v3"
     ),
     Expect("O6", "river-falls", OCT, 120, "Built v1 (current)", 1),
-    Expect("O6", "river-falls", OCT, 210, "Built v2 (current)", 2, "the corrected P&L"),
+    Expect(
+        "O6",
+        "river-falls",
+        OCT,
+        210,
+        "Built v2 (current)",
+        2,
+        "the corrected P&L",
+        withdrawn=f"{DISPLACED}; the 09:31 Balance Sheet lands before the 09:30 run reaches it",
+    ),
+    Expect("O6", "river-falls", OCT, 240, "Built v1 - newer files waiting", 1, "added 09:25"),
+    # Added 09:25: both corrections in one build, once the 09:31 file settles (10:31). Tight:
+    # the 10:30 run must reach River Falls after 10:31 — it builds two months first.
+    Expect("O6", "river-falls", OCT, 300, "Built v2 (current)", 2, "both corrections, added"),
     Expect("O7", "bridgewater", OCT, 120, "Built v1 (current)", 1),
     Expect("O7", "bridgewater", OCT, 210, "Built v2 (current)", 2, "Ben's, the newer, wins"),
     Expect("O8", "salmon-crossing", OCT, 120, "Built v1 (current)", 1),
