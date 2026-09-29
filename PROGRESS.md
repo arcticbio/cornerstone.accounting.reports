@@ -97,7 +97,7 @@ identical to the golden-label build ($3.73). See `docs/ANALYSIS-model-successor-
    clearing PLAN Phase 10's STOP; `infra/main.bicep`'s `cronExpression` default is now
    `*/30 * * * *`. [#18](https://github.com/arcticbio/cornerstone.accounting.reports/pull/18)
    merged it with `aa4201d` (the `scheduled` option fix), *Deploy to Azure* from `main` put it
-   on the job at 02:00 UTC, and the first scheduled execution ran that half hour (Phase 10 →
+   on the job at 02:00 UTC; scheduled executions ran at 02:00 and 02:30 (Phase 10 →
    *Armed*). **Watch in the first week:** overlapping executions should each log
    `intake.lease_held` and do nothing (A-14); Cost Management's Container Apps vCPU-seconds for
    the first full day with no builds, divided by 96, is the billed seconds per run (A-15); the
@@ -284,7 +284,7 @@ Drive skeleton already exists (folders only), so a real September run writes int
 | 2026-09-29 | 10 | Findings 4–6 fixed (close-grace window, Drive retries, run lease) and every document brought up to date; the release candidate live-tested in the production environment — Azure what-if, production no-op and lease race, real-model builds in the rehearsal root on both models — 588 passed, 0 xfail | Merge the release PR; deploy; measure on Azure; arm |
 | 2026-09-29 | 10 | Released (#17), deployed, and a no-op run measured on Azure: ~60 s of process, ~100 s of execution, $0 to ≈ $3.25 a month at 48 a day (A-15). `azure-job.yml`'s `scheduled` option fixed (it did not dispatch from `main`) and its exit-code note rewritten for `reconcile` | The owner's decision: arm `*/30`, or hourly |
 | 2026-09-29 | 10 | **The owner armed the 30-minute schedule** (PLAN Phase 10's STOP cleared). Activation PR: `cronExpression` default `*/30 * * * *`, the pin test moved with it, a guard that *Run the Azure job* still recognises a paused schedule, and every document that said "until armed" | Merge; deploy from `main`; check the first scheduled executions |
-| 2026-09-29 | 10 | #18 merged and deployed from `main` at 02:00 UTC: **continuous intake is live**, every 30 minutes. The first scheduled execution, at 02:00, took and released the lease and advanced the summary | The first week: A-14's overlaps, A-15's billed seconds, the Trash's probes |
+| 2026-09-29 | 10 | #18 merged and deployed from `main` at 02:00 UTC: **continuous intake is live**, every 30 minutes. The first two scheduled executions, at 02:00 and 02:30, each took and released the lease and advanced the summary | The first week: A-14's overlaps, A-15's billed seconds, the Trash's probes |
 
 ## Phase 0 — Repository hygiene and scaffold
 
@@ -504,7 +504,7 @@ Mirrors PLAN Phase 10; SPEC §18; D-17 – D-24.
 (~100 s per run with nothing to build; $0 to ≈ $3.25 a month at 48 a day, A-15), the owner
 chose to arm the 30-minute schedule rather than an hourly one. `cronExpression` defaults to
 `*/30 * * * *` in `infra/main.bicep`, pinned by `test_the_schedule_runs_reconcile_every_30_minutes`.
-Deployed at 02:00 UTC that day; the first scheduled execution is under *Armed* below.
+Deployed at 02:00 UTC that day; the first scheduled executions are under *Armed* below.
 
 ### Audit follow-ups (2026-09-26)
 
@@ -646,6 +646,7 @@ in `aa4201d` with a test that fails on the old file.
 | 2 | *Deploy to Azure* from `main`, preview ([run 36510024153](https://github.com/arcticbio/cornerstone.accounting.reports/actions/runs/36510024153)) | one real change: `crr-quarterly`'s `cronExpression`, `0 6 20 1,4,7,10 *` → `*/30 * * * *`; the rest is the known what-if noise |
 | 3 | *Deploy to Azure*, applied ([run 36510404622](https://github.com/arcticbio/cornerstone.accounting.reports/actions/runs/36510404622)) | the same change, deployed 01:59:03–02:00:11; the job's identity still reads the vault |
 | 4 | The first scheduled execution, `crr-quarterly-29844120` | lease 02:00:39–02:01:31; the summary says *Last checked 2026-09-29 02:00 UTC* and lists no month that could not be checked |
+| 5 | The second, `crr-quarterly-29844150`, 30 minutes later | lease 02:30:24–02:31:20; *Last checked 2026-09-29 02:30 UTC*, nothing that could not be checked. The replica started 15 s faster than at 02:00 (24 s to the lease, against 39 s) |
 
 A scheduled execution is named for its fire time: `29844120` is 2026-09-29 02:00 UTC in
 minutes since the epoch. A manual start gets a random suffix instead (`crr-quarterly-e8diyyh`),
