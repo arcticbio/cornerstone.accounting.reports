@@ -1,4 +1,4 @@
-Scored 71 predictions — late: 3, met: 47, not yet: 1, pending: 17, withdrawn: 3
+Scored 71 predictions — late: 3, met: 48, not yet: 1, pending: 16, withdrawn: 3
 
 | Scenario | Property | Month | Tick | Expected | v | Actual | v | Verdict | Note |
 |---|---|---|---|---|---|---|---|---|---|
@@ -26,7 +26,7 @@ Scored 71 predictions — late: 3, met: 47, not yet: 1, pending: 17, withdrawn: 
 | S5 | timber-place | 2026-09 | 09:00 | Built v1 (current) | 1 | Built v1 - newer files held | 1 | **withdrawn** | deleted: v1 again, no build — withdrawn: the 09:00 run was displaced by O5b; the protected file (09:10) is in play by 09:30 |
 | S5 | timber-place | 2026-09 | 09:30 | Built v1 - newer files waiting | 1 | Built v1 - newer files waiting | 1 | **met** | added 09:25 |
 | S5 | timber-place | 2026-09 | 10:30 | Built v1 - newer files held | 1 | Built v1 - newer files held | 1 | **met** | protected PDF held |
-| S5 | timber-place | 2026-09 | 11:00 | Built v1 - newer files waiting | 1 | - | - | **pending** | R1 settling |
+| S5 | timber-place | 2026-09 | 11:00 | Built v1 - newer files waiting | 1 | Built v1 - newer files waiting | 1 | **met** | R1 settling |
 | S6 | river-falls | 2026-09 | 07:00 | Held - would cost about | 0 | Held - would cost about $3.69, over the $3.00 limit | 0 | **met** | ceiling, no model call |
 | S6 | river-falls | 2026-09 | 07:30 | Waiting for uploads to settle | 0 | Waiting for uploads to settle | 0 | **met** |  |
 | S6 | river-falls | 2026-09 | 08:30 | Built v1 (current) | 1 | Built v1 (current) | 1 | **met** | the right report |

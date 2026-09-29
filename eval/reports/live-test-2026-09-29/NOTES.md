@@ -189,3 +189,11 @@ are in `evaluation.md` (from `eval/live/evaluate.py`).
   60+ minutes after the month's last upload — 60 to 90 minutes, plus the build.
   47 met, 3 late, 0 missed, 1 not yet (O6), 3 withdrawn, 17 pending; $8.50; 107/123 actions,
   0 failed. The S5 protected file was trashed on time at 10:40; R1 (16 reissues) starts 10:45.
+- **11:24** · Watchdog (the 11:12 trigger fired 12 minutes late). R1 done: Cornerstone
+  accounting reissued all 16 Balance Sheets, September and October, between 10:45:14 and
+  10:47:03 — every stakeholder action in the plan is now performed, 123/123, none failed. The
+  11:00 run `crr-quarterly-29844660` (11:00:23–11:03:05) built nothing and put all sixteen
+  months on `Built vN - newer files waiting`, exactly: the reissues settle from 11:45 to
+  11:47, so the 12:00 run faces sixteen rebuilds at once — the soft deadline's real test.
+  S5's amended 11:00 prediction met. 48 met, 3 late, 0 missed, 1 not yet (O6), 3 withdrawn,
+  16 pending; $8.50.
