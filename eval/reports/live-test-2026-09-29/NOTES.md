@@ -119,3 +119,8 @@ are in `evaluation.md` (from `eval/live/evaluate.py`).
   no model cost. Aside for the report: both forced runs spent ~35 s between reusing the
   report's labels and the Balance Sheet's (09:18:44→09:19:19; 09:00:14→09:00:49) — not the
   model; worth a look at what the reuse path does per page for a 23-page scanned report.
+- **09:23** · The ~35 s aside, explained: it is the orientation cross-check
+  (`pipeline._classify` → `apply_orientation_check`: a 400 DPI render and a tesseract OSD pass
+  per page, ~1.5 s a page), which runs on reused labels as well as fresh ones. Correct, and
+  cheap next to a model call; a possible later saving is to skip it when the labels are
+  reused for identical bytes. Not a defect.
