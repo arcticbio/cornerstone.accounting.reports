@@ -251,7 +251,7 @@ the Container Apps free grant (A-15). Measure one on Azure before arming (*Run t
 |---|---|---|
 | **version** | prints `crr 1.0.0` and exits | nothing |
 | **validate-config** | lists 4 schemas, 3 output definitions, 8 properties | nothing |
-| **scheduled (the job's own arguments, unchanged: one reconcile run)** | one `reconcile` run, exactly what the schedule does | only what is ready to build |
+| **scheduled (the job's own arguments, one reconcile run)** | one `reconcile` run, exactly what the schedule does | only what is ready to build |
 | **wait_minutes** | how long to wait before giving up on the execution | `20` |
 
 The first two set the job's arguments, start it, print its logs and then **put the scheduled

@@ -207,3 +207,21 @@ class TestInfrastructure:
         ci = _workflow("ci.yml")
         steps = " ".join(str(s.get("run", "")) for s in ci["jobs"]["bicep"]["steps"])
         assert "az bicep build" in steps
+
+
+def test_every_choice_option_is_a_plain_string() -> None:
+    """An option such as `x (a, b: c)` is a YAML mapping, not a string: GitHub then refuses to
+    dispatch it, and nothing else notices. It happened to Run the Azure job's third option."""
+    for path in sorted(WORKFLOWS.glob("*.yml")):
+        inputs = (_workflow(path.name)[True].get("workflow_dispatch") or {}).get("inputs") or {}
+        for name, spec in inputs.items():
+            for option in spec.get("options", []):
+                assert isinstance(option, str), f"{path.name}: {name} option {option!r}"
+
+
+def test_the_azure_jobs_scheduled_option_is_the_one_its_plan_step_recognises() -> None:
+    workflow = _workflow("azure-job.yml")
+    options = workflow[True]["workflow_dispatch"]["inputs"]["command"]["options"]
+    scheduled = [o for o in options if str(o).startswith("scheduled")]
+    assert len(scheduled) == 1
+    assert '"${COMMAND#scheduled}"' in (WORKFLOWS / "azure-job.yml").read_text()

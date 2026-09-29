@@ -215,4 +215,4 @@ jobs:
           if [ "${{ steps.grant.outputs.granted }}" != "true" ]; then
             echo "::warning title=Grant Key Vault access by hand::The job's identity cannot read ${{ steps.settings.outputs.key_vault_name }} yet. Run: az role assignment create --assignee-object-id ${{ steps.deploy.outputs.principal_id }} --assignee-principal-type ServicePrincipal --role 'Key Vault Secrets User' --scope \$(az keyvault show -n ${{ steps.settings.outputs.key_vault_name }} --query id -o tsv) — or do it in the portal (docs/SETUP-AZURE-PORTAL.md part 4), then re-run this workflow so the job picks up the secrets it can now read. See docs/SETUP-AZURE.md step 6."
           fi
-          echo "::notice title=Smoke test the job::az containerapp job start --name ${{ steps.deploy.outputs.job_name }} --resource-group ${{ steps.settings.outputs.resource_group }} --args version"
+          echo "::notice title=Smoke test the job::Actions → Run the Azure job → version. (az containerapp job start --args does not work: docs/SETUP-AZURE.md step 7.)"
