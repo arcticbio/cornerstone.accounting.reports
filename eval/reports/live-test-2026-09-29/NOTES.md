@@ -10,3 +10,11 @@ are in `evaluation.md` (from `eval/live/evaluate.py`).
   settling / waiting-for statuses exactly as SPEC §18.8 names them. $0 spent (nothing has
   settled yet). The one PDF in Salmon Crossing's September `output/` is the test's deliberate
   drop there, not a version.
+- **06:43** · Conductor healthy; 76/123 actions, 0 failed. 06:30 run `crr-quarterly-29844390`
+  (lease 06:30:23–06:32:15, 1 m 52 s: more months with files to read). 8/8 predictions due
+  met. Hand-made folders behave as the code said they would: Fort Grounds' `2026-08 August`
+  got its component folders and `output/` from the run (no status — its only file was dropped
+  loose in the month folder); beside Lolo Peak's person-made `2026-08` the run created a
+  proper `2026-08 August`, and the file in `2026-08` is never read; Mullan Crossing's
+  `August 2026` and WayPointe's closed `2026-07 July` were left untouched (no `output/`).
+  Every October month is settling. First builds are due in the 07:00 run.

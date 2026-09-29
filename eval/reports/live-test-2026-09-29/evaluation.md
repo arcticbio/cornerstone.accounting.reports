@@ -1,4 +1,4 @@
-Scored 67 predictions — met: 3, pending: 64
+Scored 67 predictions — met: 8, pending: 59
 
 | Scenario | Property | Month | Tick | Expected | v | Actual | v | Verdict | Note |
 |---|---|---|---|---|---|---|---|---|---|
@@ -14,7 +14,7 @@ Scored 67 predictions — met: 3, pending: 64
 | S2 | lolo-peak-village | 2026-09 | 09:00 | Built v1 (current) | 1 | - | - | **pending** | incl. schedule moved in |
 | S2 | lolo-peak-village | 2026-09 | 10:30 | Built v2 (current) | 2 | - | - | **pending** | identical re-upload |
 | S3 | mullan-crossing | 2026-09 | 06:00 | Waiting for Balance Sheet, Profit and Loss | 0 | Waiting for Balance Sheet, Profit and Loss | 0 | **met** |  |
-| S3 | mullan-crossing | 2026-09 | 06:30 | Waiting for Profit and Loss | 0 | - | - | **pending** |  |
+| S3 | mullan-crossing | 2026-09 | 06:30 | Waiting for Profit and Loss | 0 | Waiting for Profit and Loss | 0 | **met** |  |
 | S3 | mullan-crossing | 2026-09 | 09:00 | Waiting for uploads to settle | 0 | - | - | **pending** | never settled |
 | S3 | mullan-crossing | 2026-09 | 09:30 | Built v1 (current) | 1 | - | - | **pending** | with the corrected P&L |
 | S4 | waypointe | 2026-09 | 07:00 | Built v1 (current) | 1 | - | - | **pending** |  |
@@ -48,11 +48,11 @@ Scored 67 predictions — met: 3, pending: 64
 | O8 | salmon-crossing | 2026-10 | 07:30 | Built v1 (current) | 1 | - | - | **pending** |  |
 | O8 | salmon-crossing | 2026-10 | 08:30 | Built v1 (current) | 1 | - | - | **pending** | deleted v1 goes unnoticed |
 | O8 | salmon-crossing | 2026-10 | 10:00 | Built v2 (current) | 2 | - | - | **pending** | numbering continues |
-| A1 | fort-grounds | folder:2026-08 August | 06:30 | - | 0 | - | - | **pending** | system adds the folders |
+| A1 | fort-grounds | folder:2026-08 August | 06:30 | - | 0 | - | 0 | **met** | system adds the folders |
 | A1 | fort-grounds | folder:2026-08 August | 08:00 | Built v1 (current) | 1 | - | - | **pending** |  |
-| A2 | lolo-peak-village | folder:2026-08 | 06:30 | - | 0 | - | - | **pending** | a proper 2026-08 August appears beside it; the file is never read |
-| A3 | mullan-crossing | folder:August 2026 | 06:30 | - | 0 | - | - | **pending** | ignored entirely |
-| J1 | waypointe | folder:2026-07 July | 06:30 | - | 0 | - | - | **pending** | closed: never read |
+| A2 | lolo-peak-village | folder:2026-08 | 06:30 | - | 0 | - | 0 | **met** | a proper 2026-08 August appears beside it; the file is never read |
+| A3 | mullan-crossing | folder:August 2026 | 06:30 | - | 0 | - | 0 | **met** | ignored entirely |
+| J1 | waypointe | folder:2026-07 July | 06:30 | - | 0 | - | 0 | **met** | closed: never read |
 | R1 | fort-grounds | 2026-09 | 12:00 | - | - | - | - | **pending** | rebuilt with the reissued Balance Sheet |
 | R1 | lolo-peak-village | 2026-09 | 12:00 | - | - | - | - | **pending** | rebuilt with the reissued Balance Sheet |
 | R1 | mullan-crossing | 2026-09 | 12:00 | - | - | - | - | **pending** | rebuilt with the reissued Balance Sheet |
