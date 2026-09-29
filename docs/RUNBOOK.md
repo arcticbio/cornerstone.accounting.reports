@@ -78,10 +78,12 @@ v2.pdf` and every earlier version — and **one** status file. Read its name fir
 | `STATUS - Needs review (v2).txt` | v2 was built, but something was ambiguous and the system declined to guess | Read `REVIEW - v2.md`, check the pages it names — [below](#handling-a-review) |
 | `STATUS - Waiting for Balance Sheet, Profit and Loss.txt` | a required document has not arrived | Nothing, or chase whoever owes it |
 | `STATUS - Waiting for uploads to settle.txt` | something was uploaded in the last hour | Nothing; it builds on its own |
+| `STATUS - Ready - building on the next run.txt` | everything is here and settled; the last run was busy and ran out of time | Nothing; the next run, within 30 minutes, builds it |
 | `STATUS - Held - Balance Sheet cannot be opened.txt` | a file is not a readable PDF, or is password-protected | Ask for a readable PDF in that folder |
 | `STATUS - Held - would cost about $4.10, over the $3.00 limit.txt` | a file is far longer than it should be — usually the wrong document | Check each folder holds the right file |
 | `STATUS - Built v2 - newer files waiting.txt` | v2 stands; newer files are waiting (missing or settling) | v2 is still usable; the next version is coming |
 | `STATUS - Built v2 - newer files held.txt` | v2 stands; a newer file is held (see the body) | As for *Held* above |
+| `STATUS - Built v2 - newer files ready, building next run.txt` | v2 stands; the newer files are ready and the next run builds them | v2 is still usable; the next version comes within 30 minutes |
 | `STATUS - Failed (attempt 1 of 3), will retry.txt` | the build raised an error; it retries every 30 minutes | Nothing yet |
 | `STATUS - Failed 3 times, stopped retrying.txt` | it failed three times on the same files | See [failure modes](#failure-modes-and-what-to-do-about-them) |
 | `STATUS - Closed 2026-11-11 (v4 is final).txt` | the month is no longer watched; later changes are ignored | Nothing |

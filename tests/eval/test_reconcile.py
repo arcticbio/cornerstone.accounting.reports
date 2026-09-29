@@ -327,14 +327,34 @@ def test_the_cost_ceiling_holds_and_reuse_lowers_the_estimate(tmp_path: Path) ->
 
 def test_the_soft_deadline_defers_a_build_to_the_next_run(world: World) -> None:
     world.upload_all()
-    world.later(minutes=61)
+    world.later(minutes=31)
+    world.run()
+    assert world.status() == "STATUS - Waiting for uploads to settle.txt"
+    world.later(minutes=30)
     world.soft_deadline_passed = True
     result = world.run()
     assert result[PERIOD].note == "deferred to the next run"
     assert world.classifier.calls == []
+    # Live-test finding F2: the status used to go on saying "Waiting for uploads to settle".
+    assert world.status() == "STATUS - Ready - building on the next run.txt"
+    assert "reached its time limit" in world.body()
     world.soft_deadline_passed = False
     world.run()
     assert world.status() == "STATUS - Built v1 (current).txt"
+
+
+def test_a_deferred_update_keeps_the_version_that_stands_in_its_status(world: World) -> None:
+    world.upload_all()
+    world.later(minutes=61)
+    world.run()
+    world.upload("bs", "bs corrected.pdf", content=SOURCE["bs"].read_bytes() + b"\n%x\n")
+    world.later(minutes=61)
+    world.soft_deadline_passed = True
+    world.run()
+    assert world.status() == "STATUS - Built v1 - newer files ready, building next run.txt"
+    world.soft_deadline_passed = False
+    world.run()
+    assert world.status() == "STATUS - Built v2 (current).txt"
 
 
 def test_force_rebuilds_unchanged_files(world: World) -> None:

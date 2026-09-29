@@ -27,6 +27,7 @@ class Kind(StrEnum):
     FAILED = "failed"  # the last attempt raised; it will be retried
     STOPPED = "stopped"  # failed too often on these files; not retried
     BUILD = "build"  # ready: build now
+    READY = "ready"  # ready, but the run ran out of time before starting it: the next run builds
     CLOSED = "closed"  # past the lookback window
     ERROR = "error"  # checking the month raised; nothing was decided; the next run retries
 
@@ -68,6 +69,7 @@ _STALE = {
     Kind.SETTLING: "newer files waiting",
     Kind.HELD: "newer files held",
     Kind.FAILED: "newer files failed, will retry",
+    Kind.READY: "newer files ready, building next run",
 }
 
 
@@ -153,6 +155,19 @@ def decide(
         )
 
     return Verdict(Kind.BUILD, None, "Ready to build.", fp)
+
+
+def deferred(state: MonthState, fp: str | None) -> Verdict:
+    """A `BUILD` verdict the run had no time left to start (SPEC §18.9 step 5). Saying so beats
+    leaving the last status up: it would still read "Waiting for uploads to settle"."""
+    return _pending(
+        Kind.READY,
+        "Ready - building on the next run",
+        "Every file is here and has settled, but this run reached its time limit before it could "
+        "start this build. The next run builds it.",
+        state,
+        fp,
+    )
 
 
 def held(reason: str, detail: str, state: MonthState, fp: str | None) -> Verdict:

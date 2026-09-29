@@ -1076,11 +1076,13 @@ from the folder listing:
 | `STATUS - Waiting for Balance Sheet, Profit and Loss.txt` | required components missing |
 | `STATUS - Waiting for uploads to settle.txt` | an upload in the last 60 minutes |
 | `STATUS - Held - <reason>.txt` | a file does not open, or the build would exceed the cost ceiling; nothing built |
+| `STATUS - Ready - building on the next run.txt` | ready, but this run reached its time limit before starting the build (§18.9 step 5); the next run builds it |
 | `STATUS - Built v2 (current).txt` | newest build is `BUILT` and reflects the current files |
 | `STATUS - Needs review (v2).txt` | newest build is `NEEDS_REVIEW` |
 | `STATUS - Built v2 - newer files waiting.txt` | v2 stands, but the files have changed since and the next build is waiting (a required file missing, or settling) |
 | `STATUS - Built v2 - newer files held.txt` | … and a newer file cannot be opened, or would cost too much: someone should look (each of these three reads `Needs review (v2) - …` when the standing build needs review) |
 | `STATUS - Built v2 - newer files failed, will retry.txt` | … and building from them raised; the next run retries |
+| `STATUS - Built v2 - newer files ready, building next run.txt` | … and they are ready, but this run ran out of time before building them (§18.9 step 5) |
 | `STATUS - Failed (attempt 1 of 3), will retry.txt` | building raised and no earlier version stands; the next run retries |
 | `STATUS - Failed 3 times, stopped retrying.txt` | §18.7 |
 | `STATUS - Closed 2026-11-11 (v2 is final).txt` | past the lookback window; later changes ignored |
@@ -1124,7 +1126,10 @@ crr reconcile [--repo gdrive] [--classifier anthropic] [--property ID]... [--per
    store error — is that month's outcome, `Could not be checked - will retry`, and the run
    moves on. Only a problem with the run itself (the classifier cannot be built) stops it.
 5. Stop *starting* builds after `CRR_RUN_SOFT_DEADLINE_S` (1200 s). Whatever is left is picked
-   up next run.
+   up next run, and its status says so — `Ready - building on the next run`, or `Built v2 -
+   newer files ready, building next run` — rather than keeping the headline of an earlier run.
+   (Until 2026-09-29 the status was left as it was: a month deferred by the October crunch of
+   the live test went on reading `Waiting for uploads to settle` for a run after it had settled.)
 6. Write the root summary: a line per property, then every month that could not be checked.
    Release the lease.
    Exit 0 — per-property outcomes are statuses, not exit codes — unless a month could not be

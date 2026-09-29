@@ -36,6 +36,7 @@ from crr.intake.decide import (
     closed,
     current_files,
     decide,
+    deferred,
     held,
 )
 from crr.intake.files import choose
@@ -384,9 +385,12 @@ class Reconciler:
                 outcome.note = "would build"
                 return outcome
             if deadline_passed:
-                # Leave the status as it is; the next run starts this build (SPEC §18.9 step 5).
-                outcome.note = "deferred to the next run"
-                outcome.headline = None
+                # The next run starts this build; the status says so (SPEC §18.9 step 5).
+                verdict = deferred(month.state, verdict.fingerprint)
+                outcome = Outcome(
+                    prop.id, period, verdict.kind, verdict.headline, note="deferred to the next run"
+                )
+                self._write_status(month, verdict)
                 return outcome
             if not self._still_leased():
                 log.warning("intake.lease_taken_over", property=prop.id, period=period)
