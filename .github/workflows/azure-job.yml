@@ -32,7 +32,7 @@ on:
         options:
           - version
           - validate-config
-          - scheduled (the job's own arguments, unchanged: one reconcile run)
+          - scheduled (the job's own arguments, one reconcile run)
       wait_minutes:
         description: "How long to wait for the execution before giving up on it"
         required: true
@@ -243,7 +243,7 @@ jobs:
             echo "| Execution | \`${EXECUTION:-—  (not started)}\` |"
             echo "| Status | **${STATUS:-—}** |"
             echo
-            echo "Azure marks any non-zero exit as \`Failed\`. The runner exits 0 built, 2 needs review, 1 failed (SPEC §6.8) — so a \`Failed\` build execution is very often exit 2, meaning packages built and went to \`review/\`. Read the logs above before treating it as an incident."
+            echo "Azure marks any non-zero exit as \`Failed\`. The scheduled run (\`crr reconcile\`) exits 0 whenever it finishes: a build that needs review, a month still waiting on files and a run that found another holding the lease are statuses in Drive, not failures. It exits 1 only when the run could not proceed (config, credentials, Drive not writable) or a month could not be checked (SPEC §18.9). So a \`Failed\` execution is a real incident — read the logs above."
           } >> "$GITHUB_STEP_SUMMARY"
           if [ "${{ steps.plan.outputs.start }}" != "true" ]; then exit 1; fi
           [ "$STATUS" = "Succeeded" ] || exit 1

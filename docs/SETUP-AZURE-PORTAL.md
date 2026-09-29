@@ -25,9 +25,8 @@ the labels move.
 | 4 | Azure portal | Let the job read the vault, then redeploy | 5 min |
 | 5 | Azure portal + Cloud Shell | Smoke test | 5 min |
 
-At the end you will have a Container Apps Job that runs `crr reconcile` on a schedule —
-quarterly until PLAN Phase 10's STOP is cleared, then every 30 minutes — and can be started by
-hand.
+At the end you will have a Container Apps Job that runs `crr reconcile` every 30 minutes and can
+be started by hand.
 
 ---
 
@@ -487,10 +486,10 @@ image tag → **Save**. Or re-run the deploy workflow with a different `image` i
 that parks the cron on 31 February, which never arrives. Manual runs still work. Portal
 alternative: Container App Job → **Job settings** → change the cron expression.
 
-**Change when it runs.** Continuous intake runs every 30 minutes (`*/30 * * * *`). Until PLAN
-Phase 10's STOP is cleared the default stays the quarterly `0 6 20 1,4,7,10 *` — 06:00 UTC on
-the 20th of January, April, July and October. Edit `cronExpression` in `infra/main.bicep` and
-redeploy, so the repository stays the source of truth.
+**Change when it runs.** Continuous intake runs every 30 minutes (`*/30 * * * *`, the
+template's default since 2026-09-29). Edit `cronExpression` in `infra/main.bicep` and redeploy,
+so the repository stays the source of truth: every deploy applies that default, so an edit in
+the portal lasts only until the next one.
 
 **Delete everything.** Resource groups → `rg-cust-cornerstone` → **Delete resource group**. Nothing in Drive
 or GitHub is touched.

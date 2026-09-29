@@ -886,8 +886,8 @@ the path to use until Azure is provisioned.
 **Status: built 2026-09-26 (PLAN Phase 10) and rehearsed on the live drive.** It supersedes the
 parts of §6.1 (finding inputs by exact filename), §6.9 (the separate `review/` folder), §13
 (the `inputs/` layout) and §14 (the quarterly schedule) that it contradicts; those sections
-still describe `crr build`. The 30-minute schedule is armed only once Phase 10's STOP is
-cleared (§18.10). Decisions D-17 – D-24.
+still describe `crr build`. The 30-minute schedule was armed on 2026-09-29, when the owner
+cleared Phase 10's STOP (§18.10). Decisions D-17 – D-24.
 
 ### 18.1 Why
 
@@ -1121,7 +1121,7 @@ the failure cap. It does not skip the completeness or open checks, nor the settl
 
 ### 18.10 Hosting changes
 
-- `infra/main.bicep`: cron `*/30 * * * *` once armed; baked args `reconcile --repo gdrive
+- `infra/main.bicep`: cron `*/30 * * * *` (armed 2026-09-29); baked args `reconcile --repo gdrive
   --classifier anthropic`; replica timeout 1800 s (the 1200 s soft deadline stops new work well before it);
   parallelism 1.
 - Container Apps starts a scheduled execution even while the previous one is still running
@@ -1129,14 +1129,17 @@ the failure cap. It does not skip the completeness or open checks, nor the settl
   works at a time: the run lease (§18.9 step 0) sends the second away at once, the soft
   deadline keeps runs shorter than the interval, and step 4's pre-publish re-list discards a
   duplicate from any run that got in regardless.
-- Cost: a run with nothing to build lasts well under a minute. 48 a day is expected to sit near
-  or inside the Container Apps consumption free grant — **to be verified against current Azure
-  pricing** before the schedule is armed.
+- Cost: a run with nothing to build measured ~60 s of process and ~100 s of execution on Azure,
+  ~35 s of it the replica starting (A-15). 48 a day is 96–160 % of the Container Apps free grant,
+  depending on which of the two Azure bills: between $0 and ≈ $3.25 a month at list price, less
+  than the model calls of one full build of every property ($4.78).
 - `build-period.yml` (Actions) gains a `command` choice — `reconcile`, `reconcile --force`,
   `build` — with optional `property` and `period`: `reconcile --force` is the on-demand rebuild.
   Not `azure-job.yml`: `--args` cannot carry a multi-token list (A-13), and Actions runs the
-  identical image with nothing to restore. The job's cron default stays quarterly until Phase
-  10's STOP is cleared, so no redeploy can arm the 30-minute schedule by accident. The deploy chain is unchanged: merge to `main` → `:build-v1` → `deploy.yml`.
+  identical image with nothing to restore. The job's cron default stayed quarterly until the
+  owner cleared Phase 10's STOP on 2026-09-29, so that no redeploy could arm the 30-minute
+  schedule by accident. The deploy chain is unchanged: merge to `main` → `:build-v1` →
+  `deploy.yml`.
 - Settings added to §12: `CRR_SETTLE_MINUTES` 60, `CRR_LOOKBACK_DAYS` 42, `CRR_CLOSE_GRACE_DAYS` 14, `CRR_FOLDERS_AHEAD` 1,
   `CRR_RUN_SOFT_DEADLINE_S` 1200, `CRR_MAX_BUILD_USD` 3.00, `CRR_COST_PER_PAGE_USD` 0.03,
   `CRR_MAX_FAILED_ATTEMPTS` 3.

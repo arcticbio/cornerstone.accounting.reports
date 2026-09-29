@@ -257,18 +257,21 @@ config, missing credentials, an unwritable drive — or a month could not be che
 Drive, not exit codes (`docs/RUNBOOK.md` → *For reviewers*). The v1 command `crr build`, run by
 hand, keeps its own contract (SPEC §6.8): 0 built, 2 needs review, 1 failed.
 
-## Step 9 — Turn the schedule on
+## Step 9 — The schedule
 
-Continuous intake runs every 30 minutes, `*/30 * * * *`. Until PLAN Phase 10's STOP is cleared —
-a no-op run measured on Azure and its monthly cost checked (QUESTIONS A-15) — the template's
-default stays the quarterly `0 6 20 1,4,7,10 *` (06:00 UTC on the 20th of January, April, July
-and October), so that no deploy can arm the 30-minute schedule by accident. **To arm it**, change
-the `cronExpression` default in `infra/main.bicep` to `'*/30 * * * *'`, merge, and run the
-deploy workflow with *Preview* unticked (`docs/RUNBOOK.md` → *Running it on Azure*).
+Continuous intake runs every 30 minutes, `*/30 * * * *`: the template's default since
+2026-09-29, when the owner cleared PLAN Phase 10's STOP after a run with nothing to build was
+measured on Azure (~100 s, between $0 and ≈ $3.25 a month at 48 a day: QUESTIONS A-15). A deploy
+with **Arm the schedule** ticked, the default, puts it on the job, so on a new install the
+schedule starts at step 6. To hold it until steps 7 and 8 have passed, untick **Arm the
+schedule** in step 6 and re-run the deploy with it ticked here.
+
+**To change the cadence**, change the `cronExpression` default in `infra/main.bicep`, merge, and
+run the deploy workflow with *Preview* unticked (`docs/RUNBOOK.md` → *Running it on Azure*).
 
 To deploy the job *without* any schedule, untick **Arm the schedule** when you run the deploy
-workflow. That parks the cron on 31 February, which never arrives; manual starts still work.
-Re-run with it ticked when you are ready.
+workflow. That parks the cron on 31 February, which never arrives; manual starts still work,
+and *Run the Azure job* keeps it parked. Re-run with it ticked when you are ready.
 
 ---
 
