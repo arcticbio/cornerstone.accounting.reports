@@ -151,3 +151,13 @@ are in `evaluation.md` (from `eval/live/evaluate.py`).
   gives the 10:30 run more margin to reach River Falls October after 10:31. 41 met, 3 late,
   0 missed, 3 withdrawn, 24 pending; $8.07 spent; 105/123 actions, 0 failed. Watchdogs through
   12:42 and the 13:08 report are all scheduled.
+- **09:55** · F1 looked into, for the report. The existing record check cannot catch it for
+  this company: a `per_record` section maps each page's `Property:` qualifier to the
+  property's `records[].pm_name` and flags `unresolved_record` when none matches — but every
+  section of the Cobalt schema (Bridgewater, Salmon Crossing) is `cardinality: one` with
+  "record_qualifier is always null" (`config/schemas/cobalt.yaml`), so no page is ever
+  matched against the property. The fix belongs one level up: an identity check on the text
+  the pipeline already extracts (OCR'd when scanned) — at least one page of the PM report
+  must name the property (its `pm_name`, or an alias configured per property), else a
+  `property_mismatch` review reason. Validated against the eight June samples before it
+  ships, so it cannot flag a genuine report.
