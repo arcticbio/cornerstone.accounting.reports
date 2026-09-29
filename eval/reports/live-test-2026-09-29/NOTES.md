@@ -33,3 +33,11 @@ are in `evaluation.md` (from `eval/live/evaluate.py`).
   `Built v1 (current)`. Proposed fix: a review reason when no page's record label matches
   one of the property's configured `records[].pm_name` (the classifier already reads the
   `Property:` header per page), so it lands as `Needs review` instead.
+- **07:43** · The 07:30 run `crr-quarterly-29844450` is still building at 07:43 (lease since
+  07:30:24): October's eight properties all became ready together, the crunch by design. Its
+  soft deadline (no new build after 20 min) should end it by ~07:56. The +130 actions ran at
+  07:40 *during* that run (October: a schedule moved out of Lolo Peak, the whole Mullan
+  Crossing report, a rename, a Google Doc, a shortcut, two Balance Sheets seconds apart at
+  Bridgewater): whichever months the run had not yet reached will see those files before
+  building, which is realistic and will show in the O-scenario scores. 92/123 actions, 0
+  failed; $2.39 spent.
