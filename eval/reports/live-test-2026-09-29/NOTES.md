@@ -139,3 +139,15 @@ are in `evaluation.md` (from `eval/live/evaluate.py`).
   One plan error caught at the same time: S5 at 11:00 predicted `Built v1 (current)`, but
   R1 reissues that month's Balance Sheet at 10:45, so it will be `Built v1 - newer files
   waiting`; amended. `evaluate.py` shows withdrawn rows with their reason.
+- **09:43** · Watchdog. The 09:30 run `crr-quarterly-29844570` (09:30:23–09:37:30) caught up
+  on the displaced 09:00 work: Mullan Crossing September v1 with the corrected P&L (8 p / 6 bm
+  = golden, 20 calls, $0.46), Bridgewater October v2 with Ben's Balance Sheet — the later of
+  two uploaded seconds apart (24/8, 1 call, $0.017, the rest reused) — and Mullan Crossing
+  October v2 from the complete report, its `Needs review` cleared (8/6 = golden, 17 calls,
+  $0.36; Balance Sheet, P&L and schedule reused). River Falls October saw the Balance Sheet
+  uploaded at 09:31:12 — mid-run, before the run reached it — and waited, as predicted. Every
+  09:30 prediction met, the revised ones included; O3 and O7 score "late". Build order is
+  month-major (September's builds first, then October's, each alphabetical by property), which
+  gives the 10:30 run more margin to reach River Falls October after 10:31. 41 met, 3 late,
+  0 missed, 3 withdrawn, 24 pending; $8.07 spent; 105/123 actions, 0 failed. Watchdogs through
+  12:42 and the 13:08 report are all scheduled.
