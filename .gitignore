@@ -23,3 +23,5 @@ Thumbs.db
 
 # Claude Code personal settings for this checkout — never commit
 .claude/settings.local.json
+# The live-test conductor rewrites its heartbeat every 15 s; the event log is the record
+eval/reports/live-test-*/heartbeat.json
