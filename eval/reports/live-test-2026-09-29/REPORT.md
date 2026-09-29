@@ -9,6 +9,8 @@ deletions. Nothing about the system under test was changed or helped along: no c
 or Azure change during the test. The only runs started by hand were the operator steps the
 plan called for.
 
+Published as a page: https://claude.ai/artifact/RuDow4jqiMmj8ZdzLWrkLB (private to the owner until shared).
+
 The plan, with every prediction, was committed before the test began (`eval/live/plan.py`). A
 conductor performed the actions and photographed Drive after every run (`eval/live/conductor.py`).
 The evidence is in this folder.
@@ -181,7 +183,7 @@ and deleted nothing:
 
 The record is `cleanup.json`. Right after the move, each property in production held only its
 original `2026-06 June` folder, and the root only the three company folders, the lease file and
-the summary (snapshot `after-cleanup-1305`). The check after the next scheduled run follows below.
+the summary (snapshot `after-cleanup-1305`). After the next scheduled run (13:30:27–13:34:15, host `crr-quarterly-29844810`), every property again has an empty `2026-09 September` and `2026-10 October` — four empty component folders and an empty `output/` each, no status — beside its untouched June folder, and the root summary reads *Last checked 2026-09-29 13:30 UTC* with no property lines: production is back to the state stakeholders will start from (snapshot `after-cleanup`).
 
 Left in place: files the test moved to Trash stay in the shared drive's Trash, which Drive empties
 after 30 days (the service account can trash but not delete). The published reports went with

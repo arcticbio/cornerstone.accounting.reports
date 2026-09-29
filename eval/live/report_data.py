@@ -78,6 +78,8 @@ def tables() -> str:
     leases: dict[tuple[str, str], dict[str, Any]] = {}
     for e in events:
         lease = e.get("lease")
+        if str(e.get("tag", "")).startswith("after-cleanup"):  # taken after the test
+            continue
         if e["kind"] in ("snapshot", "no_run") and lease and lease.get("acquired"):
             leases[(lease["host"], lease["acquired"])] = lease
 
