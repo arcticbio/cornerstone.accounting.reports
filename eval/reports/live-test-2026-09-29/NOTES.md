@@ -83,3 +83,7 @@ are in `evaluation.md` (from `eval/live/evaluate.py`).
   report that no longer exists (predicted, per §18.7: nothing re-reads `output/`'s PDFs).
   Proposed fix: when the current version's PDF is missing, say so in the status
   (`Built v1 - report file missing`) so a reviewer knows to restore it from Trash.
+- **08:59** · Operator step O5b: *Build a period* → `reconcile --force`, `timber-place`,
+  `2026-10`, dispatched on `main` at 08:58:54
+  ([run 36546168639](https://github.com/arcticbio/cornerstone.accounting.reports/actions/runs/36546168639)),
+  racing the 09:00 scheduled run for the lease. Result to follow.
