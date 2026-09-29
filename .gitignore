@@ -20,3 +20,6 @@ eval/reports/*.tmp
 # OS
 .DS_Store
 Thumbs.db
+
+# Claude Code personal settings for this checkout — never commit
+.claude/settings.local.json
