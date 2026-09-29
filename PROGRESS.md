@@ -4,6 +4,8 @@ Single source of truth for build state. Claude Code ticks tasks here after each 
 commits. Humans read this to see where things stand. Mirrors `docs/PLAN.md`; if they diverge,
 PLAN.md defines the work and this file records what has been done.
 
+**Continuous intake (Phase 10) is built, audited, fixed and live-tested; its release to `main` is a PR from `claude/gracious-davinci-nnkdv1`** — see "Pick up here", item 0.
+
 **Branch:** `main` — v1 landed there via [#1](https://github.com/arcticbio/cornerstone.accounting.reports/pull/1) (built on the session branch `claude/gifted-lamport-wwgenm`; D-15 — every reference to `build/v1` in these documents means the release line, now `main`) · **Current phase:** 9 (complete) · **Tag:** `v1.0.0` pushed · **Last session note:** B-08 fixed; real-model eval run over all 172 pages and now **100 % on every metric**; the orientation defect it surfaced fixed — a page was shipping upside down — and the 59 % record score it reported traced to the metric, not the classifier. #7 merged to `main`; this branch merged it back cleanly. **B-09 is resolved: the production publish path works end to end.** **B-04 is resolved: Azure is
 deployed, audited and armed**, a rehearsal period (`2026-08`) is seeded in Drive, and
 `Actions → Run the Azure job` can start the job and put its arguments back. **B-11 is resolved
@@ -44,9 +46,8 @@ both built clean at their exact golden page counts. And the `build` option mutat
 workflow's "Set the arguments" step was **skipped** and the restore and confirm jobs did not run,
 because the job already holds the arguments the cron reads.
 
-⚠️ **These eight packages say August and contain June figures.** They are the rehearsal dataset
-(A-11), not deliverables. Delete the `2026-08` tree from Drive before anyone can mistake them for
-a real quarter.
+~~⚠️ These eight packages say August and contain June figures. Delete the `2026-08` tree.~~
+**Done** — the `2026-08` rehearsal tree was deleted before 2026-09-26.
 
 ## Pick up here
 
@@ -74,6 +75,24 @@ identical to the golden-label build ($3.73). See `docs/ANALYSIS-model-successor-
 | Also fixed | CI's `BUILD_BRANCH` still named the pre-merge session branch, so merges to `main` rebuilt the image and silently did not push it |
 
 **Open, in the order it is worth doing.**
+
+0. **Phase 10 — continuous intake is built and rehearsed on the live drive; it stops at its
+   STOP** (2026-09-26, branch `claude/eager-fermat-h7ub70`, not yet merged). `crr reconcile`: a
+   folder per component, newest upload wins, a new version per change of input files, versions
+   side by side in `output/`, a status file whose name is the headline. SPEC §18, D-17 – D-24,
+   PLAN Phase 10. **What is left is the operator's:** merge; deploy (the job then runs
+   `reconcile`, still on the quarterly cron); measure one no-op run on Azure (A-15); then arm
+   the 30-minute cron — one line in `infra/main.bicep` (RUNBOOK → *Running it on Azure*).
+   The rehearsal's Fort Grounds / 2026-09 v1–v6 moved out of the production root on 2026-09-28
+   into a separate rehearsal root; September is clean in production (Audit follow-ups, item 3).
+   **Audited 2026-09-26, fixed 2026-09-28, live-tested 2026-09-29** (Phase 10 → *Audit
+   follow-ups* and *Live test* below). All nine findings are closed on
+   `claude/gracious-davinci-nnkdv1` — PR #15, a merge of `main` (#16), then the fixes — which is
+   the release candidate: 588 tests pass, 0 xfail, and it has run for real against the
+   production drive and the production model. **What is left:** merge the release PR; *Deploy to
+   Azure* (the live what-if already shows exactly `build → reconcile` and `3600 → 1800 s`, cron
+   untouched); *Run the Azure job* → `scheduled` to measure a no-op run on Azure (A-15); then
+   arm `*/30` — one reviewed line in `infra/main.bicep` (PLAN Phase 10's STOP).
 
 1. ~~**B-08 — the two McCathren packages go to review on `cardinality_violation`.**~~
    **Fixed 2026-09-11, root-caused with a real-model run.** Not a labelling error: a re-run of
@@ -249,6 +268,9 @@ Drive skeleton already exists (folders only), so a real September run writes int
 | 2026-09-11 | post-v1 | **Phase 8 complete.** `crr version` ran on Azure and its logs say `crr 1.0.0` (`crr-quarterly-94admd0`). Took three runs: `--job-execution-name` is not a flag, `--args` cannot set a multi-token list (the restore left the cron on `version` — repaired), `--tail` is capped at 300. The restore is now a call to `deploy.yml` with a verification job after it (A-13). | `validate-config`, then the `build` option against the seeded `2026-08` data (~$4.72) |
 | 2026-09-11 | post-v1 | `validate-config` on Azure: `4 schema(s), 3 output definition(s), 8 propert(ies)`, identical to a local run line for line — the config in the image matches `main`. | The full build |
 | 2026-09-11 | post-v1 | **The production host built a full quarter, clean.** `crr-quarterly-ectvlit`, exit 0, **8/8 built, 0 to review**, $4.78. Every published PDF downloaded back out of Drive and checked: page counts match golden exactly, bookmarks and titles correct. B-08 confirmed fixed in production. | Delete the `2026-08` rehearsal tree; load September's real inputs |
+| 2026-09-26 | 10 | Phase 10 built and rehearsed on the live drive (PR #15), then audited: nine findings, each reproduced by a probe | Fix what unattended runs would hit |
+| 2026-09-28 | 10 | Audit follow-ups on `claude/gracious-davinci-nnkdv1`: main (#16) merged in; tie-break and month-isolation defects fixed; probes kept as tests (563 passed, 3 strict xfail); September cleaned in Drive, the rehearsal moved whole to its own root | Findings 4–6; land the branch in PR #15; merge |
+| 2026-09-29 | 10 | Findings 4–6 fixed (close-grace window, Drive retries, run lease) and every document brought up to date; the release candidate live-tested in the production environment — Azure what-if, production no-op and lease race, real-model builds in the rehearsal root on both models — 588 passed, 0 xfail | Merge the release PR; deploy; measure on Azure; arm |
 
 ## Phase 0 — Repository hygiene and scaffold
 
@@ -409,6 +431,164 @@ OCR included), and the image is pushed to GHCR as `:build-v1` and `:sha-<short>`
 
 **Acceptance:** `README.md` → `docs/RUNBOOK.md` takes someone who has never seen the repository from "the exports arrived" to "the packages are in Drive", including what to do with a review outcome. The `v1.0.0` tag is the last task.
 
+
+## Phase 10 — Continuous intake (built 2026-09-26; at its STOP)
+
+Mirrors PLAN Phase 10; SPEC §18; D-17 – D-24.
+
+- [x] Config: `component_folders` in `properties.yaml`; per-property `components` overrides. `validate-config` covers both. Keyed by role, not by the output definition's alias — the aliases differ per manager and the roles do not (SPEC §18.5 amended). `ConfigBundle.components_for()` drops `not_used`; also rejects a folder named `output`/`SUPERSEDED…`, duplicates, and a property left with no components. 9 tests.
+- [x] Repository: list a component folder with head-revision upload times and `md5Checksum`; rename to and from `SUPERSEDED - `; create the month/component/`output` skeleton; read and write `state.json`; publish `vN` names. `crr.intake.store.IntakeStore` with `LocalIntakeStore` and `DriveIntakeStore` (a subclass of the v1 Drive repository, reusing its navigation and preflight). One contract suite runs against both (22 tests). On Drive a file whose `modifiedTime == createdTime` costs no extra call; only a renamed or re-versioned file needs `revisions.list`. The system's own files (status, index, summary) are rewritten in place with `files.update`, so a folder never shows two statuses and no person's file is ever trashed — both pinned by tests.
+- [x] File choice (§18.4) and readiness (§18.5), pure, fully unit-tested: newest wins, prefix follows the winner, delete-newest reverts, settle window, optional components, `not_used`. `crr.intake.{files,calendar,decide,state,status}` — no I/O and no clock, so all of §18.4/§18.5/§18.7's decisions and §18.8's headlines are pinned by 37 tests. The per-month index is `output/manifests/state.json` (versions + failed attempts), one small download per month per run instead of every manifest (SPEC §18.7 amended).
+- [x] Fingerprint and versions (§18.7); manifest v2 fields; classification reuse from the previous manifest with its compatibility check. Manifest v2 adds `version`, `input_fingerprint`, `omitted_optional` and per input `source_sha256` (pre-OCR — OCR output is not byte-stable, so the post-OCR `sha256` could never match), `schema_sha256`, `upload_name`, `file_id`, `md5`, `uploaded_at`, `reused_classification`. `ReusingClassifier` carries labels over only when bytes, schema hash, classifier name, model and prompt version all match and every page is labelled (7 unit tests). End to end: replacing the Balance Sheet re-classifies exactly one role.
+- [x] Open check (§18.6), cost ceiling and three-strike failure cap (§18.7). The ceiling counts only the pages that will actually be sent, so reuse lowers it; it applies to any classifier named `anthropic*` and is zero for golden.
+- [x] Status files and root summary (§18.8): every row of the table has a test; bodies carry no page text, tenant names or figures (extend the log-capture test). The page-text check extracts every line of 12+ characters from the input PDFs and asserts none reaches a status or the summary. The summary's "Last checked" line changes every run on purpose: it is the reviewer's only sign the job is still alive.
+- [x] `crr reconcile` (§18.9) with `--property`, `--period`, `--force`, `--dry-run`; soft deadline; pre-publish re-list. `crr.intake.reconcile.Reconciler` runs the v1 pipeline unchanged through a staging adapter and publishes the result itself. The duplicate check is "a version appeared since this run read the index, with the same fingerprint" — proven by a test in which a second run executes *inside* the first one's classification. 13 end-to-end scenarios over real June files (`tests/eval/test_reconcile.py`). Smoke-tested from the CLI on a scratch tree: dry run → v1 → idempotent re-run.
+- [ ] Verify against Azure docs and one real run: (a) whether a scheduled Container Apps Job execution starts while the previous one is running; (b) the monthly cost of 48 short runs a day. Record both in `QUESTIONS.md`. **Docs half done (A-14, A-15):** overlapping executions run in parallel by default — and since 2026-09-28 the run lease sends the second away, proven live on the production drive; a no-op run measured **48.8 s** against production from a session container (78 % of the free grant at 48/day). **Open:** the same measurement on Azure — needs the merge and a deploy, so it waits for the STOP.
+- [x] Hosting (§18.10): Bicep cron and args; `azure-job.yml` gains `reconcile --force`; `build-period.yml` gains `reconcile`. The job now runs `crr reconcile --repo gdrive --classifier anthropic` with a 1800 s replica timeout, **but the cron default stays quarterly** — so no redeploy, including `Run the Azure job`'s automatic restore, can arm the 30-minute schedule before the STOP is cleared; arming is one reviewed line. `--force` went to `Build a period` (a `command` choice: `reconcile`, `reconcile --force`, `build`) rather than `azure-job.yml`: `az containerapp job update --args` cannot carry a multi-token list (A-13), and Actions runs the identical image with no job mutation to restore.
+- [x] Rehearsal in Drive: seed a month in the new layout and walk it through every status — partial upload, settle, unopenable file held, built v1, replace one component, v2 with reuse, duplicate upload superseded, delete-newest revert, closed. Record each in `PROGRESS.md`. **Done 2026-09-26 on the live shared drive, Fort Grounds / 2026-09 September**, the uploader played through the Drive API with June files under new names:
+
+  | Step | What a person did | What `output/` said |
+  |---|---|---|
+  | 1 | nothing | folders for Sep and Oct created; no status |
+  | 2 | PM report only | `Waiting for Balance Sheet, Profit and Loss` |
+  | 3 | BS and P&L arrive | `Waiting for uploads to settle` (60 min) |
+  | 4 | — (settled) | `Built v1 (current)` — golden labels |
+  | 5 | — | nothing rebuilt |
+  | 6 | corrected BS uploaded | old one renamed `SUPERSEDED - Balance Sheet 9-30.pdf`; `Built v2 (current)` |
+  | 7 | a non-PDF named `.pdf` into P&L | `Built v2 - newer files waiting` → **fixed** to `… held` (see below) |
+  | 8 | that file deleted | old P&L un-marked; fingerprint equals v2's, so **no rebuild**: `Built v2 (current)` |
+  | 9 | corrected BS deleted | original BS un-marked; `Built v3 (current)` |
+  | 10 | Distribution Schedule arrives | `Built v4 (current)`, history "Distribution Schedule added" |
+  | 11 | upload into July (closed 09-11) | silently ignored — never had a status |
+  | 11 | August with a status, window passed | `Closed 2026-08-31 (nothing built)`, once; the next run does not look |
+  | 12 | **real model**, `--force` | `Built v5`: 19 calls, **$0.52**, 8 pages (= golden) |
+  | 12 | corrected P&L | `Built v6`: **1 call, $0.02** — PM, BS and Distribution labels reused |
+  | 13 | full 8-property run | first run 2 m 06 s (creates every property's Sep/Oct folders); **steady state with nothing to build: 37 s** from this container |
+
+  v6 downloaded back out of Drive: 8 pages, 6 bookmarks, title `Fort Grounds - Investor Report - September 2026`. The root `_STATUS - All properties.txt` reads `Fort Grounds - September 2026 - Built v6 (current)`. **Two defects found and fixed** (`aa2c8df`): a replaced component was listed twice in a version's history (`a | b - c` precedence), and a held newer file read as "waiting", which asks nothing of a reviewer. The July/August test months were trashed afterwards; **Fort Grounds / 2026-09 was left in place as a worked example** (v1–v6 and their status); on 2026-09-28 it moved, whole, to the rehearsal root — see *Audit follow-ups*, item 3.
+- [x] Docs: `RUNBOOK.md` rewritten around the new layout — a one-page "how to upload" for non-technical uploaders, and "how to read the status" for reviewers; `SETUP-GOOGLE-DRIVE.md`; banners in SPEC §6.1/§6.9/§13/§14 replaced by the amended text. The runbook's operating half is new: *How it works*, *For uploaders — one page* (written to be forwarded as is), *For reviewers* (every status headline, what it means, what to do; the root summary's *Last checked* as the liveness signal), the folder layout, on-demand runs, Azure and how to arm the schedule, and six new failure-mode rows. README, SETUP-GOOGLE-DRIVE, SPEC §11 (CLI) and §12 (settings) updated; the §6.1/§6.9/§13/§14 banners now say those sections describe `crr build`.
+
+**Acceptance, 2026-09-26:**
+- *Every rehearsal scenario produces its §18.8 status and no build it should not* — **met**, on
+  the live drive (table above), after the two defects it found were fixed.
+- *An unrelated PDF of any length costs at most `CRR_MAX_BUILD_USD`* — **met**: the ceiling is
+  checked before any model call and counts only pages that would be sent (test
+  `test_the_cost_ceiling_holds_and_reuse_lowers_the_estimate`).
+- *A run with nothing to build finishes in under a minute on Azure* — **37 s from this
+  container against the live drive; not yet measured on Azure** (needs a deploy — the STOP).
+  Re-measured 2026-09-29 with the run lease and preflight: **48.8 s** against production, flat
+  with history since fix 4.
+- *Keyed eval unchanged at 100 %* — **met by construction**: `src/crr/classify`, `segment`,
+  `resolve`, `compose`, `config/schemas`, `config/outputs` and `eval/golden` are byte-identical
+  to `main`, and the prompt version is unchanged; the golden gate passes in the suite (542
+  tests), and the real-model rebuild of Fort Grounds matched golden (8 pages, 6 bookmarks).
+
+### Audit follow-ups (2026-09-26)
+
+An audit of PR #15 reproduced nine findings with probes run against the branch head `286dc89`.
+Every probe is now a test. This work is on `claude/gracious-davinci-nnkdv1`, which is PR #15's
+head plus a merge of `main` (#16 had made two docs lines conflict) plus the commits below.
+
+- [x] **1. A tie on upload time flipped the winner on every run** (`b6f5505`). `choose()` broke
+  ties on the file name and then renamed the loser `SUPERSEDED - …`, which changed the
+  tie-break: two PDFs uploaded at the same instant produced a new version, and a paid
+  re-classification, on every run. Ties now break on the name without the prefix, then the id.
+  SPEC §18.4 amended. The unit test now applies the renames between runs; an end-to-end test
+  runs four times over two equal-time Balance Sheets and gets one version.
+- [x] **2. One bad property-month stopped the whole run, on every run** (`9891fa9`). An index
+  the code could not read (a state.json with one unexpected key — what an older image meets
+  after a rollback), a folder named `2026-13 …`, or one Drive error ended the run; every month
+  after it went unchecked and the root summary was never written. Months are now checked in
+  isolation. A failing month gets `Could not be checked - will retry` (only over an existing
+  status), and the summary is always written, listing it. `reconcile` exits 1 after the rest is
+  done. Folders that only look like months are skipped. `RunAborted` keeps a missing API key a
+  run-level stop. SPEC §11/§18.3/§18.8/§18.9, RUNBOOK and README amended.
+- [x] **Probes kept as tests** (`6bde5d7`). NEEDS REVIEW publishing, `--period`, cross-month
+  drift, and the password, owner-password and zero-page cases now run; coverage had shown them
+  never executed. Two behaviours are pinned: `--force` reuses every unchanged label, and the
+  cost ceiling is per attempt.
+- [x] **3. Live-Drive hygiene — done 2026-09-28**, approved by the operator. September was a
+  live month still holding the rehearsal: five input PDFs byte-identical to the June bundle
+  (the "revised" P&L is the June P&L plus `\n%revised\n`), v1–v6, manifests, state.json and
+  status. A real September upload would have been combined with June statements and
+  published as `v7 (current)`. Drive was re-verified against the 2026-09-26 inventory first
+  (26/26 items identical). Then, in order:
+  1. **The record went to git before Drive was touched** (`ca76a15`,
+     `eval/reports/rehearsal-2026-09-fort-grounds/`): inventory with ids and md5s, how to
+     rebuild each input from the bundle, status, state.json and v1–v6 manifests (model-written
+     `evidence` replaced by a marker), from a download whose every file matched Drive's md5.
+  2. Created `Cornerstone Reports - REHEARSAL (test data, not for investors)`
+     (`1eGZGlv5IGVd7OGM0-_2jcDfa56FkwAlz`) beside the production root in the shared drive,
+     with `Missoula Property Management/Fort Grounds/` inside it.
+  3. Trashed the eight empty `2026-09 September/inputs/` folders (v1 leftovers that
+     `reconcile` ignores silently; restorable from Drive's trash for 30 days).
+  4. Moved the rehearsal month there whole: 25/25 items with their ids and md5s. Pointed at
+     that root, `reconcile --dry-run` reads it as `Built v6 (current)`: it is a working
+     rehearsal environment (RUNBOOK → *Rehearsing without touching a real month*).
+  5. On the production root, a write-blocked dry run showed all 16 open property-months empty.
+     A real `reconcile` pass in which a build was impossible then recreated Fort Grounds'
+     September skeleton (the month, four numbered folders, `output/`) and rewrote the root
+     summary, which had still read `Built v6`.
+
+  Verified afterwards: every property's September and October hold exactly the four numbered
+  folders and `output/`, with no files; the root holds the three manager folders and the
+  summary. Every Drive write is logged, with ids, in
+  `eval/reports/rehearsal-2026-09-fort-grounds/drive-operations-2026-09-28.json`.
+- [x] **4, 5, 6 — fixed 2026-09-28** as recommended below: a close-grace window
+  (`98f8a84`), retries on every Drive request with safe folder creation (`2bcd21e`), and a run
+  lease (`dd06f75`). The strict xfails that held them now pass as ordinary tests
+  (`tests/eval/test_reconcile_operations.py`, `tests/unit/test_drive_client_retries.py`).
+- [x] **Documents** (`30e4e7f`): the setup guides and infra README described the old quarterly
+  `build`; D-20, README, RUNBOOK `--force` cost, PLAN's per-attempt ceiling, SPEC §18.8.
+- [x] **4. Closed months are re-read on every run.** Each costs 3 Drive calls: 126 calls with no
+  history, 414 with a year of it (strict xfail
+  `test_a_no_op_run_does_not_grow_with_closed_history`). *Recommended:* only consider closing a
+  month within a grace period after its close date (`CRR_CLOSE_GRACE_DAYS`, say 14). Beyond
+  that it was closed by an earlier run, so skip it without a Drive call. Check the status by
+  name from one listing, not by downloading its body.
+- [x] **5. Drive requests are not retried** (strict xfail `test_drive_requests_are_retried`).
+  *Recommended:* `execute(num_retries=5)` on every request in `GoogleDriveApi`, and the same on
+  `MediaIoBaseDownload.next_chunk`. googleapiclient then backs off on 5xx, 429 and rate-limit
+  403s. It is all in one file, the seam the fake replaces. Since fix 2, whatever still fails
+  after retries costs one month one run, not the run.
+- [x] **6. A run landing between a build's publish and its state.json write publishes a
+  duplicate**, and the index keeps only one of the two (strict xfail
+  `test_a_run_landing_between_publish_and_commit_publishes_no_duplicate`). *Recommended:* a run
+  lease — one system file in the root, written, read back to confirm ownership, expiring after
+  the 1800 s replica timeout. A second execution finding a live lease exits 0 at once. That
+  closes this window and concurrent folder creation at month rollover, and keeps the duplicate
+  check as a backstop. Until then, do not run *Build a period* → `reconcile` while an Azure
+  execution is running.
+- [x] Still open from the audit, documents only (closed by `30e4e7f`): D-20 names the wrong workflow for `--force`;
+  the README says "every 30 minutes" before the schedule is armed; the RUNBOOK's
+  "$0.60 per property-month" for `--force` is ≈$0 with reuse; PLAN's "at most
+  CRR_MAX_BUILD_USD" is per attempt; `azure-job.yml`'s `build (…)` option now starts a
+  reconcile run.
+
+### Live test (2026-09-29): the release candidate in the production environment
+
+Real Azure, real Drive, real model. Nothing was uploaded into the production root: builds ran in
+the rehearsal root (the same shared drive, service account and API key), and the production root
+had no-op runs only.
+
+| # | Where | What | Result |
+|---|---|---|---|
+| 1 | Azure, live resource group | *Deploy to Azure*, what-if only, from the release branch ([run 36499470034](https://github.com/arcticbio/cornerstone.accounting.reports/actions/runs/36499470034)) | `crr-quarterly`: `args[0] build → reconcile`, `replicaTimeout 3600 → 1800`, **schedule untouched**; the rest is what-if noise (Key Vault URLs as expressions, environment defaults). Nothing deployed. |
+| 2 | Production root | `crr reconcile --dry-run` | 16 open property-months, nothing to build; 39 s |
+| 3 | Production root | real `crr reconcile` | preflight, lease, 16 months checked, summary rewritten, exit 0; **48.8 s** |
+| 4 | Production root | two real runs started together | one worked; the other lost the lease race and printed `nothing done: another run (vm) holds the lease until …`; both exit 0 |
+| 5 | Rehearsal root | first real run in the new root | 99 folders created; Fort Grounds' archived month read as `Built v6 (current)` |
+| 6 | Rehearsal root | Timber Place's June files uploaded; the default 60-minute settle | `Waiting for uploads to settle` |
+| 7 | Rehearsal root | real model (`claude-opus-5`), settle 0 | `Built v1 (current)`: OCR, 25 calls, one orientation disagreement arbitrated. Downloaded back: 25 pages, 13 bookmarks, title right, **plan identical to golden** including `rotate:90` on page 5 (`/Rotate 90`, 792×612). $0.80, 278 s |
+| 8 | Rehearsal root | a corrected Balance Sheet uploaded | `Built v2 (current)`: **1 call**, PM and P&L labels reused — the scanned PM source across OCR — and the old file renamed `SUPERSEDED - …`; $0.02 |
+| 9 | Rehearsal root | `--force` on production's model, `claude-opus-5-5` | `Built v3 (current)`: 25 calls, nothing reused (the model changed); **plan identical to golden**, rotation included; $0.62, 226 s |
+| 10 | Rehearsal root | Timber Place's state.json edited by hand | that month `Could not be checked - will retry`, listed in the root summary, Fort Grounds unaffected, exit 1; restored as the RUNBOOK says → `Built v3 (current)`, exit 0 |
+| 11 | Production | `pytest -m "api or gdrive"`, `claude-opus-5-5` | 8 passed |
+
+Model spend for all of it: **$1.44**. The rehearsal root now holds Timber Place / 2026-09 v1–v3
+beside Fort Grounds' v1–v6; the production root gained only its lease file and a refreshed
+summary. Why step 9: this container sets `CRR_MODEL=claude-opus-5`, while the Azure job sets no
+model and so runs the default, `claude-opus-5-5`.
 
 ## Eval results (append newest first)
 

@@ -1,8 +1,9 @@
 # Build plan
 
-Nine phases. Each phase has tasks, acceptance criteria, and a checkpoint policy. `PROGRESS.md`
-mirrors this file as a checklist and is the single source of truth for "where are we" — update
-it after every completed task, before every commit.
+Nine phases for v1; Phase 10 (continuous intake) follows it. Each phase has tasks, acceptance
+criteria, and a checkpoint policy. `PROGRESS.md` mirrors this file as a checklist and is the
+single source of truth for "where are we" — update it after every completed task, before every
+commit.
 
 ## Operating loop (every session, every task)
 
@@ -210,10 +211,42 @@ Checkpoint: **STOP** — `CHECKPOINT: v1.0.0 complete.` Summarise eval numbers, 
 
 ---
 
+## Phase 10 — Continuous intake (SPEC §18, D-17 – D-24)
+
+Replaces the quarterly schedule with a reconciler that builds each property as soon as its
+documents are ready, and rebuilds when a document changes. Existing Drive trees are development
+data: delete and re-seed them in the new layout as needed.
+
+Tasks
+- [ ] Config: `component_folders` in `properties.yaml`; per-property `components` overrides. `validate-config` covers both.
+- [ ] Repository: list a component folder with head-revision upload times and `md5Checksum`; rename to and from `SUPERSEDED - `; create the month/component/`output` skeleton; read and write `state.json`; publish `vN` names. Both `GoogleDriveRepository` and `LocalFsRepository` (mtime stands in for upload time).
+- [ ] File choice (§18.4) and readiness (§18.5), pure, fully unit-tested: newest wins, prefix follows the winner, delete-newest reverts, settle window, optional components, `not_used`.
+- [ ] Fingerprint and versions (§18.7); manifest v2 fields; classification reuse from the previous manifest with its compatibility check.
+- [ ] Open check (§18.6), cost ceiling and three-strike failure cap (§18.7).
+- [ ] Status files and root summary (§18.8): every row of the table has a test; bodies carry no page text, tenant names or figures (extend the log-capture test).
+- [ ] `crr reconcile` (§18.9) with `--property`, `--period`, `--force`, `--dry-run`; soft deadline; pre-publish re-list.
+- [ ] Verify against Azure docs and one real run: (a) whether a scheduled Container Apps Job execution starts while the previous one is running; (b) the monthly cost of 48 short runs a day. Record both in `QUESTIONS.md`.
+- [ ] Hosting (§18.10): Bicep cron and args; `build-period.yml` gains `reconcile` and `reconcile --force` (the on-demand rebuild).
+- [ ] Rehearsal in Drive: seed a month in the new layout and walk it through every status — partial upload, settle, unopenable file held, built v1, replace one component, v2 with reuse, duplicate upload superseded, delete-newest revert, closed. Record each in `PROGRESS.md`.
+- [ ] Docs: `RUNBOOK.md` rewritten around the new layout — a one-page "how to upload" for non-technical uploaders, and "how to read the status" for reviewers; `SETUP-GOOGLE-DRIVE.md`; banners in SPEC §6.1/§6.9/§13/§14 replaced by the amended text.
+
+Acceptance
+- On the rehearsal month, every scenario above produces the status in SPEC §18.8 and no build
+  it should not.
+- An unrelated PDF of any length in any folder costs at most `CRR_MAX_BUILD_USD` per attempt,
+  and at most `CRR_MAX_FAILED_ATTEMPTS` attempts are made on the same files.
+- A run with nothing to build finishes in under a minute on Azure.
+- Keyed eval unchanged at 100 %.
+
+Checkpoint: **STOP** before arming the 30-minute schedule on Azure — `CHECKPOINT:` with the
+rehearsal results and the measured monthly cost.
+
+---
+
 ## Ordering and dependencies
 
 ```
-0 → 1 → 2 → 3 → 4 → 5 → 6 → 7 → [8] → 9
+0 → 1 → 2 → 3 → 4 → 5 → 6 → 7 → [8] → 9 → 10
                 ↑             ↑
    API key needed here     Google creds here
    (else golden only)      (else fake only)

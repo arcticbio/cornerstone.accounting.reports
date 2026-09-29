@@ -14,7 +14,7 @@ import yaml
 from pydantic import ValidationError
 
 from crr.config.models import OutputDefinition, SourceSchema
-from crr.config.properties import PropertyRegistry
+from crr.config.properties import PropertyRegistry, Requirement
 from crr.preprocess.text import sha256_file
 from crr.resolve.address import AddressError, parse_address
 
@@ -44,6 +44,44 @@ class ConfigBundle:
 
     def output_for_property(self, property_id: str) -> OutputDefinition:
         return self.outputs[self.properties.manager_for(property_id).output_definition]
+
+    def components_for(self, property_id: str) -> tuple[Component, ...]:
+        """The input components one property uses, in output-definition order (SPEC §18.5).
+
+        `not_used` components are left out: they get no folder and are never waited for.
+        """
+        entry = self.properties.property(property_id)
+        out: list[Component] = []
+        for source in self.output_for_property(property_id).sources.values():
+            default: Requirement = "required" if source.required else "optional"
+            requirement = entry.components.get(source.role, default)
+            if requirement == "not_used":
+                continue
+            out.append(
+                Component(
+                    role=source.role,
+                    folder=self.properties.component_folders[source.role],
+                    requirement=requirement,
+                    schema_id=source.schema_id,
+                )
+            )
+        return tuple(out)
+
+
+@dataclass(frozen=True)
+class Component:
+    """One input a property expects, and the folder it is uploaded into (SPEC §18.3)."""
+
+    role: str
+    folder: str
+    requirement: Requirement
+    schema_id: str
+
+    @property
+    def label(self) -> str:
+        """`2 - Balance Sheet` → `Balance Sheet`: the name a person reads in a status."""
+        head, sep, tail = self.folder.partition(" - ")
+        return tail if sep and head.strip().isdigit() else self.folder
 
 
 def _load_yaml(path: Path) -> object:
@@ -143,11 +181,32 @@ def _cross_validate(
                     f"{pm.output_definition}: property_manager is "
                     f"{declared.property_manager!r} but properties.yaml assigns it to {pm.id!r}"
                 )
+        for output in outputs.values():
+            for alias, source in output.sources.items():
+                if source.role not in registry.component_folders:
+                    problems.append(
+                        f"properties.yaml: component_folders has no folder for role "
+                        f"{source.role!r} ({output.output_id} source {alias!r})"
+                    )
         for prop in registry.properties:
             record_ids = {r.id for r in prop.records}
             prop_output = outputs.get(registry.manager_for(prop.id).output_definition)
             if prop_output is None:
                 continue
+            roles = {source.role for source in prop_output.sources.values()}
+            for role in sorted(set(prop.components) - roles):
+                problems.append(
+                    f"properties.yaml: {prop.id} components names {role!r}, which "
+                    f"{prop_output.output_id} does not use (it has {', '.join(sorted(roles))})"
+                )
+            required_roles = [
+                s.role
+                for s in prop_output.sources.values()
+                if prop.components.get(s.role, "required" if s.required else "optional")
+                != "not_used"
+            ]
+            if not required_roles:
+                problems.append(f"properties.yaml: {prop.id} uses no components at all")
             for leaf in prop_output.leaves:
                 try:
                     parsed = parse_address(leaf.address)

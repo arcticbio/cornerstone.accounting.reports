@@ -1,7 +1,7 @@
 // Cornerstone Report Runner — Azure Container Apps Job (SPEC §14, D-13).
 //
 // Resource-group scoped. Deploys Log Analytics, a Container Apps Environment and a scheduled
-// Container Apps Job that runs the GHCR image quarterly and can also be started by hand.
+// Container Apps Job that runs `crr reconcile` on a schedule and can also be started by hand.
 //
 // Secrets are *referenced* from an existing Key Vault, never created here: a secret in a
 // template is a secret in source control and in every deployment log.
@@ -31,7 +31,11 @@ param googleSecretName string = 'google-service-account-b64'
 @description('Drive folder id that holds the property-manager folders. Not a secret.')
 param gdriveRootFolderId string
 
-@description('Quarterly schedule, UTC. Default: 06:00 on the 20th of Jan, Apr, Jul, Oct.')
+// Continuous intake (SPEC §18, D-17) runs every 30 minutes: '*/30 * * * *'. The default stays
+// quarterly until PLAN Phase 10's STOP is cleared, so that no redeploy — including the restore
+// that `Run the Azure job` performs — can arm the 30-minute schedule by accident. Arming it is
+// changing this one default, reviewed like any other change.
+@description('Schedule, UTC. Continuous intake: */30 * * * *. Default: quarterly, until armed.')
 param cronExpression string = '0 6 20 1,4,7,10 *'
 
 @description('Set false to deploy the job without arming the schedule.')
@@ -90,7 +94,9 @@ resource job 'Microsoft.App/jobs@2024-03-01' = {
     environmentId: environment.id
     configuration: {
       triggerType: 'Schedule'
-      replicaTimeout: 3600
+      // Hard stop. `crr reconcile` stops *starting* builds after 1200 s (CRR_RUN_SOFT_DEADLINE_S),
+      // so a run finishes well inside this and well inside a 30-minute schedule (SPEC §18.10).
+      replicaTimeout: 1800
       replicaRetryLimit: 1
       scheduleTriggerConfig: {
         cronExpression: scheduleEnabled ? cronExpression : '0 0 31 2 *' // 31 February: never
@@ -127,11 +133,11 @@ resource job 'Microsoft.App/jobs@2024-03-01' = {
         {
           name: 'crr'
           image: image
-          // No --period: the runner defaults to the month just ended, which is exactly the
-          // period a quarterly run on the 20th is closing. Start the job by hand with
-          // `--args` to rebuild any other period (infra/README.md).
+          // Continuous intake (SPEC §18.9): every open month of every property, built when its
+          // files are ready and have changed. No --period, no --force: a forced rebuild is
+          // `Actions → Build a period` with command `reconcile --force`.
           args: [
-            'build'
+            'reconcile'
             '--repo'
             'gdrive'
             '--classifier'

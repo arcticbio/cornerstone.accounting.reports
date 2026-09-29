@@ -1,0 +1,27 @@
+Fort Grounds - September 2026
+Status: Built v6 (current)
+
+v6 was built from exactly the files listed below.
+
+Files
+  Property Manager Report: "Sept owner packet.pdf" (uploaded 2026-09-26 01:44 UTC)
+  Balance Sheet: "Balance Sheet 9-30.pdf" (uploaded 2026-09-26 01:44 UTC)
+  Profit and Loss: "P&L YTD revised.pdf" (uploaded 2026-09-26 01:52 UTC)
+      set aside: "SUPERSEDED - P&L YTD.pdf" (uploaded 2026-09-26 01:44 UTC) - a newer file is in this folder
+  Distribution Schedule: "Distributions 2026.pdf" (uploaded 2026-09-26 01:47 UTC)
+
+Versions (newest first)
+  v6 - 2026-09-26 01:52 UTC - built - Profit and Loss replaced (uploaded 2026-09-26 01:52 UTC)
+  v5 - 2026-09-26 01:50 UTC - built - same files, rebuilt on request
+  v4 - 2026-09-26 01:47 UTC - built - Distribution Schedule added (uploaded 2026-09-26 01:47 UTC)
+  v3 - 2026-09-26 01:47 UTC - built - Balance Sheet replaced (uploaded 2026-09-26 01:44 UTC)
+  v2 - 2026-09-26 01:46 UTC - built - Balance Sheet replaced (uploaded 2026-09-26 01:45 UTC)
+  v1 - 2026-09-26 01:45 UTC - built - first build
+
+How this folder works
+  Put one PDF in each numbered folder. Any filename is fine.
+  If a folder holds more than one PDF, the newest upload is used and the others are
+  renamed "SUPERSEDED - ...". To go back to an older file, delete the newer one.
+  A new version is built about 60 minutes after the last upload, and
+  older versions stay in this folder.
+  Changes after 2026-11-11 are ignored.

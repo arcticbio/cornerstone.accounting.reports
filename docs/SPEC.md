@@ -283,6 +283,10 @@ Each stage is a pure function of its inputs plus the settings object, and writes
 
 ### 6.1 Fetch (`crr.repository`)
 
+> **Superseded in part by §18 (continuous intake, PLAN Phase 10).** What follows is the v1 contract,
+> still served by `crr build` over the `inputs/` layout; where it contradicts §18, §18 governs
+> `crr reconcile`.
+
 ```python
 class SourceRepository(Protocol):
     def list_periods(self, property: Property) -> list[PeriodId]: ...
@@ -423,6 +427,10 @@ The build is `NEEDS_REVIEW` (never silently `BUILT`) when any of:
 Exit codes: 0 all `BUILT`; 2 any `NEEDS_REVIEW`; 1 any `FAILED`.
 
 ### 6.9 Publish
+
+> **Superseded in part by §18 (continuous intake, PLAN Phase 10).** What follows is the v1 contract,
+> still served by `crr build` over the `inputs/` layout; where it contradicts §18, §18 governs
+> `crr reconcile`.
 
 `BUILT` → `output/`; `NEEDS_REVIEW` → `review/` with the manifest and a `REVIEW.md` summarising
 the reasons in plain language; `FAILED` → nothing published, manifest written to `work/`.
@@ -726,6 +734,11 @@ crr build [--period 2026-06] [--property <id>]... [--classifier anthropic|golden
           [--repo local|gdrive] [--dry-run] [--work-dir work/]
           # --period defaults to the month just ended, so an unattended quarterly run
           # (the 20th of Jan/Apr/Jul/Oct closes Dec/Mar/Jun/Sep) needs no argument.
+crr reconcile [--repo local|gdrive] [--classifier anthropic|golden] [--property <id>]...
+              [--period YYYY-MM] [--force] [--dry-run] [--work-dir work/]
+          # continuous intake (§18.9): what the schedule runs; exits 0 unless the run itself
+          # cannot proceed, or a month could not be checked (after checking all the others)
+crr preflight [--repo local|gdrive]       # prove a file can be written (§6.1)
 crr eval [--classifier anthropic|golden] [--pm <id>] [--gate]
 crr version
 ```
@@ -760,10 +773,24 @@ Never log page text or image bytes. Log document sha256s, not paths, at INFO.
 | `CRR_EVAL_MIN_BOUNDARY_F1` | `0.98` | per-manager gate |
 | `CRR_PRICE_TABLE_JSON` | built-in | override `{model: {input, cache_read, cache_write, output}}` USD per MTok |
 | `CRR_OCRMYPDF_BIN` | `ocrmypdf` | ocrmypdf entry point; an escape hatch for environments where the distribution's entry point is broken or off PATH |
+| `CRR_INTAKE_ROOT` | `<work_dir>/intake` | where `crr reconcile --repo local` reads and writes (§18) |
+| `CRR_SETTLE_MINUTES` | `60` | build only once nothing in a month's folders changed for this long (§18.5) |
+| `CRR_LOOKBACK_DAYS` | `42` | a month is watched until this many days after its last day (§18.3) |
+| `CRR_CLOSE_GRACE_DAYS` | `14` | a closed month is read, to write its final status, only this long past its window (§18.3) |
+| `CRR_FOLDERS_AHEAD` | `1` | month folders are prepared this many months ahead (§18.3) |
+| `CRR_RUN_SOFT_DEADLINE_S` | `1200` | a run stops starting builds after this long (§18.9) |
+| `CRR_RUN_LEASE_S` | `1800` | a crashed run's lease lapses after this long — the replica timeout (§18.9) |
+| `CRR_MAX_BUILD_USD` | `3.00` | a build estimated above this is held (§18.7) |
+| `CRR_COST_PER_PAGE_USD` | `0.03` | the per-page estimate behind that ceiling (§18.7) |
+| `CRR_MAX_FAILED_ATTEMPTS` | `3` | failures on the same files before retrying stops (§18.7) |
 
 ---
 
 ## 13. Google Drive layout
+
+> **Superseded in part by §18 (continuous intake, PLAN Phase 10).** What follows is the v1 contract,
+> still served by `crr build` over the `inputs/` layout; where it contradicts §18, §18 governs
+> `crr reconcile`.
 
 Mirror of the repo bundle, without `target/` and `reference/`:
 
@@ -788,9 +815,20 @@ Mirror of the repo bundle, without `target/` and `reference/`:
 A period is "ready to build" when `inputs/` contains the PM source file. `crr build --period X`
 with `--repo gdrive` skips properties whose `inputs/` is missing and reports them.
 
+**Requests** (both layouts). Every Drive request is retried up to 5 times, with randomised
+exponential backoff (at most ~31 s), on a 5xx, a 429, a rate-limit 403, or a connection that
+dropped or timed out. Folder creation is the exception, because `files.create` is not
+idempotent: a retry after a lost response would leave two folders with one name. After a
+transient failure it looks in the parent first, and returns the folder if the failed attempt
+did in fact create it (`crr.repository.drive_client`).
+
 ---
 
 ## 14. Hosting
+
+> **Superseded in part by §18 (continuous intake, PLAN Phase 10).** What follows is the v1 contract,
+> still served by `crr build` over the `inputs/` layout; where it contradicts §18, §18 governs
+> `crr reconcile`.
 
 **Container:** `python:3.12-slim` + `tesseract-ocr tesseract-ocr-eng tesseract-ocr-osd ocrmypdf ghostscript`
 + `uv sync --frozen`. Entrypoint `crr`. **The image never contains `data/bundle/`** (tenant data);
@@ -840,3 +878,281 @@ the path to use until Azure is provisioned.
 - Multi-period comparison or trend output.
 - A web UI. The manifest and `REVIEW.md` are the review surface.
 - Reproducing published-package features that have no source (D-03).
+
+---
+
+## 18. Continuous intake (v2 — Phase 10)
+
+**Status: built 2026-09-26 (PLAN Phase 10) and rehearsed on the live drive.** It supersedes the
+parts of §6.1 (finding inputs by exact filename), §6.9 (the separate `review/` folder), §13
+(the `inputs/` layout) and §14 (the quarterly schedule) that it contradicts; those sections
+still describe `crr build`. The 30-minute schedule is armed only once Phase 10's STOP is
+cleared (§18.10). Decisions D-17 – D-24.
+
+### 18.1 Why
+
+A fixed schedule cannot serve the business. Each property should be built as soon as its
+documents are complete, which can be the 1st of the month or the 24th. Each component comes from
+a different person who cannot see the others' progress, and any component can arrive from
+anyone, in any order. A component edited after a build must produce a new build. Cadence
+(monthly, quarterly) is changing and must not be encoded in the schedule.
+
+The system produces builds for external review. **Release is not part of this product.** The only
+floor on what the system must communicate: a reviewer who browses to a property's `output/`
+folder can tell, without opening anything else, whether the newest report is trustworthy and if
+not, why.
+
+### 18.2 Model: a reconciler, not a trigger
+
+One command, `crr reconcile`, run every 30 minutes by the existing Container Apps Job. It holds
+no state between runs; it re-reads Drive every time. For every property-month still open it
+answers, in order:
+
+1. Do this month's folders exist? Create them if not (§18.3).
+2. Which file is the current one in each component folder? (§18.4)
+3. Is the package complete and settled, and does every file open? (§18.5, §18.6)
+4. Does the newest build in `output/` already reflect exactly these files? (§18.7)
+
+It builds only when 4 is no. Because every run recomputes the answer from what is in Drive,
+missed runs, duplicate runs, crashed runs and restarts need no special handling: the next run
+sees the true state. The trigger never decides *what* to build.
+
+### 18.3 Layout and folder lifecycle
+
+```
+<root>/
+  _STATUS - All properties.txt                ← one line per property, current month (§18.8)
+  _LEASE - reconcile run (do not edit).json   ← which run holds the run lease (§18.9)
+  <PM folder>/<Property folder>/2026-09 September/
+      1 - Property Manager Report/            ← uploaders drop one PDF per folder, any filename
+      2 - Balance Sheet/
+      3 - Profit and Loss/
+      4 - Distribution Schedule/              ← only where the property uses it
+      output/
+          STATUS - Built v2 (current).txt
+          Fort Grounds - Investor Report - September 2026 - v1.pdf
+          Fort Grounds - Investor Report - September 2026 - v2.pdf
+          manifests/
+              v1.json  v2.json  state.json
+```
+
+- **The folder a file is in declares what the file is**, and is trusted (§18.6). Filenames are
+  never interpreted. The model is never asked which component a file is. Folder names come from
+  `config/properties.yaml` (`component_folders`, role → name); a property gets a folder only for
+  the components it uses (§18.5).
+- **There is no `inputs/` folder and no `review/` folder.** Builds that need review are published
+  into `output/` beside the others, with `NEEDS REVIEW` in the filename (§18.8).
+- **Folders are created by the system.** Every run ensures, for every property, the folders for
+  the current month and the next month (`CRR_FOLDERS_AHEAD=1`). Monthly for every property
+  regardless of cadence: a quarterly property simply leaves two months in three empty, and an
+  empty month publishes nothing and no status.
+- **A month is open** from creation until 42 days after its last day (`CRR_LOOKBACK_DAYS=42`;
+  September closes 2026-11-11). The month is the one containing the source material; quarterly
+  material goes in the quarter's last month.
+- A folder whose name only looks like a month (`2026-13 …`) is not one: it is ignored, with a
+  warning in the log, and never opened, prepared or closed.
+- **A month is closed** after that. The first run past the window rewrites its status to
+  `STATUS - Closed <date> (vN is final).txt` (or `… (nothing built)`). A month is read for this
+  only within `CRR_CLOSE_GRACE_DAYS` (14) of its window's end — runs are every 30 minutes, so
+  the first of them closes it — and never again after that, so a run with nothing to do costs
+  the same however long the history. A job stopped for longer than the grace period leaves such
+  a month's last status as it was. Changes after closure are ignored, and the status says so.
+
+### 18.4 Choosing the file in each component folder
+
+Exactly one file per component (D-19). When a folder holds more than one PDF:
+
+- **The newest upload wins.** "Upload time" is the modified time of the file's *head revision* —
+  when its current content arrived — not the file's `modifiedTime`, which a rename also changes.
+  Uploading a new version of the same file (Drive → Manage versions) also counts as an upload.
+  An exact tie on upload time breaks on the name without the `SUPERSEDED - ` prefix, then on
+  the id: arbitrary, but stable, because nothing the system renames takes part in it.
+- Every other PDF in the folder is renamed `SUPERSEDED - <original name>`. Nothing is moved or
+  deleted (D-14 still holds).
+- The prefix is the system's output, not its input: the winner is always computed from *all*
+  PDFs in the folder, whatever their names. If someone deletes the newest file, the next run
+  picks the newest remaining one and strips its prefix. Going back to an older file therefore
+  takes one action: delete the newer one.
+- Non-PDFs (images, Google Docs, shortcuts, Office files) are ignored and listed in the status.
+  Files outside the component folders are ignored. Nothing below a component folder is read.
+
+### 18.5 When a package is ready
+
+**Components per property.** Each output definition's `sources` gives the default: `required:
+true` → `required`, `required: false` → `optional`. A property may override any of them in
+`config/properties.yaml` with `components: {<role>: required | optional | not_used}` — keyed by
+role (`cornerstone_distribution_schedule`), as `component_folders` is, not by the output
+definition's per-manager alias.
+`not_used` components get no folder.
+
+A property-month is **ready** when all of these hold:
+
+| Condition | Rule | Status while not met |
+|---|---|---|
+| Complete | every `required` component has a current file | `Waiting for <components>` |
+| Settled | no PDF in any component folder has an upload time within the last `CRR_SETTLE_MINUTES` (60) | `Waiting for uploads to settle (last upload <time>)` |
+| Opens | every current file opens as a PDF (§18.6) | `Held - <reason>` |
+
+An `optional` component with no file is simply left out, and the status and manifest say the
+report was built without it. If it arrives later, the inputs have changed and the next run
+builds the next version.
+
+### 18.6 The folder is trusted
+
+A file's component is whatever folder it is in, and its month is whatever month folder it is in
+(D-19). The system does not inspect content to confirm either: document formats, lengths and
+layouts vary between managers and will keep changing, and a content check tuned to today's
+formats would reject tomorrow's good files. Only two mechanical checks run, and a failure
+**holds** the property-month with a plain-language status:
+
+1. **Opens as a PDF**, not encrypted (`Held - "<name>" in Balance Sheet cannot be opened`).
+2. **Within the cost ceiling** (§18.7) — the only guard against an unrelated upload, and it
+   depends on nothing but page count.
+
+What this accepts, deliberately:
+
+- **A wrong document in a folder is built as if it were right.** The existing review gate (§6.8)
+  usually catches it downstream — pages the schema does not recognise are `unknown_page`,
+  sections missing from the flow are `missing_required` — so it tends to land as
+  `NEEDS REVIEW`, but that is a side effect, not a guarantee.
+- **A document for the wrong month is not detected.** The reviewer is the check. The manifest and
+  status name every file used and when it was uploaded, so the question is answerable from the
+  `output/` folder.
+
+### 18.7 When to build, and versions
+
+**Input fingerprint** = the sorted list of `(source key, Drive file id, md5Checksum)` for the
+current files. Drive reports `md5Checksum` without a download, so an unchanged month costs one
+listing per folder. The manifest (§10) gains `inputs[].drive_file_id`, `inputs[].md5`,
+`inputs[].uploaded_at`, `input_fingerprint`, `version` and `omitted_optional[]`.
+
+A ready property-month is **built** when its fingerprint differs from the newest manifest in
+`output/manifests/`, whatever that manifest's status. A `needs_review` build consumes its
+fingerprint like any other: the same files are not rebuilt until one of them changes or a person
+forces it. **Code and config changes never trigger a build** (D-20); `--force` does.
+
+**Versions.** `N` = 1 + the highest `vN` already in `output/`. Filenames:
+`<Property> - Investor Report - <Month YYYY> - v<N>.pdf`, and
+`… - v<N> - NEEDS REVIEW.pdf` with `REVIEW - v<N>.md` beside it. Older versions stay where they
+are. Every build uses the code current at the time it runs.
+
+**Reuse.** A document whose `sha256`, schema `sha256`, model and `prompt_version` match an input
+in the previous manifest reuses that manifest's page classifications instead of re-classifying.
+Correcting a 1-page Balance Sheet does not re-classify a 26-page PM source.
+
+**Cost ceiling.** Before classifying, the estimated cost of the pages that will actually be sent
+(`pages × CRR_COST_PER_PAGE_USD`, default 0.03 from the measured $0.0275) must be below
+`CRR_MAX_BUILD_USD` (3.00). Otherwise: `Held - would cost about $X, over the $3.00 limit`.
+
+**Failures.** A `FAILED` build publishes no PDF. It appends `{fingerprint, at, error class}` to
+the month's index, `output/manifests/state.json` — which also lists every published version
+(number, time, status, fingerprint, inputs) so a run decides and writes a status from one small
+download rather than every manifest. The `vN.json` manifests remain the record. After `CRR_MAX_FAILED_ATTEMPTS` (3) failures on the same
+fingerprint, the reconciler stops retrying it: `STATUS - Failed 3 times, stopped retrying`. A
+new upload (new fingerprint) or `--force` resets it.
+
+### 18.8 Status — the review surface
+
+Each open property-month with any file in it has exactly one status file in `output/`, rewritten
+on every run whose outcome changed. **The name carries the headline**, so a reviewer reads it
+from the folder listing:
+
+| Name | Meaning |
+|---|---|
+| `STATUS - Waiting for Balance Sheet, Profit and Loss.txt` | required components missing |
+| `STATUS - Waiting for uploads to settle.txt` | an upload in the last 60 minutes |
+| `STATUS - Held - <reason>.txt` | a file does not open, or the build would exceed the cost ceiling; nothing built |
+| `STATUS - Built v2 (current).txt` | newest build is `BUILT` and reflects the current files |
+| `STATUS - Needs review (v2).txt` | newest build is `NEEDS_REVIEW` |
+| `STATUS - Built v2 - newer files waiting.txt` | v2 stands, but the files have changed since and the next build is waiting (a required file missing, or settling) |
+| `STATUS - Built v2 - newer files held.txt` | … and a newer file cannot be opened, or would cost too much: someone should look (each of these three reads `Needs review (v2) - …` when the standing build needs review) |
+| `STATUS - Built v2 - newer files failed, will retry.txt` | … and building from them raised; the next run retries |
+| `STATUS - Failed (attempt 1 of 3), will retry.txt` | building raised and no earlier version stands; the next run retries |
+| `STATUS - Failed 3 times, stopped retrying.txt` | §18.7 |
+| `STATUS - Closed 2026-11-11 (v2 is final).txt` | past the lookback window; later changes ignored |
+| `STATUS - Could not be checked - will retry.txt` | checking the month raised before anything was decided (§18.9); nothing was built or changed. Written only over an existing status: a month that never showed one does not get one from an error |
+
+The body is plain text for a non-technical reader: per component, the file used (name, upload
+time), files set aside and why, what was left out, and a version history
+(`v2 · 2026-10-09 14:40 · Balance Sheet replaced (uploaded 2026-10-09 13:32)`). No page text,
+tenant names or figures (§16).
+
+`_STATUS - All properties.txt` at the root: one line per property for the newest open month
+with any files, e.g. `Fort Grounds · September 2026 · Built v2 (current)`.
+
+### 18.9 One run
+
+```
+crr reconcile [--repo gdrive] [--classifier anthropic] [--property ID]... [--period YYYY-MM]
+              [--force] [--dry-run]
+```
+
+0. **Take the run lease** (`crr.intake.lease`): read the lease file at the root; if another run
+   holds it and it has not lapsed, do nothing and exit 0, saying which host holds it until
+   when. Otherwise write this run's lease, wait a moment (3 s on Drive), and read it back:
+   only the run whose write is read back goes on. A crashed run's lease lapses after
+   `CRR_RUN_LEASE_S` (1800 s, the replica timeout); a damaged lease file is treated as none.
+   A dry run takes no lease. Before each build the run checks the lease is still its own, and
+   starts nothing more if it is not.
+1. Publish preflight (§6.1). On failure exit 1 — the only condition that fails the run.
+2. Ensure folders (§18.3).
+3. Close any month newly past its window; write its final status.
+4. For each open property-month with files, **oldest month first**: choose files (§18.4) →
+   readiness (§18.5) → opens (§18.6) → fingerprint vs newest manifest (§18.7) → failure
+   cap → cost ceiling → build → **re-list `output/` and discard the build if a manifest with the
+   same fingerprint appeared meanwhile** → publish `vN` → status.
+   **Each property-month is checked in isolation.** Whatever raises while checking one —
+   anything outside the build, which §6.8 already contains: an index that cannot be read, a
+   store error — is that month's outcome, `Could not be checked - will retry`, and the run
+   moves on. Only a problem with the run itself (the classifier cannot be built) stops it.
+5. Stop *starting* builds after `CRR_RUN_SOFT_DEADLINE_S` (1200 s). Whatever is left is picked
+   up next run.
+6. Write the root summary: a line per property, then every month that could not be checked.
+   Release the lease.
+   Exit 0 — per-property outcomes are statuses, not exit codes — unless a month could not be
+   checked: then exit 1, after every other month is done and the summary written, so the
+   execution shows as failed and someone reads the log.
+
+`--force` builds the selected property-months even when the fingerprint is unchanged and resets
+the failure cap. It does not skip the completeness or open checks, nor the settle window.
+`--dry-run` prints every decision and writes nothing.
+
+`crr build` (§6) remains for development and one-off runs.
+
+### 18.10 Hosting changes
+
+- `infra/main.bicep`: cron `*/30 * * * *` once armed; baked args `reconcile --repo gdrive
+  --classifier anthropic`; replica timeout 1800 s (the 1200 s soft deadline stops new work well before it);
+  parallelism 1.
+- Container Apps starts a scheduled execution even while the previous one is still running
+  (A-14), and *Build a period* runs the same image from Actions alongside it. Only one of them
+  works at a time: the run lease (§18.9 step 0) sends the second away at once, the soft
+  deadline keeps runs shorter than the interval, and step 4's pre-publish re-list discards a
+  duplicate from any run that got in regardless.
+- Cost: a run with nothing to build lasts well under a minute. 48 a day is expected to sit near
+  or inside the Container Apps consumption free grant — **to be verified against current Azure
+  pricing** before the schedule is armed.
+- `build-period.yml` (Actions) gains a `command` choice — `reconcile`, `reconcile --force`,
+  `build` — with optional `property` and `period`: `reconcile --force` is the on-demand rebuild.
+  Not `azure-job.yml`: `--args` cannot carry a multi-token list (A-13), and Actions runs the
+  identical image with nothing to restore. The job's cron default stays quarterly until Phase
+  10's STOP is cleared, so no redeploy can arm the 30-minute schedule by accident. The deploy chain is unchanged: merge to `main` → `:build-v1` → `deploy.yml`.
+- Settings added to §12: `CRR_SETTLE_MINUTES` 60, `CRR_LOOKBACK_DAYS` 42, `CRR_CLOSE_GRACE_DAYS` 14, `CRR_FOLDERS_AHEAD` 1,
+  `CRR_RUN_SOFT_DEADLINE_S` 1200, `CRR_MAX_BUILD_USD` 3.00, `CRR_COST_PER_PAGE_USD` 0.03,
+  `CRR_MAX_FAILED_ATTEMPTS` 3.
+
+### 18.11 Considered and rejected
+
+- **Drive push notifications (`changes.watch`) to an endpoint that starts the job.** Adds an
+  always-on HTTPS endpoint, channel renewal (channels expire), and still needs polling as a
+  backstop. Its latency gain is erased by the 60-minute settle window.
+- **Logic Apps' Google Drive trigger.** Its connector needs an interactive OAuth consent, which
+  breaks the automated GitHub → Azure deploy chain.
+- **Identifying components by content.** The folder is the declaration (§18.6).
+- **Confirming the folder from content** — a first-page check of title, entity and period, and a
+  classifier-reported period for sources that print none on page 1. Designed 2026-09-26 and
+  withdrawn the same day: the June bundle showed page 1 states a period for only some sources,
+  and any content rule is tied to today's formats. Too fragile for the value (§18.6).
+- **An "I'm done" signal from uploaders** (marker files, a checklist sheet). Uploaders are
+  non-technical and rarely involved; completeness plus a settle window infers the same thing
+  with nothing extra to learn.

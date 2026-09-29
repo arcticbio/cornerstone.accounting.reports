@@ -178,7 +178,7 @@ the next paragraph, and then checks that the restore actually took.
 ### Why the restore is a re-deploy
 
 `az containerapp job update --args` can set `version`, and cannot set
-`build --repo gdrive --classifier anthropic`. The CLI's parser reads every `--`-prefixed token
+`reconcile --repo gdrive --classifier anthropic`. The CLI's parser reads every `--`-prefixed token
 after `--args` as one of its own flags and stops:
 
 ```
@@ -187,7 +187,7 @@ ERROR: unrecognized arguments: --repo gdrive --classifier anthropic
 
 No amount of quoting changes that, and there is no `--` escape. So the arguments can be *set* to
 a single-token command and not set back, which is the worst possible asymmetry for something the
-quarterly cron depends on. `infra/main.bicep` is the only place the real argument list is
+schedule depends on. `infra/main.bicep` is the only place the real argument list is
 written down, so re-deploying is how you get back to it — and it is the only way.
 
 ### Or by hand
@@ -207,7 +207,7 @@ az containerapp job update --name crr-quarterly --resource-group rg-cust-corners
 az containerapp job start  --name crr-quarterly --resource-group rg-cust-cornerstone
 ```
 
-**Restore the arguments when you are done** — the quarterly schedule runs whatever is
+**Restore the arguments when you are done** — the schedule runs whatever is
 configured, and as above you cannot put them back with `--args`. **Re-run the deploy workflow**
 (Preview unticked); it resets them from `infra/main.bicep`. Check with:
 
@@ -216,7 +216,7 @@ az containerapp job show --name crr-quarterly --resource-group rg-cust-cornersto
   --query "properties.template.containers[0].args" -o tsv
 ```
 
-which must print `build --repo gdrive --classifier anthropic`, one per line.
+which must print `reconcile --repo gdrive --classifier anthropic`, one per line.
 
 Watch them:
 
@@ -231,37 +231,44 @@ image is fine and the config copy is not — which would be a bug worth reportin
 
 ## Step 8 — A real run
 
-Only once a period's inputs are in Drive (`docs/RUNBOOK.md` → *Preparing a period in Drive*):
+The job runs `crr reconcile --repo gdrive --classifier anthropic` (SPEC §18): one pass over every
+open month of every property, which builds each month whose files are ready and have changed,
+and does nothing else. It is safe to start at any time; with nothing waiting it checks every
+month, rewrites the root summary and exits 0.
 
 ```bash
-# The period just ended — what the schedule does, and the only form needing no arguments.
+# Exactly what the schedule does.
 az containerapp job start --name crr-quarterly --resource-group rg-cust-cornerstone
 ```
 
-**Actions → Run the Azure job** with the arguments left at `build --repo gdrive --classifier
-anthropic` does the same thing through the same job, and reports the execution status and logs
-back into the run summary. Use it when you want the run recorded somewhere other than a
-terminal.
+**Actions → Run the Azure job** with `scheduled` does the same thing through the same job, and
+reports the execution status and logs back into the run summary. Use it when you want the run
+recorded somewhere other than a terminal.
 
-For any *other* period or a single property, use **Actions → Build a period**: it takes the
-period, property, repo and classifier as inputs, runs the same image with the same secrets, and
-does not require mutating the job definition the schedule depends on.
+To force a rebuild, or to run one property or one month, use **Actions → Build a period**
+(`reconcile --force`, with **property** and **period**): it runs the same image with the same
+secrets, and does not require mutating the job definition the schedule depends on. It is safe
+beside a running Azure execution: only one run works at a time (the run lease), and the other
+says so and exits 0.
 
-**Read the exit code carefully.** The runner's contract (SPEC §6.8) is 0 built, 2 needs review,
-1 failed — and Azure marks any non-zero exit as a *failed execution*. **An execution showing
-"Failed" is very often exit code 2, which means the packages built but one or more went to
-`review/` for a human.** Check the logs before treating it as an incident; the packages and
-manifests are in Drive either way.
+**Read the exit code.** `reconcile` exits 0 unless the run itself could not proceed — bad
+config, missing credentials, an unwritable drive — or a month could not be checked, so a
+**Failed** execution is a real incident: read its logs. Per-month outcomes are status files in
+Drive, not exit codes (`docs/RUNBOOK.md` → *For reviewers*). The v1 command `crr build`, run by
+hand, keeps its own contract (SPEC §6.8): 0 built, 2 needs review, 1 failed.
 
 ## Step 9 — Turn the schedule on
 
-The job deploys with the quarterly cron already armed: `0 6 20 1,4,7,10 *` — 06:00 UTC on the
-20th of January, April, July and October, which closes December, March, June and September. The
-runner defaults `--period` to the month just ended, so a scheduled run needs no argument.
+Continuous intake runs every 30 minutes, `*/30 * * * *`. Until PLAN Phase 10's STOP is cleared —
+a no-op run measured on Azure and its monthly cost checked (QUESTIONS A-15) — the template's
+default stays the quarterly `0 6 20 1,4,7,10 *` (06:00 UTC on the 20th of January, April, July
+and October), so that no deploy can arm the 30-minute schedule by accident. **To arm it**, change
+the `cronExpression` default in `infra/main.bicep` to `'*/30 * * * *'`, merge, and run the
+deploy workflow with *Preview* unticked (`docs/RUNBOOK.md` → *Running it on Azure*).
 
-To deploy the job *without* arming the schedule, untick **Arm the quarterly cron** when you run
-the deploy workflow. That parks the cron on 31 February, which never arrives; manual starts
-still work. Re-run with it ticked when you are ready.
+To deploy the job *without* any schedule, untick **Arm the schedule** when you run the deploy
+workflow. That parks the cron on 31 February, which never arrives; manual starts still work.
+Re-run with it ticked when you are ready.
 
 ---
 

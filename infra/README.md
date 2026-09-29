@@ -1,7 +1,8 @@
 # Azure Container Apps Job
 
-The quarterly runner as a scheduled Container Apps Job (SPEC §14, D-13). GitHub Actions runs
-the same image today; this is the target once Azure is provisioned.
+The runner as a scheduled Container Apps Job (SPEC §14, §18.10, D-13): it runs
+`crr reconcile --repo gdrive --classifier anthropic`, which builds each property-month when its
+files are ready. GitHub Actions (*Build a period*) runs the same image on demand.
 
 **Setting this up for the first time?** Follow
 [`../docs/SETUP-AZURE.md`](../docs/SETUP-AZURE.md) (CLI, starts with `./infra/bootstrap.sh`) or
@@ -14,7 +15,7 @@ parts this file assumes are already done. What follows is the reference for the 
 |---|---|
 | Log Analytics workspace | where the job's stdout/stderr land, 90-day retention |
 | Container Apps Environment | the compute the job runs in |
-| Container Apps Job | schedule trigger (quarterly), 2 vCPU / 4 GiB, 3600 s timeout, 1 retry |
+| Container Apps Job | schedule trigger (quarterly until PLAN Phase 10's STOP is cleared, then `*/30 * * * *`), 2 vCPU / 4 GiB, 1800 s timeout, 1 retry |
 
 It does **not** create the Key Vault or the secrets. It references an existing vault, because a
 secret in a template is a secret in source control and in every deployment log.
@@ -67,13 +68,13 @@ Re-run the deployment afterwards so the job picks up the secrets it can now read
 
 ## Running it by hand
 
-The schedule fires quarterly. To run one now:
+To run one now:
 
 ```bash
-# The period just ended — same thing the schedule does.
+# One reconcile pass — exactly what the schedule does.
 az containerapp job start --name crr-quarterly --resource-group rg-cust-cornerstone
 
-# A specific period, or one property: use Actions -> "Build a period" instead. `--args` on
+# A forced rebuild, one month or one property: use Actions -> "Build a period" instead. `--args` on
 # `job start` fails with ContainerAppImageRequired, and --image drops the env vars
 # (Azure/azure-cli#27521); --args is also reported ignored there (microsoft/azure-container-apps#1360).
 
@@ -92,10 +93,12 @@ az containerapp job logs show --name crr-quarterly --resource-group rg-cust-corn
 
 ## Exit codes
 
-The job's execution status follows SPEC §6.8: **0** every property built, **2** at least one
-package went to `review/`, **1** at least one property failed. Azure marks a non-zero exit as a
-failed execution, so a review outcome shows up as a failed run — check the logs before treating
-it as an incident. The packages and manifests are in Drive either way.
+`reconcile` exits **0** unless the run itself could not proceed (config, credentials, an
+unwritable drive) or a month could not be checked — then **1**, after every other month is done
+(SPEC §18.9). Per-month outcomes, reviews included, are status files in Drive, not exit codes,
+so a **Failed** execution is a real incident: read its logs. A run that finds another holding
+the run lease exits 0 having done nothing. (`crr build`, the v1 command, keeps SPEC §6.8's
+0 / 2 / 1.)
 
 ## Updating the image
 

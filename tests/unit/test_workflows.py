@@ -101,8 +101,10 @@ class TestBuildPeriodWorkflow:
 
     def test_it_is_dispatchable_with_the_spec_inputs(self) -> None:
         inputs = self.trigger["workflow_dispatch"]["inputs"]
-        assert set(inputs) == {"period", "property", "repo", "classifier", "image_tag"}
-        assert inputs["period"]["required"] is True
+        assert set(inputs) == {"command", "period", "property", "repo", "classifier", "image_tag"}
+        assert inputs["period"]["required"] is False  # reconcile needs none; build checks
+        assert inputs["command"]["default"] == "reconcile"
+        assert set(inputs["command"]["options"]) == {"reconcile", "reconcile --force", "build"}
         assert inputs["property"]["required"] is False
         assert inputs["repo"]["default"] == "gdrive"
         assert set(inputs["repo"]["options"]) == {"gdrive", "local"}
@@ -146,10 +148,9 @@ class TestInfrastructure:
         self.deploy = _workflow("deploy.yml")
 
     def test_the_job_matches_the_spec_shape(self) -> None:
-        """SPEC §14: quarterly schedule, manual start, 2 vCPU / 4 GiB, 3600 s, 1 retry."""
-        assert "'0 6 20 1,4,7,10 *'" in self.bicep
+        """SPEC §14, §18.10: schedule, manual start, 2 vCPU / 4 GiB, 1800 s, 1 retry."""
         assert "triggerType: 'Schedule'" in self.bicep
-        assert "replicaTimeout: 3600" in self.bicep
+        assert "replicaTimeout: 1800" in self.bicep
         assert "replicaRetryLimit: 1" in self.bicep
         assert "cpu: json('2.0')" in self.bicep
         assert "memory: '4Gi'" in self.bicep
@@ -172,6 +173,12 @@ class TestInfrastructure:
         assert "secretRef: 'anthropic-api-key'" in self.bicep
         assert "secretRef: 'google-service-account-b64'" in self.bicep
         assert "sk-ant" not in self.bicep
+
+    def test_the_schedule_runs_reconcile_and_stays_quarterly_until_armed(self) -> None:
+        """PLAN Phase 10 STOP: no redeploy may arm the 30-minute schedule by default."""
+        assert "'reconcile'" in self.bicep
+        assert "param cronExpression string = '0 6 20 1,4,7,10 *'" in self.bicep
+        assert "'--force'" not in self.bicep
 
     def test_the_scheduled_run_needs_no_period_argument(self) -> None:
         """A-07: the runner defaults to the month just ended."""

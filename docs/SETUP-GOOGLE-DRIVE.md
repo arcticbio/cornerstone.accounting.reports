@@ -119,6 +119,12 @@ Check the member list now shows the `crr-runner@…` address with **Content mana
 
 ---
 
+> **Since Phase 10 (continuous intake)** the runner creates every property's month folders
+> itself — `1 - Property Manager Report/` … `output/` — for the current and the next month, on
+> every run (SPEC §18.3). The `inputs/` tree described below is the v1 layout; nobody needs to
+> prepare folders by hand any more. Everything about the shared drive and the runner's role is
+> unchanged.
+
 # Part 3 — Give the runner a root inside the shared drive
 
 > ### Don't try to move the existing folder. You can't, and you don't need to.
@@ -233,7 +239,7 @@ uv run crr inspect --repo gdrive --period 2026-09
 If that lists folders, authentication and read access are fine and the problem is squarely the
 write path — which narrows it to Part 2 (role) or Part 4 (wrong folder).
 
-`crr build` runs this same check before it does anything else, so a real run will now stop in
+`crr build` and `crr reconcile` run this same check before they do anything else, so a real run will now stop in
 about a second rather than spending a full run's classification (~$3.73 across eight
 properties) and failing at the last step.
 

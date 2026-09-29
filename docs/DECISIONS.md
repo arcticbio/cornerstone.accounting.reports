@@ -89,3 +89,57 @@ reference to `build/v1` in these documents as that branch.
 
 **D-16 · Python 3.12, `uv`, `ruff`, `mypy --strict` on `src/`, `pytest`, pydantic v2, Typer, structlog.**
 No frameworks beyond these. No async unless a measured need appears.
+
+---
+
+*D-17 – D-24 were settled with the user on 2026-09-25/26 while designing continuous intake
+(SPEC §18, PLAN Phase 10). They take effect when Phase 10 lands.*
+
+**D-17 · Build each property as soon as its documents are ready; no fixed schedule. Supersedes
+the quarterly cron of D-13 / SPEC §14.**
+Documents can be ready on the 1st or the 24th, come from different people in any order, and can
+be edited after a build; cadence is changing. *Consequence:* a stateless reconciler
+(`crr reconcile`) runs every 30 minutes, derives everything from Drive, and builds a
+property-month when its current files differ from its newest build. Push notifications and Logic
+Apps were rejected (SPEC §18.11).
+
+**D-18 · Release is out of scope. The `output/` folder is the whole review surface.**
+The product builds packages for external review and delivery by people. The one requirement on
+communication: a reviewer browsing a property's `output/` can see whether the newest report is
+trustworthy and, if not, why. *Consequence:* no notifications, dashboards or messaging. A status
+file whose *name* is the headline, plus a root summary. Supersedes the separate `review/` folder
+of D-12; D-12's rule (review over guess) stands.
+
+**D-19 · A folder per component declares what a file is. One file per component. Filenames are
+never interpreted.**
+Uploaders may be anyone with Drive access and no technical background. The model is never asked
+which component a file is, and no content check second-guesses the folder: formats vary and
+will change, so any such check is fragile (withdrawn 2026-09-26, SPEC §18.11). A wrong or
+wrong-month document is built as given; the reviewer is the check.
+*Consequence:* no `inputs/` folder; the exact-filename rule of SPEC §6.1 goes.
+
+**D-20 · Only a change of input files triggers a build. Code and config changes do not;
+`--force` (from the GitHub `Build a period` workflow) rebuilds on demand. Every build uses the
+code current at the time it runs.**
+Otherwise every merge to `main` would issue new versions of every open month.
+
+**D-21 · When a component folder holds more than one PDF, the newest upload wins; the others are
+renamed `SUPERSEDED - …`.**
+"Upload time" is the head revision's time, which a rename does not change. The prefix is output,
+never input: deleting the newest file makes the next-newest the winner and strips its prefix.
+*Consequence:* the runner now renames files it did not write. It still never moves, overwrites
+or deletes them (D-14).
+
+**D-22 · Every build is a new version in the same `output/` folder. Old versions stay.**
+`… - v<N>.pdf`, `… - v<N> - NEEDS REVIEW.pdf`.
+
+**D-23 · A month is open until 42 days after its last day, then closed; later changes are
+ignored and the status says so.**
+The month is the one containing the source material; quarterly material goes in the quarter's
+last month. The system creates the current and next month's folders for every property.
+
+**D-24 · Only PDFs; spend is bounded by page count alone.**
+A file must open as a PDF; nothing else about its content is checked (D-19). Spend is bounded by
+a per-build cost ceiling (pages × a measured per-page rate), a three-strike failure cap and a
+spend limit on the Anthropic workspace — none of which depends on a document's format.
+An unrelated upload costs at most the ceiling, and the review gate usually flags it.

@@ -15,7 +15,7 @@ from pydantic import BaseModel, ConfigDict, Field
 from crr import __version__
 from crr.models import BuildStatus, PageClassification, PlanItem, ResolvedSection, ReviewReason
 
-MANIFEST_VERSION = 1
+MANIFEST_VERSION = 2
 
 _STRICT = ConfigDict(extra="forbid")
 
@@ -68,6 +68,20 @@ class InputRef(BaseModel):
     ocr_applied: bool = False
     ocr_version: str | None = None
     ocr_rotated_pages: bool | None = None
+    # -- v2: continuous intake (SPEC §18.7) ------------------------------------------------
+    #: The uploaded file's hash before OCR. `sha256` is the file the build composed from,
+    #: which for a scan is the OCR output — and OCR output is not byte-stable, so this is the
+    #: identity a later build compares to reuse classifications.
+    source_sha256: str | None = None
+    #: Hash of the source schema this input was classified against.
+    schema_sha256: str | None = None
+    #: The name the person uploaded it under, the Drive file id, its md5 and upload time.
+    upload_name: str | None = None
+    file_id: str | None = None
+    md5: str | None = None
+    uploaded_at: datetime | None = None
+    #: True when this input's page labels were carried over from the previous version.
+    reused_classification: bool = False
 
 
 class DroppedRef(BaseModel):
@@ -117,7 +131,7 @@ class Timings(BaseModel):
 class BuildManifest(BaseModel):
     model_config = ConfigDict(extra="forbid", populate_by_name=True)
 
-    manifest_version: Literal[1] = 1
+    manifest_version: Literal[1, 2] = 2
     runner_version: str = __version__
     built_at: datetime = Field(default_factory=lambda: datetime.now(UTC))
     status: BuildStatus
@@ -136,3 +150,9 @@ class BuildManifest(BaseModel):
     timings_ms: Timings = Timings()
     #: Set when the build failed with an exception rather than a review reason (SPEC §6.8).
     error: str | None = None
+    # -- v2: continuous intake (SPEC §18.7) ------------------------------------------------
+    #: The version number in `output/`, and the identity of the input set it was built from.
+    version: int | None = None
+    input_fingerprint: str | None = None
+    #: Optional components that had no file, so the report was built without them.
+    omitted_optional: list[str] = Field(default_factory=list)

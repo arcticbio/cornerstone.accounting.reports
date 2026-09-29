@@ -25,7 +25,9 @@ the labels move.
 | 4 | Azure portal | Let the job read the vault, then redeploy | 5 min |
 | 5 | Azure portal + Cloud Shell | Smoke test | 5 min |
 
-At the end you will have a Container Apps Job that runs quarterly and can be started by hand.
+At the end you will have a Container Apps Job that runs `crr reconcile` on a schedule —
+quarterly until PLAN Phase 10's STOP is cleared, then every 30 minutes — and can be started by
+hand.
 
 ---
 
@@ -372,10 +374,11 @@ Two runs that touch neither Drive nor the model.
 > ### Do not use "Run now" for this
 >
 > The portal's **Run now** button takes no arguments — it runs the job exactly as configured,
-> which is `build --repo gdrive --classifier anthropic`: **a full production build**, not a
-> smoke test. Against a period whose inputs are not yet staged in Drive it fails within about
-> twenty seconds, retries once, and ends as `BackoffLimitExceeded`. That failure says nothing
-> about your setup.
+> which is `reconcile --repo gdrive --classifier anthropic`: **a real production pass**, which
+> builds, and pays for, any month whose files are waiting in Drive. With nothing waiting it
+> only checks every month and exits 0, which does show the job can reach Drive — but it needs
+> Drive credentials and a configured root, so it is not the credential-free smoke test this
+> part is about.
 >
 > A smoke test has to override the arguments, and only the command line can do that. Use 5.1.
 
@@ -480,13 +483,14 @@ Actions copy is separate.
 **Change the image.** Container App Job → **Containers** → **Edit and deploy** → change the
 image tag → **Save**. Or re-run the deploy workflow with a different `image` input.
 
-**Pause the schedule.** Re-run the deploy workflow with **Arm the quarterly cron** unticked —
+**Pause the schedule.** Re-run the deploy workflow with **Arm the schedule** unticked —
 that parks the cron on 31 February, which never arrives. Manual runs still work. Portal
 alternative: Container App Job → **Job settings** → change the cron expression.
 
-**Change when it runs.** The default `0 6 20 1,4,7,10 *` is 06:00 UTC on the 20th of January,
-April, July and October — closing December, March, June and September. Edit `cronExpression` in
-`infra/main.bicep` and redeploy, so the repository stays the source of truth.
+**Change when it runs.** Continuous intake runs every 30 minutes (`*/30 * * * *`). Until PLAN
+Phase 10's STOP is cleared the default stays the quarterly `0 6 20 1,4,7,10 *` — 06:00 UTC on
+the 20th of January, April, July and October. Edit `cronExpression` in `infra/main.bicep` and
+redeploy, so the repository stays the source of truth.
 
 **Delete everything.** Resource groups → `rg-cust-cornerstone` → **Delete resource group**. Nothing in Drive
 or GitHub is touched.

@@ -95,6 +95,9 @@ class SourceDocument(BaseModel):
     ocr_applied: bool = False
     ocr_version: str | None = None
     ocr_rotated_pages: bool | None = None
+    #: The file's hash as uploaded, before OCR replaced it (SPEC §18.7). None means "same as
+    #: `sha256`" — nothing replaced it.
+    source_sha256: str | None = None
 
 
 class PageClassification(BaseModel):

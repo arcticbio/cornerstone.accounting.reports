@@ -4,12 +4,17 @@ from __future__ import annotations
 
 import calendar
 from datetime import date
+from typing import Literal
 
-from pydantic import BaseModel, ConfigDict, model_validator
+from pydantic import BaseModel, ConfigDict, Field, model_validator
 
 from crr.models import Property, PropertyRecord
 
 _STRICT = ConfigDict(extra="forbid", frozen=True)
+
+#: How a property uses one input component (SPEC §18.5). The default comes from the output
+#: definition's `sources[*].required`; a property may override it.
+Requirement = Literal["required", "optional", "not_used"]
 
 
 class PropertyManager(BaseModel):
@@ -43,6 +48,8 @@ class PropertyEntry(BaseModel):
     property_manager: str
     owning_entity: str
     records: tuple[PropertyRecord, ...]
+    #: role → requirement, overriding the output definition's default (SPEC §18.5).
+    components: dict[str, Requirement] = Field(default_factory=dict)
 
     def to_domain(self) -> Property:
         return Property(
@@ -62,6 +69,9 @@ class PropertyRegistry(BaseModel):
     period_folder_template: str
     property_managers: tuple[PropertyManager, ...]
     cornerstone_files: dict[str, str]
+    #: role → the folder uploaders drop that component into (SPEC §18.3). The folder declares
+    #: what a file is; filenames are never interpreted (D-19).
+    component_folders: dict[str, str] = Field(default_factory=dict)
     properties: tuple[PropertyEntry, ...]
 
     @model_validator(mode="after")
@@ -78,6 +88,12 @@ class PropertyRegistry(BaseModel):
         dupes = sorted({i for i in ids if ids.count(i) > 1})
         if dupes:
             raise ValueError(f"duplicate property id(s): {', '.join(dupes)}")
+        folders = [name.casefold() for name in self.component_folders.values()]
+        if len(set(folders)) != len(folders):
+            raise ValueError("component_folders: two components share a folder name")
+        for role, name in self.component_folders.items():
+            if name.casefold() == "output" or name.upper().startswith("SUPERSEDED"):
+                raise ValueError(f"component_folders: {role!r} may not use the name {name!r}")
         return self
 
     def manager(self, pm_id: str) -> PropertyManager:

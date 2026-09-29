@@ -258,6 +258,41 @@ same branch. `docs/ANALYSIS-model-successor-2026-09.md`.
 
 ---
 
+**A-14 · Overlapping scheduled executions are assumed to run in parallel, and the design
+tolerates it.** (Phase 10, SPEC §18.10.) Microsoft's pages are not reachable from the build
+container; secondary sources agree that a Container Apps Job starts a new scheduled execution
+even while the previous one is still running — "both will run in parallel unless limits are
+set" ([Microsoft Q&A](https://learn.microsoft.com/en-us/answers/questions/2203090/behaviour-of-scheduled-job-(cron)-when-a-previous),
+[practical guide](https://yeongseon.github.io/azure-container-apps-practical-guide/platform/jobs/scheduled-jobs/)).
+Nothing in the design depends on the answer. Since 2026-09-28 a **run lease** (SPEC §18.9
+step 0) keeps a second execution out while one works: it finds the lease and exits 0 at once.
+Behind that, `crr reconcile` stops starting builds after 1200 s, the replica timeout is 1800 s,
+and a build re-reads the month's index just before publishing and discards itself if an
+overlapping run published the same files. Before the lease, the audit showed that re-read left a
+window: a run landing between a build's publish and its index write published a duplicate
+(`tests/eval/test_reconcile_operations.py`). *Confirm* on the first armed week: overlapping
+executions in the history should each log `intake.lease_held` and do nothing.
+
+**A-15 · The 30-minute schedule costs about nothing on top of the builds.** (Phase 10.) The
+Consumption plan's free grant is 180,000 vCPU-s and 360,000 GiB-s per subscription per month,
+and jobs are billed per second of replica runtime
+([Billing in Azure Container Apps](https://learn.microsoft.com/en-us/azure/container-apps/billing)).
+At 2 vCPU / 4 GiB, 48 runs a day for 30 days is 1,440 runs; **if a run with nothing to build
+lasts 60 s, that is 172,800 vCPU-s and 345,600 GiB-s — just inside the grant**; at 30 s, half
+of it. The builds themselves add ~2 minutes of replica time each. The worst case beyond the grant
+is a few dollars a month at list price, against ~$0.60 of model calls per property build.
+*Confirm* the real no-op run time on Azure before arming; if it is well over 60 s, the options
+are a smaller replica (1 vCPU / 2 GiB halves it) or a business-hours cron.
+*Measured 2026-09-29, not yet on Azure:* a real `crr reconcile` with nothing to build took
+**48.8 s** against the production drive from a session container — preflight, the run lease
+(3 s of it is the lease's settle) and interpreter start-up included. That is 140,500 vCPU-s and
+281,100 GiB-s a month at 48 runs a day, **78 % of the grant**, leaving ~40 builds' worth of
+headroom (a build measured 226-278 s on Timber Place, the slowest property, OCR included). It
+no longer grows with history: the audit found every closed month added 3 Drive calls to every
+run, fixed 2026-09-28 (SPEC §18.3). Model calls are the real cost: $0.62 for Timber Place on
+`claude-opus-5-5`, $0.02 for a one-page correction. Azure adds the container's start and image
+pull, which only a run there can measure.
+
 ## Blocked (Claude Code appends here)
 
 *(format: `B-nn · <what is needed> · <what is blocked> · <what continues meanwhile>`)*
