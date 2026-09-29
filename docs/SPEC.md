@@ -1025,6 +1025,13 @@ What this accepts, deliberately:
 - **A document for the wrong month is not detected.** The reviewer is the check. The manifest and
   status name every file used and when it was uploaded, so the question is answerable from the
   `output/` folder.
+- **A document for the wrong property is built as that property's report** (D-25). Managers
+  name properties their own way, scans garble names and names change, so a name check would hold
+  good reports. The reviewer is the check, as for the wrong month. Rent Manager reports are the
+  exception by construction: their `Property:` line is matched to split WayPointe's two records
+  (§5 rule 3), so a Missoula report for another entity usually lands as `NEEDS REVIEW`
+  (`unresolved_record`) — a side effect, not a guarantee. Cobalt's and McCathren's schemas
+  carry no record qualifier, and neither do Cornerstone's own files.
 
 ### 18.7 When to build, and versions
 
