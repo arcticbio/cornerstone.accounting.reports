@@ -197,3 +197,13 @@ are in `evaluation.md` (from `eval/live/evaluate.py`).
   11:47, so the 12:00 run faces sixteen rebuilds at once — the soft deadline's real test.
   S5's amended 11:00 prediction met. 48 met, 3 late, 0 missed, 1 not yet (O6), 3 withdrawn,
   16 pending; $8.50.
+- **11:25** · Names in Drive, checked in the snapshots. Lolo Peak September's same-name
+  re-upload (Drive's "Keep both"): the 09:30 run renamed the 05:35 copy `SUPERSEDED - Lolo Peak
+  Village Owner Report Sep 2026.pdf` and v1's index cites the 09:10 copy by file id — the
+  identical bytes told apart correctly. The schedule moved in from October keeps its
+  `… Oct 2026.pdf` name and is used, as the trusted folder says (§18.6). A withdrawn
+  correction restores the old name: Fort Grounds' original Balance Sheet, `SUPERSEDED` while
+  the REVISED one was newest, was renamed back at 10:30:49 by the run that built v4 from it —
+  and the rename did not restart the settle (it changes `modified`, not the upload time), as
+  that same run built. At 11:00:57 it went back to `SUPERSEDED` for R1's reissue: files are
+  marked superseded on sight, before the newer one settles.
