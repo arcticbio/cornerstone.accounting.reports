@@ -87,3 +87,17 @@ are in `evaluation.md` (from `eval/live/evaluate.py`).
   `2026-10`, dispatched on `main` at 08:58:54
   ([run 36546168639](https://github.com/arcticbio/cornerstone.accounting.reports/actions/runs/36546168639)),
   racing the 09:00 scheduled run for the lease. Result to follow.
+- **09:08** · **O5b: the forced build won the race — and displaced the whole 09:00 run.**
+  Run 36546168639 took the lease at 08:59:17 (host `5cced9db4683`, the runner's container),
+  OCR'd Timber Place's scanned report, reused all three stored classifications (no model
+  call), published `Built v2 (current)` (25 pages, 13 bookmarks, as v1) at 09:01:08, released
+  the lease at 09:01:12 and exited 0. The lease shows no Azure run after it, so the 09:00
+  scheduled execution — starting about 09:00:20, while the forced run held the lease — did
+  nothing, as O5a showed it does. By design, then: one operator's forced build of one property
+  stood the scheduled run down for all eight, so the builds due at 09:00 (S2, S5, O3, O6, O7)
+  land at 09:30 and will score "late". Operator guidance for the RUNBOOK: dispatch a manual
+  run a few minutes after :00/:30 has finished, never just before.
+  The 09:30 prediction for O5 is amended from v2 to v3 before O5c runs (the plan's own note
+  for O5c: "v3 if O5b already built v2"). Note on the image: `:build-v1` on `main` still
+  probes at start (`repository.preflight_ok` 08:59:16) — the follow-up ec061b7 is not
+  deployed, deliberately; the system under test stays fixed tonight.

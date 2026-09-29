@@ -956,8 +956,9 @@ EXPECTS: list[Expect] = [
     Expect("O4", "waypointe", OCT, 120, "Built v1 (current)", 1),
     Expect("O4", "waypointe", OCT, 150, "Built v1 (current)", 1, "rename/Doc/shortcut: no build"),
     Expect("O5", "timber-place", OCT, 120, "Built v1 (current)", 1),
+    # Amended 09:10, before O5c ran: O5b won the 09:00 race and built v2, so O5c makes v3.
     Expect(
-        "O5", "timber-place", OCT, 240, "Built v2 (current)", 2, "the operator's forced rebuild"
+        "O5", "timber-place", OCT, 240, "Built v3 (current)", 3, "two forced rebuilds, v2 and v3"
     ),
     Expect("O6", "river-falls", OCT, 120, "Built v1 (current)", 1),
     Expect("O6", "river-falls", OCT, 210, "Built v2 (current)", 2, "the corrected P&L"),
