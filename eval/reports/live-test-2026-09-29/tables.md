@@ -11,6 +11,12 @@
 | `crr-quarterly-29844510-65mjq` | Azure, scheduled | 08:30:24 | 08:40:45 | 10:21 | 4 | $1.01 |
 | `6f4fcffad146` | Actions, forced | 09:17:45 | 09:19:35 | 1:50 | 1 | $0.00 |
 | `crr-quarterly-29844570-wc6hw` | Azure, scheduled | 09:30:23 | 09:37:30 | 7:07 | 3 | $0.84 |
+| `crr-quarterly-29844600-t49gx` | Azure, scheduled | 10:00:23 | 10:04:28 | 4:05 | 3 | $0.05 |
+| `crr-quarterly-29844630-tljwv` | Azure, scheduled | 10:30:23 | 10:34:32 | 4:09 | 2 | $0.38 |
+| `crr-quarterly-29844660-g725b` | Azure, scheduled | 11:00:23 | 11:03:05 | 2:42 | 0 | $0.00 |
+| `crr-quarterly-29844690-ww2nf` | Azure, scheduled | 11:30:22 | 11:31:57 | 1:35 | 0 | $0.00 |
+| `crr-quarterly-29844720-tdl7q` | Azure, scheduled | 12:00:22 | 12:20:00 | 19:38 | 16 | $0.31 |
+| `crr-quarterly-29844750-s7v65` | Azure, scheduled | 12:30:24 | 12:32:10 | 1:46 | 0 | $0.00 |
 | (lease not captured) | | | | | 1 | $0.00 |
 
 ### Every version published
@@ -41,20 +47,41 @@
 | 09:31:24 | mullan-crossing | 2026-09 | 1 | built | 8/6 | = golden | ok | 20 | 0.459 | 0 | - |
 | 09:33:59 | bridgewater | 2026-10 | 2 | built | 24/8 | = golden | ok | 1 | 0.017 | 3 | - |
 | 09:35:06 | mullan-crossing | 2026-10 | 2 | built | 8/6 | = golden | ok | 17 | 0.361 | 3 | - |
+| 10:01:01 | fort-grounds | 2026-09 | 3 | built | 8/6 | = golden | ok | 1 | 0.018 | 3 | - |
+| 10:02:22 | waypointe | 2026-09 | 2 | built | 10/8 | = golden | ok | 1 | 0.018 | 3 | - |
+| 10:03:34 | salmon-crossing | 2026-10 | 2 | built | 18/8 | = golden | ok | 1 | 0.018 | 3 | - |
+| 10:30:57 | fort-grounds | 2026-09 | 4 | built | 8/6 | = golden | ok | 1 | 0.018 | 3 | - |
+| 10:31:48 | lolo-peak-village | 2026-09 | 1 | built | 8/6 | = golden | ok | 18 | 0.359 | 0 | - |
+| 12:00:58 | bridgewater | 2026-09 | 3 | built | 24/8 | = golden | ok | 1 | 0.033 | 3 | - |
+| 12:01:59 | fort-grounds | 2026-09 | 5 | built | 8/6 | = golden | ok | 1 | 0.017 | 3 | - |
+| 12:02:59 | lolo-peak-village | 2026-09 | 2 | built | 8/6 | = golden | ok | 1 | 0.017 | 3 | - |
+| 12:03:49 | mullan-crossing | 2026-09 | 2 | built | 8/6 | = golden | ok | 1 | 0.017 | 3 | - |
+| 12:04:45 | river-falls | 2026-09 | 2 | built | 29/13 | = golden | ok | 1 | 0.017 | 3 | - |
+| 12:07:37 | salmon-crossing | 2026-09 | 3 | built | 18/8 | = golden | ok | 1 | 0.017 | 3 | - |
+| 12:08:26 | timber-place | 2026-09 | 2 | built | 25/13 | = golden | ok | 1 | 0.017 | 2 | - |
+| 12:10:41 | waypointe | 2026-09 | 3 | built | 10/8 | = golden | ok | 1 | 0.017 | 3 | - |
+| 12:11:32 | bridgewater | 2026-10 | 3 | built | 24/8 | = golden | ok | 1 | 0.017 | 3 | - |
+| 12:12:36 | fort-grounds | 2026-10 | 2 | built | 8/6 | = golden | ok | 1 | 0.017 | 3 | - |
+| 12:13:33 | lolo-peak-village | 2026-10 | 3 | built | 7/5 | = golden less the optional schedule | ok | 1 | 0.017 | 2 | - |
+| 12:14:21 | mullan-crossing | 2026-10 | 3 | built | 8/6 | = golden | ok | 1 | 0.017 | 3 | - |
+| 12:15:17 | river-falls | 2026-10 | 2 | built | 29/13 | = golden | ok | 2 | 0.036 | 2 | - |
+| 12:16:54 | salmon-crossing | 2026-10 | 3 | built | 18/8 | = golden | ok | 1 | 0.017 | 3 | - |
+| 12:17:48 | timber-place | 2026-10 | 4 | built | 25/13 | = golden | ok | 1 | 0.017 | 2 | - |
+| 12:19:08 | waypointe | 2026-10 | 2 | built | 10/8 | = golden | ok | 1 | 0.017 | 3 | - |
 
 ### Model spend
 
-- 24 versions, 376 model calls, **$8.07** in all.
-- Fresh builds (nothing reused): 16, $7.37, median $0.43 each.
-- Builds reusing some labels: 5, $0.71; reusing all: 3, $0.
-- By month: 2026-08 August $0.38, 2026-09 September $3.85, 2026-10 October $3.85.
+- 45 versions, 415 model calls, **$8.81** in all.
+- Fresh builds (nothing reused): 17, $7.73, median $0.40 each.
+- Builds reusing some labels: 25, $1.09; reusing all: 3, $0.
+- By month: 2026-08 August $0.38, 2026-09 September $4.42, 2026-10 October $4.02.
 
 ### Stakeholder actions performed
 
-- 105 performed, 0 failed, 0 skipped; median 11 s after the planned minute, worst 61 s.
-- By operation: upload 89, mkdir 4, manual 3, move 2, update 2, rename 1, gdoc 1, shortcut 1, trash_output 1, trash 1.
-- By who: Cornerstone accounting 69, Missoula Property Management 20, McCathren Management 7, Cobalt Properties Group 5, Operator 3, Cornerstone reviewer 1.
+- 123 performed, 0 failed, 0 skipped; median 11 s after the planned minute, worst 61 s.
+- By operation: upload 105, mkdir 4, manual 3, trash 3, move 2, update 2, rename 1, gdoc 1, shortcut 1, trash_output 1.
+- By who: Cornerstone accounting 87, Missoula Property Management 20, McCathren Management 7, Cobalt Properties Group 5, Operator 3, Cornerstone reviewer 1.
 
 ### Predictions
 
-- late 3, met 41, pending 24, withdrawn 3 (of 71).
+- MISSED 1, late 3, met 64, withdrawn 3 (of 71).
