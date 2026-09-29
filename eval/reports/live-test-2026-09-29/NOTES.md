@@ -107,3 +107,7 @@ are in `evaluation.md` (from `eval/live/evaluate.py`).
   open by design — the only lease since 08:30 is O5b's, taken before the tick — so its
   snapshot will be taken after O5c's run releases the lease (about 09:18), and will reflect
   that run, not a scheduled one.
+- **09:17** · Operator step O5c: *Build a period* → `reconcile --force`, `timber-place`,
+  `2026-10`, dispatched on `main` at 09:17:18 with the lease free (released 09:01:12)
+  ([run 36548185639](https://github.com/arcticbio/cornerstone.accounting.reports/actions/runs/36548185639)).
+  Expected: v3 by reuse (O5b made v2). Result to follow.
