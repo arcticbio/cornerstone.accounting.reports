@@ -1,11 +1,11 @@
-Scored 67 predictions — late: 1, met: 28, pending: 38
+Scored 67 predictions — late: 1, met: 35, pending: 31
 
 | Scenario | Property | Month | Tick | Expected | v | Actual | v | Verdict | Note |
 |---|---|---|---|---|---|---|---|---|---|
 | S1 | fort-grounds | 2026-09 | 06:00 | Waiting for uploads to settle | 0 | Waiting for uploads to settle | 0 | **met** |  |
 | S1 | fort-grounds | 2026-09 | 07:00 | Built v1 (current) | 1 | Built v1 (current) | 1 | **met** | without the optional schedule |
 | S1 | fort-grounds | 2026-09 | 07:30 | Built v1 - newer files waiting | 1 | Built v1 - newer files waiting | 1 | **met** | schedule settling |
-| S1 | fort-grounds | 2026-09 | 08:30 | Built v2 (current) | 2 | - | - | **pending** | schedule added, rest reused |
+| S1 | fort-grounds | 2026-09 | 08:30 | Built v2 (current) | 2 | Built v2 (current) | 2 | **met** | schedule added, rest reused |
 | S1 | fort-grounds | 2026-09 | 10:00 | Built v3 (current) | 3 | - | - | **pending** | Balance Sheet replaced |
 | S1 | fort-grounds | 2026-09 | 10:30 | Built v4 (current) | 4 | - | - | **pending** | correction deleted: v2's files |
 | S2 | lolo-peak-village | 2026-09 | 06:00 | Waiting for Balance Sheet, Profit and Loss | 0 | Waiting for Balance Sheet, Profit and Loss | 0 | **met** |  |
@@ -18,20 +18,20 @@ Scored 67 predictions — late: 1, met: 28, pending: 38
 | S3 | mullan-crossing | 2026-09 | 09:00 | Waiting for uploads to settle | 0 | - | - | **pending** | never settled |
 | S3 | mullan-crossing | 2026-09 | 09:30 | Built v1 (current) | 1 | - | - | **pending** | with the corrected P&L |
 | S4 | waypointe | 2026-09 | 07:00 | Built v1 (current) | 1 | Built v1 (current) | 1 | **met** |  |
-| S4 | waypointe | 2026-09 | 08:30 | Built v1 (current) | 1 | - | - | **pending** | identical new version: no build |
+| S4 | waypointe | 2026-09 | 08:30 | Built v1 (current) | 1 | Built v1 (current) | 1 | **met** | identical new version: no build |
 | S4 | waypointe | 2026-09 | 10:00 | Built v2 (current) | 2 | - | - | **pending** | changed bytes as a new version |
 | S5 | timber-place | 2026-09 | 07:00 | Built v1 (current) | 1 | Built v1 (current) | 1 | **met** | scanned source, OCR |
-| S5 | timber-place | 2026-09 | 08:30 | Built v1 - newer files held | 1 | - | - | **pending** | non-PDF held |
+| S5 | timber-place | 2026-09 | 08:30 | Built v1 - newer files held | 1 | Built v1 - newer files held | 1 | **met** | non-PDF held |
 | S5 | timber-place | 2026-09 | 09:00 | Built v1 (current) | 1 | - | - | **pending** | deleted: v1 again, no build |
 | S5 | timber-place | 2026-09 | 10:30 | Built v1 - newer files held | 1 | - | - | **pending** | protected PDF held |
 | S5 | timber-place | 2026-09 | 11:00 | Built v1 (current) | 1 | - | - | **pending** | deleted: v1 again |
 | S6 | river-falls | 2026-09 | 07:00 | Held - would cost about | 0 | Held - would cost about $3.69, over the $3.00 limit | 0 | **met** | ceiling, no model call |
 | S6 | river-falls | 2026-09 | 07:30 | Waiting for uploads to settle | 0 | Waiting for uploads to settle | 0 | **met** |  |
-| S6 | river-falls | 2026-09 | 08:30 | Built v1 (current) | 1 | - | - | **pending** | the right report |
+| S6 | river-falls | 2026-09 | 08:30 | Built v1 (current) | 1 | Built v1 (current) | 1 | **met** | the right report |
 | S7 | bridgewater | 2026-09 | 07:00 | - | 1 | Needs review (v1) | 1 | **met** | P&L as Balance Sheet: built as if right or review |
-| S7 | bridgewater | 2026-09 | 08:30 | - | 2 | - | - | **pending** | the right Balance Sheet |
+| S7 | bridgewater | 2026-09 | 08:30 | - | 2 | Built v2 (current) | 2 | **met** | the right Balance Sheet |
 | S8 | salmon-crossing | 2026-09 | 07:00 | - | 1 | Built v1 (current) | 1 | **met** | another property's report: built or review |
-| S8 | salmon-crossing | 2026-09 | 08:30 | - | 2 | - | - | **pending** | the right report |
+| S8 | salmon-crossing | 2026-09 | 08:30 | - | 2 | Built v2 (current) | 2 | **met** | the right report |
 | O1 | fort-grounds | 2026-10 | 07:30 | Built v1 (current) | 1 | Built v1 (current) | 1 | **met** |  |
 | O2 | lolo-peak-village | 2026-10 | 07:30 | Built v1 (current) | 1 | Built v1 (current) | 1 | **met** | with the schedule |
 | O2 | lolo-peak-village | 2026-10 | 08:00 | Built v2 (current) | 2 | Built v2 (current) | 2 | **met** | schedule moved away |
@@ -46,7 +46,7 @@ Scored 67 predictions — late: 1, met: 28, pending: 38
 | O7 | bridgewater | 2026-10 | 07:30 | Built v1 (current) | 1 | Built v1 (current) | 1 | **met** |  |
 | O7 | bridgewater | 2026-10 | 09:00 | Built v2 (current) | 2 | - | - | **pending** | Ben's, the newer, wins |
 | O8 | salmon-crossing | 2026-10 | 07:30 | Built v1 (current) | 1 | Built v1 (current) | 1 | **met** |  |
-| O8 | salmon-crossing | 2026-10 | 08:30 | Built v1 (current) | 1 | - | - | **pending** | deleted v1 goes unnoticed |
+| O8 | salmon-crossing | 2026-10 | 08:30 | Built v1 (current) | 1 | Built v1 (current) | 1 | **met** | deleted v1 goes unnoticed |
 | O8 | salmon-crossing | 2026-10 | 10:00 | Built v2 (current) | 2 | - | - | **pending** | numbering continues |
 | A1 | fort-grounds | folder:2026-08 August | 06:30 | - | 0 | - | 0 | **met** | system adds the folders |
 | A1 | fort-grounds | folder:2026-08 August | 08:00 | Built v1 (current) | 1 | Built v1 (current) | 1 | **met** |  |

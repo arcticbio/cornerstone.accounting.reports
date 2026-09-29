@@ -68,3 +68,18 @@ are in `evaluation.md` (from `eval/live/evaluate.py`).
   (Succeeded) — while the 08:30 scheduled run went on building. This is QUESTIONS A-14's
   first-week check, confirmed live on Azure: overlapping executions each see the lease and the
   second does nothing.
+- **08:44** · The 08:30 run `crr-quarterly-29844510` (08:30:24–08:40:45) built four September
+  versions, all exactly golden, corrections for cents: Bridgewater v2 with the right Balance
+  Sheet (24/8, $0.017, 1 call, PM/P&L/schedule reused — the `Needs review` cleared), Fort
+  Grounds v2 with the schedule (8/6, $0.022), River Falls v1 from the right report (29/13,
+  $0.68) and Salmon Crossing v2 from its own report (18/8, $0.29, 15 calls). 35 predictions
+  met, 1 late (the deferral), 0 missed; $7.24 spent; 100/123 actions, 0 failed.
+  WayPointe September's "Update existing" with identical bytes (07:28) never disturbed the
+  status — it read `Built v1 (current)` at 08:00 while the new revision was still settling, so
+  an unchanged fingerprint outranks the settle window. Timber Place September's text file
+  named `.pdf` is `Built v1 - newer files held`.
+  **Finding F3 (minor) — a deleted published version goes unnoticed.** A reviewer trashed
+  Salmon Crossing's October v1 at 08:10; the status still says `Built v1 (current)` for a
+  report that no longer exists (predicted, per §18.7: nothing re-reads `output/`'s PDFs).
+  Proposed fix: when the current version's PDF is missing, say so in the status
+  (`Built v1 - report file missing`) so a reviewer knows to restore it from Trash.
