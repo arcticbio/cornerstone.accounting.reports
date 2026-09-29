@@ -230,3 +230,7 @@ are in `evaluation.md` (from `eval/live/evaluate.py`).
   skipping that check for labels reused on identical bytes would roughly halve a crunch
   like this one. Predictions: all 16 R1 met — **64 met, 3 late, 1 missed (O6, my wrong
   settle-clock prediction), 3 withdrawn; every prediction scored.** $8.81 spent.
+- **12:43** · Watchdog. Steady state: the 12:30 run `crr-quarterly-29844750` (12:30:24–12:32:10,
+  1 min 46 s) built nothing, and all seventeen months with a status (sixteen September and
+  October, plus Fort Grounds' hand-made August) read `Built vN (current)`. $8.81 spent in
+  all; 15/16 ticks. The 13:00 run is the last; then the report and the cleanup.
