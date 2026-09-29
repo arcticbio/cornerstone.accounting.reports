@@ -61,3 +61,10 @@ are in `evaluation.md` (from `eval/live/evaluate.py`).
   ([run 36543294733](https://github.com/arcticbio/cornerstone.accounting.reports/actions/runs/36543294733))
   while the 08:30 scheduled run holds the lease. Expected: the manual execution finds the
   lease held and exits 0 with "nothing done". Result to follow from its logs.
+- **08:36** · **O5a passed: two executions at once, one works.** The manual execution
+  `crr-quarterly-h1oj2wx` (started 08:32:09) logged at 08:32:33 `intake.lease_held`
+  `host=crr-quarterly-29844510-65mjq` and printed `nothing done: another run
+  (crr-quarterly-29844510-65mjq) holds the lease until 2026-09-29 09:00 UTC`, then exited 0
+  (Succeeded) — while the 08:30 scheduled run went on building. This is QUESTIONS A-14's
+  first-week check, confirmed live on Azure: overlapping executions each see the lease and the
+  second does nothing.
