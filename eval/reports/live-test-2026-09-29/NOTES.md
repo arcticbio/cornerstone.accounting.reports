@@ -18,3 +18,18 @@ are in `evaluation.md` (from `eval/live/evaluate.py`).
   proper `2026-08 August`, and the file in `2026-08` is never read; Mullan Crossing's
   `August 2026` and WayPointe's closed `2026-07 July` were left untouched (no `output/`).
   Every October month is settling. First builds are due in the 07:00 run.
+- **07:20** · First builds. The 07:00 run `crr-quarterly-29844420` held the lease 07:00:24–07:14:57
+  (14.5 min, inside the 20-min soft deadline) and built five September packages on
+  `claude-opus-5-5`, $2.39 in all: Fort Grounds v1 (7 p / 5 bm — golden 8/6 less the absent
+  optional schedule, $0.40), WayPointe v1 (10/8 = golden, $0.36), Timber Place v1 (25/13 =
+  golden, OCR, $0.60), Bridgewater v1 **Needs review** (the P&L in the Balance Sheet folder:
+  `unmapped_section`, `missing_required`; $0.54) and Salmon Crossing v1 **Built (current)**
+  from Bridgewater's report (24 p / 8 bm — Bridgewater's shape, golden is 18/8; $0.49).
+  River Falls held at the cost ceiling ($3.69 > $3.00), no model call. 15/15 predictions due
+  met; 82/123 actions, 0 failed.
+  **Finding F1 — another property's report is built as current, not flagged.** SPEC §18.6
+  accepts that the folder is trusted, but a whole PM report for the wrong property passing
+  the review gate is the case a reviewer is least likely to catch: the status says
+  `Built v1 (current)`. Proposed fix: a review reason when no page's record label matches
+  one of the property's configured `records[].pm_name` (the classifier already reads the
+  `Property:` header per page), so it lands as `Needs review` instead.
