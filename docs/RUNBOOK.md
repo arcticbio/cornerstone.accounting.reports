@@ -155,10 +155,11 @@ it is more than an hour old, the job has stopped running** — see
 - **Two system files sit at the root**: `_STATUS - All properties.txt`, the summary, and
   `_LEASE - reconcile run (do not edit).json`, which says which run is working, so that only
   one does at a time. Neither is anyone's to edit.
-- **The shared drive's Trash collects one `.crr-preflight-…` file per run**, about 48 a day.
-  Before it spends anything, each run proves it can write by uploading a 3-byte file to the
-  root and trashing it (SPEC §6.1): the service account may trash files but not delete them.
-  Drive deletes each for good after 30 days. Leave them there.
+- **The shared drive's Trash collects one `.crr-preflight-…` file per run that builds.**
+  Before its first build, such a run proves it can write by uploading a 3-byte file to the
+  root and trashing it (SPEC §6.1, §18.9): the service account may trash files but not delete
+  them. A run with nothing to build writes none. Drive deletes each for good after 30 days.
+  Leave them there.
 
 ### Rehearsing without touching a real month
 

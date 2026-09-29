@@ -412,7 +412,6 @@ def reconcile(
     from crr.config import ConfigError, load_config
     from crr.intake.decide import Kind
     from crr.intake.reconcile import LeaseHeld, Options, Reconciler, RunAborted
-    from crr.repository.protocol import RepositoryError
     from crr.settings import Settings
 
     settings = Settings()
@@ -436,15 +435,9 @@ def reconcile(
             typer.echo(str(exc), err=True)
             raise typer.Exit(code=1) from None
 
+    # No publish preflight here: the reconciler proves the store writable just before the
+    # run's first build, so a run with nothing to build writes no probe (SPEC §18.9 step 4).
     store = _make_intake_store(repo, settings, bundle)
-    if settings.publish_preflight and not dry_run:
-        try:
-            store.preflight_publish()
-        except RepositoryError as exc:
-            typer.echo(f"cannot publish to {store.name}: {exc}", err=True)
-            typer.echo("nothing was built; no model calls were made.", err=True)
-            raise typer.Exit(code=1) from None
-
     engines: dict[str, object] = {}
 
     def classifier_for(property_id: str):  # type: ignore[no-untyped-def]

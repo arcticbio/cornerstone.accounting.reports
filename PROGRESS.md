@@ -102,8 +102,9 @@ identical to the golden-label build ($3.73). See `docs/ANALYSIS-model-successor-
    `intake.lease_held` and do nothing (A-14); Cost Management's Container Apps vCPU-seconds for
    the first full day with no builds, divided by 96, is the billed seconds per run (A-15); the
    shared drive's Trash collects ~48 `.crr-preflight-…` probes a day, which Drive deletes after
-   30 days (RUNBOOK → *The folders in Drive*). A follow-up could preflight only before a run's
-   first build, which would leave a run with nothing to build no probe at all.
+   30 days (RUNBOOK → *The folders in Drive*). **Follow-up done (2026-09-29, awaiting
+   review):** `crr reconcile` now runs the preflight only before a run's first build, so a
+   run with nothing to build writes no probe (SPEC §18.9 step 1).
 
 1. ~~**B-08 — the two McCathren packages go to review on `cardinality_violation`.**~~
    **Fixed 2026-09-11, root-caused with a real-model run.** Not a labelling error: a re-run of

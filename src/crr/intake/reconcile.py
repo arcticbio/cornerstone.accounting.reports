@@ -58,6 +58,7 @@ from crr.manifest.writer import write_manifest
 from crr.models import BuildStatus, PeriodId, Property, SourceDocument
 from crr.pipeline import build_property
 from crr.preprocess.text import document_text_layer, page_count, sha256_file
+from crr.repository.protocol import RepositoryError
 from crr.review.report import render_review
 from crr.settings import Settings
 
@@ -137,6 +138,7 @@ class Reconciler:
         self.monotonic = monotonic
         self.sleep = sleep
         self._lease: Lease | None = None
+        self._preflighted = False
 
     # -- the run ---------------------------------------------------------------------------
     def run(self, options: Options | None = None) -> list[Outcome]:
@@ -144,6 +146,7 @@ class Reconciler:
         work at once; raises `LeaseHeld`, having done nothing, when another run has it. A dry
         run writes nothing and takes no lease."""
         options = options or Options()
+        self._preflighted = False
         if options.dry_run:
             return self._run(options)
         self._lease = self._acquire_lease()
@@ -182,6 +185,21 @@ class Reconciler:
             return True
         current = parse(self.store.read_lease())
         return current is not None and current.owner == self._lease.owner
+
+    def _preflight_once(self) -> None:
+        """Prove the store takes a new file, once a run, just before the run's first build:
+        the first moment anything is spent (SPEC §18.9 step 4). A run with nothing to build
+        writes no probe. On failure the run stops, nothing built and no model called."""
+        if self._preflighted or not self.settings.publish_preflight:
+            return
+        try:
+            self.store.preflight_publish()
+        except RepositoryError as exc:
+            raise RunAborted(
+                f"cannot publish to {self.store.name}: {exc} "
+                "(nothing was built; no model calls were made)"
+            ) from exc
+        self._preflighted = True
 
     def _release_lease(self) -> None:
         lease, self._lease = self._lease, None
@@ -500,6 +518,7 @@ class Reconciler:
             )
             return verdict, Outcome(prop.id, period, Kind.HELD, verdict.headline)
 
+        self._preflight_once()
         staged = _Staged(documents, self, prop)
         result = build_property(
             prop,
