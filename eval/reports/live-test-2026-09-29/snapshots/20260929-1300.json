@@ -1,0 +1,3271 @@
+{
+ "tag": "20260929-1300",
+ "taken": "2026-09-29T13:02:06Z",
+ "tick": "2026-09-29T13:00:00Z",
+ "offset": 450,
+ "run_observed": true,
+ "lease": {
+  "host": "crr-quarterly-29844780-5w92d",
+  "acquired": "2026-09-29T13:00:24Z",
+  "released": "2026-09-29T13:01:57Z",
+  "expires": "2026-09-29T13:30:24Z"
+ },
+ "summary": [
+  "Investor report status - one line per property, newest month with any files",
+  "",
+  "Fort Grounds - October 2026 - Built v2 (current)",
+  "Lolo Peak Village - October 2026 - Built v3 (current)",
+  "Mullan Crossing - October 2026 - Built v3 (current)",
+  "WayPointe - October 2026 - Built v2 (current)",
+  "Timber Place - October 2026 - Built v4 (current)",
+  "River Falls - October 2026 - Built v2 (current)",
+  "Bridgewater - October 2026 - Built v3 (current)",
+  "Salmon Crossing - October 2026 - Built v3 (current)",
+  "",
+  "Last checked 2026-09-29 13:00 UTC. Open a property's month folder, then output/, for detail."
+ ],
+ "root_files": [
+  "Cobalt Properties Group",
+  "McCathren Management and Real Estate Services",
+  "Missoula Property Management",
+  "_LEASE - reconcile run (do not edit).json",
+  "_STATUS - All properties.txt"
+ ],
+ "properties": {
+  "fort-grounds": {
+   "months": {
+    "2026-08 August": {
+     "components": {
+      "4 - Distribution Schedule": [],
+      "3 - Profit and Loss": [
+       {
+        "name": "Fort Grounds P&L YTD Aug 2026.pdf",
+        "id": "1D6w5vMvbhQR_VzGwdlE11SaVqiBPinrm",
+        "mime": "application/pdf",
+        "md5": "6c40e59dc313bc16632cf7dc9791fe0e",
+        "created": "2026-09-29T06:40:39.848Z",
+        "modified": "2026-09-29T06:40:39.848Z",
+        "size": 31827
+       }
+      ],
+      "2 - Balance Sheet": [
+       {
+        "name": "Fort Grounds Balance Sheet Aug 2026.pdf",
+        "id": "1HsE3ym8fVJI_eMCVwzGs6iDgEm3xqwHv",
+        "mime": "application/pdf",
+        "md5": "2afe786194a9c6982a4d95a2fb2b46f8",
+        "created": "2026-09-29T06:40:35.751Z",
+        "modified": "2026-09-29T06:40:35.751Z",
+        "size": 33643
+       }
+      ],
+      "1 - Property Manager Report": [
+       {
+        "name": "Fort Grounds Owner Report Aug 2026.pdf",
+        "id": "1aV8UxtXmCX8loJ187N23e0Z0h0R2zQDP",
+        "mime": "application/pdf",
+        "md5": "919b5b3e1cb9e8d25cf49f1de385bc86",
+        "created": "2026-09-29T06:10:43.326Z",
+        "modified": "2026-09-29T06:10:43.326Z",
+        "size": 193587
+       }
+      ]
+     },
+     "loose": [],
+     "output": {
+      "status": [
+       "Built v1 (current)"
+      ],
+      "pdfs": [
+       "Fort Grounds - Investor Report - August 2026 - v1.pdf"
+      ],
+      "reviews": [],
+      "other": []
+     },
+     "state": {
+      "versions": [
+       {
+        "version": 1,
+        "built_at": "2026-09-29T08:00:51.538893Z",
+        "status": "built",
+        "fingerprint": "3f170daa9246f17a3760340687c5f911364f735424c5b07b59a0d9b8b6d66746",
+        "output_file": "Fort Grounds - Investor Report - August 2026 - v1.pdf",
+        "inputs": [
+         {
+          "role": "pm_source",
+          "file_id": "1aV8UxtXmCX8loJ187N23e0Z0h0R2zQDP",
+          "md5": "919b5b3e1cb9e8d25cf49f1de385bc86",
+          "name": "Fort Grounds Owner Report Aug 2026.pdf",
+          "uploaded_at": "2026-09-29T06:10:43.326000Z"
+         },
+         {
+          "role": "cornerstone_balance_sheet",
+          "file_id": "1HsE3ym8fVJI_eMCVwzGs6iDgEm3xqwHv",
+          "md5": "2afe786194a9c6982a4d95a2fb2b46f8",
+          "name": "Fort Grounds Balance Sheet Aug 2026.pdf",
+          "uploaded_at": "2026-09-29T06:40:35.751000Z"
+         },
+         {
+          "role": "cornerstone_profit_loss_ytd",
+          "file_id": "1D6w5vMvbhQR_VzGwdlE11SaVqiBPinrm",
+          "md5": "6c40e59dc313bc16632cf7dc9791fe0e",
+          "name": "Fort Grounds P&L YTD Aug 2026.pdf",
+          "uploaded_at": "2026-09-29T06:40:39.848000Z"
+         }
+        ],
+        "review_codes": []
+       }
+      ],
+      "attempts": []
+     }
+    },
+    "2026-09 September": {
+     "components": {
+      "4 - Distribution Schedule": [
+       {
+        "name": "Fort Grounds Distribution Schedule Q3.pdf",
+        "id": "1nSNNo7D6zvwOjo0JR3Cal7UCJ2BrsJau",
+        "mime": "application/pdf",
+        "md5": "bf77ef48796b4420228c8d725cdd964f",
+        "created": "2026-09-29T07:10:13.476Z",
+        "modified": "2026-09-29T07:10:13.476Z",
+        "size": 107663
+       }
+      ],
+      "3 - Profit and Loss": [
+       {
+        "name": "Fort Grounds P&L YTD Sep 2026.pdf",
+        "id": "1RcdfHpUMEXrtxWaI7gAMQfOqW9kYt1Gi",
+        "mime": "application/pdf",
+        "md5": "6c40e59dc313bc16632cf7dc9791fe0e",
+        "created": "2026-09-29T05:36:10.165Z",
+        "modified": "2026-09-29T05:36:10.165Z",
+        "size": 31827
+       }
+      ],
+      "2 - Balance Sheet": [
+       {
+        "name": "SUPERSEDED - Fort Grounds Balance Sheet Sep 2026.pdf",
+        "id": "14QG_9IIewMibiM1wtutsZwMEX8NcPqX2",
+        "mime": "application/pdf",
+        "md5": "2afe786194a9c6982a4d95a2fb2b46f8",
+        "created": "2026-09-29T05:35:09.691Z",
+        "modified": "2026-09-29T11:00:57.485Z",
+        "size": 33643
+       },
+       {
+        "name": "Fort Grounds Balance Sheet Sep 2026 reissued.pdf",
+        "id": "13xax40A0Ee63zsrBvi7riyTKYLctplM-",
+        "mime": "application/pdf",
+        "md5": "92c3c4d10468d4693faaff1800d937b4",
+        "created": "2026-09-29T10:45:13.095Z",
+        "modified": "2026-09-29T10:45:13.095Z",
+        "size": 33714
+       }
+      ],
+      "1 - Property Manager Report": [
+       {
+        "name": "Fort Grounds Owner Report Sep 2026.pdf",
+        "id": "1kvr-qKfZYyMItaoYC4a6dOOfjelH54yz",
+        "mime": "application/pdf",
+        "md5": "919b5b3e1cb9e8d25cf49f1de385bc86",
+        "created": "2026-09-29T05:35:06.402Z",
+        "modified": "2026-09-29T05:35:06.402Z",
+        "size": 193587
+       }
+      ]
+     },
+     "loose": [],
+     "output": {
+      "status": [
+       "Built v5 (current)"
+      ],
+      "pdfs": [
+       "Fort Grounds - Investor Report - September 2026 - v1.pdf",
+       "Fort Grounds - Investor Report - September 2026 - v2.pdf",
+       "Fort Grounds - Investor Report - September 2026 - v3.pdf",
+       "Fort Grounds - Investor Report - September 2026 - v4.pdf",
+       "Fort Grounds - Investor Report - September 2026 - v5.pdf"
+      ],
+      "reviews": [],
+      "other": []
+     },
+     "state": {
+      "versions": [
+       {
+        "version": 1,
+        "built_at": "2026-09-29T07:03:38.980390Z",
+        "status": "built",
+        "fingerprint": "b7fbf27c9d6dd7e1dfc51c8c36a9909d62fdd9b414e3b8edac53a68017e9706d",
+        "output_file": "Fort Grounds - Investor Report - September 2026 - v1.pdf",
+        "inputs": [
+         {
+          "role": "pm_source",
+          "file_id": "1kvr-qKfZYyMItaoYC4a6dOOfjelH54yz",
+          "md5": "919b5b3e1cb9e8d25cf49f1de385bc86",
+          "name": "Fort Grounds Owner Report Sep 2026.pdf",
+          "uploaded_at": "2026-09-29T05:35:06.402000Z"
+         },
+         {
+          "role": "cornerstone_balance_sheet",
+          "file_id": "14QG_9IIewMibiM1wtutsZwMEX8NcPqX2",
+          "md5": "2afe786194a9c6982a4d95a2fb2b46f8",
+          "name": "Fort Grounds Balance Sheet Sep 2026.pdf",
+          "uploaded_at": "2026-09-29T05:35:09.691000Z"
+         },
+         {
+          "role": "cornerstone_profit_loss_ytd",
+          "file_id": "1RcdfHpUMEXrtxWaI7gAMQfOqW9kYt1Gi",
+          "md5": "6c40e59dc313bc16632cf7dc9791fe0e",
+          "name": "Fort Grounds P&L YTD Sep 2026.pdf",
+          "uploaded_at": "2026-09-29T05:36:10.165000Z"
+         }
+        ],
+        "review_codes": []
+       },
+       {
+        "version": 2,
+        "built_at": "2026-09-29T08:32:12.308725Z",
+        "status": "built",
+        "fingerprint": "f3ec8dbbd244f5fe7f47c6cd22d7b65ec4d5487529556e1901c0e72cd56b506d",
+        "output_file": "Fort Grounds - Investor Report - September 2026 - v2.pdf",
+        "inputs": [
+         {
+          "role": "pm_source",
+          "file_id": "1kvr-qKfZYyMItaoYC4a6dOOfjelH54yz",
+          "md5": "919b5b3e1cb9e8d25cf49f1de385bc86",
+          "name": "Fort Grounds Owner Report Sep 2026.pdf",
+          "uploaded_at": "2026-09-29T05:35:06.402000Z"
+         },
+         {
+          "role": "cornerstone_balance_sheet",
+          "file_id": "14QG_9IIewMibiM1wtutsZwMEX8NcPqX2",
+          "md5": "2afe786194a9c6982a4d95a2fb2b46f8",
+          "name": "Fort Grounds Balance Sheet Sep 2026.pdf",
+          "uploaded_at": "2026-09-29T05:35:09.691000Z"
+         },
+         {
+          "role": "cornerstone_profit_loss_ytd",
+          "file_id": "1RcdfHpUMEXrtxWaI7gAMQfOqW9kYt1Gi",
+          "md5": "6c40e59dc313bc16632cf7dc9791fe0e",
+          "name": "Fort Grounds P&L YTD Sep 2026.pdf",
+          "uploaded_at": "2026-09-29T05:36:10.165000Z"
+         },
+         {
+          "role": "cornerstone_distribution_schedule",
+          "file_id": "1nSNNo7D6zvwOjo0JR3Cal7UCJ2BrsJau",
+          "md5": "bf77ef48796b4420228c8d725cdd964f",
+          "name": "Fort Grounds Distribution Schedule Q3.pdf",
+          "uploaded_at": "2026-09-29T07:10:13.476000Z"
+         }
+        ],
+        "review_codes": []
+       },
+       {
+        "version": 3,
+        "built_at": "2026-09-29T10:01:01.234970Z",
+        "status": "built",
+        "fingerprint": "4a8f3ff3feedcc679e086582c46bb6c957682f7fed1bae7b8f4d9d8dbab4ef71",
+        "output_file": "Fort Grounds - Investor Report - September 2026 - v3.pdf",
+        "inputs": [
+         {
+          "role": "pm_source",
+          "file_id": "1kvr-qKfZYyMItaoYC4a6dOOfjelH54yz",
+          "md5": "919b5b3e1cb9e8d25cf49f1de385bc86",
+          "name": "Fort Grounds Owner Report Sep 2026.pdf",
+          "uploaded_at": "2026-09-29T05:35:06.402000Z"
+         },
+         {
+          "role": "cornerstone_balance_sheet",
+          "file_id": "1MOkY8TEOl6eu3xGmV8hWCZP5mk9feqKY",
+          "md5": "73172cf1fb11ad0719db04d54a3b0caf",
+          "name": "Fort Grounds Balance Sheet Sep 2026 REVISED.pdf",
+          "uploaded_at": "2026-09-29T08:40:15.676000Z"
+         },
+         {
+          "role": "cornerstone_profit_loss_ytd",
+          "file_id": "1RcdfHpUMEXrtxWaI7gAMQfOqW9kYt1Gi",
+          "md5": "6c40e59dc313bc16632cf7dc9791fe0e",
+          "name": "Fort Grounds P&L YTD Sep 2026.pdf",
+          "uploaded_at": "2026-09-29T05:36:10.165000Z"
+         },
+         {
+          "role": "cornerstone_distribution_schedule",
+          "file_id": "1nSNNo7D6zvwOjo0JR3Cal7UCJ2BrsJau",
+          "md5": "bf77ef48796b4420228c8d725cdd964f",
+          "name": "Fort Grounds Distribution Schedule Q3.pdf",
+          "uploaded_at": "2026-09-29T07:10:13.476000Z"
+         }
+        ],
+        "review_codes": []
+       },
+       {
+        "version": 4,
+        "built_at": "2026-09-29T10:30:57.935661Z",
+        "status": "built",
+        "fingerprint": "f3ec8dbbd244f5fe7f47c6cd22d7b65ec4d5487529556e1901c0e72cd56b506d",
+        "output_file": "Fort Grounds - Investor Report - September 2026 - v4.pdf",
+        "inputs": [
+         {
+          "role": "pm_source",
+          "file_id": "1kvr-qKfZYyMItaoYC4a6dOOfjelH54yz",
+          "md5": "919b5b3e1cb9e8d25cf49f1de385bc86",
+          "name": "Fort Grounds Owner Report Sep 2026.pdf",
+          "uploaded_at": "2026-09-29T05:35:06.402000Z"
+         },
+         {
+          "role": "cornerstone_balance_sheet",
+          "file_id": "14QG_9IIewMibiM1wtutsZwMEX8NcPqX2",
+          "md5": "2afe786194a9c6982a4d95a2fb2b46f8",
+          "name": "Fort Grounds Balance Sheet Sep 2026.pdf",
+          "uploaded_at": "2026-09-29T05:35:09.691000Z"
+         },
+         {
+          "role": "cornerstone_profit_loss_ytd",
+          "file_id": "1RcdfHpUMEXrtxWaI7gAMQfOqW9kYt1Gi",
+          "md5": "6c40e59dc313bc16632cf7dc9791fe0e",
+          "name": "Fort Grounds P&L YTD Sep 2026.pdf",
+          "uploaded_at": "2026-09-29T05:36:10.165000Z"
+         },
+         {
+          "role": "cornerstone_distribution_schedule",
+          "file_id": "1nSNNo7D6zvwOjo0JR3Cal7UCJ2BrsJau",
+          "md5": "bf77ef48796b4420228c8d725cdd964f",
+          "name": "Fort Grounds Distribution Schedule Q3.pdf",
+          "uploaded_at": "2026-09-29T07:10:13.476000Z"
+         }
+        ],
+        "review_codes": []
+       },
+       {
+        "version": 5,
+        "built_at": "2026-09-29T12:01:59.878541Z",
+        "status": "built",
+        "fingerprint": "5cc3ef7db6816874eeb31a7e95a3448b44224e008eb7d30cbdb12da170430b2d",
+        "output_file": "Fort Grounds - Investor Report - September 2026 - v5.pdf",
+        "inputs": [
+         {
+          "role": "pm_source",
+          "file_id": "1kvr-qKfZYyMItaoYC4a6dOOfjelH54yz",
+          "md5": "919b5b3e1cb9e8d25cf49f1de385bc86",
+          "name": "Fort Grounds Owner Report Sep 2026.pdf",
+          "uploaded_at": "2026-09-29T05:35:06.402000Z"
+         },
+         {
+          "role": "cornerstone_balance_sheet",
+          "file_id": "13xax40A0Ee63zsrBvi7riyTKYLctplM-",
+          "md5": "92c3c4d10468d4693faaff1800d937b4",
+          "name": "Fort Grounds Balance Sheet Sep 2026 reissued.pdf",
+          "uploaded_at": "2026-09-29T10:45:13.095000Z"
+         },
+         {
+          "role": "cornerstone_profit_loss_ytd",
+          "file_id": "1RcdfHpUMEXrtxWaI7gAMQfOqW9kYt1Gi",
+          "md5": "6c40e59dc313bc16632cf7dc9791fe0e",
+          "name": "Fort Grounds P&L YTD Sep 2026.pdf",
+          "uploaded_at": "2026-09-29T05:36:10.165000Z"
+         },
+         {
+          "role": "cornerstone_distribution_schedule",
+          "file_id": "1nSNNo7D6zvwOjo0JR3Cal7UCJ2BrsJau",
+          "md5": "bf77ef48796b4420228c8d725cdd964f",
+          "name": "Fort Grounds Distribution Schedule Q3.pdf",
+          "uploaded_at": "2026-09-29T07:10:13.476000Z"
+         }
+        ],
+        "review_codes": []
+       }
+      ],
+      "attempts": []
+     }
+    },
+    "2026-10 October": {
+     "components": {
+      "4 - Distribution Schedule": [
+       {
+        "name": "Fort Grounds Distribution Schedule Oct 2026.pdf",
+        "id": "1AeQSI8cqb9vqNh-R7-lOaiWolcQdTWj3",
+        "mime": "application/pdf",
+        "md5": "bf77ef48796b4420228c8d725cdd964f",
+        "created": "2026-09-29T06:06:27.277Z",
+        "modified": "2026-09-29T06:06:27.277Z",
+        "size": 107663
+       }
+      ],
+      "3 - Profit and Loss": [
+       {
+        "name": "Fort Grounds P&L YTD Oct 2026.pdf",
+        "id": "1XwLgpK7MYilCD_GH538HFxgH2TsQ7kau",
+        "mime": "application/pdf",
+        "md5": "6c40e59dc313bc16632cf7dc9791fe0e",
+        "created": "2026-09-29T06:06:24.091Z",
+        "modified": "2026-09-29T06:06:24.091Z",
+        "size": 31827
+       }
+      ],
+      "2 - Balance Sheet": [
+       {
+        "name": "SUPERSEDED - Fort Grounds Balance Sheet Oct 2026.pdf",
+        "id": "1rPRtdPhLkDq0CkbYGd0R_KMbRUXhyxHT",
+        "mime": "application/pdf",
+        "md5": "2afe786194a9c6982a4d95a2fb2b46f8",
+        "created": "2026-09-29T06:05:14.485Z",
+        "modified": "2026-09-29T11:02:00.704Z",
+        "size": 33643
+       },
+       {
+        "name": "Fort Grounds Balance Sheet Oct 2026 reissued.pdf",
+        "id": "1uMyWyB7M50qlkP1bfRcutc-33kks1Eji",
+        "mime": "application/pdf",
+        "md5": "92c3c4d10468d4693faaff1800d937b4",
+        "created": "2026-09-29T10:46:08.043Z",
+        "modified": "2026-09-29T10:46:08.043Z",
+        "size": 33714
+       }
+      ],
+      "1 - Property Manager Report": [
+       {
+        "name": "Fort Grounds Owner Report Oct 2026.pdf",
+        "id": "1mIYz6B8JA0GBHgOjmmNqX7CQ7TfKB6kO",
+        "mime": "application/pdf",
+        "md5": "919b5b3e1cb9e8d25cf49f1de385bc86",
+        "created": "2026-09-29T06:05:11.031Z",
+        "modified": "2026-09-29T06:05:11.031Z",
+        "size": 193587
+       }
+      ]
+     },
+     "loose": [],
+     "output": {
+      "status": [
+       "Built v2 (current)"
+      ],
+      "pdfs": [
+       "Fort Grounds - Investor Report - October 2026 - v1.pdf",
+       "Fort Grounds - Investor Report - October 2026 - v2.pdf"
+      ],
+      "reviews": [],
+      "other": []
+     },
+     "state": {
+      "versions": [
+       {
+        "version": 1,
+        "built_at": "2026-09-29T07:34:24.959735Z",
+        "status": "built",
+        "fingerprint": "abf3ded0033cbc6da37c75da41af201ba6d79ed4a973dfa904873cd52da58240",
+        "output_file": "Fort Grounds - Investor Report - October 2026 - v1.pdf",
+        "inputs": [
+         {
+          "role": "pm_source",
+          "file_id": "1mIYz6B8JA0GBHgOjmmNqX7CQ7TfKB6kO",
+          "md5": "919b5b3e1cb9e8d25cf49f1de385bc86",
+          "name": "Fort Grounds Owner Report Oct 2026.pdf",
+          "uploaded_at": "2026-09-29T06:05:11.031000Z"
+         },
+         {
+          "role": "cornerstone_balance_sheet",
+          "file_id": "1rPRtdPhLkDq0CkbYGd0R_KMbRUXhyxHT",
+          "md5": "2afe786194a9c6982a4d95a2fb2b46f8",
+          "name": "Fort Grounds Balance Sheet Oct 2026.pdf",
+          "uploaded_at": "2026-09-29T06:05:14.485000Z"
+         },
+         {
+          "role": "cornerstone_profit_loss_ytd",
+          "file_id": "1XwLgpK7MYilCD_GH538HFxgH2TsQ7kau",
+          "md5": "6c40e59dc313bc16632cf7dc9791fe0e",
+          "name": "Fort Grounds P&L YTD Oct 2026.pdf",
+          "uploaded_at": "2026-09-29T06:06:24.091000Z"
+         },
+         {
+          "role": "cornerstone_distribution_schedule",
+          "file_id": "1AeQSI8cqb9vqNh-R7-lOaiWolcQdTWj3",
+          "md5": "bf77ef48796b4420228c8d725cdd964f",
+          "name": "Fort Grounds Distribution Schedule Oct 2026.pdf",
+          "uploaded_at": "2026-09-29T06:06:27.277000Z"
+         }
+        ],
+        "review_codes": []
+       },
+       {
+        "version": 2,
+        "built_at": "2026-09-29T12:12:36.228236Z",
+        "status": "built",
+        "fingerprint": "9c470a290f1551926a0edb005b59c340388ca81957eba3cf3c1416c41e225992",
+        "output_file": "Fort Grounds - Investor Report - October 2026 - v2.pdf",
+        "inputs": [
+         {
+          "role": "pm_source",
+          "file_id": "1mIYz6B8JA0GBHgOjmmNqX7CQ7TfKB6kO",
+          "md5": "919b5b3e1cb9e8d25cf49f1de385bc86",
+          "name": "Fort Grounds Owner Report Oct 2026.pdf",
+          "uploaded_at": "2026-09-29T06:05:11.031000Z"
+         },
+         {
+          "role": "cornerstone_balance_sheet",
+          "file_id": "1uMyWyB7M50qlkP1bfRcutc-33kks1Eji",
+          "md5": "92c3c4d10468d4693faaff1800d937b4",
+          "name": "Fort Grounds Balance Sheet Oct 2026 reissued.pdf",
+          "uploaded_at": "2026-09-29T10:46:08.043000Z"
+         },
+         {
+          "role": "cornerstone_profit_loss_ytd",
+          "file_id": "1XwLgpK7MYilCD_GH538HFxgH2TsQ7kau",
+          "md5": "6c40e59dc313bc16632cf7dc9791fe0e",
+          "name": "Fort Grounds P&L YTD Oct 2026.pdf",
+          "uploaded_at": "2026-09-29T06:06:24.091000Z"
+         },
+         {
+          "role": "cornerstone_distribution_schedule",
+          "file_id": "1AeQSI8cqb9vqNh-R7-lOaiWolcQdTWj3",
+          "md5": "bf77ef48796b4420228c8d725cdd964f",
+          "name": "Fort Grounds Distribution Schedule Oct 2026.pdf",
+          "uploaded_at": "2026-09-29T06:06:27.277000Z"
+         }
+        ],
+        "review_codes": []
+       }
+      ],
+      "attempts": []
+     }
+    },
+    "2026-06 June": {
+     "components": {},
+     "loose": [],
+     "output": null,
+     "state": null,
+     "other_folders": [
+      "inputs"
+     ]
+    }
+   },
+   "loose": []
+  },
+  "lolo-peak-village": {
+   "months": {
+    "2026-08 August": {
+     "components": {
+      "4 - Distribution Schedule": [],
+      "3 - Profit and Loss": [],
+      "2 - Balance Sheet": [],
+      "1 - Property Manager Report": []
+     },
+     "loose": [],
+     "output": {
+      "status": [],
+      "pdfs": [],
+      "reviews": [],
+      "other": []
+     },
+     "state": null
+    },
+    "2026-08": {
+     "components": {},
+     "loose": [
+      {
+       "name": "Lolo Peak Village Owner Report Aug 2026.pdf",
+       "id": "19yTuKsphqLBCogpesmbZnsCLx4uBga9v",
+       "mime": "application/pdf",
+       "md5": "10cc5d90f9897507d4b79118b8b6f860",
+       "created": "2026-09-29T06:10:46.923Z",
+       "modified": "2026-09-29T06:10:46.923Z",
+       "size": 177991
+      }
+     ],
+     "output": null,
+     "state": null
+    },
+    "2026-10 October": {
+     "components": {
+      "4 - Distribution Schedule": [],
+      "3 - Profit and Loss": [
+       {
+        "name": "Lolo Peak Village P&L YTD Oct 2026.pdf",
+        "id": "1DYy4XZfgkuBAvJ3U-Snx4RPRtVk-lyYI",
+        "mime": "application/pdf",
+        "md5": "e74a486e44e7e455345ebca7d8b22ed6",
+        "created": "2026-09-29T06:06:30.191Z",
+        "modified": "2026-09-29T06:06:30.191Z",
+        "size": 69835
+       }
+      ],
+      "2 - Balance Sheet": [
+       {
+        "name": "SUPERSEDED - Lolo Peak Village Balance Sheet Oct 2026.pdf",
+        "id": "1Y10v0PB3Sewn0N-m599neoQE_MC_mxli",
+        "mime": "application/pdf",
+        "md5": "f1d0a50ccd2d56476379193ce7783d2a",
+        "created": "2026-09-29T06:05:21.060Z",
+        "modified": "2026-09-29T11:02:07.876Z",
+        "size": 33405
+       },
+       {
+        "name": "Lolo Peak Village Balance Sheet Oct 2026 reissued.pdf",
+        "id": "1ASJ_zy4VvW_bj5gv50gBI9zla30htucf",
+        "mime": "application/pdf",
+        "md5": "0e01de7c51f0115c0cae07f16e487aed",
+        "created": "2026-09-29T10:46:10.728Z",
+        "modified": "2026-09-29T10:46:10.728Z",
+        "size": 33476
+       }
+      ],
+      "1 - Property Manager Report": [
+       {
+        "name": "Lolo Peak Village Owner Report Oct 2026.pdf",
+        "id": "1tbJg7O53jGybyK6J_VUcy_0DxAXAIXR3",
+        "mime": "application/pdf",
+        "md5": "10cc5d90f9897507d4b79118b8b6f860",
+        "created": "2026-09-29T06:05:17.705Z",
+        "modified": "2026-09-29T06:05:17.705Z",
+        "size": 177991
+       }
+      ]
+     },
+     "loose": [],
+     "output": {
+      "status": [
+       "Built v3 (current)"
+      ],
+      "pdfs": [
+       "Lolo Peak Village - Investor Report - October 2026 - v1.pdf",
+       "Lolo Peak Village - Investor Report - October 2026 - v2.pdf",
+       "Lolo Peak Village - Investor Report - October 2026 - v3.pdf"
+      ],
+      "reviews": [],
+      "other": []
+     },
+     "state": {
+      "versions": [
+       {
+        "version": 1,
+        "built_at": "2026-09-29T07:36:33.643323Z",
+        "status": "built",
+        "fingerprint": "e15426f7a28ed3e9858e887013e8127604a444fddb66c877092551e72bae669b",
+        "output_file": "Lolo Peak Village - Investor Report - October 2026 - v1.pdf",
+        "inputs": [
+         {
+          "role": "pm_source",
+          "file_id": "1tbJg7O53jGybyK6J_VUcy_0DxAXAIXR3",
+          "md5": "10cc5d90f9897507d4b79118b8b6f860",
+          "name": "Lolo Peak Village Owner Report Oct 2026.pdf",
+          "uploaded_at": "2026-09-29T06:05:17.705000Z"
+         },
+         {
+          "role": "cornerstone_balance_sheet",
+          "file_id": "1Y10v0PB3Sewn0N-m599neoQE_MC_mxli",
+          "md5": "f1d0a50ccd2d56476379193ce7783d2a",
+          "name": "Lolo Peak Village Balance Sheet Oct 2026.pdf",
+          "uploaded_at": "2026-09-29T06:05:21.060000Z"
+         },
+         {
+          "role": "cornerstone_profit_loss_ytd",
+          "file_id": "1DYy4XZfgkuBAvJ3U-Snx4RPRtVk-lyYI",
+          "md5": "e74a486e44e7e455345ebca7d8b22ed6",
+          "name": "Lolo Peak Village P&L YTD Oct 2026.pdf",
+          "uploaded_at": "2026-09-29T06:06:30.191000Z"
+         },
+         {
+          "role": "cornerstone_distribution_schedule",
+          "file_id": "14IaSGnAzRdqDx35PHc4dC0k8jiPUq6CX",
+          "md5": "1a5a326be3f5c93bf6e484e849607a29",
+          "name": "Lolo Peak Village Distribution Schedule Oct 2026.pdf",
+          "uploaded_at": "2026-09-29T06:06:34.237000Z"
+         }
+        ],
+        "review_codes": []
+       },
+       {
+        "version": 2,
+        "built_at": "2026-09-29T08:04:03.549009Z",
+        "status": "built",
+        "fingerprint": "1188d0cb632bacdf515bf3e29a4a141f8e15a8f15b5ae195a1d38bbe3e0e553c",
+        "output_file": "Lolo Peak Village - Investor Report - October 2026 - v2.pdf",
+        "inputs": [
+         {
+          "role": "pm_source",
+          "file_id": "1tbJg7O53jGybyK6J_VUcy_0DxAXAIXR3",
+          "md5": "10cc5d90f9897507d4b79118b8b6f860",
+          "name": "Lolo Peak Village Owner Report Oct 2026.pdf",
+          "uploaded_at": "2026-09-29T06:05:17.705000Z"
+         },
+         {
+          "role": "cornerstone_balance_sheet",
+          "file_id": "1Y10v0PB3Sewn0N-m599neoQE_MC_mxli",
+          "md5": "f1d0a50ccd2d56476379193ce7783d2a",
+          "name": "Lolo Peak Village Balance Sheet Oct 2026.pdf",
+          "uploaded_at": "2026-09-29T06:05:21.060000Z"
+         },
+         {
+          "role": "cornerstone_profit_loss_ytd",
+          "file_id": "1DYy4XZfgkuBAvJ3U-Snx4RPRtVk-lyYI",
+          "md5": "e74a486e44e7e455345ebca7d8b22ed6",
+          "name": "Lolo Peak Village P&L YTD Oct 2026.pdf",
+          "uploaded_at": "2026-09-29T06:06:30.191000Z"
+         }
+        ],
+        "review_codes": []
+       },
+       {
+        "version": 3,
+        "built_at": "2026-09-29T12:13:33.497031Z",
+        "status": "built",
+        "fingerprint": "8b46d609c2c1ea160d495a8efaed6f86fc37647894cc957c4bac77ea91633860",
+        "output_file": "Lolo Peak Village - Investor Report - October 2026 - v3.pdf",
+        "inputs": [
+         {
+          "role": "pm_source",
+          "file_id": "1tbJg7O53jGybyK6J_VUcy_0DxAXAIXR3",
+          "md5": "10cc5d90f9897507d4b79118b8b6f860",
+          "name": "Lolo Peak Village Owner Report Oct 2026.pdf",
+          "uploaded_at": "2026-09-29T06:05:17.705000Z"
+         },
+         {
+          "role": "cornerstone_balance_sheet",
+          "file_id": "1ASJ_zy4VvW_bj5gv50gBI9zla30htucf",
+          "md5": "0e01de7c51f0115c0cae07f16e487aed",
+          "name": "Lolo Peak Village Balance Sheet Oct 2026 reissued.pdf",
+          "uploaded_at": "2026-09-29T10:46:10.728000Z"
+         },
+         {
+          "role": "cornerstone_profit_loss_ytd",
+          "file_id": "1DYy4XZfgkuBAvJ3U-Snx4RPRtVk-lyYI",
+          "md5": "e74a486e44e7e455345ebca7d8b22ed6",
+          "name": "Lolo Peak Village P&L YTD Oct 2026.pdf",
+          "uploaded_at": "2026-09-29T06:06:30.191000Z"
+         }
+        ],
+        "review_codes": []
+       }
+      ],
+      "attempts": []
+     }
+    },
+    "2026-09 September": {
+     "components": {
+      "4 - Distribution Schedule": [
+       {
+        "name": "Lolo Peak Village Distribution Schedule Oct 2026.pdf",
+        "id": "14IaSGnAzRdqDx35PHc4dC0k8jiPUq6CX",
+        "mime": "application/pdf",
+        "md5": "1a5a326be3f5c93bf6e484e849607a29",
+        "created": "2026-09-29T06:06:34.237Z",
+        "modified": "2026-09-29T06:06:34.237Z",
+        "size": 104788
+       }
+      ],
+      "3 - Profit and Loss": [
+       {
+        "name": "Lolo Peak Village P&L YTD Sep 2026.pdf",
+        "id": "1UoARGDKC4q50C2iLfGM4Xt3817HiS3j4",
+        "mime": "application/pdf",
+        "md5": "e74a486e44e7e455345ebca7d8b22ed6",
+        "created": "2026-09-29T07:35:07.276Z",
+        "modified": "2026-09-29T07:35:07.276Z",
+        "size": 69835
+       }
+      ],
+      "2 - Balance Sheet": [
+       {
+        "name": "SUPERSEDED - Lolo Peak Village Balance Sheet Sep 2026.pdf",
+        "id": "1ERzyXKW5N8Azb7Rh3P6igZaxCjeVTrgo",
+        "mime": "application/pdf",
+        "md5": "f1d0a50ccd2d56476379193ce7783d2a",
+        "created": "2026-09-29T06:35:12.890Z",
+        "modified": "2026-09-29T11:01:05.378Z",
+        "size": 33405
+       },
+       {
+        "name": "Lolo Peak Village Balance Sheet Sep 2026 reissued.pdf",
+        "id": "1i1qy6GjfEc1OaBDPses8maPmCwSrGqkP",
+        "mime": "application/pdf",
+        "md5": "0e01de7c51f0115c0cae07f16e487aed",
+        "created": "2026-09-29T10:45:16.562Z",
+        "modified": "2026-09-29T10:45:16.562Z",
+        "size": 33476
+       }
+      ],
+      "1 - Property Manager Report": [
+       {
+        "name": "SUPERSEDED - Lolo Peak Village Owner Report Sep 2026.pdf",
+        "id": "1cG9Ogcs9xgZWofhzeYkMwRaXMtT5x1as",
+        "mime": "application/pdf",
+        "md5": "10cc5d90f9897507d4b79118b8b6f860",
+        "created": "2026-09-29T05:35:12.728Z",
+        "modified": "2026-09-29T09:31:07.313Z",
+        "size": 177991
+       },
+       {
+        "name": "Lolo Peak Village Owner Report Sep 2026.pdf",
+        "id": "1WG7JRpV-P3sJ0ZeMFslItgZwUsBn9NBw",
+        "mime": "application/pdf",
+        "md5": "10cc5d90f9897507d4b79118b8b6f860",
+        "created": "2026-09-29T09:10:13.038Z",
+        "modified": "2026-09-29T09:10:13.038Z",
+        "size": 177991
+       }
+      ]
+     },
+     "loose": [],
+     "output": {
+      "status": [
+       "Built v2 (current)"
+      ],
+      "pdfs": [
+       "Lolo Peak Village - Investor Report - September 2026 - v1.pdf",
+       "Lolo Peak Village - Investor Report - September 2026 - v2.pdf"
+      ],
+      "reviews": [],
+      "other": []
+     },
+     "state": {
+      "versions": [
+       {
+        "version": 1,
+        "built_at": "2026-09-29T10:31:48.722509Z",
+        "status": "built",
+        "fingerprint": "86c97b6c57496f6779bf3cf627024c2404784e10fbb5436fe8cdd0dd2b721c47",
+        "output_file": "Lolo Peak Village - Investor Report - September 2026 - v1.pdf",
+        "inputs": [
+         {
+          "role": "pm_source",
+          "file_id": "1WG7JRpV-P3sJ0ZeMFslItgZwUsBn9NBw",
+          "md5": "10cc5d90f9897507d4b79118b8b6f860",
+          "name": "Lolo Peak Village Owner Report Sep 2026.pdf",
+          "uploaded_at": "2026-09-29T09:10:13.038000Z"
+         },
+         {
+          "role": "cornerstone_balance_sheet",
+          "file_id": "1ERzyXKW5N8Azb7Rh3P6igZaxCjeVTrgo",
+          "md5": "f1d0a50ccd2d56476379193ce7783d2a",
+          "name": "Lolo Peak Village Balance Sheet Sep 2026.pdf",
+          "uploaded_at": "2026-09-29T06:35:12.890000Z"
+         },
+         {
+          "role": "cornerstone_profit_loss_ytd",
+          "file_id": "1UoARGDKC4q50C2iLfGM4Xt3817HiS3j4",
+          "md5": "e74a486e44e7e455345ebca7d8b22ed6",
+          "name": "Lolo Peak Village P&L YTD Sep 2026.pdf",
+          "uploaded_at": "2026-09-29T07:35:07.276000Z"
+         },
+         {
+          "role": "cornerstone_distribution_schedule",
+          "file_id": "14IaSGnAzRdqDx35PHc4dC0k8jiPUq6CX",
+          "md5": "1a5a326be3f5c93bf6e484e849607a29",
+          "name": "Lolo Peak Village Distribution Schedule Oct 2026.pdf",
+          "uploaded_at": "2026-09-29T06:06:34.237000Z"
+         }
+        ],
+        "review_codes": []
+       },
+       {
+        "version": 2,
+        "built_at": "2026-09-29T12:02:59.132242Z",
+        "status": "built",
+        "fingerprint": "da8c21cc4c541f856ee9df3fec433434c8c40b8f1b1ed453ddc2a4ed43502272",
+        "output_file": "Lolo Peak Village - Investor Report - September 2026 - v2.pdf",
+        "inputs": [
+         {
+          "role": "pm_source",
+          "file_id": "1WG7JRpV-P3sJ0ZeMFslItgZwUsBn9NBw",
+          "md5": "10cc5d90f9897507d4b79118b8b6f860",
+          "name": "Lolo Peak Village Owner Report Sep 2026.pdf",
+          "uploaded_at": "2026-09-29T09:10:13.038000Z"
+         },
+         {
+          "role": "cornerstone_balance_sheet",
+          "file_id": "1i1qy6GjfEc1OaBDPses8maPmCwSrGqkP",
+          "md5": "0e01de7c51f0115c0cae07f16e487aed",
+          "name": "Lolo Peak Village Balance Sheet Sep 2026 reissued.pdf",
+          "uploaded_at": "2026-09-29T10:45:16.562000Z"
+         },
+         {
+          "role": "cornerstone_profit_loss_ytd",
+          "file_id": "1UoARGDKC4q50C2iLfGM4Xt3817HiS3j4",
+          "md5": "e74a486e44e7e455345ebca7d8b22ed6",
+          "name": "Lolo Peak Village P&L YTD Sep 2026.pdf",
+          "uploaded_at": "2026-09-29T07:35:07.276000Z"
+         },
+         {
+          "role": "cornerstone_distribution_schedule",
+          "file_id": "14IaSGnAzRdqDx35PHc4dC0k8jiPUq6CX",
+          "md5": "1a5a326be3f5c93bf6e484e849607a29",
+          "name": "Lolo Peak Village Distribution Schedule Oct 2026.pdf",
+          "uploaded_at": "2026-09-29T06:06:34.237000Z"
+         }
+        ],
+        "review_codes": []
+       }
+      ],
+      "attempts": []
+     }
+    },
+    "2026-06 June": {
+     "components": {},
+     "loose": [],
+     "output": null,
+     "state": null,
+     "other_folders": [
+      "inputs"
+     ]
+    }
+   },
+   "loose": []
+  },
+  "mullan-crossing": {
+   "months": {
+    "August 2026": {
+     "components": {},
+     "loose": [
+      {
+       "name": "Mullan Crossing Owner Report Aug 2026.pdf",
+       "id": "14Vs9p3-9L4_YzXHw-727y_dWfO8FiLbR",
+       "mime": "application/pdf",
+       "md5": "cc7a957625e2e96c4874e667635ff284",
+       "created": "2026-09-29T06:10:49.639Z",
+       "modified": "2026-09-29T06:10:49.639Z",
+       "size": 201617
+      }
+     ],
+     "output": null,
+     "state": null
+    },
+    "2026-10 October": {
+     "components": {
+      "4 - Distribution Schedule": [
+       {
+        "name": "Mullan Crossing Distribution Schedule Oct 2026.pdf",
+        "id": "1hjSf0PjpEIAwET_Yo5v75DNFWE_1g0re",
+        "mime": "application/pdf",
+        "md5": "3903b92b7bf9f66acf28fe6cce18623a",
+        "created": "2026-09-29T06:06:43.462Z",
+        "modified": "2026-09-29T06:06:43.462Z",
+        "size": 121592
+       }
+      ],
+      "3 - Profit and Loss": [
+       {
+        "name": "Mullan Crossing P&L YTD Oct 2026.pdf",
+        "id": "1iOvN_vRY6lgvlVwcbvdYYMW28uVAVKf4",
+        "mime": "application/pdf",
+        "md5": "1ebc396db4dd87113ccc45cb8f0e517b",
+        "created": "2026-09-29T06:06:40.404Z",
+        "modified": "2026-09-29T06:06:40.404Z",
+        "size": 69784
+       }
+      ],
+      "2 - Balance Sheet": [
+       {
+        "name": "SUPERSEDED - Mullan Crossing Balance Sheet Oct 2026.pdf",
+        "id": "1nKkBSBc2UrGCCTgtf78xUefHlgPpS6EK",
+        "mime": "application/pdf",
+        "md5": "a7c1c7b2e547ade64f51aa3e9656c7c8",
+        "created": "2026-09-29T06:06:37.225Z",
+        "modified": "2026-09-29T11:02:18.252Z",
+        "size": 34199
+       },
+       {
+        "name": "Mullan Crossing Balance Sheet Oct 2026 reissued.pdf",
+        "id": "1nlXFkYe-7eAi693MWamnGfrjVhfKqufn",
+        "mime": "application/pdf",
+        "md5": "4785164a9148a8ff93585a5ab148aa2a",
+        "created": "2026-09-29T10:46:30.846Z",
+        "modified": "2026-09-29T10:46:30.846Z",
+        "size": 34270
+       }
+      ],
+      "1 - Property Manager Report": [
+       {
+        "name": "SUPERSEDED - Mullan Crossing Owner Report Oct 2026 part 2 of 2.pdf",
+        "id": "1661RAo3L94vA9OKGtyTw_lisKVHYYlVm",
+        "mime": "application/pdf",
+        "md5": "b2f2d8ee9408e102a28b9a1395e46ff8",
+        "created": "2026-09-29T06:06:21.346Z",
+        "modified": "2026-09-29T08:04:46.339Z",
+        "size": 127566
+       },
+       {
+        "name": "Mullan Crossing Owner Report Oct 2026 (complete).pdf",
+        "id": "1v3EXx0qE5XAj6u3aCd5956HdxQd9KMiR",
+        "mime": "application/pdf",
+        "md5": "cc7a957625e2e96c4874e667635ff284",
+        "created": "2026-09-29T07:40:18.918Z",
+        "modified": "2026-09-29T07:40:18.918Z",
+        "size": 201617
+       },
+       {
+        "name": "SUPERSEDED - Mullan Crossing Owner Report Oct 2026 part 1 of 2.pdf",
+        "id": "1CBku_AtWGf4yaWTuUH__PcBZVyfAsRYy",
+        "mime": "application/pdf",
+        "md5": "2782b7652b15600c91a8803c8918d9fe",
+        "created": "2026-09-29T06:05:27.231Z",
+        "modified": "2026-09-29T06:31:47.289Z",
+        "size": 78127
+       }
+      ]
+     },
+     "loose": [],
+     "output": {
+      "status": [
+       "Built v3 (current)"
+      ],
+      "pdfs": [
+       "Mullan Crossing - Investor Report - October 2026 - v1 - NEEDS REVIEW.pdf",
+       "Mullan Crossing - Investor Report - October 2026 - v2.pdf",
+       "Mullan Crossing - Investor Report - October 2026 - v3.pdf"
+      ],
+      "reviews": [
+       "REVIEW - v1.md"
+      ],
+      "other": []
+     },
+     "state": {
+      "versions": [
+       {
+        "version": 1,
+        "built_at": "2026-09-29T07:38:28.142986Z",
+        "status": "needs_review",
+        "fingerprint": "47fd15dcce9815b5bf555e1df41b5def30a073db7ac8b9ef1ae821a904abd32c",
+        "output_file": "Mullan Crossing - Investor Report - October 2026 - v1 - NEEDS REVIEW.pdf",
+        "inputs": [
+         {
+          "role": "pm_source",
+          "file_id": "1661RAo3L94vA9OKGtyTw_lisKVHYYlVm",
+          "md5": "b2f2d8ee9408e102a28b9a1395e46ff8",
+          "name": "Mullan Crossing Owner Report Oct 2026 part 2 of 2.pdf",
+          "uploaded_at": "2026-09-29T06:06:21.346000Z"
+         },
+         {
+          "role": "cornerstone_balance_sheet",
+          "file_id": "1nKkBSBc2UrGCCTgtf78xUefHlgPpS6EK",
+          "md5": "a7c1c7b2e547ade64f51aa3e9656c7c8",
+          "name": "Mullan Crossing Balance Sheet Oct 2026.pdf",
+          "uploaded_at": "2026-09-29T06:06:37.225000Z"
+         },
+         {
+          "role": "cornerstone_profit_loss_ytd",
+          "file_id": "1iOvN_vRY6lgvlVwcbvdYYMW28uVAVKf4",
+          "md5": "1ebc396db4dd87113ccc45cb8f0e517b",
+          "name": "Mullan Crossing P&L YTD Oct 2026.pdf",
+          "uploaded_at": "2026-09-29T06:06:40.404000Z"
+         },
+         {
+          "role": "cornerstone_distribution_schedule",
+          "file_id": "1hjSf0PjpEIAwET_Yo5v75DNFWE_1g0re",
+          "md5": "3903b92b7bf9f66acf28fe6cce18623a",
+          "name": "Mullan Crossing Distribution Schedule Oct 2026.pdf",
+          "uploaded_at": "2026-09-29T06:06:43.462000Z"
+         }
+        ],
+        "review_codes": [
+         "missing_required"
+        ]
+       },
+       {
+        "version": 2,
+        "built_at": "2026-09-29T09:35:06.967376Z",
+        "status": "built",
+        "fingerprint": "e9b42df11b730b194bbd13ea261913894e638b57fa26c1b405c538f23d323e5e",
+        "output_file": "Mullan Crossing - Investor Report - October 2026 - v2.pdf",
+        "inputs": [
+         {
+          "role": "pm_source",
+          "file_id": "1v3EXx0qE5XAj6u3aCd5956HdxQd9KMiR",
+          "md5": "cc7a957625e2e96c4874e667635ff284",
+          "name": "Mullan Crossing Owner Report Oct 2026 (complete).pdf",
+          "uploaded_at": "2026-09-29T07:40:18.918000Z"
+         },
+         {
+          "role": "cornerstone_balance_sheet",
+          "file_id": "1nKkBSBc2UrGCCTgtf78xUefHlgPpS6EK",
+          "md5": "a7c1c7b2e547ade64f51aa3e9656c7c8",
+          "name": "Mullan Crossing Balance Sheet Oct 2026.pdf",
+          "uploaded_at": "2026-09-29T06:06:37.225000Z"
+         },
+         {
+          "role": "cornerstone_profit_loss_ytd",
+          "file_id": "1iOvN_vRY6lgvlVwcbvdYYMW28uVAVKf4",
+          "md5": "1ebc396db4dd87113ccc45cb8f0e517b",
+          "name": "Mullan Crossing P&L YTD Oct 2026.pdf",
+          "uploaded_at": "2026-09-29T06:06:40.404000Z"
+         },
+         {
+          "role": "cornerstone_distribution_schedule",
+          "file_id": "1hjSf0PjpEIAwET_Yo5v75DNFWE_1g0re",
+          "md5": "3903b92b7bf9f66acf28fe6cce18623a",
+          "name": "Mullan Crossing Distribution Schedule Oct 2026.pdf",
+          "uploaded_at": "2026-09-29T06:06:43.462000Z"
+         }
+        ],
+        "review_codes": []
+       },
+       {
+        "version": 3,
+        "built_at": "2026-09-29T12:14:21.097409Z",
+        "status": "built",
+        "fingerprint": "fd156c9846b8d81f17a1c82d025cf9c78a5af622b04b4bb112252baeceb7ce54",
+        "output_file": "Mullan Crossing - Investor Report - October 2026 - v3.pdf",
+        "inputs": [
+         {
+          "role": "pm_source",
+          "file_id": "1v3EXx0qE5XAj6u3aCd5956HdxQd9KMiR",
+          "md5": "cc7a957625e2e96c4874e667635ff284",
+          "name": "Mullan Crossing Owner Report Oct 2026 (complete).pdf",
+          "uploaded_at": "2026-09-29T07:40:18.918000Z"
+         },
+         {
+          "role": "cornerstone_balance_sheet",
+          "file_id": "1nlXFkYe-7eAi693MWamnGfrjVhfKqufn",
+          "md5": "4785164a9148a8ff93585a5ab148aa2a",
+          "name": "Mullan Crossing Balance Sheet Oct 2026 reissued.pdf",
+          "uploaded_at": "2026-09-29T10:46:30.846000Z"
+         },
+         {
+          "role": "cornerstone_profit_loss_ytd",
+          "file_id": "1iOvN_vRY6lgvlVwcbvdYYMW28uVAVKf4",
+          "md5": "1ebc396db4dd87113ccc45cb8f0e517b",
+          "name": "Mullan Crossing P&L YTD Oct 2026.pdf",
+          "uploaded_at": "2026-09-29T06:06:40.404000Z"
+         },
+         {
+          "role": "cornerstone_distribution_schedule",
+          "file_id": "1hjSf0PjpEIAwET_Yo5v75DNFWE_1g0re",
+          "md5": "3903b92b7bf9f66acf28fe6cce18623a",
+          "name": "Mullan Crossing Distribution Schedule Oct 2026.pdf",
+          "uploaded_at": "2026-09-29T06:06:43.462000Z"
+         }
+        ],
+        "review_codes": []
+       }
+      ],
+      "attempts": []
+     }
+    },
+    "2026-09 September": {
+     "components": {
+      "4 - Distribution Schedule": [
+       {
+        "name": "Mullan Crossing Distribution Schedule Sep 2026.pdf",
+        "id": "1i3vDj_ASuxPTVzcPvQ9pJfNKl2pwMCzi",
+        "mime": "application/pdf",
+        "md5": "3903b92b7bf9f66acf28fe6cce18623a",
+        "created": "2026-09-29T07:35:11.626Z",
+        "modified": "2026-09-29T07:35:11.626Z",
+        "size": 121592
+       }
+      ],
+      "3 - Profit and Loss": [
+       {
+        "name": "SUPERSEDED - Mullan Crossing P&L YTD Sep 2026.pdf",
+        "id": "16XYJJXAx3te4AvUO1DFORKnXGbJn2Gcy",
+        "mime": "application/pdf",
+        "md5": "1ebc396db4dd87113ccc45cb8f0e517b",
+        "created": "2026-09-29T06:55:13.446Z",
+        "modified": "2026-09-29T08:33:07.088Z",
+        "size": 69784
+       },
+       {
+        "name": "Mullan Crossing P&L YTD Sep 2026 v2.pdf",
+        "id": "1rLSoBYv0TMr4rWPEfdzc5lGsl3RzUVXk",
+        "mime": "application/pdf",
+        "md5": "a5bac9f7b3f508b3bbd01a0f96c48978",
+        "created": "2026-09-29T08:15:16.521Z",
+        "modified": "2026-09-29T08:15:16.521Z",
+        "size": 69857
+       }
+      ],
+      "2 - Balance Sheet": [
+       {
+        "name": "SUPERSEDED - Mullan Crossing Balance Sheet Sep 2026.pdf",
+        "id": "11zfHzWTh6iDAFnp0Erwmgbo2siHKhjN7",
+        "mime": "application/pdf",
+        "md5": "a7c1c7b2e547ade64f51aa3e9656c7c8",
+        "created": "2026-09-29T06:15:03.004Z",
+        "modified": "2026-09-29T11:01:12.864Z",
+        "size": 34199
+       },
+       {
+        "name": "Mullan Crossing Balance Sheet Sep 2026 reissued.pdf",
+        "id": "1HmaRn5fda7oInd0HZG0fLZHqdxdtqTfv",
+        "mime": "application/pdf",
+        "md5": "4785164a9148a8ff93585a5ab148aa2a",
+        "created": "2026-09-29T10:45:34.791Z",
+        "modified": "2026-09-29T10:45:34.791Z",
+        "size": 34270
+       }
+      ],
+      "1 - Property Manager Report": [
+       {
+        "name": "Mullan Crossing Owner Report Sep 2026.pdf",
+        "id": "1xoxhNZbaoa9b5oqHhMF-fnX3jVCtoEOg",
+        "mime": "application/pdf",
+        "md5": "cc7a957625e2e96c4874e667635ff284",
+        "created": "2026-09-29T05:35:15.593Z",
+        "modified": "2026-09-29T05:35:15.593Z",
+        "size": 201617
+       }
+      ]
+     },
+     "loose": [],
+     "output": {
+      "status": [
+       "Built v2 (current)"
+      ],
+      "pdfs": [
+       "Mullan Crossing - Investor Report - September 2026 - v1.pdf",
+       "Mullan Crossing - Investor Report - September 2026 - v2.pdf"
+      ],
+      "reviews": [],
+      "other": []
+     },
+     "state": {
+      "versions": [
+       {
+        "version": 1,
+        "built_at": "2026-09-29T09:31:24.287190Z",
+        "status": "built",
+        "fingerprint": "3b3897f33e586790837e6f44276d3af008bd96cc44bba278b0df69cc33a1b107",
+        "output_file": "Mullan Crossing - Investor Report - September 2026 - v1.pdf",
+        "inputs": [
+         {
+          "role": "pm_source",
+          "file_id": "1xoxhNZbaoa9b5oqHhMF-fnX3jVCtoEOg",
+          "md5": "cc7a957625e2e96c4874e667635ff284",
+          "name": "Mullan Crossing Owner Report Sep 2026.pdf",
+          "uploaded_at": "2026-09-29T05:35:15.593000Z"
+         },
+         {
+          "role": "cornerstone_balance_sheet",
+          "file_id": "11zfHzWTh6iDAFnp0Erwmgbo2siHKhjN7",
+          "md5": "a7c1c7b2e547ade64f51aa3e9656c7c8",
+          "name": "Mullan Crossing Balance Sheet Sep 2026.pdf",
+          "uploaded_at": "2026-09-29T06:15:03.004000Z"
+         },
+         {
+          "role": "cornerstone_profit_loss_ytd",
+          "file_id": "1rLSoBYv0TMr4rWPEfdzc5lGsl3RzUVXk",
+          "md5": "a5bac9f7b3f508b3bbd01a0f96c48978",
+          "name": "Mullan Crossing P&L YTD Sep 2026 v2.pdf",
+          "uploaded_at": "2026-09-29T08:15:16.521000Z"
+         },
+         {
+          "role": "cornerstone_distribution_schedule",
+          "file_id": "1i3vDj_ASuxPTVzcPvQ9pJfNKl2pwMCzi",
+          "md5": "3903b92b7bf9f66acf28fe6cce18623a",
+          "name": "Mullan Crossing Distribution Schedule Sep 2026.pdf",
+          "uploaded_at": "2026-09-29T07:35:11.626000Z"
+         }
+        ],
+        "review_codes": []
+       },
+       {
+        "version": 2,
+        "built_at": "2026-09-29T12:03:49.238379Z",
+        "status": "built",
+        "fingerprint": "01c4e7eb0daeba7f78c906c523c0441182a5fcd9c3b44802762707a6407f644d",
+        "output_file": "Mullan Crossing - Investor Report - September 2026 - v2.pdf",
+        "inputs": [
+         {
+          "role": "pm_source",
+          "file_id": "1xoxhNZbaoa9b5oqHhMF-fnX3jVCtoEOg",
+          "md5": "cc7a957625e2e96c4874e667635ff284",
+          "name": "Mullan Crossing Owner Report Sep 2026.pdf",
+          "uploaded_at": "2026-09-29T05:35:15.593000Z"
+         },
+         {
+          "role": "cornerstone_balance_sheet",
+          "file_id": "1HmaRn5fda7oInd0HZG0fLZHqdxdtqTfv",
+          "md5": "4785164a9148a8ff93585a5ab148aa2a",
+          "name": "Mullan Crossing Balance Sheet Sep 2026 reissued.pdf",
+          "uploaded_at": "2026-09-29T10:45:34.791000Z"
+         },
+         {
+          "role": "cornerstone_profit_loss_ytd",
+          "file_id": "1rLSoBYv0TMr4rWPEfdzc5lGsl3RzUVXk",
+          "md5": "a5bac9f7b3f508b3bbd01a0f96c48978",
+          "name": "Mullan Crossing P&L YTD Sep 2026 v2.pdf",
+          "uploaded_at": "2026-09-29T08:15:16.521000Z"
+         },
+         {
+          "role": "cornerstone_distribution_schedule",
+          "file_id": "1i3vDj_ASuxPTVzcPvQ9pJfNKl2pwMCzi",
+          "md5": "3903b92b7bf9f66acf28fe6cce18623a",
+          "name": "Mullan Crossing Distribution Schedule Sep 2026.pdf",
+          "uploaded_at": "2026-09-29T07:35:11.626000Z"
+         }
+        ],
+        "review_codes": []
+       }
+      ],
+      "attempts": []
+     }
+    },
+    "2026-06 June": {
+     "components": {},
+     "loose": [],
+     "output": null,
+     "state": null,
+     "other_folders": [
+      "inputs"
+     ]
+    }
+   },
+   "loose": []
+  },
+  "waypointe": {
+   "months": {
+    "2026-07 July": {
+     "components": {
+      "4 - Distribution Schedule": [],
+      "3 - Profit and Loss": [
+       {
+        "name": "WayPointe P&L YTD Jul 2026.pdf",
+        "id": "1K-3Y6rmR6iDbLR0njGGw-UaoQKmIObWe",
+        "mime": "application/pdf",
+        "md5": "a916190d85f1c3dd324a30dd4d0d096c",
+        "created": "2026-09-29T06:10:59.200Z",
+        "modified": "2026-09-29T06:10:59.200Z",
+        "size": 31896
+       }
+      ],
+      "2 - Balance Sheet": [
+       {
+        "name": "WayPointe Balance Sheet Jul 2026.pdf",
+        "id": "165z9wRSuRaQSo04FJG5VCh-DgPem21iG",
+        "mime": "application/pdf",
+        "md5": "bb57400f1524171b8febe4871c7178c4",
+        "created": "2026-09-29T06:10:56.093Z",
+        "modified": "2026-09-29T06:10:56.093Z",
+        "size": 31701
+       }
+      ],
+      "1 - Property Manager Report": [
+       {
+        "name": "WayPointe Owner Report Jul 2026.pdf",
+        "id": "1itff6Mz7H99WVivaUguUeQBIqhp1FQLr",
+        "mime": "application/pdf",
+        "md5": "1910c38a5f45fd4b8a1c4decad66d19e",
+        "created": "2026-09-29T06:10:53.190Z",
+        "modified": "2026-09-29T06:10:53.190Z",
+        "size": 179103
+       }
+      ]
+     },
+     "loose": [],
+     "output": null,
+     "state": null
+    },
+    "2026-10 October": {
+     "components": {
+      "4 - Distribution Schedule": [
+       {
+        "name": "Shortcut to the report",
+        "id": "1dd7K4_3peQwKQ4_WAox7Fnnb7aLV0XV-",
+        "mime": "application/vnd.google-apps.shortcut",
+        "md5": null,
+        "created": "2026-09-29T07:40:30.082Z",
+        "modified": "2026-09-29T07:40:30.082Z",
+        "size": null
+       },
+       {
+        "name": "WayPointe Distribution Schedule Oct 2026.pdf",
+        "id": "1WIfQ1kJxo9x15nuGkAqNbwusQZdgGQXd",
+        "mime": "application/pdf",
+        "md5": "a6632aac215dbe7ec9bcc0cd56a7509f",
+        "created": "2026-09-29T06:07:00.429Z",
+        "modified": "2026-09-29T06:07:00.429Z",
+        "size": 211281
+       }
+      ],
+      "3 - Profit and Loss": [
+       {
+        "name": "Notes on October numbers",
+        "id": "1Cp26hd4PRBxNfu_TzLB2O5t3JfayS2UnDcyQ5oT0LR8",
+        "mime": "application/vnd.google-apps.document",
+        "md5": null,
+        "created": "2026-09-29T07:40:23.793Z",
+        "modified": "2026-09-29T07:40:23.966Z",
+        "size": 1024
+       },
+       {
+        "name": "WayPointe P&L YTD Oct 2026.pdf",
+        "id": "1EJDpThF9MdZda7D5eOVb8kn_UGBYXrhv",
+        "mime": "application/pdf",
+        "md5": "a916190d85f1c3dd324a30dd4d0d096c",
+        "created": "2026-09-29T06:06:47.498Z",
+        "modified": "2026-09-29T06:06:47.498Z",
+        "size": 31896
+       }
+      ],
+      "2 - Balance Sheet": [
+       {
+        "name": "SUPERSEDED - WayPointe BS Oct 2026 FINAL.pdf",
+        "id": "1-qPrfue0TD6-blDwer2rDr_ApZ8TMNDL",
+        "mime": "application/pdf",
+        "md5": "bb57400f1524171b8febe4871c7178c4",
+        "created": "2026-09-29T06:05:33.398Z",
+        "modified": "2026-09-29T11:02:50.825Z",
+        "size": 31701
+       },
+       {
+        "name": "WayPointe Balance Sheet Oct 2026 reissued.pdf",
+        "id": "17RldiOw1b4sqETZqEUJyezW3ksEZqi3I",
+        "mime": "application/pdf",
+        "md5": "04d142b3dcd126aa9cce1770819adf11",
+        "created": "2026-09-29T10:46:33.758Z",
+        "modified": "2026-09-29T10:46:33.758Z",
+        "size": 31772
+       }
+      ],
+      "1 - Property Manager Report": [
+       {
+        "name": "WayPointe Owner Report Oct 2026.pdf",
+        "id": "1GthqDOv1rt46LdLZQpzOT7d_yDVjms82",
+        "mime": "application/pdf",
+        "md5": "1910c38a5f45fd4b8a1c4decad66d19e",
+        "created": "2026-09-29T06:05:30.418Z",
+        "modified": "2026-09-29T06:05:30.418Z",
+        "size": 179103
+       }
+      ]
+     },
+     "loose": [],
+     "output": {
+      "status": [
+       "Built v2 (current)"
+      ],
+      "pdfs": [
+       "WayPointe - Investor Report - October 2026 - v1.pdf",
+       "WayPointe - Investor Report - October 2026 - v2.pdf"
+      ],
+      "reviews": [],
+      "other": []
+     },
+     "state": {
+      "versions": [
+       {
+        "version": 1,
+        "built_at": "2026-09-29T08:05:19.150630Z",
+        "status": "built",
+        "fingerprint": "debae2501483257c52560ecac41c659786fe36bde923bf3a553ffc95e168bc4c",
+        "output_file": "WayPointe - Investor Report - October 2026 - v1.pdf",
+        "inputs": [
+         {
+          "role": "pm_source",
+          "file_id": "1GthqDOv1rt46LdLZQpzOT7d_yDVjms82",
+          "md5": "1910c38a5f45fd4b8a1c4decad66d19e",
+          "name": "WayPointe Owner Report Oct 2026.pdf",
+          "uploaded_at": "2026-09-29T06:05:30.418000Z"
+         },
+         {
+          "role": "cornerstone_balance_sheet",
+          "file_id": "1-qPrfue0TD6-blDwer2rDr_ApZ8TMNDL",
+          "md5": "bb57400f1524171b8febe4871c7178c4",
+          "name": "WayPointe BS Oct 2026 FINAL.pdf",
+          "uploaded_at": "2026-09-29T06:05:33.398000Z"
+         },
+         {
+          "role": "cornerstone_profit_loss_ytd",
+          "file_id": "1EJDpThF9MdZda7D5eOVb8kn_UGBYXrhv",
+          "md5": "a916190d85f1c3dd324a30dd4d0d096c",
+          "name": "WayPointe P&L YTD Oct 2026.pdf",
+          "uploaded_at": "2026-09-29T06:06:47.498000Z"
+         },
+         {
+          "role": "cornerstone_distribution_schedule",
+          "file_id": "1WIfQ1kJxo9x15nuGkAqNbwusQZdgGQXd",
+          "md5": "a6632aac215dbe7ec9bcc0cd56a7509f",
+          "name": "WayPointe Distribution Schedule Oct 2026.pdf",
+          "uploaded_at": "2026-09-29T06:07:00.429000Z"
+         }
+        ],
+        "review_codes": []
+       },
+       {
+        "version": 2,
+        "built_at": "2026-09-29T12:19:08.015350Z",
+        "status": "built",
+        "fingerprint": "309998efb3cbcccee6a7cf6df456e09c99836f9773339ed63d9e522a47a5daa2",
+        "output_file": "WayPointe - Investor Report - October 2026 - v2.pdf",
+        "inputs": [
+         {
+          "role": "pm_source",
+          "file_id": "1GthqDOv1rt46LdLZQpzOT7d_yDVjms82",
+          "md5": "1910c38a5f45fd4b8a1c4decad66d19e",
+          "name": "WayPointe Owner Report Oct 2026.pdf",
+          "uploaded_at": "2026-09-29T06:05:30.418000Z"
+         },
+         {
+          "role": "cornerstone_balance_sheet",
+          "file_id": "17RldiOw1b4sqETZqEUJyezW3ksEZqi3I",
+          "md5": "04d142b3dcd126aa9cce1770819adf11",
+          "name": "WayPointe Balance Sheet Oct 2026 reissued.pdf",
+          "uploaded_at": "2026-09-29T10:46:33.758000Z"
+         },
+         {
+          "role": "cornerstone_profit_loss_ytd",
+          "file_id": "1EJDpThF9MdZda7D5eOVb8kn_UGBYXrhv",
+          "md5": "a916190d85f1c3dd324a30dd4d0d096c",
+          "name": "WayPointe P&L YTD Oct 2026.pdf",
+          "uploaded_at": "2026-09-29T06:06:47.498000Z"
+         },
+         {
+          "role": "cornerstone_distribution_schedule",
+          "file_id": "1WIfQ1kJxo9x15nuGkAqNbwusQZdgGQXd",
+          "md5": "a6632aac215dbe7ec9bcc0cd56a7509f",
+          "name": "WayPointe Distribution Schedule Oct 2026.pdf",
+          "uploaded_at": "2026-09-29T06:07:00.429000Z"
+         }
+        ],
+        "review_codes": []
+       }
+      ],
+      "attempts": []
+     }
+    },
+    "2026-09 September": {
+     "components": {
+      "4 - Distribution Schedule": [
+       {
+        "name": "WayPointe Distribution Schedule Sep 2026.pdf",
+        "id": "1M4ElDDtDg-KN-kBagTr6D4aI1WVhW6mp",
+        "mime": "application/pdf",
+        "md5": "a6632aac215dbe7ec9bcc0cd56a7509f",
+        "created": "2026-09-29T05:36:15.969Z",
+        "modified": "2026-09-29T05:36:15.969Z",
+        "size": 211281
+       }
+      ],
+      "3 - Profit and Loss": [
+       {
+        "name": "WayPointe P&L YTD Sep 2026.pdf",
+        "id": "1ZTxDjW-vdrWKjhqbSL76Tp-LyNx7D7oh",
+        "mime": "application/pdf",
+        "md5": "cfcbd9f93dfff33a460e9c4fc756f2d8",
+        "created": "2026-09-29T05:36:13.323Z",
+        "modified": "2026-09-29T08:40:24.109Z",
+        "size": 31969
+       }
+      ],
+      "2 - Balance Sheet": [
+       {
+        "name": "SUPERSEDED - WayPointe Balance Sheet Sep 2026.pdf",
+        "id": "13IXMjLjXtQG9OUhD2DfPN_yrXUYknAGw",
+        "mime": "application/pdf",
+        "md5": "bb57400f1524171b8febe4871c7178c4",
+        "created": "2026-09-29T05:35:22.959Z",
+        "modified": "2026-09-29T11:01:45.501Z",
+        "size": 31701
+       },
+       {
+        "name": "WayPointe Balance Sheet Sep 2026 reissued.pdf",
+        "id": "1iWUGl7BzYdzjCy80qDfXhKnI6g5JSKON",
+        "mime": "application/pdf",
+        "md5": "04d142b3dcd126aa9cce1770819adf11",
+        "created": "2026-09-29T10:45:37.921Z",
+        "modified": "2026-09-29T10:45:37.921Z",
+        "size": 31772
+       }
+      ],
+      "1 - Property Manager Report": [
+       {
+        "name": "WayPointe Owner Report Sep 2026.pdf",
+        "id": "1SX7vEFYL7x0pz4kExZIwF7xm7ca-Gpnl",
+        "mime": "application/pdf",
+        "md5": "1910c38a5f45fd4b8a1c4decad66d19e",
+        "created": "2026-09-29T05:35:18.526Z",
+        "modified": "2026-09-29T05:35:18.526Z",
+        "size": 179103
+       }
+      ]
+     },
+     "loose": [],
+     "output": {
+      "status": [
+       "Built v3 (current)"
+      ],
+      "pdfs": [
+       "WayPointe - Investor Report - September 2026 - v1.pdf",
+       "WayPointe - Investor Report - September 2026 - v2.pdf",
+       "WayPointe - Investor Report - September 2026 - v3.pdf"
+      ],
+      "reviews": [],
+      "other": []
+     },
+     "state": {
+      "versions": [
+       {
+        "version": 1,
+        "built_at": "2026-09-29T07:12:32.317442Z",
+        "status": "built",
+        "fingerprint": "7008efff43a5e0a0919a653fa1a55a841562654decf95ec48f898da4dd215574",
+        "output_file": "WayPointe - Investor Report - September 2026 - v1.pdf",
+        "inputs": [
+         {
+          "role": "pm_source",
+          "file_id": "1SX7vEFYL7x0pz4kExZIwF7xm7ca-Gpnl",
+          "md5": "1910c38a5f45fd4b8a1c4decad66d19e",
+          "name": "WayPointe Owner Report Sep 2026.pdf",
+          "uploaded_at": "2026-09-29T05:35:18.526000Z"
+         },
+         {
+          "role": "cornerstone_balance_sheet",
+          "file_id": "13IXMjLjXtQG9OUhD2DfPN_yrXUYknAGw",
+          "md5": "bb57400f1524171b8febe4871c7178c4",
+          "name": "WayPointe Balance Sheet Sep 2026.pdf",
+          "uploaded_at": "2026-09-29T05:35:22.959000Z"
+         },
+         {
+          "role": "cornerstone_profit_loss_ytd",
+          "file_id": "1ZTxDjW-vdrWKjhqbSL76Tp-LyNx7D7oh",
+          "md5": "a916190d85f1c3dd324a30dd4d0d096c",
+          "name": "WayPointe P&L YTD Sep 2026.pdf",
+          "uploaded_at": "2026-09-29T05:36:13.323000Z"
+         },
+         {
+          "role": "cornerstone_distribution_schedule",
+          "file_id": "1M4ElDDtDg-KN-kBagTr6D4aI1WVhW6mp",
+          "md5": "a6632aac215dbe7ec9bcc0cd56a7509f",
+          "name": "WayPointe Distribution Schedule Sep 2026.pdf",
+          "uploaded_at": "2026-09-29T05:36:15.969000Z"
+         }
+        ],
+        "review_codes": []
+       },
+       {
+        "version": 2,
+        "built_at": "2026-09-29T10:02:22.820212Z",
+        "status": "built",
+        "fingerprint": "2a7a52291ff92f128ce778a7bbdad7fb105481e48143214ee12161fe5c21c1d4",
+        "output_file": "WayPointe - Investor Report - September 2026 - v2.pdf",
+        "inputs": [
+         {
+          "role": "pm_source",
+          "file_id": "1SX7vEFYL7x0pz4kExZIwF7xm7ca-Gpnl",
+          "md5": "1910c38a5f45fd4b8a1c4decad66d19e",
+          "name": "WayPointe Owner Report Sep 2026.pdf",
+          "uploaded_at": "2026-09-29T05:35:18.526000Z"
+         },
+         {
+          "role": "cornerstone_balance_sheet",
+          "file_id": "13IXMjLjXtQG9OUhD2DfPN_yrXUYknAGw",
+          "md5": "bb57400f1524171b8febe4871c7178c4",
+          "name": "WayPointe Balance Sheet Sep 2026.pdf",
+          "uploaded_at": "2026-09-29T07:28:06.112000Z"
+         },
+         {
+          "role": "cornerstone_profit_loss_ytd",
+          "file_id": "1ZTxDjW-vdrWKjhqbSL76Tp-LyNx7D7oh",
+          "md5": "cfcbd9f93dfff33a460e9c4fc756f2d8",
+          "name": "WayPointe P&L YTD Sep 2026.pdf",
+          "uploaded_at": "2026-09-29T08:40:24.109000Z"
+         },
+         {
+          "role": "cornerstone_distribution_schedule",
+          "file_id": "1M4ElDDtDg-KN-kBagTr6D4aI1WVhW6mp",
+          "md5": "a6632aac215dbe7ec9bcc0cd56a7509f",
+          "name": "WayPointe Distribution Schedule Sep 2026.pdf",
+          "uploaded_at": "2026-09-29T05:36:15.969000Z"
+         }
+        ],
+        "review_codes": []
+       },
+       {
+        "version": 3,
+        "built_at": "2026-09-29T12:10:41.557305Z",
+        "status": "built",
+        "fingerprint": "f891dbb0d8c06ce55f911a213bced2c15d4b1e1c7efc6b91dfaa5569d719d7cc",
+        "output_file": "WayPointe - Investor Report - September 2026 - v3.pdf",
+        "inputs": [
+         {
+          "role": "pm_source",
+          "file_id": "1SX7vEFYL7x0pz4kExZIwF7xm7ca-Gpnl",
+          "md5": "1910c38a5f45fd4b8a1c4decad66d19e",
+          "name": "WayPointe Owner Report Sep 2026.pdf",
+          "uploaded_at": "2026-09-29T05:35:18.526000Z"
+         },
+         {
+          "role": "cornerstone_balance_sheet",
+          "file_id": "1iWUGl7BzYdzjCy80qDfXhKnI6g5JSKON",
+          "md5": "04d142b3dcd126aa9cce1770819adf11",
+          "name": "WayPointe Balance Sheet Sep 2026 reissued.pdf",
+          "uploaded_at": "2026-09-29T10:45:37.921000Z"
+         },
+         {
+          "role": "cornerstone_profit_loss_ytd",
+          "file_id": "1ZTxDjW-vdrWKjhqbSL76Tp-LyNx7D7oh",
+          "md5": "cfcbd9f93dfff33a460e9c4fc756f2d8",
+          "name": "WayPointe P&L YTD Sep 2026.pdf",
+          "uploaded_at": "2026-09-29T08:40:24.109000Z"
+         },
+         {
+          "role": "cornerstone_distribution_schedule",
+          "file_id": "1M4ElDDtDg-KN-kBagTr6D4aI1WVhW6mp",
+          "md5": "a6632aac215dbe7ec9bcc0cd56a7509f",
+          "name": "WayPointe Distribution Schedule Sep 2026.pdf",
+          "uploaded_at": "2026-09-29T05:36:15.969000Z"
+         }
+        ],
+        "review_codes": []
+       }
+      ],
+      "attempts": []
+     }
+    },
+    "2026-06 June": {
+     "components": {},
+     "loose": [],
+     "output": null,
+     "state": null,
+     "other_folders": [
+      "inputs"
+     ]
+    }
+   },
+   "loose": []
+  },
+  "timber-place": {
+   "months": {
+    "2026-10 October": {
+     "components": {
+      "4 - Distribution Schedule": [],
+      "3 - Profit and Loss": [
+       {
+        "name": "Timber Place P&L YTD Oct 2026.pdf",
+        "id": "1_-kvDEJQCZhl7LzMDkvaWRWKBVwyy1Ee",
+        "mime": "application/pdf",
+        "md5": "b93468ac94f691775e2ad032c82fcaf1",
+        "created": "2026-09-29T06:07:03.589Z",
+        "modified": "2026-09-29T06:07:03.589Z",
+        "size": 32029
+       }
+      ],
+      "2 - Balance Sheet": [
+       {
+        "name": "SUPERSEDED - Timber Place Balance Sheet Oct 2026.pdf",
+        "id": "1epo4VQ4qCtvyLlEJvZ3zBYt5cuopicmO",
+        "mime": "application/pdf",
+        "md5": "34c84b9b2b298bbd2d90a18a99779599",
+        "created": "2026-09-29T06:05:40.273Z",
+        "modified": "2026-09-29T11:02:42.493Z",
+        "size": 33751
+       },
+       {
+        "name": "Timber Place Balance Sheet Oct 2026 reissued.pdf",
+        "id": "1nzRLJ8EaCoAyyMhOtEyGlqY8sIMWNbbk",
+        "mime": "application/pdf",
+        "md5": "2f19b7647b0fd59816e3541bdc975ca5",
+        "created": "2026-09-29T10:46:37.378Z",
+        "modified": "2026-09-29T10:46:37.378Z",
+        "size": 33822
+       }
+      ],
+      "1 - Property Manager Report": [
+       {
+        "name": "Timber Place Owner Report Oct 2026.pdf",
+        "id": "1HYGBtopeJwZS2qEPZN_xFsS7tU1EbTcr",
+        "mime": "application/pdf",
+        "md5": "e29c1ea8a207b1ab41794d85713ae356",
+        "created": "2026-09-29T06:05:37.003Z",
+        "modified": "2026-09-29T06:05:37.003Z",
+        "size": 1396232
+       }
+      ]
+     },
+     "loose": [],
+     "output": {
+      "status": [
+       "Built v4 (current)"
+      ],
+      "pdfs": [
+       "Timber Place - Investor Report - October 2026 - v1.pdf",
+       "Timber Place - Investor Report - October 2026 - v2.pdf",
+       "Timber Place - Investor Report - October 2026 - v3.pdf",
+       "Timber Place - Investor Report - October 2026 - v4.pdf"
+      ],
+      "reviews": [],
+      "other": []
+     },
+     "state": {
+      "versions": [
+       {
+        "version": 1,
+        "built_at": "2026-09-29T07:46:46.093949Z",
+        "status": "built",
+        "fingerprint": "8da83c2d27ba861dc38a6a07ae6ec53e9c65b76e4d1496d89969838960ef8295",
+        "output_file": "Timber Place - Investor Report - October 2026 - v1.pdf",
+        "inputs": [
+         {
+          "role": "pm_source",
+          "file_id": "1HYGBtopeJwZS2qEPZN_xFsS7tU1EbTcr",
+          "md5": "e29c1ea8a207b1ab41794d85713ae356",
+          "name": "Timber Place Owner Report Oct 2026.pdf",
+          "uploaded_at": "2026-09-29T06:05:37.003000Z"
+         },
+         {
+          "role": "cornerstone_balance_sheet",
+          "file_id": "1epo4VQ4qCtvyLlEJvZ3zBYt5cuopicmO",
+          "md5": "34c84b9b2b298bbd2d90a18a99779599",
+          "name": "Timber Place Balance Sheet Oct 2026.pdf",
+          "uploaded_at": "2026-09-29T06:05:40.273000Z"
+         },
+         {
+          "role": "cornerstone_profit_loss_ytd",
+          "file_id": "1_-kvDEJQCZhl7LzMDkvaWRWKBVwyy1Ee",
+          "md5": "b93468ac94f691775e2ad032c82fcaf1",
+          "name": "Timber Place P&L YTD Oct 2026.pdf",
+          "uploaded_at": "2026-09-29T06:07:03.589000Z"
+         }
+        ],
+        "review_codes": []
+       },
+       {
+        "version": 2,
+        "built_at": "2026-09-29T08:59:31.456168Z",
+        "status": "built",
+        "fingerprint": "8da83c2d27ba861dc38a6a07ae6ec53e9c65b76e4d1496d89969838960ef8295",
+        "output_file": "Timber Place - Investor Report - October 2026 - v2.pdf",
+        "inputs": [
+         {
+          "role": "pm_source",
+          "file_id": "1HYGBtopeJwZS2qEPZN_xFsS7tU1EbTcr",
+          "md5": "e29c1ea8a207b1ab41794d85713ae356",
+          "name": "Timber Place Owner Report Oct 2026.pdf",
+          "uploaded_at": "2026-09-29T06:05:37.003000Z"
+         },
+         {
+          "role": "cornerstone_balance_sheet",
+          "file_id": "1epo4VQ4qCtvyLlEJvZ3zBYt5cuopicmO",
+          "md5": "34c84b9b2b298bbd2d90a18a99779599",
+          "name": "Timber Place Balance Sheet Oct 2026.pdf",
+          "uploaded_at": "2026-09-29T06:05:40.273000Z"
+         },
+         {
+          "role": "cornerstone_profit_loss_ytd",
+          "file_id": "1_-kvDEJQCZhl7LzMDkvaWRWKBVwyy1Ee",
+          "md5": "b93468ac94f691775e2ad032c82fcaf1",
+          "name": "Timber Place P&L YTD Oct 2026.pdf",
+          "uploaded_at": "2026-09-29T06:07:03.589000Z"
+         }
+        ],
+        "review_codes": []
+       },
+       {
+        "version": 3,
+        "built_at": "2026-09-29T09:18:01.268247Z",
+        "status": "built",
+        "fingerprint": "8da83c2d27ba861dc38a6a07ae6ec53e9c65b76e4d1496d89969838960ef8295",
+        "output_file": "Timber Place - Investor Report - October 2026 - v3.pdf",
+        "inputs": [
+         {
+          "role": "pm_source",
+          "file_id": "1HYGBtopeJwZS2qEPZN_xFsS7tU1EbTcr",
+          "md5": "e29c1ea8a207b1ab41794d85713ae356",
+          "name": "Timber Place Owner Report Oct 2026.pdf",
+          "uploaded_at": "2026-09-29T06:05:37.003000Z"
+         },
+         {
+          "role": "cornerstone_balance_sheet",
+          "file_id": "1epo4VQ4qCtvyLlEJvZ3zBYt5cuopicmO",
+          "md5": "34c84b9b2b298bbd2d90a18a99779599",
+          "name": "Timber Place Balance Sheet Oct 2026.pdf",
+          "uploaded_at": "2026-09-29T06:05:40.273000Z"
+         },
+         {
+          "role": "cornerstone_profit_loss_ytd",
+          "file_id": "1_-kvDEJQCZhl7LzMDkvaWRWKBVwyy1Ee",
+          "md5": "b93468ac94f691775e2ad032c82fcaf1",
+          "name": "Timber Place P&L YTD Oct 2026.pdf",
+          "uploaded_at": "2026-09-29T06:07:03.589000Z"
+         }
+        ],
+        "review_codes": []
+       },
+       {
+        "version": 4,
+        "built_at": "2026-09-29T12:17:48.380566Z",
+        "status": "built",
+        "fingerprint": "3acfc6d4dcaea146bb754ef5ab7f1b0c203917b54181e07c6d2f8242d607a269",
+        "output_file": "Timber Place - Investor Report - October 2026 - v4.pdf",
+        "inputs": [
+         {
+          "role": "pm_source",
+          "file_id": "1HYGBtopeJwZS2qEPZN_xFsS7tU1EbTcr",
+          "md5": "e29c1ea8a207b1ab41794d85713ae356",
+          "name": "Timber Place Owner Report Oct 2026.pdf",
+          "uploaded_at": "2026-09-29T06:05:37.003000Z"
+         },
+         {
+          "role": "cornerstone_balance_sheet",
+          "file_id": "1nzRLJ8EaCoAyyMhOtEyGlqY8sIMWNbbk",
+          "md5": "2f19b7647b0fd59816e3541bdc975ca5",
+          "name": "Timber Place Balance Sheet Oct 2026 reissued.pdf",
+          "uploaded_at": "2026-09-29T10:46:37.378000Z"
+         },
+         {
+          "role": "cornerstone_profit_loss_ytd",
+          "file_id": "1_-kvDEJQCZhl7LzMDkvaWRWKBVwyy1Ee",
+          "md5": "b93468ac94f691775e2ad032c82fcaf1",
+          "name": "Timber Place P&L YTD Oct 2026.pdf",
+          "uploaded_at": "2026-09-29T06:07:03.589000Z"
+         }
+        ],
+        "review_codes": []
+       }
+      ],
+      "attempts": []
+     }
+    },
+    "2026-09 September": {
+     "components": {
+      "4 - Distribution Schedule": [],
+      "3 - Profit and Loss": [
+       {
+        "name": "Timber Place P&L YTD Sep 2026.pdf",
+        "id": "1Qq7qtsWtqDbpQQeTsrJiO_USy06n_4fn",
+        "mime": "application/pdf",
+        "md5": "b93468ac94f691775e2ad032c82fcaf1",
+        "created": "2026-09-29T05:36:18.768Z",
+        "modified": "2026-09-29T09:33:37.293Z",
+        "size": 32029
+       }
+      ],
+      "2 - Balance Sheet": [
+       {
+        "name": "Timber Place Balance Sheet Sep 2026 reissued.pdf",
+        "id": "1K8u4V4g1tNVKJwN3nsQ3uRuyURiL46iw",
+        "mime": "application/pdf",
+        "md5": "2f19b7647b0fd59816e3541bdc975ca5",
+        "created": "2026-09-29T10:45:40.765Z",
+        "modified": "2026-09-29T10:45:40.765Z",
+        "size": 33822
+       },
+       {
+        "name": "SUPERSEDED - Timber Place Balance Sheet Sep 2026.pdf",
+        "id": "12sYaUUJterVZLYONDwx3D0tIobkwph5W",
+        "mime": "application/pdf",
+        "md5": "34c84b9b2b298bbd2d90a18a99779599",
+        "created": "2026-09-29T05:35:29.290Z",
+        "modified": "2026-09-29T09:33:36.495Z",
+        "size": 33751
+       }
+      ],
+      "1 - Property Manager Report": [
+       {
+        "name": "Timber Place Owner Report Sep 2026.pdf",
+        "id": "1CxU71SQQY5DsFIlOb88Uw1T3KLQuSALx",
+        "mime": "application/pdf",
+        "md5": "e29c1ea8a207b1ab41794d85713ae356",
+        "created": "2026-09-29T05:35:26.275Z",
+        "modified": "2026-09-29T05:35:26.275Z",
+        "size": 1396232
+       }
+      ]
+     },
+     "loose": [],
+     "output": {
+      "status": [
+       "Built v2 (current)"
+      ],
+      "pdfs": [
+       "Timber Place - Investor Report - September 2026 - v1.pdf",
+       "Timber Place - Investor Report - September 2026 - v2.pdf"
+      ],
+      "reviews": [],
+      "other": []
+     },
+     "state": {
+      "versions": [
+       {
+        "version": 1,
+        "built_at": "2026-09-29T07:08:28.899195Z",
+        "status": "built",
+        "fingerprint": "e1c9faf96bab6e88180ea606674de4571ea2ccc87159230a70453f8407ac7fb0",
+        "output_file": "Timber Place - Investor Report - September 2026 - v1.pdf",
+        "inputs": [
+         {
+          "role": "pm_source",
+          "file_id": "1CxU71SQQY5DsFIlOb88Uw1T3KLQuSALx",
+          "md5": "e29c1ea8a207b1ab41794d85713ae356",
+          "name": "Timber Place Owner Report Sep 2026.pdf",
+          "uploaded_at": "2026-09-29T05:35:26.275000Z"
+         },
+         {
+          "role": "cornerstone_balance_sheet",
+          "file_id": "12sYaUUJterVZLYONDwx3D0tIobkwph5W",
+          "md5": "34c84b9b2b298bbd2d90a18a99779599",
+          "name": "Timber Place Balance Sheet Sep 2026.pdf",
+          "uploaded_at": "2026-09-29T05:35:29.290000Z"
+         },
+         {
+          "role": "cornerstone_profit_loss_ytd",
+          "file_id": "1Qq7qtsWtqDbpQQeTsrJiO_USy06n_4fn",
+          "md5": "b93468ac94f691775e2ad032c82fcaf1",
+          "name": "Timber Place P&L YTD Sep 2026.pdf",
+          "uploaded_at": "2026-09-29T05:36:18.768000Z"
+         }
+        ],
+        "review_codes": []
+       },
+       {
+        "version": 2,
+        "built_at": "2026-09-29T12:08:26.037528Z",
+        "status": "built",
+        "fingerprint": "b3fea7a711b4a37f92697cc8ebedc1efacd249bbbd7607656ea60ec2c5ef888f",
+        "output_file": "Timber Place - Investor Report - September 2026 - v2.pdf",
+        "inputs": [
+         {
+          "role": "pm_source",
+          "file_id": "1CxU71SQQY5DsFIlOb88Uw1T3KLQuSALx",
+          "md5": "e29c1ea8a207b1ab41794d85713ae356",
+          "name": "Timber Place Owner Report Sep 2026.pdf",
+          "uploaded_at": "2026-09-29T05:35:26.275000Z"
+         },
+         {
+          "role": "cornerstone_balance_sheet",
+          "file_id": "1K8u4V4g1tNVKJwN3nsQ3uRuyURiL46iw",
+          "md5": "2f19b7647b0fd59816e3541bdc975ca5",
+          "name": "Timber Place Balance Sheet Sep 2026 reissued.pdf",
+          "uploaded_at": "2026-09-29T10:45:40.765000Z"
+         },
+         {
+          "role": "cornerstone_profit_loss_ytd",
+          "file_id": "1Qq7qtsWtqDbpQQeTsrJiO_USy06n_4fn",
+          "md5": "b93468ac94f691775e2ad032c82fcaf1",
+          "name": "Timber Place P&L YTD Sep 2026.pdf",
+          "uploaded_at": "2026-09-29T05:36:18.768000Z"
+         }
+        ],
+        "review_codes": []
+       }
+      ],
+      "attempts": []
+     }
+    },
+    "2026-06 June": {
+     "components": {},
+     "loose": [],
+     "output": null,
+     "state": null,
+     "other_folders": [
+      "inputs"
+     ]
+    }
+   },
+   "loose": []
+  },
+  "river-falls": {
+   "months": {
+    "2026-10 October": {
+     "components": {
+      "4 - Distribution Schedule": [
+       {
+        "name": "River Falls Distribution Schedule Oct 2026.pdf",
+        "id": "15i8BfpBR78i_UbOI2vIvX4vFR4fxZDrr",
+        "mime": "application/pdf",
+        "md5": "54b3eaebbdaa134144cd29ac797fda91",
+        "created": "2026-09-29T06:07:09.315Z",
+        "modified": "2026-09-29T06:07:09.315Z",
+        "size": 213801
+       }
+      ],
+      "3 - Profit and Loss": [
+       {
+        "name": "SUPERSEDED - River Falls P&L YTD Oct 2026.pdf",
+        "id": "19w4WoCm8r-3WqA4arDlXh12_JJvvj4tU",
+        "mime": "application/pdf",
+        "md5": "a79af3709f06fb425c7f8d13afca7bf6",
+        "created": "2026-09-29T06:07:06.483Z",
+        "modified": "2026-09-29T08:04:54.982Z",
+        "size": 32992
+       },
+       {
+        "name": "River Falls P&L YTD Oct 2026 corrected.pdf",
+        "id": "1DZGx_4ii5f9aKU9fJAUJg9ql9ncFWm2w",
+        "mime": "application/pdf",
+        "md5": "5f7eefe4609ef215b353bba35030781d",
+        "created": "2026-09-29T07:55:12.138Z",
+        "modified": "2026-09-29T07:55:12.138Z",
+        "size": 33065
+       }
+      ],
+      "2 - Balance Sheet": [
+       {
+        "name": "SUPERSEDED - River Falls Balance Sheet Oct 2026 corrected.pdf",
+        "id": "12hxZBl9rxRcLhbRlRAT_AasPy-Shv6fP",
+        "mime": "application/pdf",
+        "md5": "de614213b654e57c592bdac6550e05ac",
+        "created": "2026-09-29T09:31:10.591Z",
+        "modified": "2026-09-29T11:02:25.808Z",
+        "size": 34988
+       },
+       {
+        "name": "River Falls Balance Sheet Oct 2026 reissued.pdf",
+        "id": "1jWrGhSRe-5Y9DKAQtMyVXtkrGm7et7F8",
+        "mime": "application/pdf",
+        "md5": "227aa8001d4e1b8c15319eee4d724d56",
+        "created": "2026-09-29T10:46:41.207Z",
+        "modified": "2026-09-29T10:46:41.207Z",
+        "size": 34986
+       },
+       {
+        "name": "SUPERSEDED - River Falls Balance Sheet Oct 2026.pdf",
+        "id": "1foFcViU0vpoGc9A2pDhEKrc7d2MFBS56",
+        "mime": "application/pdf",
+        "md5": "c03ca398ddd5f772dd809c8bec694066",
+        "created": "2026-09-29T06:05:50.210Z",
+        "modified": "2026-09-29T09:37:07.462Z",
+        "size": 34915
+       }
+      ],
+      "1 - Property Manager Report": [
+       {
+        "name": "River Falls Owner Report Oct 2026.pdf",
+        "id": "1xJ2Vb0R01nT2zgoEUBk6y_5EVo0RbcYZ",
+        "mime": "application/pdf",
+        "md5": "3479c14717b524cf24a0fcd5dc591fef",
+        "created": "2026-09-29T06:05:45.340Z",
+        "modified": "2026-09-29T06:05:45.340Z",
+        "size": 1754014
+       }
+      ]
+     },
+     "loose": [],
+     "output": {
+      "status": [
+       "Built v2 (current)"
+      ],
+      "pdfs": [
+       "River Falls - Investor Report - October 2026 - v1.pdf",
+       "River Falls - Investor Report - October 2026 - v2.pdf"
+      ],
+      "reviews": [],
+      "other": []
+     },
+     "state": {
+      "versions": [
+       {
+        "version": 1,
+        "built_at": "2026-09-29T07:39:56.832250Z",
+        "status": "built",
+        "fingerprint": "95d844a601dbec2bbe8a24cb85a4b021b9619dcb527d9d3bd8de491a72c599c5",
+        "output_file": "River Falls - Investor Report - October 2026 - v1.pdf",
+        "inputs": [
+         {
+          "role": "pm_source",
+          "file_id": "1xJ2Vb0R01nT2zgoEUBk6y_5EVo0RbcYZ",
+          "md5": "3479c14717b524cf24a0fcd5dc591fef",
+          "name": "River Falls Owner Report Oct 2026.pdf",
+          "uploaded_at": "2026-09-29T06:05:45.340000Z"
+         },
+         {
+          "role": "cornerstone_balance_sheet",
+          "file_id": "1foFcViU0vpoGc9A2pDhEKrc7d2MFBS56",
+          "md5": "c03ca398ddd5f772dd809c8bec694066",
+          "name": "River Falls Balance Sheet Oct 2026.pdf",
+          "uploaded_at": "2026-09-29T06:05:50.210000Z"
+         },
+         {
+          "role": "cornerstone_profit_loss_ytd",
+          "file_id": "19w4WoCm8r-3WqA4arDlXh12_JJvvj4tU",
+          "md5": "a79af3709f06fb425c7f8d13afca7bf6",
+          "name": "River Falls P&L YTD Oct 2026.pdf",
+          "uploaded_at": "2026-09-29T06:07:06.483000Z"
+         },
+         {
+          "role": "cornerstone_distribution_schedule",
+          "file_id": "15i8BfpBR78i_UbOI2vIvX4vFR4fxZDrr",
+          "md5": "54b3eaebbdaa134144cd29ac797fda91",
+          "name": "River Falls Distribution Schedule Oct 2026.pdf",
+          "uploaded_at": "2026-09-29T06:07:09.315000Z"
+         }
+        ],
+        "review_codes": []
+       },
+       {
+        "version": 2,
+        "built_at": "2026-09-29T12:15:17.127660Z",
+        "status": "built",
+        "fingerprint": "11aa0fb318af929ede3d255e2fb5ebf80c0c97508fa6e7cf9436abfa18bc273b",
+        "output_file": "River Falls - Investor Report - October 2026 - v2.pdf",
+        "inputs": [
+         {
+          "role": "pm_source",
+          "file_id": "1xJ2Vb0R01nT2zgoEUBk6y_5EVo0RbcYZ",
+          "md5": "3479c14717b524cf24a0fcd5dc591fef",
+          "name": "River Falls Owner Report Oct 2026.pdf",
+          "uploaded_at": "2026-09-29T06:05:45.340000Z"
+         },
+         {
+          "role": "cornerstone_balance_sheet",
+          "file_id": "1jWrGhSRe-5Y9DKAQtMyVXtkrGm7et7F8",
+          "md5": "227aa8001d4e1b8c15319eee4d724d56",
+          "name": "River Falls Balance Sheet Oct 2026 reissued.pdf",
+          "uploaded_at": "2026-09-29T10:46:41.207000Z"
+         },
+         {
+          "role": "cornerstone_profit_loss_ytd",
+          "file_id": "1DZGx_4ii5f9aKU9fJAUJg9ql9ncFWm2w",
+          "md5": "5f7eefe4609ef215b353bba35030781d",
+          "name": "River Falls P&L YTD Oct 2026 corrected.pdf",
+          "uploaded_at": "2026-09-29T07:55:12.138000Z"
+         },
+         {
+          "role": "cornerstone_distribution_schedule",
+          "file_id": "15i8BfpBR78i_UbOI2vIvX4vFR4fxZDrr",
+          "md5": "54b3eaebbdaa134144cd29ac797fda91",
+          "name": "River Falls Distribution Schedule Oct 2026.pdf",
+          "uploaded_at": "2026-09-29T06:07:09.315000Z"
+         }
+        ],
+        "review_codes": []
+       }
+      ],
+      "attempts": []
+     }
+    },
+    "2026-09 September": {
+     "components": {
+      "4 - Distribution Schedule": [
+       {
+        "name": "River Falls Distribution Schedule Sep 2026.pdf",
+        "id": "1ZBiUZmYexoo2KEXTwsE8dVkdpBKrBkwJ",
+        "mime": "application/pdf",
+        "md5": "54b3eaebbdaa134144cd29ac797fda91",
+        "created": "2026-09-29T05:36:27.422Z",
+        "modified": "2026-09-29T05:36:27.422Z",
+        "size": 213801
+       }
+      ],
+      "3 - Profit and Loss": [
+       {
+        "name": "River Falls P&L YTD Sep 2026.pdf",
+        "id": "1fSRDv2MllQqppRQhcrSu8SU3mljICRLi",
+        "mime": "application/pdf",
+        "md5": "a79af3709f06fb425c7f8d13afca7bf6",
+        "created": "2026-09-29T05:36:24.640Z",
+        "modified": "2026-09-29T05:36:24.640Z",
+        "size": 32992
+       }
+      ],
+      "2 - Balance Sheet": [
+       {
+        "name": "SUPERSEDED - River Falls Balance Sheet Sep 2026.pdf",
+        "id": "1ZoL7Cfaxu5kePo1yNPy2iKKl352dzx1C",
+        "mime": "application/pdf",
+        "md5": "c03ca398ddd5f772dd809c8bec694066",
+        "created": "2026-09-29T05:36:21.548Z",
+        "modified": "2026-09-29T11:01:21.716Z",
+        "size": 34915
+       },
+       {
+        "name": "River Falls Balance Sheet Sep 2026 reissued.pdf",
+        "id": "19KuP5YvavPtTf6WCMA2dpEFWwv9CzTYu",
+        "mime": "application/pdf",
+        "md5": "227aa8001d4e1b8c15319eee4d724d56",
+        "created": "2026-09-29T10:45:43.875Z",
+        "modified": "2026-09-29T10:45:43.875Z",
+        "size": 34986
+       }
+      ],
+      "1 - Property Manager Report": [
+       {
+        "name": "SUPERSEDED - River Falls Sept owner package.pdf",
+        "id": "1N1VexO8Kz3bl0gNDOay61ic2YO6Ig0Ut",
+        "mime": "application/pdf",
+        "md5": "6a1fb7cd0fea6c763c22c5c145e7f636",
+        "created": "2026-09-29T05:35:32.568Z",
+        "modified": "2026-09-29T07:31:12.968Z",
+        "size": 57755
+       },
+       {
+        "name": "River Falls Monthly Report Sep 2026.pdf",
+        "id": "1D8qcLaGqydikNKkbtra5djs8cMEGyBa-",
+        "mime": "application/pdf",
+        "md5": "3479c14717b524cf24a0fcd5dc591fef",
+        "created": "2026-09-29T07:10:21.616Z",
+        "modified": "2026-09-29T07:10:21.616Z",
+        "size": 1754014
+       },
+       {
+        "name": "Photo of rent roll.jpg",
+        "id": "1MVWPFR6DaxlJCfTkRGtswwECBe1aqW0N",
+        "mime": "image/jpeg",
+        "md5": "870e07841eb01b05efe9e02009a00316",
+        "created": "2026-09-29T05:35:42.485Z",
+        "modified": "2026-09-29T05:35:42.485Z",
+        "size": 14001
+       },
+       {
+        "name": "Notes for Cornerstone.docx",
+        "id": "1S3_l3gkmUniLaPLcDhm7UcXaEewCNy9O",
+        "mime": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+        "md5": "08c76b8963e08c8d9a39eb8f76542515",
+        "created": "2026-09-29T05:35:37.610Z",
+        "modified": "2026-09-29T05:35:37.610Z",
+        "size": 47
+       }
+      ]
+     },
+     "loose": [],
+     "output": {
+      "status": [
+       "Built v2 (current)"
+      ],
+      "pdfs": [
+       "River Falls - Investor Report - September 2026 - v1.pdf",
+       "River Falls - Investor Report - September 2026 - v2.pdf"
+      ],
+      "reviews": [],
+      "other": []
+     },
+     "state": {
+      "versions": [
+       {
+        "version": 1,
+        "built_at": "2026-09-29T08:33:20.627096Z",
+        "status": "built",
+        "fingerprint": "a5029dae53661da9568af6cb6018d2b51ede0371b520181933021022cb5e3b64",
+        "output_file": "River Falls - Investor Report - September 2026 - v1.pdf",
+        "inputs": [
+         {
+          "role": "pm_source",
+          "file_id": "1D8qcLaGqydikNKkbtra5djs8cMEGyBa-",
+          "md5": "3479c14717b524cf24a0fcd5dc591fef",
+          "name": "River Falls Monthly Report Sep 2026.pdf",
+          "uploaded_at": "2026-09-29T07:10:21.616000Z"
+         },
+         {
+          "role": "cornerstone_balance_sheet",
+          "file_id": "1ZoL7Cfaxu5kePo1yNPy2iKKl352dzx1C",
+          "md5": "c03ca398ddd5f772dd809c8bec694066",
+          "name": "River Falls Balance Sheet Sep 2026.pdf",
+          "uploaded_at": "2026-09-29T05:36:21.548000Z"
+         },
+         {
+          "role": "cornerstone_profit_loss_ytd",
+          "file_id": "1fSRDv2MllQqppRQhcrSu8SU3mljICRLi",
+          "md5": "a79af3709f06fb425c7f8d13afca7bf6",
+          "name": "River Falls P&L YTD Sep 2026.pdf",
+          "uploaded_at": "2026-09-29T05:36:24.640000Z"
+         },
+         {
+          "role": "cornerstone_distribution_schedule",
+          "file_id": "1ZBiUZmYexoo2KEXTwsE8dVkdpBKrBkwJ",
+          "md5": "54b3eaebbdaa134144cd29ac797fda91",
+          "name": "River Falls Distribution Schedule Sep 2026.pdf",
+          "uploaded_at": "2026-09-29T05:36:27.422000Z"
+         }
+        ],
+        "review_codes": []
+       },
+       {
+        "version": 2,
+        "built_at": "2026-09-29T12:04:45.708121Z",
+        "status": "built",
+        "fingerprint": "0364d7e88a94cc648173dcb2a4ed5d5b981b96b4a8b238d14f80cd3d8fc7828d",
+        "output_file": "River Falls - Investor Report - September 2026 - v2.pdf",
+        "inputs": [
+         {
+          "role": "pm_source",
+          "file_id": "1D8qcLaGqydikNKkbtra5djs8cMEGyBa-",
+          "md5": "3479c14717b524cf24a0fcd5dc591fef",
+          "name": "River Falls Monthly Report Sep 2026.pdf",
+          "uploaded_at": "2026-09-29T07:10:21.616000Z"
+         },
+         {
+          "role": "cornerstone_balance_sheet",
+          "file_id": "19KuP5YvavPtTf6WCMA2dpEFWwv9CzTYu",
+          "md5": "227aa8001d4e1b8c15319eee4d724d56",
+          "name": "River Falls Balance Sheet Sep 2026 reissued.pdf",
+          "uploaded_at": "2026-09-29T10:45:43.875000Z"
+         },
+         {
+          "role": "cornerstone_profit_loss_ytd",
+          "file_id": "1fSRDv2MllQqppRQhcrSu8SU3mljICRLi",
+          "md5": "a79af3709f06fb425c7f8d13afca7bf6",
+          "name": "River Falls P&L YTD Sep 2026.pdf",
+          "uploaded_at": "2026-09-29T05:36:24.640000Z"
+         },
+         {
+          "role": "cornerstone_distribution_schedule",
+          "file_id": "1ZBiUZmYexoo2KEXTwsE8dVkdpBKrBkwJ",
+          "md5": "54b3eaebbdaa134144cd29ac797fda91",
+          "name": "River Falls Distribution Schedule Sep 2026.pdf",
+          "uploaded_at": "2026-09-29T05:36:27.422000Z"
+         }
+        ],
+        "review_codes": []
+       }
+      ],
+      "attempts": []
+     }
+    },
+    "2026-06 June": {
+     "components": {},
+     "loose": [],
+     "output": null,
+     "state": null,
+     "other_folders": [
+      "inputs"
+     ]
+    }
+   },
+   "loose": []
+  },
+  "bridgewater": {
+   "months": {
+    "2026-10 October": {
+     "components": {
+      "4 - Distribution Schedule": [
+       {
+        "name": "Bridgewater Distribution Schedule Oct 2026.pdf",
+        "id": "16vtdA0Cce9g30uRdC1wbPn7Q0sRJmaEp",
+        "mime": "application/pdf",
+        "md5": "9adecfd98c20a12ee6dbc7a820ae202d",
+        "created": "2026-09-29T06:07:18.926Z",
+        "modified": "2026-09-29T06:07:18.926Z",
+        "size": 468117
+       }
+      ],
+      "3 - Profit and Loss": [
+       {
+        "name": "Bridgewater P&L YTD Oct 2026.pdf",
+        "id": "1FYPJEPk2R_B0n6NWSnX2bDPh01vNtSL8",
+        "mime": "application/pdf",
+        "md5": "495452d5f5794a9e460a0a9b6d50eef9",
+        "created": "2026-09-29T06:07:13.533Z",
+        "modified": "2026-09-29T06:07:13.533Z",
+        "size": 54574
+       }
+      ],
+      "2 - Balance Sheet": [
+       {
+        "name": "SUPERSEDED - Bridgewater Balance Sheet Oct 2026 - from Ben.pdf",
+        "id": "1gVhkJK9t0icMnBm9n1x4TdbWLnU8eGxk",
+        "mime": "application/pdf",
+        "md5": "e838e68846bec3cbfa2d080891802d51",
+        "created": "2026-09-29T07:40:36.061Z",
+        "modified": "2026-09-29T11:01:53.419Z",
+        "size": 55985
+       },
+       {
+        "name": "Bridgewater Balance Sheet Oct 2026 reissued.pdf",
+        "id": "1r60rCIAPn3mGwlXiN4_quimSl7iHDy5O",
+        "mime": "application/pdf",
+        "md5": "997e24ef7b68161c7404c58f5b20a392",
+        "created": "2026-09-29T10:46:44.509Z",
+        "modified": "2026-09-29T10:46:44.509Z",
+        "size": 55973
+       },
+       {
+        "name": "SUPERSEDED - Bridgewater Balance Sheet Oct 2026.pdf",
+        "id": "1chAN8mrHodApqk79uTHZZsDofb7teLmT",
+        "mime": "application/pdf",
+        "md5": "0ebb64bfe054ab59edb7c0a3dd346b21",
+        "created": "2026-09-29T06:05:56.561Z",
+        "modified": "2026-09-29T08:03:44.850Z",
+        "size": 55902
+       },
+       {
+        "name": "SUPERSEDED - Bridgewater Balance Sheet Oct 2026 - from Anna.pdf",
+        "id": "1pnkEambqDAt255C1nGicXZSJ3QH1XQvz",
+        "mime": "application/pdf",
+        "md5": "ad4baede6b3436e3c04a6b4879a4cc27",
+        "created": "2026-09-29T07:40:33.111Z",
+        "modified": "2026-09-29T08:03:43.799Z",
+        "size": 55975
+       }
+      ],
+      "1 - Property Manager Report": [
+       {
+        "name": "Bridgewater Owner Report Oct 2026.pdf",
+        "id": "1EKJ39okCIUaGkoYgQXoWqKcwaXmOlJ1Z",
+        "mime": "application/pdf",
+        "md5": "8eaf96f293d88b72675f04f13a117b74",
+        "created": "2026-09-29T06:05:53.218Z",
+        "modified": "2026-09-29T06:05:53.218Z",
+        "size": 387179
+       }
+      ]
+     },
+     "loose": [],
+     "output": {
+      "status": [
+       "Built v3 (current)"
+      ],
+      "pdfs": [
+       "Bridgewater - Investor Report - October 2026 - v1.pdf",
+       "Bridgewater - Investor Report - October 2026 - v2.pdf",
+       "Bridgewater - Investor Report - October 2026 - v3.pdf"
+      ],
+      "reviews": [],
+      "other": []
+     },
+     "state": {
+      "versions": [
+       {
+        "version": 1,
+        "built_at": "2026-09-29T07:31:50.763602Z",
+        "status": "built",
+        "fingerprint": "8abf7d6580f8b1f20ef28947ffd040f072fcdd8149e8bdbeac00c79fbf720c6d",
+        "output_file": "Bridgewater - Investor Report - October 2026 - v1.pdf",
+        "inputs": [
+         {
+          "role": "pm_source",
+          "file_id": "1EKJ39okCIUaGkoYgQXoWqKcwaXmOlJ1Z",
+          "md5": "8eaf96f293d88b72675f04f13a117b74",
+          "name": "Bridgewater Owner Report Oct 2026.pdf",
+          "uploaded_at": "2026-09-29T06:05:53.218000Z"
+         },
+         {
+          "role": "cornerstone_balance_sheet",
+          "file_id": "1chAN8mrHodApqk79uTHZZsDofb7teLmT",
+          "md5": "0ebb64bfe054ab59edb7c0a3dd346b21",
+          "name": "Bridgewater Balance Sheet Oct 2026.pdf",
+          "uploaded_at": "2026-09-29T06:05:56.561000Z"
+         },
+         {
+          "role": "cornerstone_profit_loss_ytd",
+          "file_id": "1FYPJEPk2R_B0n6NWSnX2bDPh01vNtSL8",
+          "md5": "495452d5f5794a9e460a0a9b6d50eef9",
+          "name": "Bridgewater P&L YTD Oct 2026.pdf",
+          "uploaded_at": "2026-09-29T06:07:13.533000Z"
+         },
+         {
+          "role": "cornerstone_distribution_schedule",
+          "file_id": "16vtdA0Cce9g30uRdC1wbPn7Q0sRJmaEp",
+          "md5": "9adecfd98c20a12ee6dbc7a820ae202d",
+          "name": "Bridgewater Distribution Schedule Oct 2026.pdf",
+          "uploaded_at": "2026-09-29T06:07:18.926000Z"
+         }
+        ],
+        "review_codes": []
+       },
+       {
+        "version": 2,
+        "built_at": "2026-09-29T09:33:59.697654Z",
+        "status": "built",
+        "fingerprint": "c75a45febb9744293cd80f01c9d4e35b3cfce203835677514b8ba50e3781217e",
+        "output_file": "Bridgewater - Investor Report - October 2026 - v2.pdf",
+        "inputs": [
+         {
+          "role": "pm_source",
+          "file_id": "1EKJ39okCIUaGkoYgQXoWqKcwaXmOlJ1Z",
+          "md5": "8eaf96f293d88b72675f04f13a117b74",
+          "name": "Bridgewater Owner Report Oct 2026.pdf",
+          "uploaded_at": "2026-09-29T06:05:53.218000Z"
+         },
+         {
+          "role": "cornerstone_balance_sheet",
+          "file_id": "1gVhkJK9t0icMnBm9n1x4TdbWLnU8eGxk",
+          "md5": "e838e68846bec3cbfa2d080891802d51",
+          "name": "Bridgewater Balance Sheet Oct 2026 - from Ben.pdf",
+          "uploaded_at": "2026-09-29T07:40:36.061000Z"
+         },
+         {
+          "role": "cornerstone_profit_loss_ytd",
+          "file_id": "1FYPJEPk2R_B0n6NWSnX2bDPh01vNtSL8",
+          "md5": "495452d5f5794a9e460a0a9b6d50eef9",
+          "name": "Bridgewater P&L YTD Oct 2026.pdf",
+          "uploaded_at": "2026-09-29T06:07:13.533000Z"
+         },
+         {
+          "role": "cornerstone_distribution_schedule",
+          "file_id": "16vtdA0Cce9g30uRdC1wbPn7Q0sRJmaEp",
+          "md5": "9adecfd98c20a12ee6dbc7a820ae202d",
+          "name": "Bridgewater Distribution Schedule Oct 2026.pdf",
+          "uploaded_at": "2026-09-29T06:07:18.926000Z"
+         }
+        ],
+        "review_codes": []
+       },
+       {
+        "version": 3,
+        "built_at": "2026-09-29T12:11:32.858245Z",
+        "status": "built",
+        "fingerprint": "382905380a8c3984296dc8379f267f65a309d7042cde7a1a723f0319a0020031",
+        "output_file": "Bridgewater - Investor Report - October 2026 - v3.pdf",
+        "inputs": [
+         {
+          "role": "pm_source",
+          "file_id": "1EKJ39okCIUaGkoYgQXoWqKcwaXmOlJ1Z",
+          "md5": "8eaf96f293d88b72675f04f13a117b74",
+          "name": "Bridgewater Owner Report Oct 2026.pdf",
+          "uploaded_at": "2026-09-29T06:05:53.218000Z"
+         },
+         {
+          "role": "cornerstone_balance_sheet",
+          "file_id": "1r60rCIAPn3mGwlXiN4_quimSl7iHDy5O",
+          "md5": "997e24ef7b68161c7404c58f5b20a392",
+          "name": "Bridgewater Balance Sheet Oct 2026 reissued.pdf",
+          "uploaded_at": "2026-09-29T10:46:44.509000Z"
+         },
+         {
+          "role": "cornerstone_profit_loss_ytd",
+          "file_id": "1FYPJEPk2R_B0n6NWSnX2bDPh01vNtSL8",
+          "md5": "495452d5f5794a9e460a0a9b6d50eef9",
+          "name": "Bridgewater P&L YTD Oct 2026.pdf",
+          "uploaded_at": "2026-09-29T06:07:13.533000Z"
+         },
+         {
+          "role": "cornerstone_distribution_schedule",
+          "file_id": "16vtdA0Cce9g30uRdC1wbPn7Q0sRJmaEp",
+          "md5": "9adecfd98c20a12ee6dbc7a820ae202d",
+          "name": "Bridgewater Distribution Schedule Oct 2026.pdf",
+          "uploaded_at": "2026-09-29T06:07:18.926000Z"
+         }
+        ],
+        "review_codes": []
+       }
+      ],
+      "attempts": []
+     }
+    },
+    "2026-09 September": {
+     "components": {
+      "4 - Distribution Schedule": [
+       {
+        "name": "Bridgewater Distribution Schedule Sep 2026.pdf",
+        "id": "1mIoE4T6x1cDtdAGGcSBJTJKV3AgcjUAg",
+        "mime": "application/pdf",
+        "md5": "9adecfd98c20a12ee6dbc7a820ae202d",
+        "created": "2026-09-29T05:36:33.195Z",
+        "modified": "2026-09-29T05:36:33.195Z",
+        "size": 468117
+       }
+      ],
+      "3 - Profit and Loss": [
+       {
+        "name": "Bridgewater P&L YTD Sep 2026.pdf",
+        "id": "1xAKJyIMRBq6y780A5b5EVyoGPBQXEOxc",
+        "mime": "application/pdf",
+        "md5": "495452d5f5794a9e460a0a9b6d50eef9",
+        "created": "2026-09-29T05:36:30.208Z",
+        "modified": "2026-09-29T05:36:30.208Z",
+        "size": 54574
+       }
+      ],
+      "2 - Balance Sheet": [
+       {
+        "name": "SUPERSEDED - Bridgewater Balance Sheet Sep 2026 (correct).pdf",
+        "id": "1d74sLsETKuLpO8c7FH1IS5lS2QT8yJas",
+        "mime": "application/pdf",
+        "md5": "0ebb64bfe054ab59edb7c0a3dd346b21",
+        "created": "2026-09-29T07:10:25.943Z",
+        "modified": "2026-09-29T11:00:49.871Z",
+        "size": 55902
+       },
+       {
+        "name": "Bridgewater Balance Sheet Sep 2026 reissued.pdf",
+        "id": "1ykQ2Gr7Gj9z5Ov-eH_vwPSDPHjxOTlbR",
+        "mime": "application/pdf",
+        "md5": "997e24ef7b68161c7404c58f5b20a392",
+        "created": "2026-09-29T10:46:02.637Z",
+        "modified": "2026-09-29T10:46:02.637Z",
+        "size": 55973
+       },
+       {
+        "name": "SUPERSEDED - Bridgewater Balance Sheet Sep 2026.pdf",
+        "id": "1t22bcaC9Ziam9TtAG64gWM6nbYQRm0oJ",
+        "mime": "application/pdf",
+        "md5": "495452d5f5794a9e460a0a9b6d50eef9",
+        "created": "2026-09-29T05:35:48.417Z",
+        "modified": "2026-09-29T07:30:52.448Z",
+        "size": 54574
+       }
+      ],
+      "1 - Property Manager Report": [
+       {
+        "name": "Bridgewater Owner Report Sep 2026.pdf",
+        "id": "1d6Df6oOCZ8OZPZeMuns4bbRLLYsJ63it",
+        "mime": "application/pdf",
+        "md5": "8eaf96f293d88b72675f04f13a117b74",
+        "created": "2026-09-29T05:35:45.389Z",
+        "modified": "2026-09-29T05:35:45.389Z",
+        "size": 387179
+       }
+      ]
+     },
+     "loose": [],
+     "output": {
+      "status": [
+       "Built v3 (current)"
+      ],
+      "pdfs": [
+       "Bridgewater - Investor Report - September 2026 - v1 - NEEDS REVIEW.pdf",
+       "Bridgewater - Investor Report - September 2026 - v2.pdf",
+       "Bridgewater - Investor Report - September 2026 - v3.pdf"
+      ],
+      "reviews": [
+       "REVIEW - v1.md"
+      ],
+      "other": []
+     },
+     "state": {
+      "versions": [
+       {
+        "version": 1,
+        "built_at": "2026-09-29T07:00:56.328681Z",
+        "status": "needs_review",
+        "fingerprint": "700db500414f047b9c1b99718fca89d690e1fc9d51cb3b0290d0cf62bd8000f8",
+        "output_file": "Bridgewater - Investor Report - September 2026 - v1 - NEEDS REVIEW.pdf",
+        "inputs": [
+         {
+          "role": "pm_source",
+          "file_id": "1d6Df6oOCZ8OZPZeMuns4bbRLLYsJ63it",
+          "md5": "8eaf96f293d88b72675f04f13a117b74",
+          "name": "Bridgewater Owner Report Sep 2026.pdf",
+          "uploaded_at": "2026-09-29T05:35:45.389000Z"
+         },
+         {
+          "role": "cornerstone_balance_sheet",
+          "file_id": "1t22bcaC9Ziam9TtAG64gWM6nbYQRm0oJ",
+          "md5": "495452d5f5794a9e460a0a9b6d50eef9",
+          "name": "Bridgewater Balance Sheet Sep 2026.pdf",
+          "uploaded_at": "2026-09-29T05:35:48.417000Z"
+         },
+         {
+          "role": "cornerstone_profit_loss_ytd",
+          "file_id": "1xAKJyIMRBq6y780A5b5EVyoGPBQXEOxc",
+          "md5": "495452d5f5794a9e460a0a9b6d50eef9",
+          "name": "Bridgewater P&L YTD Sep 2026.pdf",
+          "uploaded_at": "2026-09-29T05:36:30.208000Z"
+         },
+         {
+          "role": "cornerstone_distribution_schedule",
+          "file_id": "1mIoE4T6x1cDtdAGGcSBJTJKV3AgcjUAg",
+          "md5": "9adecfd98c20a12ee6dbc7a820ae202d",
+          "name": "Bridgewater Distribution Schedule Sep 2026.pdf",
+          "uploaded_at": "2026-09-29T05:36:33.195000Z"
+         }
+        ],
+        "review_codes": [
+         "missing_required",
+         "unmapped_section"
+        ]
+       },
+       {
+        "version": 2,
+        "built_at": "2026-09-29T08:31:09.021905Z",
+        "status": "built",
+        "fingerprint": "dfb6ae089285b1f08a711b60bdcb68962c8b304edf9d3c8b7aa3ab1318b82fff",
+        "output_file": "Bridgewater - Investor Report - September 2026 - v2.pdf",
+        "inputs": [
+         {
+          "role": "pm_source",
+          "file_id": "1d6Df6oOCZ8OZPZeMuns4bbRLLYsJ63it",
+          "md5": "8eaf96f293d88b72675f04f13a117b74",
+          "name": "Bridgewater Owner Report Sep 2026.pdf",
+          "uploaded_at": "2026-09-29T05:35:45.389000Z"
+         },
+         {
+          "role": "cornerstone_balance_sheet",
+          "file_id": "1d74sLsETKuLpO8c7FH1IS5lS2QT8yJas",
+          "md5": "0ebb64bfe054ab59edb7c0a3dd346b21",
+          "name": "Bridgewater Balance Sheet Sep 2026 (correct).pdf",
+          "uploaded_at": "2026-09-29T07:10:25.943000Z"
+         },
+         {
+          "role": "cornerstone_profit_loss_ytd",
+          "file_id": "1xAKJyIMRBq6y780A5b5EVyoGPBQXEOxc",
+          "md5": "495452d5f5794a9e460a0a9b6d50eef9",
+          "name": "Bridgewater P&L YTD Sep 2026.pdf",
+          "uploaded_at": "2026-09-29T05:36:30.208000Z"
+         },
+         {
+          "role": "cornerstone_distribution_schedule",
+          "file_id": "1mIoE4T6x1cDtdAGGcSBJTJKV3AgcjUAg",
+          "md5": "9adecfd98c20a12ee6dbc7a820ae202d",
+          "name": "Bridgewater Distribution Schedule Sep 2026.pdf",
+          "uploaded_at": "2026-09-29T05:36:33.195000Z"
+         }
+        ],
+        "review_codes": []
+       },
+       {
+        "version": 3,
+        "built_at": "2026-09-29T12:00:58.013539Z",
+        "status": "built",
+        "fingerprint": "1b2ff1fe6e543c9e2c7281380446f14ae8082e657589755bf70de017b1b90b2b",
+        "output_file": "Bridgewater - Investor Report - September 2026 - v3.pdf",
+        "inputs": [
+         {
+          "role": "pm_source",
+          "file_id": "1d6Df6oOCZ8OZPZeMuns4bbRLLYsJ63it",
+          "md5": "8eaf96f293d88b72675f04f13a117b74",
+          "name": "Bridgewater Owner Report Sep 2026.pdf",
+          "uploaded_at": "2026-09-29T05:35:45.389000Z"
+         },
+         {
+          "role": "cornerstone_balance_sheet",
+          "file_id": "1ykQ2Gr7Gj9z5Ov-eH_vwPSDPHjxOTlbR",
+          "md5": "997e24ef7b68161c7404c58f5b20a392",
+          "name": "Bridgewater Balance Sheet Sep 2026 reissued.pdf",
+          "uploaded_at": "2026-09-29T10:46:02.637000Z"
+         },
+         {
+          "role": "cornerstone_profit_loss_ytd",
+          "file_id": "1xAKJyIMRBq6y780A5b5EVyoGPBQXEOxc",
+          "md5": "495452d5f5794a9e460a0a9b6d50eef9",
+          "name": "Bridgewater P&L YTD Sep 2026.pdf",
+          "uploaded_at": "2026-09-29T05:36:30.208000Z"
+         },
+         {
+          "role": "cornerstone_distribution_schedule",
+          "file_id": "1mIoE4T6x1cDtdAGGcSBJTJKV3AgcjUAg",
+          "md5": "9adecfd98c20a12ee6dbc7a820ae202d",
+          "name": "Bridgewater Distribution Schedule Sep 2026.pdf",
+          "uploaded_at": "2026-09-29T05:36:33.195000Z"
+         }
+        ],
+        "review_codes": []
+       }
+      ],
+      "attempts": []
+     }
+    },
+    "2026-06 June": {
+     "components": {},
+     "loose": [],
+     "output": null,
+     "state": null,
+     "other_folders": [
+      "inputs"
+     ]
+    }
+   },
+   "loose": []
+  },
+  "salmon-crossing": {
+   "months": {
+    "2026-10 October": {
+     "components": {
+      "4 - Distribution Schedule": [
+       {
+        "name": "Salmon Crossing Distribution Schedule Oct 2026.pdf",
+        "id": "1ZrDz0zPVWqKpdXdgil91rdMaFysLVNVJ",
+        "mime": "application/pdf",
+        "md5": "8ed7855ff9129ab82ec5371b2250a293",
+        "created": "2026-09-29T06:07:25.016Z",
+        "modified": "2026-09-29T06:07:25.016Z",
+        "size": 211437
+       }
+      ],
+      "3 - Profit and Loss": [
+       {
+        "name": "SUPERSEDED - Salmon Crossing P&L YTD Oct 2026.pdf",
+        "id": "1zglUM0R9J8YZ0dWnaltvPgzvFBnPvZHX",
+        "mime": "application/pdf",
+        "md5": "2c031bf08dc8e8ebb777cbd2b99819e5",
+        "created": "2026-09-29T06:07:22.130Z",
+        "modified": "2026-09-29T09:37:15.028Z",
+        "size": 54034
+       },
+       {
+        "name": "Salmon Crossing P&L YTD Oct 2026 corrected.pdf",
+        "id": "1UtjDQIMnLNV64zWy_JjYH_vcRaMDnpnB",
+        "mime": "application/pdf",
+        "md5": "001d934271c9d03a7e9627c3b937f44f",
+        "created": "2026-09-29T08:40:30.120Z",
+        "modified": "2026-09-29T08:40:30.120Z",
+        "size": 54107
+       }
+      ],
+      "2 - Balance Sheet": [
+       {
+        "name": "SUPERSEDED - Salmon Crossing Balance Sheet Oct 2026.pdf",
+        "id": "1Be-cfULpOxZnGd02JhZh2SncJcWCBh2d",
+        "mime": "application/pdf",
+        "md5": "4f0b12bb48987fed55694a4a06e87dcd",
+        "created": "2026-09-29T06:06:02.629Z",
+        "modified": "2026-09-29T11:02:33.361Z",
+        "size": 56335
+       },
+       {
+        "name": "Salmon Crossing Balance Sheet Oct 2026 reissued.pdf",
+        "id": "1wZCxGuUbdJq8cs4CI322s2YHlEz7000g",
+        "mime": "application/pdf",
+        "md5": "a788b0b4f815ce1cc813ccbc3219e43a",
+        "created": "2026-09-29T10:47:02.147Z",
+        "modified": "2026-09-29T10:47:02.147Z",
+        "size": 56406
+       }
+      ],
+      "1 - Property Manager Report": [
+       {
+        "name": "Salmon Crossing Owner Report Oct 2026.pdf",
+        "id": "1g79PR0Mb4BvZfNxXHGTYT0n1XzRbHB31",
+        "mime": "application/pdf",
+        "md5": "67c1902bc8147c903ceaf88bd20031ed",
+        "created": "2026-09-29T06:05:59.402Z",
+        "modified": "2026-09-29T06:05:59.402Z",
+        "size": 357552
+       }
+      ]
+     },
+     "loose": [],
+     "output": {
+      "status": [
+       "Built v3 (current)"
+      ],
+      "pdfs": [
+       "Salmon Crossing - Investor Report - October 2026 - v2.pdf",
+       "Salmon Crossing - Investor Report - October 2026 - v3.pdf"
+      ],
+      "reviews": [],
+      "other": []
+     },
+     "state": {
+      "versions": [
+       {
+        "version": 1,
+        "built_at": "2026-09-29T07:44:46.955793Z",
+        "status": "built",
+        "fingerprint": "9139c0477a99727011dfa726614d5a70d6b42e8abd1f31f15481bc7208fc7e55",
+        "output_file": "Salmon Crossing - Investor Report - October 2026 - v1.pdf",
+        "inputs": [
+         {
+          "role": "pm_source",
+          "file_id": "1g79PR0Mb4BvZfNxXHGTYT0n1XzRbHB31",
+          "md5": "67c1902bc8147c903ceaf88bd20031ed",
+          "name": "Salmon Crossing Owner Report Oct 2026.pdf",
+          "uploaded_at": "2026-09-29T06:05:59.402000Z"
+         },
+         {
+          "role": "cornerstone_balance_sheet",
+          "file_id": "1Be-cfULpOxZnGd02JhZh2SncJcWCBh2d",
+          "md5": "4f0b12bb48987fed55694a4a06e87dcd",
+          "name": "Salmon Crossing Balance Sheet Oct 2026.pdf",
+          "uploaded_at": "2026-09-29T06:06:02.629000Z"
+         },
+         {
+          "role": "cornerstone_profit_loss_ytd",
+          "file_id": "1zglUM0R9J8YZ0dWnaltvPgzvFBnPvZHX",
+          "md5": "2c031bf08dc8e8ebb777cbd2b99819e5",
+          "name": "Salmon Crossing P&L YTD Oct 2026.pdf",
+          "uploaded_at": "2026-09-29T06:07:22.130000Z"
+         },
+         {
+          "role": "cornerstone_distribution_schedule",
+          "file_id": "1ZrDz0zPVWqKpdXdgil91rdMaFysLVNVJ",
+          "md5": "8ed7855ff9129ab82ec5371b2250a293",
+          "name": "Salmon Crossing Distribution Schedule Oct 2026.pdf",
+          "uploaded_at": "2026-09-29T06:07:25.016000Z"
+         }
+        ],
+        "review_codes": []
+       },
+       {
+        "version": 2,
+        "built_at": "2026-09-29T10:03:34.445944Z",
+        "status": "built",
+        "fingerprint": "8007dc303838e1f6e2e1e3d8f6bd6aea9964c8de974f4c6d3f9d24c85cb88b79",
+        "output_file": "Salmon Crossing - Investor Report - October 2026 - v2.pdf",
+        "inputs": [
+         {
+          "role": "pm_source",
+          "file_id": "1g79PR0Mb4BvZfNxXHGTYT0n1XzRbHB31",
+          "md5": "67c1902bc8147c903ceaf88bd20031ed",
+          "name": "Salmon Crossing Owner Report Oct 2026.pdf",
+          "uploaded_at": "2026-09-29T06:05:59.402000Z"
+         },
+         {
+          "role": "cornerstone_balance_sheet",
+          "file_id": "1Be-cfULpOxZnGd02JhZh2SncJcWCBh2d",
+          "md5": "4f0b12bb48987fed55694a4a06e87dcd",
+          "name": "Salmon Crossing Balance Sheet Oct 2026.pdf",
+          "uploaded_at": "2026-09-29T06:06:02.629000Z"
+         },
+         {
+          "role": "cornerstone_profit_loss_ytd",
+          "file_id": "1UtjDQIMnLNV64zWy_JjYH_vcRaMDnpnB",
+          "md5": "001d934271c9d03a7e9627c3b937f44f",
+          "name": "Salmon Crossing P&L YTD Oct 2026 corrected.pdf",
+          "uploaded_at": "2026-09-29T08:40:30.120000Z"
+         },
+         {
+          "role": "cornerstone_distribution_schedule",
+          "file_id": "1ZrDz0zPVWqKpdXdgil91rdMaFysLVNVJ",
+          "md5": "8ed7855ff9129ab82ec5371b2250a293",
+          "name": "Salmon Crossing Distribution Schedule Oct 2026.pdf",
+          "uploaded_at": "2026-09-29T06:07:25.016000Z"
+         }
+        ],
+        "review_codes": []
+       },
+       {
+        "version": 3,
+        "built_at": "2026-09-29T12:16:54.672126Z",
+        "status": "built",
+        "fingerprint": "57cf55571c62d0c7792a1c507ad389776879dd16613605c267acc888bae6ba34",
+        "output_file": "Salmon Crossing - Investor Report - October 2026 - v3.pdf",
+        "inputs": [
+         {
+          "role": "pm_source",
+          "file_id": "1g79PR0Mb4BvZfNxXHGTYT0n1XzRbHB31",
+          "md5": "67c1902bc8147c903ceaf88bd20031ed",
+          "name": "Salmon Crossing Owner Report Oct 2026.pdf",
+          "uploaded_at": "2026-09-29T06:05:59.402000Z"
+         },
+         {
+          "role": "cornerstone_balance_sheet",
+          "file_id": "1wZCxGuUbdJq8cs4CI322s2YHlEz7000g",
+          "md5": "a788b0b4f815ce1cc813ccbc3219e43a",
+          "name": "Salmon Crossing Balance Sheet Oct 2026 reissued.pdf",
+          "uploaded_at": "2026-09-29T10:47:02.147000Z"
+         },
+         {
+          "role": "cornerstone_profit_loss_ytd",
+          "file_id": "1UtjDQIMnLNV64zWy_JjYH_vcRaMDnpnB",
+          "md5": "001d934271c9d03a7e9627c3b937f44f",
+          "name": "Salmon Crossing P&L YTD Oct 2026 corrected.pdf",
+          "uploaded_at": "2026-09-29T08:40:30.120000Z"
+         },
+         {
+          "role": "cornerstone_distribution_schedule",
+          "file_id": "1ZrDz0zPVWqKpdXdgil91rdMaFysLVNVJ",
+          "md5": "8ed7855ff9129ab82ec5371b2250a293",
+          "name": "Salmon Crossing Distribution Schedule Oct 2026.pdf",
+          "uploaded_at": "2026-09-29T06:07:25.016000Z"
+         }
+        ],
+        "review_codes": []
+       }
+      ],
+      "attempts": []
+     }
+    },
+    "2026-09 September": {
+     "components": {
+      "4 - Distribution Schedule": [
+       {
+        "name": "Salmon Crossing Distribution Schedule Sep 2026.pdf",
+        "id": "1Yk4FNzo1OIKA4szGFmx6e1xdocquimwk",
+        "mime": "application/pdf",
+        "md5": "8ed7855ff9129ab82ec5371b2250a293",
+        "created": "2026-09-29T05:36:41.087Z",
+        "modified": "2026-09-29T05:36:41.087Z",
+        "size": 211437
+       }
+      ],
+      "3 - Profit and Loss": [
+       {
+        "name": "Salmon Crossing P&L YTD Sep 2026.pdf",
+        "id": "1l-j2u3oKLC3S-Ij_QbsSOklk26w9stlJ",
+        "mime": "application/pdf",
+        "md5": "2c031bf08dc8e8ebb777cbd2b99819e5",
+        "created": "2026-09-29T05:36:38.408Z",
+        "modified": "2026-09-29T05:36:38.408Z",
+        "size": 54034
+       }
+      ],
+      "2 - Balance Sheet": [
+       {
+        "name": "SUPERSEDED - Salmon Crossing Balance Sheet Sep 2026.pdf",
+        "id": "1yvBNXcag9YmWFJiZ6KhR47mit5bPjDDG",
+        "mime": "application/pdf",
+        "md5": "4f0b12bb48987fed55694a4a06e87dcd",
+        "created": "2026-09-29T05:36:35.708Z",
+        "modified": "2026-09-29T11:01:31.255Z",
+        "size": 56335
+       },
+       {
+        "name": "Salmon Crossing Balance Sheet Sep 2026 reissued.pdf",
+        "id": "18_s1Q2cmB1H41YeO5ZgU0UA-jjsglNTM",
+        "mime": "application/pdf",
+        "md5": "a788b0b4f815ce1cc813ccbc3219e43a",
+        "created": "2026-09-29T10:46:05.385Z",
+        "modified": "2026-09-29T10:46:05.385Z",
+        "size": 56406
+       }
+      ],
+      "1 - Property Manager Report": [
+       {
+        "name": "SUPERSEDED - Salmon Crossing Owner Report Sep 2026.pdf",
+        "id": "1GpYO8yVPf9cxQ0zI_26rF4HjEzOY0SvZ",
+        "mime": "application/pdf",
+        "md5": "8eaf96f293d88b72675f04f13a117b74",
+        "created": "2026-09-29T05:35:52.149Z",
+        "modified": "2026-09-29T07:31:21.298Z",
+        "size": 387179
+       },
+       {
+        "name": "Salmon Crossing Owner Report Sep 2026 (corrected).pdf",
+        "id": "1JVrcX0fSREUcSmb_Plt-5IIAgMdK13aQ",
+        "mime": "application/pdf",
+        "md5": "67c1902bc8147c903ceaf88bd20031ed",
+        "created": "2026-09-29T07:10:34.064Z",
+        "modified": "2026-09-29T07:10:34.064Z",
+        "size": 357552
+       }
+      ]
+     },
+     "loose": [
+      {
+       "name": "Balance Sheet (dropped in the month folder).pdf",
+       "id": "12wqbpIjFai0xtPqiuOGcBAija-5aybfh",
+       "mime": "application/pdf",
+       "md5": "4f0b12bb48987fed55694a4a06e87dcd",
+       "created": "2026-09-29T05:36:43.831Z",
+       "modified": "2026-09-29T05:36:43.831Z",
+       "size": 56335
+      }
+     ],
+     "output": {
+      "status": [
+       "Built v3 (current)"
+      ],
+      "pdfs": [
+       "Distribution (dropped in output).pdf",
+       "Salmon Crossing - Investor Report - September 2026 - v1.pdf",
+       "Salmon Crossing - Investor Report - September 2026 - v2.pdf",
+       "Salmon Crossing - Investor Report - September 2026 - v3.pdf"
+      ],
+      "reviews": [],
+      "other": []
+     },
+     "state": {
+      "versions": [
+       {
+        "version": 1,
+        "built_at": "2026-09-29T07:05:57.442948Z",
+        "status": "built",
+        "fingerprint": "c42a5396766fb5c5a6da792719ac9fc7d218f685a2bcc2a7a418248d831b131a",
+        "output_file": "Salmon Crossing - Investor Report - September 2026 - v1.pdf",
+        "inputs": [
+         {
+          "role": "pm_source",
+          "file_id": "1GpYO8yVPf9cxQ0zI_26rF4HjEzOY0SvZ",
+          "md5": "8eaf96f293d88b72675f04f13a117b74",
+          "name": "Salmon Crossing Owner Report Sep 2026.pdf",
+          "uploaded_at": "2026-09-29T05:35:52.149000Z"
+         },
+         {
+          "role": "cornerstone_balance_sheet",
+          "file_id": "1yvBNXcag9YmWFJiZ6KhR47mit5bPjDDG",
+          "md5": "4f0b12bb48987fed55694a4a06e87dcd",
+          "name": "Salmon Crossing Balance Sheet Sep 2026.pdf",
+          "uploaded_at": "2026-09-29T05:36:35.708000Z"
+         },
+         {
+          "role": "cornerstone_profit_loss_ytd",
+          "file_id": "1l-j2u3oKLC3S-Ij_QbsSOklk26w9stlJ",
+          "md5": "2c031bf08dc8e8ebb777cbd2b99819e5",
+          "name": "Salmon Crossing P&L YTD Sep 2026.pdf",
+          "uploaded_at": "2026-09-29T05:36:38.408000Z"
+         },
+         {
+          "role": "cornerstone_distribution_schedule",
+          "file_id": "1Yk4FNzo1OIKA4szGFmx6e1xdocquimwk",
+          "md5": "8ed7855ff9129ab82ec5371b2250a293",
+          "name": "Salmon Crossing Distribution Schedule Sep 2026.pdf",
+          "uploaded_at": "2026-09-29T05:36:41.087000Z"
+         }
+        ],
+        "review_codes": []
+       },
+       {
+        "version": 2,
+        "built_at": "2026-09-29T08:38:19.331307Z",
+        "status": "built",
+        "fingerprint": "8040de501023b44606e448ca0f4e2a821e41ac901c48c84b93c0f838e19de60d",
+        "output_file": "Salmon Crossing - Investor Report - September 2026 - v2.pdf",
+        "inputs": [
+         {
+          "role": "pm_source",
+          "file_id": "1JVrcX0fSREUcSmb_Plt-5IIAgMdK13aQ",
+          "md5": "67c1902bc8147c903ceaf88bd20031ed",
+          "name": "Salmon Crossing Owner Report Sep 2026 (corrected).pdf",
+          "uploaded_at": "2026-09-29T07:10:34.064000Z"
+         },
+         {
+          "role": "cornerstone_balance_sheet",
+          "file_id": "1yvBNXcag9YmWFJiZ6KhR47mit5bPjDDG",
+          "md5": "4f0b12bb48987fed55694a4a06e87dcd",
+          "name": "Salmon Crossing Balance Sheet Sep 2026.pdf",
+          "uploaded_at": "2026-09-29T05:36:35.708000Z"
+         },
+         {
+          "role": "cornerstone_profit_loss_ytd",
+          "file_id": "1l-j2u3oKLC3S-Ij_QbsSOklk26w9stlJ",
+          "md5": "2c031bf08dc8e8ebb777cbd2b99819e5",
+          "name": "Salmon Crossing P&L YTD Sep 2026.pdf",
+          "uploaded_at": "2026-09-29T05:36:38.408000Z"
+         },
+         {
+          "role": "cornerstone_distribution_schedule",
+          "file_id": "1Yk4FNzo1OIKA4szGFmx6e1xdocquimwk",
+          "md5": "8ed7855ff9129ab82ec5371b2250a293",
+          "name": "Salmon Crossing Distribution Schedule Sep 2026.pdf",
+          "uploaded_at": "2026-09-29T05:36:41.087000Z"
+         }
+        ],
+        "review_codes": []
+       },
+       {
+        "version": 3,
+        "built_at": "2026-09-29T12:07:37.325454Z",
+        "status": "built",
+        "fingerprint": "4411ab813ec98650a26388c87825a0e5f3d65ec983a827316242c94c083a4bef",
+        "output_file": "Salmon Crossing - Investor Report - September 2026 - v3.pdf",
+        "inputs": [
+         {
+          "role": "pm_source",
+          "file_id": "1JVrcX0fSREUcSmb_Plt-5IIAgMdK13aQ",
+          "md5": "67c1902bc8147c903ceaf88bd20031ed",
+          "name": "Salmon Crossing Owner Report Sep 2026 (corrected).pdf",
+          "uploaded_at": "2026-09-29T07:10:34.064000Z"
+         },
+         {
+          "role": "cornerstone_balance_sheet",
+          "file_id": "18_s1Q2cmB1H41YeO5ZgU0UA-jjsglNTM",
+          "md5": "a788b0b4f815ce1cc813ccbc3219e43a",
+          "name": "Salmon Crossing Balance Sheet Sep 2026 reissued.pdf",
+          "uploaded_at": "2026-09-29T10:46:05.385000Z"
+         },
+         {
+          "role": "cornerstone_profit_loss_ytd",
+          "file_id": "1l-j2u3oKLC3S-Ij_QbsSOklk26w9stlJ",
+          "md5": "2c031bf08dc8e8ebb777cbd2b99819e5",
+          "name": "Salmon Crossing P&L YTD Sep 2026.pdf",
+          "uploaded_at": "2026-09-29T05:36:38.408000Z"
+         },
+         {
+          "role": "cornerstone_distribution_schedule",
+          "file_id": "1Yk4FNzo1OIKA4szGFmx6e1xdocquimwk",
+          "md5": "8ed7855ff9129ab82ec5371b2250a293",
+          "name": "Salmon Crossing Distribution Schedule Sep 2026.pdf",
+          "uploaded_at": "2026-09-29T05:36:41.087000Z"
+         }
+        ],
+        "review_codes": []
+       }
+      ],
+      "attempts": []
+     }
+    },
+    "2026-06 June": {
+     "components": {},
+     "loose": [],
+     "output": null,
+     "state": null,
+     "other_folders": [
+      "inputs"
+     ]
+    }
+   },
+   "loose": [
+    {
+     "name": "P&L (dropped in the property folder).pdf",
+     "id": "1XNa1KJYRxla9gAUgQQ4Zur-vUU5VF8Xz",
+     "mime": "application/pdf",
+     "md5": "2c031bf08dc8e8ebb777cbd2b99819e5",
+     "created": "2026-09-29T05:36:46.128Z",
+     "modified": "2026-09-29T05:36:46.128Z",
+     "size": 54034
+    }
+   ]
+  }
+ },
+ "spent_usd": 8.8143
+}

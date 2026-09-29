@@ -17,6 +17,7 @@
 | `crr-quarterly-29844690-ww2nf` | Azure, scheduled | 11:30:22 | 11:31:57 | 1:35 | 0 | $0.00 |
 | `crr-quarterly-29844720-tdl7q` | Azure, scheduled | 12:00:22 | 12:20:00 | 19:38 | 16 | $0.31 |
 | `crr-quarterly-29844750-s7v65` | Azure, scheduled | 12:30:24 | 12:32:10 | 1:46 | 0 | $0.00 |
+| `crr-quarterly-29844780-5w92d` | Azure, scheduled | 13:00:24 | 13:01:57 | 1:33 | 0 | $0.00 |
 | (lease not captured) | | | | | 1 | $0.00 |
 
 ### Every version published
