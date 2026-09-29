@@ -161,3 +161,12 @@ are in `evaluation.md` (from `eval/live/evaluate.py`).
   must name the property (its `pm_name`, or an alias configured per property), else a
   `property_mismatch` review reason. Validated against the eight June samples before it
   ships, so it cannot flag a genuine report.
+- **10:13** · Watchdog. The 10:00 run `crr-quarterly-29844600` (10:00:23–10:04:28) built three
+  one-file corrections for about 2 cents each, one model call apiece, everything else reused:
+  Fort Grounds September v3 with the revised Balance Sheet (8/6), WayPointe September v2 from
+  Drive's "Update existing" with changed bytes (10/8), and Salmon Crossing October v2 with the
+  corrected P&L (18/8) — numbered v2 although a reviewer had deleted v1's PDF, since versions
+  come from the month's index, not from `output/`. All golden. River Falls, Lolo Peak and
+  Timber Place still waiting on their 09:10/09:31 uploads, as predicted. S1's correction
+  withdrawn at 10:10 (the revised Balance Sheet trashed). 44 met, 3 late, 0 missed, 3
+  withdrawn, 21 pending; $8.13; 106/123 actions, 0 failed.

@@ -1,4 +1,4 @@
-Scored 71 predictions — late: 3, met: 41, pending: 24, withdrawn: 3
+Scored 71 predictions — late: 3, met: 44, pending: 21, withdrawn: 3
 
 | Scenario | Property | Month | Tick | Expected | v | Actual | v | Verdict | Note |
 |---|---|---|---|---|---|---|---|---|---|
@@ -6,7 +6,7 @@ Scored 71 predictions — late: 3, met: 41, pending: 24, withdrawn: 3
 | S1 | fort-grounds | 2026-09 | 07:00 | Built v1 (current) | 1 | Built v1 (current) | 1 | **met** | without the optional schedule |
 | S1 | fort-grounds | 2026-09 | 07:30 | Built v1 - newer files waiting | 1 | Built v1 - newer files waiting | 1 | **met** | schedule settling |
 | S1 | fort-grounds | 2026-09 | 08:30 | Built v2 (current) | 2 | Built v2 (current) | 2 | **met** | schedule added, rest reused |
-| S1 | fort-grounds | 2026-09 | 10:00 | Built v3 (current) | 3 | - | - | **pending** | Balance Sheet replaced |
+| S1 | fort-grounds | 2026-09 | 10:00 | Built v3 (current) | 3 | Built v3 (current) | 3 | **met** | Balance Sheet replaced |
 | S1 | fort-grounds | 2026-09 | 10:30 | Built v4 (current) | 4 | - | - | **pending** | correction deleted: v2's files |
 | S2 | lolo-peak-village | 2026-09 | 06:00 | Waiting for Balance Sheet, Profit and Loss | 0 | Waiting for Balance Sheet, Profit and Loss | 0 | **met** |  |
 | S2 | lolo-peak-village | 2026-09 | 07:00 | Waiting for Profit and Loss | 0 | Waiting for Profit and Loss | 0 | **met** |  |
@@ -20,7 +20,7 @@ Scored 71 predictions — late: 3, met: 41, pending: 24, withdrawn: 3
 | S3 | mullan-crossing | 2026-09 | 09:30 | Built v1 (current) | 1 | Built v1 (current) | 1 | **met** | with the corrected P&L |
 | S4 | waypointe | 2026-09 | 07:00 | Built v1 (current) | 1 | Built v1 (current) | 1 | **met** |  |
 | S4 | waypointe | 2026-09 | 08:30 | Built v1 (current) | 1 | Built v1 (current) | 1 | **met** | identical new version: no build |
-| S4 | waypointe | 2026-09 | 10:00 | Built v2 (current) | 2 | - | - | **pending** | changed bytes as a new version |
+| S4 | waypointe | 2026-09 | 10:00 | Built v2 (current) | 2 | Built v2 (current) | 2 | **met** | changed bytes as a new version |
 | S5 | timber-place | 2026-09 | 07:00 | Built v1 (current) | 1 | Built v1 (current) | 1 | **met** | scanned source, OCR |
 | S5 | timber-place | 2026-09 | 08:30 | Built v1 - newer files held | 1 | Built v1 - newer files held | 1 | **met** | non-PDF held |
 | S5 | timber-place | 2026-09 | 09:00 | Built v1 (current) | 1 | Built v1 - newer files held | 1 | **withdrawn** | deleted: v1 again, no build — withdrawn: the 09:00 run was displaced by O5b; the protected file (09:10) is in play by 09:30 |
@@ -51,7 +51,7 @@ Scored 71 predictions — late: 3, met: 41, pending: 24, withdrawn: 3
 | O7 | bridgewater | 2026-10 | 09:00 | Built v2 (current) | 2 | Built v1 - newer files waiting | 1 | **late** | Ben's, the newer, wins |
 | O8 | salmon-crossing | 2026-10 | 07:30 | Built v1 (current) | 1 | Built v1 (current) | 1 | **met** |  |
 | O8 | salmon-crossing | 2026-10 | 08:30 | Built v1 (current) | 1 | Built v1 (current) | 1 | **met** | deleted v1 goes unnoticed |
-| O8 | salmon-crossing | 2026-10 | 10:00 | Built v2 (current) | 2 | - | - | **pending** | numbering continues |
+| O8 | salmon-crossing | 2026-10 | 10:00 | Built v2 (current) | 2 | Built v2 (current) | 2 | **met** | numbering continues |
 | A1 | fort-grounds | folder:2026-08 August | 06:30 | - | 0 | - | 0 | **met** | system adds the folders |
 | A1 | fort-grounds | folder:2026-08 August | 08:00 | Built v1 (current) | 1 | Built v1 (current) | 1 | **met** |  |
 | A2 | lolo-peak-village | folder:2026-08 | 06:30 | - | 0 | - | 0 | **met** | a proper 2026-08 August appears beside it; the file is never read |
