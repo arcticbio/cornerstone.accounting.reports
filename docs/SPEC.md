@@ -993,6 +993,13 @@ A property-month is **ready** when all of these hold:
 | Settled | no PDF in any component folder has an upload time within the last `CRR_SETTLE_MINUTES` (60) | `Waiting for uploads to settle (last upload <time>)` |
 | Opens | every current file opens as a PDF (§18.6) | `Held - <reason>` |
 
+"The last 60 minutes" is measured from the moment the run starts: one clock for every month in
+the run, so a file uploaded while a run is working is never settled by that run. A month is
+therefore built by the first run that *starts* at least 60 minutes after its last upload — on
+the 30-minute schedule, 60 to 90 minutes after the last file, plus the build. (Made explicit
+after the live test of 2026-09-29, where a file 59 min 11 s old at the run's start waited for
+the next run, as the code intends.)
+
 An `optional` component with no file is simply left out, and the status and manifest say the
 report was built without it. If it arrives later, the inputs have changed and the next run
 builds the next version.

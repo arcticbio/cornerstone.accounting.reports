@@ -195,6 +195,13 @@ safe to run at any time, including while Azure is running: only one run works at
 that finds another holding the run lease prints `nothing done: another run (<host>) holds the
 lease until <time>` and exits green — run it again after that time.
 
+**Mind the half hour.** The lease covers every property, so a manual run that takes it in the
+minutes before :00 or :30 makes that scheduled run stand down for *all* eight properties, and
+their builds wait another 30 minutes (the live test of 2026-09-29 did this on purpose: a forced
+build of one property at 08:59 held back five builds until 09:30). Start a manual run once the
+half-hour run has finished — the root summary's *Last checked* line moves when it does — and
+not in the last few minutes before the next one.
+
 1. **Actions** → **Build a period** → **Run workflow**.
 2. Fill in:
 
