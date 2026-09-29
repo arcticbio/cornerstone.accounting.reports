@@ -314,8 +314,8 @@ start is billed. *Confirm* on the first armed day with no builds: Cost Managemen
 Apps vCPU-seconds for that day, divided by 96 (48 runs × 2 vCPU), is the billed seconds per run.
 
 Three levers, if it matters, cheapest first. An hourly cron (`0 * * * *`) halves the runs and
-stays inside the grant even at 100 s (80 %); after the 60-minute settle a build then waits up to
-an hour instead of half an hour. A 1 vCPU / 2 GiB replica halves the rate too, but builds (OCR)
+stays inside the grant even at 100 s (80 %); after the settle window (30 minutes since D-26) a
+build then waits up to 90 minutes instead of an hour. A 1 vCPU / 2 GiB replica halves the rate too, but builds (OCR)
 slow down and would need testing at that size. Checking the properties in parallel would cut the
 46 s pass to about 10 s, though the ~35 s start stays; that is a code change.
 

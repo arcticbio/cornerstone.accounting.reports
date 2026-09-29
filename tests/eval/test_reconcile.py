@@ -168,16 +168,16 @@ def test_the_whole_life_of_a_month(world: World) -> None:
     world.run()
     assert world.status() == "STATUS - Waiting for Balance Sheet, Profit and Loss.txt"
 
-    # Everything required arrives; the month settles for an hour before building.
+    # Everything required arrives; the month settles for 30 minutes before building.
     world.later(minutes=10)
     world.upload("bs", "BS.pdf")
     world.upload("pl", "P&L.pdf")
-    world.later(minutes=30)
+    world.later(minutes=20)
     world.run()
     assert world.status() == "STATUS - Waiting for uploads to settle.txt"
     assert world.classifier.calls == []
 
-    world.later(minutes=31)
+    world.later(minutes=11)
     result = world.run()
     assert result[PERIOD].version == 1
     assert world.status() == "STATUS - Built v1 (current).txt"
@@ -326,10 +326,10 @@ def test_the_cost_ceiling_holds_and_reuse_lowers_the_estimate(tmp_path: Path) ->
 
 def test_the_soft_deadline_defers_a_build_to_the_next_run(world: World) -> None:
     world.upload_all()
-    world.later(minutes=31)
+    world.later(minutes=20)
     world.run()
     assert world.status() == "STATUS - Waiting for uploads to settle.txt"
-    world.later(minutes=30)
+    world.later(minutes=11)
     world.soft_deadline_passed = True
     result = world.run()
     assert result[PERIOD].note == "deferred to the next run"

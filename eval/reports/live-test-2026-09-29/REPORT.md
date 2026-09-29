@@ -15,6 +15,8 @@ Published as a page: https://claude.ai/artifact/RuDow4jqiMmj8ZdzLWrkLB (private 
 > which property a file belongs to (D-25, SPEC §18.6). F2, F3 and the capacity note are fixed in
 > the follow-up PR; F4 and F5 were documented in #20 and the probe change (ec061b7) is live
 > (the 17:30 and 18:00 runs left no probe). The findings below say what was done about each.
+> The same PR lowers the settle window from 60 to 30 minutes (D-26): the test ran at 60, so the
+> timings below (reports 60–90 minutes after the last upload) now read 30–60.
 
 The plan, with every prediction, was committed before the test began (`eval/live/plan.py`). A
 conductor performed the actions and photographed Drive after every run (`eval/live/conductor.py`).

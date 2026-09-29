@@ -116,7 +116,9 @@ identical to the golden-label build ($3.73). See `docs/ANALYSIS-model-successor-
    D-25, SPEC §18.6: the folder declares the property, as it declares component and month; a
    name check would hold genuine reports); F2 (a deferred month's stale status), F3 (a deleted
    published PDF unnoticed) and the capacity note (reused labels were cross-checked for
-   orientation again) are fixed in the follow-up PR; F4 and F5 were documented in #20. The
+   orientation again) are fixed in the follow-up PR, which also lowers the settle window to 30
+   minutes (D-26: a report now comes 30–60 minutes after the last upload, not 60–90); F4 and F5
+   were documented in #20. The
    probe change (ec061b7) is live: the first runs after #20 merged left no probe. The test
    months were moved to the rehearsal root afterwards; production holds only June and the
    empty months the schedule prepares.

@@ -778,7 +778,7 @@ Never log page text or image bytes. Log document sha256s, not paths, at INFO.
 | `CRR_PRICE_TABLE_JSON` | built-in | override `{model: {input, cache_read, cache_write, output}}` USD per MTok |
 | `CRR_OCRMYPDF_BIN` | `ocrmypdf` | ocrmypdf entry point; an escape hatch for environments where the distribution's entry point is broken or off PATH |
 | `CRR_INTAKE_ROOT` | `<work_dir>/intake` | where `crr reconcile --repo local` reads and writes (§18) |
-| `CRR_SETTLE_MINUTES` | `60` | build only once nothing in a month's folders changed for this long (§18.5) |
+| `CRR_SETTLE_MINUTES` | `30` | build only once nothing in a month's folders changed for this long (§18.5; 60 until 2026-09-29, D-26) |
 | `CRR_LOOKBACK_DAYS` | `42` | a month is watched until this many days after its last day (§18.3) |
 | `CRR_CLOSE_GRACE_DAYS` | `14` | a closed month is read, to write its final status, only this long past its window (§18.3) |
 | `CRR_FOLDERS_AHEAD` | `1` | month folders are prepared this many months ahead (§18.3) |
@@ -994,15 +994,15 @@ A property-month is **ready** when all of these hold:
 | Condition | Rule | Status while not met |
 |---|---|---|
 | Complete | every `required` component has a current file | `Waiting for <components>` |
-| Settled | no PDF in any component folder has an upload time within the last `CRR_SETTLE_MINUTES` (60) | `Waiting for uploads to settle (last upload <time>)` |
+| Settled | no PDF in any component folder has an upload time within the last `CRR_SETTLE_MINUTES` (30) | `Waiting for uploads to settle (last upload <time>)` |
 | Opens | every current file opens as a PDF (§18.6) | `Held - <reason>` |
 
-"The last 60 minutes" is measured from the moment the run starts: one clock for every month in
-the run, so a file uploaded while a run is working is never settled by that run. A month is
-therefore built by the first run that *starts* at least 60 minutes after its last upload — on
-the 30-minute schedule, 60 to 90 minutes after the last file, plus the build. (Made explicit
-after the live test of 2026-09-29, where a file 59 min 11 s old at the run's start waited for
-the next run, as the code intends.)
+"The last `CRR_SETTLE_MINUTES`" is measured from the moment the run starts: one clock for every
+month in the run, so a file uploaded while a run is working is never settled by that run. A month
+is therefore built by the first run that *starts* at least 30 minutes after its last upload — on
+the 30-minute schedule, 30 to 60 minutes after the last file, plus the build. (Made explicit
+after the live test of 2026-09-29, where — with the window then at 60 minutes — a file 59 min
+11 s old at the run's start waited for the next run, as the code intends.)
 
 An `optional` component with no file is simply left out, and the status and manifest say the
 report was built without it. If it arrives later, the inputs have changed and the next run
@@ -1083,7 +1083,7 @@ from the folder listing:
 | Name | Meaning |
 |---|---|
 | `STATUS - Waiting for Balance Sheet, Profit and Loss.txt` | required components missing |
-| `STATUS - Waiting for uploads to settle.txt` | an upload in the last 60 minutes |
+| `STATUS - Waiting for uploads to settle.txt` | an upload in the last 30 minutes |
 | `STATUS - Held - <reason>.txt` | a file does not open, or the build would exceed the cost ceiling; nothing built |
 | `STATUS - Ready - building on the next run.txt` | ready, but this run reached its time limit before starting the build (§18.9 step 5); the next run builds it |
 | `STATUS - Built v2 (current).txt` | newest build is `BUILT` and reflects the current files |
@@ -1173,7 +1173,7 @@ the failure cap. It does not skip the completeness or open checks, nor the settl
   owner cleared Phase 10's STOP on 2026-09-29, so that no redeploy could arm the 30-minute
   schedule by accident. The deploy chain is unchanged: merge to `main` → `:build-v1` →
   `deploy.yml`.
-- Settings added to §12: `CRR_SETTLE_MINUTES` 60, `CRR_LOOKBACK_DAYS` 42, `CRR_CLOSE_GRACE_DAYS` 14, `CRR_FOLDERS_AHEAD` 1,
+- Settings added to §12: `CRR_SETTLE_MINUTES` 60 (30 since 2026-09-29, D-26), `CRR_LOOKBACK_DAYS` 42, `CRR_CLOSE_GRACE_DAYS` 14, `CRR_FOLDERS_AHEAD` 1,
   `CRR_RUN_SOFT_DEADLINE_S` 1200, `CRR_MAX_BUILD_USD` 3.00, `CRR_COST_PER_PAGE_USD` 0.03,
   `CRR_MAX_FAILED_ATTEMPTS` 3.
 
@@ -1181,7 +1181,8 @@ the failure cap. It does not skip the completeness or open checks, nor the settl
 
 - **Drive push notifications (`changes.watch`) to an endpoint that starts the job.** Adds an
   always-on HTTPS endpoint, channel renewal (channels expire), and still needs polling as a
-  backstop. Its latency gain is erased by the 60-minute settle window.
+  backstop. Its latency gain — at most one 30-minute interval, on top of the settle window it
+  must still wait out — does not pay for an always-on endpoint.
 - **Logic Apps' Google Drive trigger.** Its connector needs an interactive OAuth consent, which
   breaks the automated GitHub → Azure deploy chain.
 - **Identifying components by content.** The folder is the declaration (§18.6).

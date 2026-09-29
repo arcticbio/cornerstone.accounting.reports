@@ -29,6 +29,7 @@ def test_defaults_match_spec(monkeypatch: pytest.MonkeyPatch) -> None:
     assert s.exemplar_policy == "exclude_same_property"
     assert s.eval_min_page_accuracy == 0.98
     assert s.eval_min_boundary_f1 == 0.98
+    assert s.settle_minutes == 30  # D-26: lowered from 60 after the live test
 
 
 def test_env_prefix_and_unprefixed_keys(monkeypatch: pytest.MonkeyPatch) -> None:

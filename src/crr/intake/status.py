@@ -97,8 +97,8 @@ def render_status(
         "  Put one PDF in each numbered folder. Any filename is fine.",
         "  If a folder holds more than one PDF, the newest upload is used and the others are",
         f'  renamed "{SUPERSEDED_PREFIX}...". To go back to an older file, delete the newer one.',
-        f"  A new version is built about {settle_minutes} minutes after the last upload, and",
-        "  older versions stay in this folder.",
+        f"  A new version is built by the first run {settle_minutes} or more minutes after the",
+        "  last upload, and older versions stay in this folder.",
         f"  Changes after {closes.isoformat()} are ignored.",
         "",
     ]

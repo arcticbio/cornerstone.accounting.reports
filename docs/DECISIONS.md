@@ -157,3 +157,14 @@ matched is the Rent Manager schema's `Property:` line, which must split WayPoint
 between its two records (SPEC §5 rule 3); as a side effect it also sends a Missoula report whose entity
 name matches no configured record to review (`unresolved_record`) until `config/properties.yaml`
 is updated.
+
+**D-26 · The settle window is 30 minutes (was 60).**
+Owner decision, 2026-09-29, after the production live test. A month is built by the first run
+that starts 30 minutes after its last upload, so on the 30-minute schedule a report appears 30 to
+60 minutes after the last file instead of 60 to 90. The cost of settling too early is a version
+that the next upload supersedes, and the live test showed those are cheap and plain: a one-file
+follow-up reuses every other label (about 2 cents), numbers continue, and the newest is marked
+current. Thirty minutes still covers someone uploading several files one after another.
+*Consequence:* `CRR_SETTLE_MINUTES` defaults to 30. Revisit after the first real month-end: every
+version's index entry records its inputs' upload times, so how often a version was superseded
+within the hour can be counted.
