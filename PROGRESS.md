@@ -127,6 +127,23 @@ identical to the golden-label build ($3.73). See `docs/ANALYSIS-model-successor-
    probe change (ec061b7) is live: the first runs after #20 merged left no probe. The test
    months were moved to the rehearsal root afterwards; production holds only June and the
    empty months the schedule prepares.
+   **Live-tested again, 2026-09-30 01:30–05:30 UTC, hands off**
+   (`eval/reports/live-test-2026-09-30/REPORT.md`). Property managers, accounting and a
+   reviewer only, with no operator or forced run and fresh exports into the prepared months.
+   Nine scheduled runs, all clean; **64 of 64 predictions met**; 23 versions, each golden-shaped
+   except the two deliberate cases; $7.81. Each change since the first test was seen working
+   in production:
+   - the 30-minute settle (a month built 32 minutes after its last upload, another made to
+     wait at 27);
+   - F2's `Ready - building on the next run` and `… newer files ready, building next run` on
+     the five months a quarter-end crunch deferred;
+   - F3's `report file missing`, and the status again current after the reviewer restored the
+     report from Trash;
+   - one-file rebuilds classifying in 4.9–11.9 s (28–52 s on 29 September);
+   - D-25's Missoula exception (another entity's report to review, the right one to v2), which
+     the owner confirmed stays for all four Missoula properties;
+   - one probe per building run and none otherwise.
+   The test months were moved to the rehearsal root afterwards.
 
 1. ~~**B-08 — the two McCathren packages go to review on `cardinality_violation`.**~~
    **Fixed 2026-09-11, root-caused with a real-model run.** Not a labelling error: a re-run of

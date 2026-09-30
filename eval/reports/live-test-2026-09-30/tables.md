@@ -10,6 +10,7 @@
 | `crr-quarterly-29845680-gmzs9` | Azure, scheduled | 04:00:19 | 04:21:21 | 21:02 | 7 | $3.30 | 1 |
 | `crr-quarterly-29845710-wwzt4` | Azure, scheduled | 04:30:19 | 04:39:26 | 9:07 | 5 | $1.23 | 1 |
 | `crr-quarterly-29845740-5wdlp` | Azure, scheduled | 05:00:22 | 05:01:55 | 1:33 | 0 | $0.00 | 0 |
+| `crr-quarterly-29845770-x4q5k` | Azure, scheduled | 05:30:20 | 05:37:37 | 7:17 | 4 | $0.41 | 1 |
 
 ### Every version published
 
@@ -34,6 +35,10 @@
 | 04:36:12 | fort-grounds | 2026-10 | 2 | built | 8/6 | = golden | ok | 1 | 0.017 | 3 | 5.2 | 70 / 76 | - |
 | 04:36:48 | salmon-crossing | 2026-10 | 1 | built | 18/8 | = golden | ok | 18 | 0.343 | 0 | 99.0 | 82 / 88 | - |
 | 04:39:00 | waypointe | 2026-10 | 2 | built | 10/8 | = golden | ok | 1 | 0.018 | 3 | 5.5 | 75 / 84 | - |
+| 05:30:48 | bridgewater | 2026-09 | 2 | built | 24/8 | = golden | ok | 1 | 0.017 | 3 | 11.9 | 40 / 40 | - |
+| 05:31:30 | mullan-crossing | 2026-09 | 2 | built | 8/6 | = golden | ok | 17 | 0.363 | 3 | 97.1 | 40 / 41 | - |
+| 05:33:28 | river-falls | 2026-09 | 2 | built | 29/13 | = golden | ok | 1 | 0.017 | 3 | 6.2 | 40 / 43 | - |
+| 05:35:32 | timber-place | 2026-09 | 2 | built | 25/13 | = golden | ok | 1 | 0.017 | 2 | 4.9 | 40 / 45 | - |
 
 ### One-file rebuilds (labels reused, one model call)
 
@@ -42,13 +47,16 @@
 | mullan-crossing | 2026-10 | 2 | 3 | 5.9 | 31-33 s (2) |
 | fort-grounds | 2026-10 | 2 | 3 | 5.2 | 29-31 s (5) |
 | waypointe | 2026-10 | 2 | 3 | 5.5 | 28-30 s (3) |
+| bridgewater | 2026-09 | 2 | 3 | 11.9 | 37-38 s (4) |
+| river-falls | 2026-09 | 2 | 3 | 6.2 | 52-52 s (1) |
+| timber-place | 2026-09 | 2 | 2 | 4.9 | 44-46 s (2) |
 
 ### Model spend
 
-- 19 versions, 344 model calls, **$7.39** in all.
+- 23 versions, 364 model calls, **$7.81** in all.
 - Fresh builds (nothing reused): 16, $7.33, median $0.41 each.
-- Builds reusing some labels: 3, $0.06; reusing all: 0, $0.
-- By month: 2026-09 September $3.66, 2026-10 October $3.74.
+- Builds reusing some labels: 7, $0.48; reusing all: 0, $0.
+- By month: 2026-09 September $4.07, 2026-10 October $3.74.
 
 ### Stakeholder actions performed
 
@@ -58,4 +66,4 @@
 
 ### Predictions
 
-- met 58, pending 6 (of 64).
+- met 64 (of 64).

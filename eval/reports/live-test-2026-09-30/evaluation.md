@@ -1,4 +1,4 @@
-Scored 64 predictions — met: 58, pending: 6
+Scored 64 predictions — met: 64
 
 | Scenario | Property | Month | Tick | Expected | v | Actual | v | Check | Verdict | Note |
 |---|---|---|---|---|---|---|---|---|---|---|
@@ -11,7 +11,7 @@ Scored 64 predictions — met: 58, pending: 6
 | O2 | lolo-peak-village | 2026-10 | 02:30 | Built v1 (current) | 1 | Built v1 (current) | 1 |  | **met** |  |
 | O2 | lolo-peak-village | 2026-10 | 03:00 | Built v1 - report file missing | 1 | Built v1 - report file missing | 1 | body:restore it from the shared drive's Trash → said | **met** | F3 |
 | O2 | lolo-peak-village | 2026-10 | 03:30 | Built v1 (current) | 1 | Built v1 (current) | 1 |  | **met** | restored; no new version |
-| O2 | lolo-peak-village | 2026-10 | 05:30 | Built v1 (current) | 1 | - | - |  | **pending** | still v1 at the end |
+| O2 | lolo-peak-village | 2026-10 | 05:30 | Built v1 (current) | 1 | Built v1 (current) | 1 |  | **met** | still v1 at the end |
 | O3 | mullan-crossing | 2026-10 | 02:00 | Waiting for uploads to settle | 0 | Waiting for uploads to settle | 0 |  | **met** |  |
 | O3 | mullan-crossing | 2026-10 | 02:30 | Built v1 (current) | 1 | Built v1 (current) | 1 | omitted:some → omitted ['Distribution Schedule'] | **met** | without the schedule |
 | O3 | mullan-crossing | 2026-10 | 03:00 | Built v1 - newer files waiting | 1 | Built v1 - newer files waiting | 1 |  | **met** | schedule settling |
@@ -53,10 +53,10 @@ Scored 64 predictions — met: 58, pending: 6
 | S1 | bridgewater | 2026-09 | 05:00 | Built v1 - newer files waiting | 1 | Built v1 - newer files waiting | 1 |  | **met** |  |
 | S5 | river-falls | 2026-09 | 05:00 | Built v1 - newer files waiting | 1 | Built v1 - newer files waiting | 1 |  | **met** |  |
 | S7 | timber-place | 2026-09 | 05:00 | Built v1 - newer files waiting | 1 | Built v1 - newer files waiting | 1 |  | **met** |  |
-| S4 | mullan-crossing | 2026-09 | 05:30 | Built v2 (current) | 2 | - | - |  | **pending** | the right report |
-| S1 | bridgewater | 2026-09 | 05:30 | Built v2 (current) | 2 | - | - | classify_max_s:20 →  | **pending** | 24 pages reused |
-| S5 | river-falls | 2026-09 | 05:30 | Built v2 (current) | 2 | - | - | classify_max_s:20 →  | **pending** | 29 pages reused |
-| S7 | timber-place | 2026-09 | 05:30 | Built v2 (current) | 2 | - | - | classify_max_s:20 →  | **pending** | 25 pages reused |
+| S4 | mullan-crossing | 2026-09 | 05:30 | Built v2 (current) | 2 | Built v2 (current) | 2 |  | **met** | the right report |
+| S1 | bridgewater | 2026-09 | 05:30 | Built v2 (current) | 2 | Built v2 (current) | 2 | classify_max_s:20 → classify 11.9 s | **met** | 24 pages reused |
+| S5 | river-falls | 2026-09 | 05:30 | Built v2 (current) | 2 | Built v2 (current) | 2 | classify_max_s:20 → classify 6.2 s | **met** | 29 pages reused |
+| S7 | timber-place | 2026-09 | 05:30 | Built v2 (current) | 2 | Built v2 (current) | 2 | classify_max_s:20 → classify 4.9 s | **met** | 25 pages reused |
 | P | * | * | 01:30 | - | - | - | - | probes:0 → 0 probe(s) | **met** | nothing uploaded yet |
 | P | * | * | 02:00 | - | - | - | - | probes:0 → 0 probe(s) | **met** | everything settling |
 | P | * | * | 02:30 | - | - | - | - | probes:1 → 1 probe(s) | **met** | five first builds |
@@ -65,4 +65,4 @@ Scored 64 predictions — met: 58, pending: 6
 | P | * | * | 04:00 | - | - | - | - | probes:1 → 1 probe(s) | **met** | the crunch |
 | P | * | * | 04:30 | - | - | - | - | probes:1 → 1 probe(s) | **met** | the deferred builds |
 | P | * | * | 05:00 | - | - | - | - | probes:0 → 0 probe(s) | **met** | everything settling |
-| P | * | * | 05:30 | - | - | - | - | probes:1 →  | **pending** | four rebuilds |
+| P | * | * | 05:30 | - | - | - | - | probes:1 → 1 probe(s) | **met** | four rebuilds |

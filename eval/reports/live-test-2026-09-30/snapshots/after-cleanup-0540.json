@@ -1,0 +1,146 @@
+{
+ "tag": "after-cleanup-0540",
+ "taken": "2026-09-30T05:40:33Z",
+ "lease": {
+  "host": "crr-quarterly-29845770-x4q5k",
+  "acquired": "2026-09-30T05:30:20Z",
+  "released": "2026-09-30T05:37:37Z",
+  "expires": "2026-09-30T06:00:20Z"
+ },
+ "summary": [
+  "Investor report status - one line per property, newest month with any files",
+  "",
+  "Fort Grounds - October 2026 - Built v2 (current)",
+  "Lolo Peak Village - October 2026 - Built v1 (current)",
+  "Mullan Crossing - October 2026 - Built v2 (current)",
+  "WayPointe - October 2026 - Built v2 (current)",
+  "Timber Place - October 2026 - Built v1 (current)",
+  "River Falls - October 2026 - Built v1 (current)",
+  "Bridgewater - October 2026 - Built v1 (current)",
+  "Salmon Crossing - October 2026 - Built v1 (current)",
+  "",
+  "Last checked 2026-09-30 05:30 UTC. Open a property's month folder, then output/, for detail."
+ ],
+ "root_files": [
+  "Cobalt Properties Group",
+  "McCathren Management and Real Estate Services",
+  "Missoula Property Management",
+  "_LEASE - reconcile run (do not edit).json",
+  "_STATUS - All properties.txt"
+ ],
+ "properties": {
+  "fort-grounds": {
+   "months": {
+    "2026-06 June": {
+     "components": {},
+     "loose": [],
+     "output": null,
+     "state": null,
+     "other_folders": [
+      "inputs"
+     ]
+    }
+   },
+   "loose": []
+  },
+  "lolo-peak-village": {
+   "months": {
+    "2026-06 June": {
+     "components": {},
+     "loose": [],
+     "output": null,
+     "state": null,
+     "other_folders": [
+      "inputs"
+     ]
+    }
+   },
+   "loose": []
+  },
+  "mullan-crossing": {
+   "months": {
+    "2026-06 June": {
+     "components": {},
+     "loose": [],
+     "output": null,
+     "state": null,
+     "other_folders": [
+      "inputs"
+     ]
+    }
+   },
+   "loose": []
+  },
+  "waypointe": {
+   "months": {
+    "2026-06 June": {
+     "components": {},
+     "loose": [],
+     "output": null,
+     "state": null,
+     "other_folders": [
+      "inputs"
+     ]
+    }
+   },
+   "loose": []
+  },
+  "timber-place": {
+   "months": {
+    "2026-06 June": {
+     "components": {},
+     "loose": [],
+     "output": null,
+     "state": null,
+     "other_folders": [
+      "inputs"
+     ]
+    }
+   },
+   "loose": []
+  },
+  "river-falls": {
+   "months": {
+    "2026-06 June": {
+     "components": {},
+     "loose": [],
+     "output": null,
+     "state": null,
+     "other_folders": [
+      "inputs"
+     ]
+    }
+   },
+   "loose": []
+  },
+  "bridgewater": {
+   "months": {
+    "2026-06 June": {
+     "components": {},
+     "loose": [],
+     "output": null,
+     "state": null,
+     "other_folders": [
+      "inputs"
+     ]
+    }
+   },
+   "loose": []
+  },
+  "salmon-crossing": {
+   "months": {
+    "2026-06 June": {
+     "components": {},
+     "loose": [],
+     "output": null,
+     "state": null,
+     "other_folders": [
+      "inputs"
+     ]
+    }
+   },
+   "loose": []
+  }
+ },
+ "spent_usd": 7.806
+}
