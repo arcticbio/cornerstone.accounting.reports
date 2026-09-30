@@ -12,3 +12,15 @@ in the rehearsal root: a fresh export, a file trashed from `output/` and restore
 the probe count — all worked.
 
 Watchdog entries below are added as the test runs.
+
+**01:39 — the conductor was down from ~01:19 to 01:38; restarted, no prediction affected.** Its
+last heartbeat was 01:18:40: the session's container was recycled after the session went idle,
+and the conductor, started detached, was not a task the harness tracks, so nothing held the
+session open (the first test's conductor was a tracked task, which is why it ran 7.5 h on one
+start). It missed the B+0 tick and the uploads planned for B+2 to B+3.5. Restarted at 01:38:20
+from `events.jsonl`: the 14 October uploads landed 01:38:32–01:39:15, 299–389 s late. Nothing
+predicted depends on them landing before B+8.5 — the B+30 run still sees them ~21 minutes old
+(settling) and the B+60 run ~51 (settled). The B+0 run's snapshot is taken after these uploads,
+but its lease window (01:30) is unchanged, so its probe count still scores that run. A tracked
+background watcher now holds the session open for as long as the conductor runs, and wakes this
+session the moment it exits.
