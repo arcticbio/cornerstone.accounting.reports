@@ -67,3 +67,18 @@ the capacity change skips. Lolo Peak Village October reads `Built v1 (current)` 
 reviewer's restore, with no new version. Fort Grounds and WayPointe October read `Built v1 -
 newer files waiting` (their corrections, 03:20:05 and 03:15:16); every September month and
 Cobalt's two Octobers read `Waiting for uploads to settle`. The crunch is the 04:00 run.
+
+**04:29 — after the B+150 run (04:00), the crunch: 46 of 46 met.** The run held the lease
+04:00:19–04:21:21 (21 min 2 s), wrote one probe (04:00:46) and started seven fresh September
+builds back to back, $3.30: Bridgewater 04:00:49, Fort Grounds 04:03:28, Lolo Peak Village
+04:05:54, Mullan Crossing 04:07:50, River Falls 04:09:52, Salmon Crossing 04:14:34 and Timber Place
+04:16:34 (16 min 15 s in; it finished past the limit, which stops a run *starting* builds). The
+20-minute limit then deferred five months, and **F2 is live** — each status names the reason
+("this run reached its time limit before it could start this build. The next run builds it."):
+WayPointe September, Bridgewater and Salmon Crossing October read `Ready - building on the next
+run`; Fort Grounds and WayPointe October read `Built v1 - newer files ready, building next run`.
+**D-25's Missoula exception is live:** Mullan Crossing September, built from Lolo Peak Village's
+report, is `Needs review (v1)` with four `unresolved_record` reasons (each per-record section
+names Lolo Peak Village LP) and, following from them, two `missing_required` (the flow's
+per-record items resolved to nothing) and three `unmapped_section`; its review PDF has 5 pages.
+Six of the seven September reports are their golden shape (24/8, 8/6, 8/6, 29/13, 18/8, 25/13).

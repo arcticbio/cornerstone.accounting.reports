@@ -1,11 +1,11 @@
-Scored 64 predictions — met: 33, pending: 31
+Scored 64 predictions — met: 46, pending: 18
 
 | Scenario | Property | Month | Tick | Expected | v | Actual | v | Check | Verdict | Note |
 |---|---|---|---|---|---|---|---|---|---|---|
 | O1 | fort-grounds | 2026-10 | 02:00 | Waiting for uploads to settle | 0 | Waiting for uploads to settle | 0 |  | **met** |  |
 | O1 | fort-grounds | 2026-10 | 02:30 | Built v1 (current) | 1 | Built v1 (current) | 1 | omitted:none → omitted none | **met** | with the schedule |
 | O1 | fort-grounds | 2026-10 | 03:30 | Built v1 - newer files waiting | 1 | Built v1 - newer files waiting | 1 |  | **met** | correction settling |
-| O1 | fort-grounds | 2026-10 | 04:00 | Built v1 - newer files ready, building next run | 1 | - | - | body:reached its time limit →  | **pending** | F2: deferred |
+| O1 | fort-grounds | 2026-10 | 04:00 | Built v1 - newer files ready, building next run | 1 | Built v1 - newer files ready, building next run | 1 | body:reached its time limit → said | **met** | F2: deferred |
 | O1 | fort-grounds | 2026-10 | 04:30 | Built v2 (current) | 2 | - | - | classify_max_s:20 →  | **pending** | one call, labels reused |
 | O2 | lolo-peak-village | 2026-10 | 02:00 | Waiting for uploads to settle | 0 | Waiting for uploads to settle | 0 |  | **met** |  |
 | O2 | lolo-peak-village | 2026-10 | 02:30 | Built v1 (current) | 1 | Built v1 (current) | 1 |  | **met** |  |
@@ -19,17 +19,17 @@ Scored 64 predictions — met: 33, pending: 31
 | O4 | waypointe | 2026-10 | 02:00 | Waiting for uploads to settle | 0 | Waiting for uploads to settle | 0 |  | **met** |  |
 | O4 | waypointe | 2026-10 | 02:30 | Built v1 (current) | 1 | Built v1 (current) | 1 |  | **met** |  |
 | O4 | waypointe | 2026-10 | 03:30 | Built v1 - newer files waiting | 1 | Built v1 - newer files waiting | 1 |  | **met** | correction settling |
-| O4 | waypointe | 2026-10 | 04:00 | Built v1 - newer files ready, building next run | 1 | - | - | body:reached its time limit →  | **pending** | F2: deferred |
+| O4 | waypointe | 2026-10 | 04:00 | Built v1 - newer files ready, building next run | 1 | Built v1 - newer files ready, building next run | 1 | body:reached its time limit → said | **met** | F2: deferred |
 | O4 | waypointe | 2026-10 | 04:30 | Built v2 (current) | 2 | - | - | classify_max_s:20 →  | **pending** | one call, labels reused |
 | O5 | river-falls | 2026-10 | 02:00 | Waiting for uploads to settle | 0 | Waiting for uploads to settle | 0 |  | **met** |  |
 | O5 | river-falls | 2026-10 | 02:30 | Built v1 (current) | 1 | Built v1 (current) | 1 | body:30 or more minutes → said | **met** | D-26: ~32 min after its last upload (60-min rule: B+90) |
 | O6 | timber-place | 2026-10 | 02:30 | Waiting for uploads to settle | 0 | Waiting for uploads to settle | 0 |  | **met** | D-26: ~27 min after its last upload |
 | O6 | timber-place | 2026-10 | 03:00 | Built v1 (current) | 1 | Built v1 (current) | 1 |  | **met** | scanned source, OCR |
 | O7 | bridgewater | 2026-10 | 03:30 | Waiting for uploads to settle | 0 | Waiting for uploads to settle | 0 |  | **met** |  |
-| O7 | bridgewater | 2026-10 | 04:00 | Ready - building on the next run | 0 | - | - | body:reached its time limit →  | **pending** | F2: deferred |
+| O7 | bridgewater | 2026-10 | 04:00 | Ready - building on the next run | 0 | Ready - building on the next run | 0 | body:reached its time limit → said | **met** | F2: deferred |
 | O7 | bridgewater | 2026-10 | 04:30 | Built v1 (current) | 1 | - | - |  | **pending** |  |
 | O8 | salmon-crossing | 2026-10 | 03:30 | Waiting for uploads to settle | 0 | Waiting for uploads to settle | 0 |  | **met** |  |
-| O8 | salmon-crossing | 2026-10 | 04:00 | Ready - building on the next run | 0 | - | - |  | **pending** | F2: deferred |
+| O8 | salmon-crossing | 2026-10 | 04:00 | Ready - building on the next run | 0 | Ready - building on the next run | 0 |  | **met** | F2: deferred |
 | O8 | salmon-crossing | 2026-10 | 04:30 | Built v1 (current) | 1 | - | - |  | **pending** |  |
 | S1 | bridgewater | 2026-09 | 03:30 | Waiting for uploads to settle | 0 | Waiting for uploads to settle | 0 |  | **met** |  |
 | S2 | fort-grounds | 2026-09 | 03:30 | Waiting for uploads to settle | 0 | Waiting for uploads to settle | 0 |  | **met** |  |
@@ -39,14 +39,14 @@ Scored 64 predictions — met: 33, pending: 31
 | S6 | salmon-crossing | 2026-09 | 03:30 | Waiting for uploads to settle | 0 | Waiting for uploads to settle | 0 |  | **met** |  |
 | S7 | timber-place | 2026-09 | 03:30 | Waiting for uploads to settle | 0 | Waiting for uploads to settle | 0 |  | **met** |  |
 | S8 | waypointe | 2026-09 | 03:30 | Waiting for uploads to settle | 0 | Waiting for uploads to settle | 0 |  | **met** |  |
-| S1 | bridgewater | 2026-09 | 04:00 | Built v1 (current) | 1 | - | - |  | **pending** | first of the crunch |
-| S2 | fort-grounds | 2026-09 | 04:00 | Built v1 (current) | 1 | - | - |  | **pending** |  |
-| S3 | lolo-peak-village | 2026-09 | 04:00 | Built v1 (current) | 1 | - | - |  | **pending** |  |
-| S4 | mullan-crossing | 2026-09 | 04:00 | Needs review (v1) | 1 | - | - | codes:unresolved_record →  | **pending** | D-25: another entity's Rent Manager report |
-| S5 | river-falls | 2026-09 | 04:00 | Built v1 (current) | 1 | - | - |  | **pending** |  |
-| S6 | salmon-crossing | 2026-09 | 04:00 | Built v1 (current) | 1 | - | - |  | **pending** |  |
-| S7 | timber-place | 2026-09 | 04:00 | Built v1 (current)|Ready - building on the next run | - | - | - |  | **pending** | 7th build, starts ~17 min in |
-| S8 | waypointe | 2026-09 | 04:00 | Ready - building on the next run|Built v1 (current) | - | - | - |  | **pending** | 8th, ~21 min in |
+| S1 | bridgewater | 2026-09 | 04:00 | Built v1 (current) | 1 | Built v1 (current) | 1 |  | **met** | first of the crunch |
+| S2 | fort-grounds | 2026-09 | 04:00 | Built v1 (current) | 1 | Built v1 (current) | 1 |  | **met** |  |
+| S3 | lolo-peak-village | 2026-09 | 04:00 | Built v1 (current) | 1 | Built v1 (current) | 1 |  | **met** |  |
+| S4 | mullan-crossing | 2026-09 | 04:00 | Needs review (v1) | 1 | Needs review (v1) | 1 | codes:unresolved_record → unmapped_section, unmapped_section, unmapped_section, missing_required, missing_required, unresolved_record, unresolved_record, unresolved_record, unresolved_record | **met** | D-25: another entity's Rent Manager report |
+| S5 | river-falls | 2026-09 | 04:00 | Built v1 (current) | 1 | Built v1 (current) | 1 |  | **met** |  |
+| S6 | salmon-crossing | 2026-09 | 04:00 | Built v1 (current) | 1 | Built v1 (current) | 1 |  | **met** |  |
+| S7 | timber-place | 2026-09 | 04:00 | Built v1 (current)|Ready - building on the next run | - | Built v1 (current) | 1 |  | **met** | 7th build, starts ~17 min in |
+| S8 | waypointe | 2026-09 | 04:00 | Ready - building on the next run|Built v1 (current) | - | Ready - building on the next run | 0 |  | **met** | 8th, ~21 min in |
 | S7 | timber-place | 2026-09 | 04:30 | Built v1 (current) | 1 | - | - |  | **pending** |  |
 | S8 | waypointe | 2026-09 | 04:30 | Built v1 (current) | 1 | - | - |  | **pending** |  |
 | S4 | mullan-crossing | 2026-09 | 05:00 | Needs review (v1) - newer files waiting | 1 | - | - | superseded:Owner Report - September 2026.pdf →  | **pending** | the wrong report set aside |
@@ -62,7 +62,7 @@ Scored 64 predictions — met: 33, pending: 31
 | P | * | * | 02:30 | - | - | - | - | probes:1 → 1 probe(s) | **met** | five first builds |
 | P | * | * | 03:00 | - | - | - | - | probes:1 → 1 probe(s) | **met** | one first build |
 | P | * | * | 03:30 | - | - | - | - | probes:1 → 1 probe(s) | **met** | one rebuild |
-| P | * | * | 04:00 | - | - | - | - | probes:1 →  | **pending** | the crunch |
+| P | * | * | 04:00 | - | - | - | - | probes:1 → 1 probe(s) | **met** | the crunch |
 | P | * | * | 04:30 | - | - | - | - | probes:1 →  | **pending** | the deferred builds |
 | P | * | * | 05:00 | - | - | - | - | probes:0 →  | **pending** | everything settling |
 | P | * | * | 05:30 | - | - | - | - | probes:1 →  | **pending** | four rebuilds |
