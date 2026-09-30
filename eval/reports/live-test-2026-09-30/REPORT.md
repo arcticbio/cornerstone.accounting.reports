@@ -186,7 +186,11 @@ statuses and indexes, and the published reports can still be opened there. The r
 `cleanup.json`.
 
 Right after the move, each property in production held only its original `2026-06 June` folder
-(snapshot `after-cleanup-0540`). ⟨after 06:00⟩
+(snapshot `after-cleanup-0540`). The next scheduled run (06:00:20–06:04:07) recreated an empty
+`2026-09 September` and `2026-10 October` for every property: four empty component folders and an
+empty `output/` each, no status. The root summary read *Last checked 2026-09-30 06:00 UTC* with no
+property lines. Production is back to the state stakeholders will start from (snapshot
+`after-cleanup`).
 
 Left in place: the six publish probes the runs trashed stay in the shared drive's Trash, which
 Drive empties after 30 days. The test itself left nothing there, because the one report it
