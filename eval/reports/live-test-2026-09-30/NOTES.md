@@ -34,3 +34,14 @@ first test's plan knew, `ds=False`); this plan asked accounting to upload one fo
 October (O6) and September (S7). O6's act failed at 02:03:08 while finding the local file
 (`StopIteration`), before anything reached Drive; S7's will fail the same way at B+95.5. The
 schedule is optional and no prediction depends on it, so the plan is left as committed.
+
+**02:51 — after the B+60 run (02:30): 14 of 14 met.** The run held the lease 02:30:19–02:45:02
+(14 min 43 s), wrote one probe (02:31:01, two seconds before its first build) and built five
+October first reports from scratch, $2.26 in all: Fort Grounds 8 pages / 6 bookmarks with the
+schedule that came 18 minutes after the rest (one version, not two); Lolo Peak Village 8/6;
+Mullan Crossing 7/5, golden less the optional schedule; River Falls 29/13; WayPointe 10/8 — each
+its golden shape. **D-26 is live:** River Falls was built by the first run ~32 minutes after its
+last upload (01:58:08), where the old 60-minute window would have waited for 03:00; Timber Place,
+~27 minutes, waits; and the status files now say "the first run 30 or more minutes after the
+last upload". Stakeholder actions since: Mullan Crossing's schedule at 02:45:09; the reviewer
+trashed Lolo Peak Village's v1 at 02:50:03.
