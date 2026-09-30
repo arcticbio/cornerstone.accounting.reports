@@ -1,4 +1,4 @@
-Scored 64 predictions — met: 53, pending: 11
+Scored 64 predictions — met: 58, pending: 6
 
 | Scenario | Property | Month | Tick | Expected | v | Actual | v | Check | Verdict | Note |
 |---|---|---|---|---|---|---|---|---|---|---|
@@ -49,10 +49,10 @@ Scored 64 predictions — met: 53, pending: 11
 | S8 | waypointe | 2026-09 | 04:00 | Ready - building on the next run|Built v1 (current) | - | Ready - building on the next run | 0 |  | **met** | 8th, ~21 min in |
 | S7 | timber-place | 2026-09 | 04:30 | Built v1 (current) | 1 | Built v1 (current) | 1 |  | **met** |  |
 | S8 | waypointe | 2026-09 | 04:30 | Built v1 (current) | 1 | Built v1 (current) | 1 |  | **met** |  |
-| S4 | mullan-crossing | 2026-09 | 05:00 | Needs review (v1) - newer files waiting | 1 | - | - | superseded:Owner Report - September 2026.pdf →  | **pending** | the wrong report set aside |
-| S1 | bridgewater | 2026-09 | 05:00 | Built v1 - newer files waiting | 1 | - | - |  | **pending** |  |
-| S5 | river-falls | 2026-09 | 05:00 | Built v1 - newer files waiting | 1 | - | - |  | **pending** |  |
-| S7 | timber-place | 2026-09 | 05:00 | Built v1 - newer files waiting | 1 | - | - |  | **pending** |  |
+| S4 | mullan-crossing | 2026-09 | 05:00 | Needs review (v1) - newer files waiting | 1 | Needs review (v1) - newer files waiting | 1 | superseded:Owner Report - September 2026.pdf → SUPERSEDED - Mullan Crossing - Owner Report - September 2026.pdf | **met** | the wrong report set aside |
+| S1 | bridgewater | 2026-09 | 05:00 | Built v1 - newer files waiting | 1 | Built v1 - newer files waiting | 1 |  | **met** |  |
+| S5 | river-falls | 2026-09 | 05:00 | Built v1 - newer files waiting | 1 | Built v1 - newer files waiting | 1 |  | **met** |  |
+| S7 | timber-place | 2026-09 | 05:00 | Built v1 - newer files waiting | 1 | Built v1 - newer files waiting | 1 |  | **met** |  |
 | S4 | mullan-crossing | 2026-09 | 05:30 | Built v2 (current) | 2 | - | - |  | **pending** | the right report |
 | S1 | bridgewater | 2026-09 | 05:30 | Built v2 (current) | 2 | - | - | classify_max_s:20 →  | **pending** | 24 pages reused |
 | S5 | river-falls | 2026-09 | 05:30 | Built v2 (current) | 2 | - | - | classify_max_s:20 →  | **pending** | 29 pages reused |
@@ -64,5 +64,5 @@ Scored 64 predictions — met: 53, pending: 11
 | P | * | * | 03:30 | - | - | - | - | probes:1 → 1 probe(s) | **met** | one rebuild |
 | P | * | * | 04:00 | - | - | - | - | probes:1 → 1 probe(s) | **met** | the crunch |
 | P | * | * | 04:30 | - | - | - | - | probes:1 → 1 probe(s) | **met** | the deferred builds |
-| P | * | * | 05:00 | - | - | - | - | probes:0 →  | **pending** | everything settling |
+| P | * | * | 05:00 | - | - | - | - | probes:0 → 0 probe(s) | **met** | everything settling |
 | P | * | * | 05:30 | - | - | - | - | probes:1 →  | **pending** | four rebuilds |

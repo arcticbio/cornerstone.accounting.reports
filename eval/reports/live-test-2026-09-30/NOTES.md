@@ -90,3 +90,14 @@ Salmon Crossing October v1 (04:36:48) and WayPointe October v2 (04:39:00) — $1
 golden shape (10/8, 24/8, 8/6, 18/8, 10/8). The two corrections were one model call each ($0.02)
 with three documents' labels reused, and **classified in 5.2 s and 5.5 s**. Next: accounting's
 three reissued Balance Sheets and Missoula's corrected Mullan Crossing report at 04:50.
+
+**05:10 — after the B+210 run (05:00): 58 of 58 met; every stakeholder action done.** The last
+four uploads landed at 04:50:16–04:50:31: Missoula's corrected Mullan Crossing September report,
+and accounting's reissued Balance Sheets for Bridgewater, River Falls and Timber Place September.
+The 05:00 run held the lease 05:00:22–05:01:55, had nothing settled to build and **wrote no
+probe**. It renamed the wrong report `SUPERSEDED - Mullan Crossing - Owner Report - September
+2026.pdf` (set aside, not deleted), so Mullan Crossing reads `Needs review (v1) - newer files
+waiting`; the three others read `Built v1 - newer files waiting`. 70 of 72 actions performed; the
+two that failed are Timber Place's schedules, which do not exist in the samples. $7.39 so far.
+The session-holding watcher ends ~05:13; if the container is recycled after that, the 05:45
+wrap-up restarts the conductor, which then snapshots the 05:30 run (no action remains).
