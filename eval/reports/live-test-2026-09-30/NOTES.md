@@ -57,3 +57,13 @@ September file for the eight properties (Mullan Crossing's owner report being Lo
 Village's) and Cobalt's two Octobers; the fortieth, Timber Place's September schedule, failed as
 expected (none in the samples). The last landed ~22 minutes before the 03:30 run and ~52 before
 04:00, the crunch.
+
+**03:39 — after the B+120 run (03:30): 33 of 33 met.** The run held the lease 03:30:20–03:32:32,
+wrote one probe and built one version: Mullan Crossing October v2, its late schedule added — one
+model call ($0.03), the three unchanged documents' labels reused, 8 pages / 6 bookmarks (golden,
+with the schedule). **Its classify step took 5.9 s** — on 29 September, comparable Missoula
+one-call rebuilds took 25–31 s, most of it the orientation cross-check of reused pages, which
+the capacity change skips. Lolo Peak Village October reads `Built v1 (current)` again after the
+reviewer's restore, with no new version. Fort Grounds and WayPointe October read `Built v1 -
+newer files waiting` (their corrections, 03:20:05 and 03:15:16); every September month and
+Cobalt's two Octobers read `Waiting for uploads to settle`. The crunch is the 04:00 run.
