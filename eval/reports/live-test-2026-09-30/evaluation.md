@@ -1,0 +1,68 @@
+Scored 64 predictions — met: 64
+
+| Scenario | Property | Month | Tick | Expected | v | Actual | v | Check | Verdict | Note |
+|---|---|---|---|---|---|---|---|---|---|---|
+| O1 | fort-grounds | 2026-10 | 02:00 | Waiting for uploads to settle | 0 | Waiting for uploads to settle | 0 |  | **met** |  |
+| O1 | fort-grounds | 2026-10 | 02:30 | Built v1 (current) | 1 | Built v1 (current) | 1 | omitted:none → omitted none | **met** | with the schedule |
+| O1 | fort-grounds | 2026-10 | 03:30 | Built v1 - newer files waiting | 1 | Built v1 - newer files waiting | 1 |  | **met** | correction settling |
+| O1 | fort-grounds | 2026-10 | 04:00 | Built v1 - newer files ready, building next run | 1 | Built v1 - newer files ready, building next run | 1 | body:reached its time limit → said | **met** | F2: deferred |
+| O1 | fort-grounds | 2026-10 | 04:30 | Built v2 (current) | 2 | Built v2 (current) | 2 | classify_max_s:20 → classify 5.2 s | **met** | one call, labels reused |
+| O2 | lolo-peak-village | 2026-10 | 02:00 | Waiting for uploads to settle | 0 | Waiting for uploads to settle | 0 |  | **met** |  |
+| O2 | lolo-peak-village | 2026-10 | 02:30 | Built v1 (current) | 1 | Built v1 (current) | 1 |  | **met** |  |
+| O2 | lolo-peak-village | 2026-10 | 03:00 | Built v1 - report file missing | 1 | Built v1 - report file missing | 1 | body:restore it from the shared drive's Trash → said | **met** | F3 |
+| O2 | lolo-peak-village | 2026-10 | 03:30 | Built v1 (current) | 1 | Built v1 (current) | 1 |  | **met** | restored; no new version |
+| O2 | lolo-peak-village | 2026-10 | 05:30 | Built v1 (current) | 1 | Built v1 (current) | 1 |  | **met** | still v1 at the end |
+| O3 | mullan-crossing | 2026-10 | 02:00 | Waiting for uploads to settle | 0 | Waiting for uploads to settle | 0 |  | **met** |  |
+| O3 | mullan-crossing | 2026-10 | 02:30 | Built v1 (current) | 1 | Built v1 (current) | 1 | omitted:some → omitted ['Distribution Schedule'] | **met** | without the schedule |
+| O3 | mullan-crossing | 2026-10 | 03:00 | Built v1 - newer files waiting | 1 | Built v1 - newer files waiting | 1 |  | **met** | schedule settling |
+| O3 | mullan-crossing | 2026-10 | 03:30 | Built v2 (current) | 2 | Built v2 (current) | 2 | classify_max_s:20 → classify 5.9 s | **met** | schedule added |
+| O4 | waypointe | 2026-10 | 02:00 | Waiting for uploads to settle | 0 | Waiting for uploads to settle | 0 |  | **met** |  |
+| O4 | waypointe | 2026-10 | 02:30 | Built v1 (current) | 1 | Built v1 (current) | 1 |  | **met** |  |
+| O4 | waypointe | 2026-10 | 03:30 | Built v1 - newer files waiting | 1 | Built v1 - newer files waiting | 1 |  | **met** | correction settling |
+| O4 | waypointe | 2026-10 | 04:00 | Built v1 - newer files ready, building next run | 1 | Built v1 - newer files ready, building next run | 1 | body:reached its time limit → said | **met** | F2: deferred |
+| O4 | waypointe | 2026-10 | 04:30 | Built v2 (current) | 2 | Built v2 (current) | 2 | classify_max_s:20 → classify 5.5 s | **met** | one call, labels reused |
+| O5 | river-falls | 2026-10 | 02:00 | Waiting for uploads to settle | 0 | Waiting for uploads to settle | 0 |  | **met** |  |
+| O5 | river-falls | 2026-10 | 02:30 | Built v1 (current) | 1 | Built v1 (current) | 1 | body:30 or more minutes → said | **met** | D-26: ~32 min after its last upload (60-min rule: B+90) |
+| O6 | timber-place | 2026-10 | 02:30 | Waiting for uploads to settle | 0 | Waiting for uploads to settle | 0 |  | **met** | D-26: ~27 min after its last upload |
+| O6 | timber-place | 2026-10 | 03:00 | Built v1 (current) | 1 | Built v1 (current) | 1 |  | **met** | scanned source, OCR |
+| O7 | bridgewater | 2026-10 | 03:30 | Waiting for uploads to settle | 0 | Waiting for uploads to settle | 0 |  | **met** |  |
+| O7 | bridgewater | 2026-10 | 04:00 | Ready - building on the next run | 0 | Ready - building on the next run | 0 | body:reached its time limit → said | **met** | F2: deferred |
+| O7 | bridgewater | 2026-10 | 04:30 | Built v1 (current) | 1 | Built v1 (current) | 1 |  | **met** |  |
+| O8 | salmon-crossing | 2026-10 | 03:30 | Waiting for uploads to settle | 0 | Waiting for uploads to settle | 0 |  | **met** |  |
+| O8 | salmon-crossing | 2026-10 | 04:00 | Ready - building on the next run | 0 | Ready - building on the next run | 0 |  | **met** | F2: deferred |
+| O8 | salmon-crossing | 2026-10 | 04:30 | Built v1 (current) | 1 | Built v1 (current) | 1 |  | **met** |  |
+| S1 | bridgewater | 2026-09 | 03:30 | Waiting for uploads to settle | 0 | Waiting for uploads to settle | 0 |  | **met** |  |
+| S2 | fort-grounds | 2026-09 | 03:30 | Waiting for uploads to settle | 0 | Waiting for uploads to settle | 0 |  | **met** |  |
+| S3 | lolo-peak-village | 2026-09 | 03:30 | Waiting for uploads to settle | 0 | Waiting for uploads to settle | 0 |  | **met** |  |
+| S4 | mullan-crossing | 2026-09 | 03:30 | Waiting for uploads to settle | 0 | Waiting for uploads to settle | 0 |  | **met** |  |
+| S5 | river-falls | 2026-09 | 03:30 | Waiting for uploads to settle | 0 | Waiting for uploads to settle | 0 |  | **met** |  |
+| S6 | salmon-crossing | 2026-09 | 03:30 | Waiting for uploads to settle | 0 | Waiting for uploads to settle | 0 |  | **met** |  |
+| S7 | timber-place | 2026-09 | 03:30 | Waiting for uploads to settle | 0 | Waiting for uploads to settle | 0 |  | **met** |  |
+| S8 | waypointe | 2026-09 | 03:30 | Waiting for uploads to settle | 0 | Waiting for uploads to settle | 0 |  | **met** |  |
+| S1 | bridgewater | 2026-09 | 04:00 | Built v1 (current) | 1 | Built v1 (current) | 1 |  | **met** | first of the crunch |
+| S2 | fort-grounds | 2026-09 | 04:00 | Built v1 (current) | 1 | Built v1 (current) | 1 |  | **met** |  |
+| S3 | lolo-peak-village | 2026-09 | 04:00 | Built v1 (current) | 1 | Built v1 (current) | 1 |  | **met** |  |
+| S4 | mullan-crossing | 2026-09 | 04:00 | Needs review (v1) | 1 | Needs review (v1) | 1 | codes:unresolved_record → unmapped_section, unmapped_section, unmapped_section, missing_required, missing_required, unresolved_record, unresolved_record, unresolved_record, unresolved_record | **met** | D-25: another entity's Rent Manager report |
+| S5 | river-falls | 2026-09 | 04:00 | Built v1 (current) | 1 | Built v1 (current) | 1 |  | **met** |  |
+| S6 | salmon-crossing | 2026-09 | 04:00 | Built v1 (current) | 1 | Built v1 (current) | 1 |  | **met** |  |
+| S7 | timber-place | 2026-09 | 04:00 | Built v1 (current)|Ready - building on the next run | - | Built v1 (current) | 1 |  | **met** | 7th build, starts ~17 min in |
+| S8 | waypointe | 2026-09 | 04:00 | Ready - building on the next run|Built v1 (current) | - | Ready - building on the next run | 0 |  | **met** | 8th, ~21 min in |
+| S7 | timber-place | 2026-09 | 04:30 | Built v1 (current) | 1 | Built v1 (current) | 1 |  | **met** |  |
+| S8 | waypointe | 2026-09 | 04:30 | Built v1 (current) | 1 | Built v1 (current) | 1 |  | **met** |  |
+| S4 | mullan-crossing | 2026-09 | 05:00 | Needs review (v1) - newer files waiting | 1 | Needs review (v1) - newer files waiting | 1 | superseded:Owner Report - September 2026.pdf → SUPERSEDED - Mullan Crossing - Owner Report - September 2026.pdf | **met** | the wrong report set aside |
+| S1 | bridgewater | 2026-09 | 05:00 | Built v1 - newer files waiting | 1 | Built v1 - newer files waiting | 1 |  | **met** |  |
+| S5 | river-falls | 2026-09 | 05:00 | Built v1 - newer files waiting | 1 | Built v1 - newer files waiting | 1 |  | **met** |  |
+| S7 | timber-place | 2026-09 | 05:00 | Built v1 - newer files waiting | 1 | Built v1 - newer files waiting | 1 |  | **met** |  |
+| S4 | mullan-crossing | 2026-09 | 05:30 | Built v2 (current) | 2 | Built v2 (current) | 2 |  | **met** | the right report |
+| S1 | bridgewater | 2026-09 | 05:30 | Built v2 (current) | 2 | Built v2 (current) | 2 | classify_max_s:20 → classify 11.9 s | **met** | 24 pages reused |
+| S5 | river-falls | 2026-09 | 05:30 | Built v2 (current) | 2 | Built v2 (current) | 2 | classify_max_s:20 → classify 6.2 s | **met** | 29 pages reused |
+| S7 | timber-place | 2026-09 | 05:30 | Built v2 (current) | 2 | Built v2 (current) | 2 | classify_max_s:20 → classify 4.9 s | **met** | 25 pages reused |
+| P | * | * | 01:30 | - | - | - | - | probes:0 → 0 probe(s) | **met** | nothing uploaded yet |
+| P | * | * | 02:00 | - | - | - | - | probes:0 → 0 probe(s) | **met** | everything settling |
+| P | * | * | 02:30 | - | - | - | - | probes:1 → 1 probe(s) | **met** | five first builds |
+| P | * | * | 03:00 | - | - | - | - | probes:1 → 1 probe(s) | **met** | one first build |
+| P | * | * | 03:30 | - | - | - | - | probes:1 → 1 probe(s) | **met** | one rebuild |
+| P | * | * | 04:00 | - | - | - | - | probes:1 → 1 probe(s) | **met** | the crunch |
+| P | * | * | 04:30 | - | - | - | - | probes:1 → 1 probe(s) | **met** | the deferred builds |
+| P | * | * | 05:00 | - | - | - | - | probes:0 → 0 probe(s) | **met** | everything settling |
+| P | * | * | 05:30 | - | - | - | - | probes:1 → 1 probe(s) | **met** | four rebuilds |

@@ -256,6 +256,9 @@ Resolution rules (`crr.resolve`):
    record's `pm_name` maps to that record's id.** (Single-record sources often print no
    `Property:` header, and golden labels store `record: null` for them.) For a multi-record
    property a null qualifier on a `per_record` section is a review reason (`unresolved_record`).
+   A qualifier that names no record of the property is `unresolved_record` on a single-record
+   property too: this is what sends a Missoula report filed under another Missoula property to
+   review (§18.6, D-25).
 4. `source:*` → every resolved section in source order, minus `drop`.
 5. `#n` selects the n-th occurrence in document order and is only legal on `cardinality: one`
    sections that the segmenter found more than once (a data-quality escape hatch, not a normal path).
@@ -417,7 +420,7 @@ The build is `NEEDS_REVIEW` (never silently `BUILT`) when any of:
 | `footer_disagrees` | `footer_agrees is False` on any page |
 | `unmapped_section` | a found section is neither in `flow` nor `drop` |
 | `missing_required` | a required flow item resolved to nothing, or a required source file is absent |
-| `unresolved_record` | a `per_record` section on a multi-record property whose qualifier maps to no record |
+| `unresolved_record` | a `per_record` section whose qualifier names no record of the property, or, on a multi-record property, has no qualifier (§5 rule 3) |
 | `cardinality_violation` | a `one` section found more than once and no `#n` in the flow |
 | `orientation_uncertain` | the two orientation signals in §7.6 disagree and the arbiter did not settle it |
 | `page_count_drift` | PM source page count differs from the last built period for this property by more than 50 % (only when a prior manifest exists) |

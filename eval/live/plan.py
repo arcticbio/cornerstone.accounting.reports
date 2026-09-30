@@ -79,6 +79,9 @@ class Expect:
     note: str = ""
     #: Set when the run made this prediction unreachable before its tick came; the reason.
     withdrawn: str = ""
+    #: A further fact the prediction claims, scored by `evaluate.py` (added for the second test;
+    #: none of this test's predictions carry one).
+    check: str = ""
 
 
 def _full_set(sid: str, at: float, prop: str, period: str, *, ds: bool = True) -> list[Act]:

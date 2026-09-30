@@ -1,0 +1,1972 @@
+{
+ "tag": "20260930-0500",
+ "taken": "2026-09-30T05:02:06Z",
+ "tick": "2026-09-30T05:00:00Z",
+ "offset": 210,
+ "run_observed": true,
+ "lease": {
+  "host": "crr-quarterly-29845740-5wdlp",
+  "acquired": "2026-09-30T05:00:22Z",
+  "released": "2026-09-30T05:01:55Z",
+  "expires": "2026-09-30T05:30:22Z"
+ },
+ "summary": [
+  "Investor report status - one line per property, newest month with any files",
+  "",
+  "Fort Grounds - October 2026 - Built v2 (current)",
+  "Lolo Peak Village - October 2026 - Built v1 (current)",
+  "Mullan Crossing - October 2026 - Built v2 (current)",
+  "WayPointe - October 2026 - Built v2 (current)",
+  "Timber Place - October 2026 - Built v1 (current)",
+  "River Falls - October 2026 - Built v1 (current)",
+  "Bridgewater - October 2026 - Built v1 (current)",
+  "Salmon Crossing - October 2026 - Built v1 (current)",
+  "",
+  "Last checked 2026-09-30 05:00 UTC. Open a property's month folder, then output/, for detail."
+ ],
+ "root_files": [
+  "Cobalt Properties Group",
+  "McCathren Management and Real Estate Services",
+  "Missoula Property Management",
+  "_LEASE - reconcile run (do not edit).json",
+  "_STATUS - All properties.txt"
+ ],
+ "probes_created": [
+  "2026-09-30T02:31:01.255Z",
+  "2026-09-30T03:01:33.789Z",
+  "2026-09-30T03:31:38.771Z",
+  "2026-09-30T04:00:46.210Z",
+  "2026-09-30T04:31:15.501Z"
+ ],
+ "properties": {
+  "fort-grounds": {
+   "months": {
+    "2026-10 October": {
+     "components": {
+      "4 - Distribution Schedule": [
+       {
+        "name": "Fort Grounds Distribution Schedule 2026-10.pdf",
+        "id": "1RUnS2F8RCVrg5Kr_SIVClaOkEDIV9vsM",
+        "mime": "application/pdf",
+        "md5": "ec62a1090586f9a59807e7c8b0a88383",
+        "created": "2026-09-30T01:50:08.543Z",
+        "modified": "2026-09-30T01:50:08.543Z",
+        "size": 107871
+       }
+      ],
+      "3 - Profit and Loss": [
+       {
+        "name": "Fort Grounds P&L YTD 2026-10.pdf",
+        "id": "1pQuIJLeSu6zpDyJSZKYEaNZV3LJCQHBK",
+        "mime": "application/pdf",
+        "md5": "f86e391a699b96dc940e0d7f7c29ffc5",
+        "created": "2026-09-30T01:38:44.435Z",
+        "modified": "2026-09-30T01:38:44.435Z",
+        "size": 32035
+       }
+      ],
+      "2 - Balance Sheet": [
+       {
+        "name": "SUPERSEDED - Fort Grounds Balance Sheet 2026-10.pdf",
+        "id": "1Rtsace5204vYbDowF2VHpewQ-m4du4qC",
+        "mime": "application/pdf",
+        "md5": "f7b9b11391e4ee8461bfaf7e57d76283",
+        "created": "2026-09-30T01:38:34.775Z",
+        "modified": "2026-09-30T03:31:16.063Z",
+        "size": 33851
+       },
+       {
+        "name": "Fort Grounds Balance Sheet 2026-10 corrected.pdf",
+        "id": "1ng3MUC6nLhKGVvA-ROTMHpyx7Wklc2Kg",
+        "mime": "application/pdf",
+        "md5": "82389626423ebfae148a19d1ae0c1f74",
+        "created": "2026-09-30T03:20:03.932Z",
+        "modified": "2026-09-30T03:20:03.932Z",
+        "size": 33877
+       }
+      ],
+      "1 - Property Manager Report": [
+       {
+        "name": "Fort Grounds - Owner Report - October 2026.pdf",
+        "id": "1nKDkYG_SGHGEXNG3xniDWxxTxghG4JTJ",
+        "mime": "application/pdf",
+        "md5": "4c12c45eecf76dc5ebf2445345c34094",
+        "created": "2026-09-30T01:38:31.240Z",
+        "modified": "2026-09-30T01:38:31.240Z",
+        "size": 193795
+       }
+      ]
+     },
+     "loose": [],
+     "output": {
+      "status": [
+       "Built v2 (current)"
+      ],
+      "status_body": [
+       "Fort Grounds - October 2026\nStatus: Built v2 (current)\n\nv2 was built from exactly the files listed below.\n\nFiles\n  Property Manager Report: \"Fort Grounds - Owner Report - October 2026.pdf\" (uploaded 2026-09-30 01:38 UTC)\n  Balance Sheet: \"Fort Grounds Balance Sheet 2026-10 corrected.pdf\" (uploaded 2026-09-30 03:20 UTC)\n      set aside: \"SUPERSEDED - Fort Grounds Balance Sheet 2026-10.pdf\" (uploaded 2026-09-30 01:38 UTC) - a newer file is in this folder\n  Profit and Loss: \"Fort Grounds P&L YTD 2026-10.pdf\" (uploaded 2026-09-30 01:38 UTC)\n  Distribution Schedule: \"Fort Grounds Distribution Schedule 2026-10.pdf\" (uploaded 2026-09-30 01:50 UTC)\n\nVersions (newest first)\n  v2 - 2026-09-30 04:36 UTC - built - Balance Sheet replaced (uploaded 2026-09-30 03:20 UTC)\n  v1 - 2026-09-30 02:31 UTC - built - first build\n\nHow this folder works\n  Put one PDF in each numbered folder. Any filename is fine.\n  If a folder holds more than one PDF, the newest upload is used and the others are\n  renamed \"SUPERSEDED - ...\". To go back to an older file, delete the newer one.\n  A new version is built by the first run 30 or more minutes after the\n  last upload, and older versions stay in this folder.\n  Changes after 2026-12-12 are ignored.\n"
+      ],
+      "pdfs": [
+       "Fort Grounds - Investor Report - October 2026 - v1.pdf",
+       "Fort Grounds - Investor Report - October 2026 - v2.pdf"
+      ],
+      "reviews": [],
+      "other": []
+     },
+     "state": {
+      "versions": [
+       {
+        "version": 1,
+        "built_at": "2026-09-30T02:31:03.807865Z",
+        "status": "built",
+        "fingerprint": "dd2757f20b489015d0ba844af96ed1eaba8553dce834d6772c64ac8ac2efeb7a",
+        "output_file": "Fort Grounds - Investor Report - October 2026 - v1.pdf",
+        "inputs": [
+         {
+          "role": "pm_source",
+          "file_id": "1nKDkYG_SGHGEXNG3xniDWxxTxghG4JTJ",
+          "md5": "4c12c45eecf76dc5ebf2445345c34094",
+          "name": "Fort Grounds - Owner Report - October 2026.pdf",
+          "uploaded_at": "2026-09-30T01:38:31.240000Z"
+         },
+         {
+          "role": "cornerstone_balance_sheet",
+          "file_id": "1Rtsace5204vYbDowF2VHpewQ-m4du4qC",
+          "md5": "f7b9b11391e4ee8461bfaf7e57d76283",
+          "name": "Fort Grounds Balance Sheet 2026-10.pdf",
+          "uploaded_at": "2026-09-30T01:38:34.775000Z"
+         },
+         {
+          "role": "cornerstone_profit_loss_ytd",
+          "file_id": "1pQuIJLeSu6zpDyJSZKYEaNZV3LJCQHBK",
+          "md5": "f86e391a699b96dc940e0d7f7c29ffc5",
+          "name": "Fort Grounds P&L YTD 2026-10.pdf",
+          "uploaded_at": "2026-09-30T01:38:44.435000Z"
+         },
+         {
+          "role": "cornerstone_distribution_schedule",
+          "file_id": "1RUnS2F8RCVrg5Kr_SIVClaOkEDIV9vsM",
+          "md5": "ec62a1090586f9a59807e7c8b0a88383",
+          "name": "Fort Grounds Distribution Schedule 2026-10.pdf",
+          "uploaded_at": "2026-09-30T01:50:08.543000Z"
+         }
+        ],
+        "review_codes": []
+       },
+       {
+        "version": 2,
+        "built_at": "2026-09-30T04:36:12.811814Z",
+        "status": "built",
+        "fingerprint": "5f64a94f55122272eab5da003475c2c3fc1c9645c93d7e25c9126fcfa2ddcd59",
+        "output_file": "Fort Grounds - Investor Report - October 2026 - v2.pdf",
+        "inputs": [
+         {
+          "role": "pm_source",
+          "file_id": "1nKDkYG_SGHGEXNG3xniDWxxTxghG4JTJ",
+          "md5": "4c12c45eecf76dc5ebf2445345c34094",
+          "name": "Fort Grounds - Owner Report - October 2026.pdf",
+          "uploaded_at": "2026-09-30T01:38:31.240000Z"
+         },
+         {
+          "role": "cornerstone_balance_sheet",
+          "file_id": "1ng3MUC6nLhKGVvA-ROTMHpyx7Wklc2Kg",
+          "md5": "82389626423ebfae148a19d1ae0c1f74",
+          "name": "Fort Grounds Balance Sheet 2026-10 corrected.pdf",
+          "uploaded_at": "2026-09-30T03:20:03.932000Z"
+         },
+         {
+          "role": "cornerstone_profit_loss_ytd",
+          "file_id": "1pQuIJLeSu6zpDyJSZKYEaNZV3LJCQHBK",
+          "md5": "f86e391a699b96dc940e0d7f7c29ffc5",
+          "name": "Fort Grounds P&L YTD 2026-10.pdf",
+          "uploaded_at": "2026-09-30T01:38:44.435000Z"
+         },
+         {
+          "role": "cornerstone_distribution_schedule",
+          "file_id": "1RUnS2F8RCVrg5Kr_SIVClaOkEDIV9vsM",
+          "md5": "ec62a1090586f9a59807e7c8b0a88383",
+          "name": "Fort Grounds Distribution Schedule 2026-10.pdf",
+          "uploaded_at": "2026-09-30T01:50:08.543000Z"
+         }
+        ],
+        "review_codes": []
+       }
+      ],
+      "attempts": []
+     }
+    },
+    "2026-09 September": {
+     "components": {
+      "4 - Distribution Schedule": [
+       {
+        "name": "Fort Grounds Distribution Schedule 2026-09.pdf",
+        "id": "1hlr9XLpjHSwkPV0jBzSlAgXoc5gKOgar",
+        "mime": "application/pdf",
+        "md5": "140f8b8b91f87a2659b3e919f83966ba",
+        "created": "2026-09-30T03:07:11.920Z",
+        "modified": "2026-09-30T03:07:11.920Z",
+        "size": 107871
+       }
+      ],
+      "3 - Profit and Loss": [
+       {
+        "name": "Fort Grounds P&L YTD 2026-09.pdf",
+        "id": "1cxjBJ4Moev33Tf-DENuDNPRLgbU0REiO",
+        "mime": "application/pdf",
+        "md5": "b7812b94411f21d4e2c6ac7fd0527ec9",
+        "created": "2026-09-30T03:07:09.284Z",
+        "modified": "2026-09-30T03:07:09.284Z",
+        "size": 32035
+       }
+      ],
+      "2 - Balance Sheet": [
+       {
+        "name": "Fort Grounds Balance Sheet 2026-09.pdf",
+        "id": "1vm1wQHmC32rFgI1Kr22OUtc0nFoCJ6SD",
+        "mime": "application/pdf",
+        "md5": "8377d399629a85c7ac15d140ddda3390",
+        "created": "2026-09-30T03:05:20.671Z",
+        "modified": "2026-09-30T03:05:20.671Z",
+        "size": 33851
+       }
+      ],
+      "1 - Property Manager Report": [
+       {
+        "name": "Fort Grounds - Owner Report - September 2026.pdf",
+        "id": "1R2e3hpKYFhoxOjixdQyXgY4QXPwuMVvd",
+        "mime": "application/pdf",
+        "md5": "44b97d712e3a3d94ba837256b2286f98",
+        "created": "2026-09-30T03:07:53.214Z",
+        "modified": "2026-09-30T03:07:53.214Z",
+        "size": 193795
+       }
+      ]
+     },
+     "loose": [],
+     "output": {
+      "status": [
+       "Built v1 (current)"
+      ],
+      "status_body": [
+       "Fort Grounds - September 2026\nStatus: Built v1 (current)\n\nv1 was built from exactly the files listed below.\n\nFiles\n  Property Manager Report: \"Fort Grounds - Owner Report - September 2026.pdf\" (uploaded 2026-09-30 03:07 UTC)\n  Balance Sheet: \"Fort Grounds Balance Sheet 2026-09.pdf\" (uploaded 2026-09-30 03:05 UTC)\n  Profit and Loss: \"Fort Grounds P&L YTD 2026-09.pdf\" (uploaded 2026-09-30 03:07 UTC)\n  Distribution Schedule: \"Fort Grounds Distribution Schedule 2026-09.pdf\" (uploaded 2026-09-30 03:07 UTC)\n\nVersions (newest first)\n  v1 - 2026-09-30 04:03 UTC - built - first build\n\nHow this folder works\n  Put one PDF in each numbered folder. Any filename is fine.\n  If a folder holds more than one PDF, the newest upload is used and the others are\n  renamed \"SUPERSEDED - ...\". To go back to an older file, delete the newer one.\n  A new version is built by the first run 30 or more minutes after the\n  last upload, and older versions stay in this folder.\n  Changes after 2026-11-11 are ignored.\n"
+      ],
+      "pdfs": [
+       "Fort Grounds - Investor Report - September 2026 - v1.pdf"
+      ],
+      "reviews": [],
+      "other": []
+     },
+     "state": {
+      "versions": [
+       {
+        "version": 1,
+        "built_at": "2026-09-30T04:03:28.304446Z",
+        "status": "built",
+        "fingerprint": "b742ddc4ab83a6d955733fff492591bd08590afadac6b1b508479dcaa3e96d26",
+        "output_file": "Fort Grounds - Investor Report - September 2026 - v1.pdf",
+        "inputs": [
+         {
+          "role": "pm_source",
+          "file_id": "1R2e3hpKYFhoxOjixdQyXgY4QXPwuMVvd",
+          "md5": "44b97d712e3a3d94ba837256b2286f98",
+          "name": "Fort Grounds - Owner Report - September 2026.pdf",
+          "uploaded_at": "2026-09-30T03:07:53.214000Z"
+         },
+         {
+          "role": "cornerstone_balance_sheet",
+          "file_id": "1vm1wQHmC32rFgI1Kr22OUtc0nFoCJ6SD",
+          "md5": "8377d399629a85c7ac15d140ddda3390",
+          "name": "Fort Grounds Balance Sheet 2026-09.pdf",
+          "uploaded_at": "2026-09-30T03:05:20.671000Z"
+         },
+         {
+          "role": "cornerstone_profit_loss_ytd",
+          "file_id": "1cxjBJ4Moev33Tf-DENuDNPRLgbU0REiO",
+          "md5": "b7812b94411f21d4e2c6ac7fd0527ec9",
+          "name": "Fort Grounds P&L YTD 2026-09.pdf",
+          "uploaded_at": "2026-09-30T03:07:09.284000Z"
+         },
+         {
+          "role": "cornerstone_distribution_schedule",
+          "file_id": "1hlr9XLpjHSwkPV0jBzSlAgXoc5gKOgar",
+          "md5": "140f8b8b91f87a2659b3e919f83966ba",
+          "name": "Fort Grounds Distribution Schedule 2026-09.pdf",
+          "uploaded_at": "2026-09-30T03:07:11.920000Z"
+         }
+        ],
+        "review_codes": []
+       }
+      ],
+      "attempts": []
+     }
+    },
+    "2026-06 June": {
+     "components": {},
+     "loose": [],
+     "output": null,
+     "state": null,
+     "other_folders": [
+      "inputs"
+     ]
+    }
+   },
+   "loose": []
+  },
+  "lolo-peak-village": {
+   "months": {
+    "2026-10 October": {
+     "components": {
+      "4 - Distribution Schedule": [
+       {
+        "name": "Lolo Peak Village Distribution Schedule 2026-10.pdf",
+        "id": "18dlKkF8FezbstbSiPDTPkv6GVigIDTy1",
+        "mime": "application/pdf",
+        "md5": "78f4113edf061be9a76b99eeff51cdd5",
+        "created": "2026-09-30T01:38:51.993Z",
+        "modified": "2026-09-30T01:38:51.993Z",
+        "size": 105012
+       }
+      ],
+      "3 - Profit and Loss": [
+       {
+        "name": "Lolo Peak Village P&L YTD 2026-10.pdf",
+        "id": "1KiTx2EScN3Zd1nX8a9cRD0ES9AwkwSGD",
+        "mime": "application/pdf",
+        "md5": "734768618439516e5afaa618b6b07ae1",
+        "created": "2026-09-30T01:38:48.594Z",
+        "modified": "2026-09-30T01:38:48.594Z",
+        "size": 70059
+       }
+      ],
+      "2 - Balance Sheet": [
+       {
+        "name": "Lolo Peak Village Balance Sheet 2026-10.pdf",
+        "id": "1EvacgN3Vx8CJiSkKGoSkPtErql9afqH8",
+        "mime": "application/pdf",
+        "md5": "0feb8fea839b4702f44b01b331ff82b0",
+        "created": "2026-09-30T01:38:41.396Z",
+        "modified": "2026-09-30T01:38:41.396Z",
+        "size": 33629
+       }
+      ],
+      "1 - Property Manager Report": [
+       {
+        "name": "Lolo Peak Village - Owner Report - October 2026.pdf",
+        "id": "1FPFbkcWWLLkPSjn2o2CWjdK-WlthdHTe",
+        "mime": "application/pdf",
+        "md5": "bd60679394639222af6fb6ad222e72ef",
+        "created": "2026-09-30T01:38:37.911Z",
+        "modified": "2026-09-30T01:38:37.911Z",
+        "size": 178215
+       }
+      ]
+     },
+     "loose": [],
+     "output": {
+      "status": [
+       "Built v1 (current)"
+      ],
+      "status_body": [
+       "Lolo Peak Village - October 2026\nStatus: Built v1 (current)\n\nv1 was built from exactly the files listed below.\n\nFiles\n  Property Manager Report: \"Lolo Peak Village - Owner Report - October 2026.pdf\" (uploaded 2026-09-30 01:38 UTC)\n  Balance Sheet: \"Lolo Peak Village Balance Sheet 2026-10.pdf\" (uploaded 2026-09-30 01:38 UTC)\n  Profit and Loss: \"Lolo Peak Village P&L YTD 2026-10.pdf\" (uploaded 2026-09-30 01:38 UTC)\n  Distribution Schedule: \"Lolo Peak Village Distribution Schedule 2026-10.pdf\" (uploaded 2026-09-30 01:38 UTC)\n\nVersions (newest first)\n  v1 - 2026-09-30 02:33 UTC - built - first build\n\nHow this folder works\n  Put one PDF in each numbered folder. Any filename is fine.\n  If a folder holds more than one PDF, the newest upload is used and the others are\n  renamed \"SUPERSEDED - ...\". To go back to an older file, delete the newer one.\n  A new version is built by the first run 30 or more minutes after the\n  last upload, and older versions stay in this folder.\n  Changes after 2026-12-12 are ignored.\n"
+      ],
+      "pdfs": [
+       "Lolo Peak Village - Investor Report - October 2026 - v1.pdf"
+      ],
+      "reviews": [],
+      "other": []
+     },
+     "state": {
+      "versions": [
+       {
+        "version": 1,
+        "built_at": "2026-09-30T02:33:27.293378Z",
+        "status": "built",
+        "fingerprint": "033b6ee14432a3988e8073669c0bbd023989417237d0003ddb1879edb71a9dcd",
+        "output_file": "Lolo Peak Village - Investor Report - October 2026 - v1.pdf",
+        "inputs": [
+         {
+          "role": "pm_source",
+          "file_id": "1FPFbkcWWLLkPSjn2o2CWjdK-WlthdHTe",
+          "md5": "bd60679394639222af6fb6ad222e72ef",
+          "name": "Lolo Peak Village - Owner Report - October 2026.pdf",
+          "uploaded_at": "2026-09-30T01:38:37.911000Z"
+         },
+         {
+          "role": "cornerstone_balance_sheet",
+          "file_id": "1EvacgN3Vx8CJiSkKGoSkPtErql9afqH8",
+          "md5": "0feb8fea839b4702f44b01b331ff82b0",
+          "name": "Lolo Peak Village Balance Sheet 2026-10.pdf",
+          "uploaded_at": "2026-09-30T01:38:41.396000Z"
+         },
+         {
+          "role": "cornerstone_profit_loss_ytd",
+          "file_id": "1KiTx2EScN3Zd1nX8a9cRD0ES9AwkwSGD",
+          "md5": "734768618439516e5afaa618b6b07ae1",
+          "name": "Lolo Peak Village P&L YTD 2026-10.pdf",
+          "uploaded_at": "2026-09-30T01:38:48.594000Z"
+         },
+         {
+          "role": "cornerstone_distribution_schedule",
+          "file_id": "18dlKkF8FezbstbSiPDTPkv6GVigIDTy1",
+          "md5": "78f4113edf061be9a76b99eeff51cdd5",
+          "name": "Lolo Peak Village Distribution Schedule 2026-10.pdf",
+          "uploaded_at": "2026-09-30T01:38:51.993000Z"
+         }
+        ],
+        "review_codes": []
+       }
+      ],
+      "attempts": []
+     }
+    },
+    "2026-09 September": {
+     "components": {
+      "4 - Distribution Schedule": [
+       {
+        "name": "Lolo Peak Village Distribution Schedule 2026-09.pdf",
+        "id": "1V0ldSkKgElJ-ay5WpITsVfFvn3r9A4fm",
+        "mime": "application/pdf",
+        "md5": "1bfb7e8cc082ba119f4b21648ec8898f",
+        "created": "2026-09-30T03:07:19.275Z",
+        "modified": "2026-09-30T03:07:19.275Z",
+        "size": 105012
+       }
+      ],
+      "3 - Profit and Loss": [
+       {
+        "name": "Lolo Peak Village P&L YTD 2026-09.pdf",
+        "id": "1WQ_TZFkqxtwByUMajWVE811DYLKYJHdX",
+        "mime": "application/pdf",
+        "md5": "9a655498ed0e78f0762392d69441f0ee",
+        "created": "2026-09-30T03:07:14.622Z",
+        "modified": "2026-09-30T03:07:14.622Z",
+        "size": 70059
+       }
+      ],
+      "2 - Balance Sheet": [
+       {
+        "name": "Lolo Peak Village Balance Sheet 2026-09.pdf",
+        "id": "15tAPkw5GRg5JPv284Rrvxxa_JiUV9A8E",
+        "mime": "application/pdf",
+        "md5": "43bdedde47e17589eabc3ec47c9fba13",
+        "created": "2026-09-30T03:05:23.759Z",
+        "modified": "2026-09-30T03:05:23.759Z",
+        "size": 33629
+       }
+      ],
+      "1 - Property Manager Report": [
+       {
+        "name": "Lolo Peak Village - Owner Report - September 2026.pdf",
+        "id": "1CIwFu21no_3Ee1KBKDFxKWFdmFiYMm1h",
+        "mime": "application/pdf",
+        "md5": "5f956d39d0af66e0b155a812d30632b1",
+        "created": "2026-09-30T03:07:56.505Z",
+        "modified": "2026-09-30T03:07:56.505Z",
+        "size": 178215
+       }
+      ]
+     },
+     "loose": [],
+     "output": {
+      "status": [
+       "Built v1 (current)"
+      ],
+      "status_body": [
+       "Lolo Peak Village - September 2026\nStatus: Built v1 (current)\n\nv1 was built from exactly the files listed below.\n\nFiles\n  Property Manager Report: \"Lolo Peak Village - Owner Report - September 2026.pdf\" (uploaded 2026-09-30 03:07 UTC)\n  Balance Sheet: \"Lolo Peak Village Balance Sheet 2026-09.pdf\" (uploaded 2026-09-30 03:05 UTC)\n  Profit and Loss: \"Lolo Peak Village P&L YTD 2026-09.pdf\" (uploaded 2026-09-30 03:07 UTC)\n  Distribution Schedule: \"Lolo Peak Village Distribution Schedule 2026-09.pdf\" (uploaded 2026-09-30 03:07 UTC)\n\nVersions (newest first)\n  v1 - 2026-09-30 04:05 UTC - built - first build\n\nHow this folder works\n  Put one PDF in each numbered folder. Any filename is fine.\n  If a folder holds more than one PDF, the newest upload is used and the others are\n  renamed \"SUPERSEDED - ...\". To go back to an older file, delete the newer one.\n  A new version is built by the first run 30 or more minutes after the\n  last upload, and older versions stay in this folder.\n  Changes after 2026-11-11 are ignored.\n"
+      ],
+      "pdfs": [
+       "Lolo Peak Village - Investor Report - September 2026 - v1.pdf"
+      ],
+      "reviews": [],
+      "other": []
+     },
+     "state": {
+      "versions": [
+       {
+        "version": 1,
+        "built_at": "2026-09-30T04:05:54.094303Z",
+        "status": "built",
+        "fingerprint": "822a71e391f39ea4ef3225a4592aeee84054cc611d6516e8122be2a3547221c9",
+        "output_file": "Lolo Peak Village - Investor Report - September 2026 - v1.pdf",
+        "inputs": [
+         {
+          "role": "pm_source",
+          "file_id": "1CIwFu21no_3Ee1KBKDFxKWFdmFiYMm1h",
+          "md5": "5f956d39d0af66e0b155a812d30632b1",
+          "name": "Lolo Peak Village - Owner Report - September 2026.pdf",
+          "uploaded_at": "2026-09-30T03:07:56.505000Z"
+         },
+         {
+          "role": "cornerstone_balance_sheet",
+          "file_id": "15tAPkw5GRg5JPv284Rrvxxa_JiUV9A8E",
+          "md5": "43bdedde47e17589eabc3ec47c9fba13",
+          "name": "Lolo Peak Village Balance Sheet 2026-09.pdf",
+          "uploaded_at": "2026-09-30T03:05:23.759000Z"
+         },
+         {
+          "role": "cornerstone_profit_loss_ytd",
+          "file_id": "1WQ_TZFkqxtwByUMajWVE811DYLKYJHdX",
+          "md5": "9a655498ed0e78f0762392d69441f0ee",
+          "name": "Lolo Peak Village P&L YTD 2026-09.pdf",
+          "uploaded_at": "2026-09-30T03:07:14.622000Z"
+         },
+         {
+          "role": "cornerstone_distribution_schedule",
+          "file_id": "1V0ldSkKgElJ-ay5WpITsVfFvn3r9A4fm",
+          "md5": "1bfb7e8cc082ba119f4b21648ec8898f",
+          "name": "Lolo Peak Village Distribution Schedule 2026-09.pdf",
+          "uploaded_at": "2026-09-30T03:07:19.275000Z"
+         }
+        ],
+        "review_codes": []
+       }
+      ],
+      "attempts": []
+     }
+    },
+    "2026-06 June": {
+     "components": {},
+     "loose": [],
+     "output": null,
+     "state": null,
+     "other_folders": [
+      "inputs"
+     ]
+    }
+   },
+   "loose": []
+  },
+  "mullan-crossing": {
+   "months": {
+    "2026-10 October": {
+     "components": {
+      "4 - Distribution Schedule": [
+       {
+        "name": "Mullan Crossing Distribution Schedule 2026-10.pdf",
+        "id": "1O5jwFZkOIiG_oRLVi2Oxp7K--oMScp5T",
+        "mime": "application/pdf",
+        "md5": "cfd2d25393b5ee285f49ab426a22f77b",
+        "created": "2026-09-30T02:45:07.850Z",
+        "modified": "2026-09-30T02:45:07.850Z",
+        "size": 121806
+       }
+      ],
+      "3 - Profit and Loss": [
+       {
+        "name": "Mullan Crossing P&L YTD 2026-10.pdf",
+        "id": "1oYNp0iY2hhvkH6PbIfbgqyDB8v7KFsaM",
+        "mime": "application/pdf",
+        "md5": "0b7d27baef8602b4f14334cce3309c42",
+        "created": "2026-09-30T01:39:08.376Z",
+        "modified": "2026-09-30T01:39:08.376Z",
+        "size": 69998
+       }
+      ],
+      "2 - Balance Sheet": [
+       {
+        "name": "Mullan Crossing Balance Sheet 2026-10.pdf",
+        "id": "16mpqqyOFSWMVoDf_i11_QIpDQSkbI0a-",
+        "mime": "application/pdf",
+        "md5": "f8be069e9b42a1461082aeea53095d8e",
+        "created": "2026-09-30T01:38:58.743Z",
+        "modified": "2026-09-30T01:38:58.743Z",
+        "size": 34413
+       }
+      ],
+      "1 - Property Manager Report": [
+       {
+        "name": "Mullan Crossing - Owner Report - October 2026.pdf",
+        "id": "1kRSVA4oWTERywwxsuf6_DXKFuOcI3gNu",
+        "mime": "application/pdf",
+        "md5": "16dacb63c93c6b33f06f7e7c9c9b7cf9",
+        "created": "2026-09-30T01:38:54.974Z",
+        "modified": "2026-09-30T01:38:54.974Z",
+        "size": 201831
+       }
+      ]
+     },
+     "loose": [],
+     "output": {
+      "status": [
+       "Built v2 (current)"
+      ],
+      "status_body": [
+       "Mullan Crossing - October 2026\nStatus: Built v2 (current)\n\nv2 was built from exactly the files listed below.\n\nFiles\n  Property Manager Report: \"Mullan Crossing - Owner Report - October 2026.pdf\" (uploaded 2026-09-30 01:38 UTC)\n  Balance Sheet: \"Mullan Crossing Balance Sheet 2026-10.pdf\" (uploaded 2026-09-30 01:38 UTC)\n  Profit and Loss: \"Mullan Crossing P&L YTD 2026-10.pdf\" (uploaded 2026-09-30 01:39 UTC)\n  Distribution Schedule: \"Mullan Crossing Distribution Schedule 2026-10.pdf\" (uploaded 2026-09-30 02:45 UTC)\n\nVersions (newest first)\n  v2 - 2026-09-30 03:31 UTC - built - Distribution Schedule added (uploaded 2026-09-30 02:45 UTC)\n  v1 - 2026-09-30 02:35 UTC - built - first build\n\nHow this folder works\n  Put one PDF in each numbered folder. Any filename is fine.\n  If a folder holds more than one PDF, the newest upload is used and the others are\n  renamed \"SUPERSEDED - ...\". To go back to an older file, delete the newer one.\n  A new version is built by the first run 30 or more minutes after the\n  last upload, and older versions stay in this folder.\n  Changes after 2026-12-12 are ignored.\n"
+      ],
+      "pdfs": [
+       "Mullan Crossing - Investor Report - October 2026 - v1.pdf",
+       "Mullan Crossing - Investor Report - October 2026 - v2.pdf"
+      ],
+      "reviews": [],
+      "other": []
+     },
+     "state": {
+      "versions": [
+       {
+        "version": 1,
+        "built_at": "2026-09-30T02:35:27.220888Z",
+        "status": "built",
+        "fingerprint": "b3349439ab961a3e74d25a32463e49155a84a68cc3316536012f94d068e4b876",
+        "output_file": "Mullan Crossing - Investor Report - October 2026 - v1.pdf",
+        "inputs": [
+         {
+          "role": "pm_source",
+          "file_id": "1kRSVA4oWTERywwxsuf6_DXKFuOcI3gNu",
+          "md5": "16dacb63c93c6b33f06f7e7c9c9b7cf9",
+          "name": "Mullan Crossing - Owner Report - October 2026.pdf",
+          "uploaded_at": "2026-09-30T01:38:54.974000Z"
+         },
+         {
+          "role": "cornerstone_balance_sheet",
+          "file_id": "16mpqqyOFSWMVoDf_i11_QIpDQSkbI0a-",
+          "md5": "f8be069e9b42a1461082aeea53095d8e",
+          "name": "Mullan Crossing Balance Sheet 2026-10.pdf",
+          "uploaded_at": "2026-09-30T01:38:58.743000Z"
+         },
+         {
+          "role": "cornerstone_profit_loss_ytd",
+          "file_id": "1oYNp0iY2hhvkH6PbIfbgqyDB8v7KFsaM",
+          "md5": "0b7d27baef8602b4f14334cce3309c42",
+          "name": "Mullan Crossing P&L YTD 2026-10.pdf",
+          "uploaded_at": "2026-09-30T01:39:08.376000Z"
+         }
+        ],
+        "review_codes": []
+       },
+       {
+        "version": 2,
+        "built_at": "2026-09-30T03:31:40.753854Z",
+        "status": "built",
+        "fingerprint": "4c94e01e79034ef9d0f4ceb32f20ea1911c3d6f3fc41ae6bc70ee97886ff6578",
+        "output_file": "Mullan Crossing - Investor Report - October 2026 - v2.pdf",
+        "inputs": [
+         {
+          "role": "pm_source",
+          "file_id": "1kRSVA4oWTERywwxsuf6_DXKFuOcI3gNu",
+          "md5": "16dacb63c93c6b33f06f7e7c9c9b7cf9",
+          "name": "Mullan Crossing - Owner Report - October 2026.pdf",
+          "uploaded_at": "2026-09-30T01:38:54.974000Z"
+         },
+         {
+          "role": "cornerstone_balance_sheet",
+          "file_id": "16mpqqyOFSWMVoDf_i11_QIpDQSkbI0a-",
+          "md5": "f8be069e9b42a1461082aeea53095d8e",
+          "name": "Mullan Crossing Balance Sheet 2026-10.pdf",
+          "uploaded_at": "2026-09-30T01:38:58.743000Z"
+         },
+         {
+          "role": "cornerstone_profit_loss_ytd",
+          "file_id": "1oYNp0iY2hhvkH6PbIfbgqyDB8v7KFsaM",
+          "md5": "0b7d27baef8602b4f14334cce3309c42",
+          "name": "Mullan Crossing P&L YTD 2026-10.pdf",
+          "uploaded_at": "2026-09-30T01:39:08.376000Z"
+         },
+         {
+          "role": "cornerstone_distribution_schedule",
+          "file_id": "1O5jwFZkOIiG_oRLVi2Oxp7K--oMScp5T",
+          "md5": "cfd2d25393b5ee285f49ab426a22f77b",
+          "name": "Mullan Crossing Distribution Schedule 2026-10.pdf",
+          "uploaded_at": "2026-09-30T02:45:07.850000Z"
+         }
+        ],
+        "review_codes": []
+       }
+      ],
+      "attempts": []
+     }
+    },
+    "2026-09 September": {
+     "components": {
+      "4 - Distribution Schedule": [
+       {
+        "name": "Mullan Crossing Distribution Schedule 2026-09.pdf",
+        "id": "1TnydVvfVqd-f1_hLCGkgvl5YtHjeO5Wg",
+        "mime": "application/pdf",
+        "md5": "e6acd212ee3922d4146311d317e87e3b",
+        "created": "2026-09-30T03:07:25.376Z",
+        "modified": "2026-09-30T03:07:25.376Z",
+        "size": 121806
+       }
+      ],
+      "3 - Profit and Loss": [
+       {
+        "name": "Mullan Crossing P&L YTD 2026-09.pdf",
+        "id": "1R7pv3o-W4S5za13s3J0AR940L6ZGjvEF",
+        "mime": "application/pdf",
+        "md5": "522ccd797a3f44488610b08548616fda",
+        "created": "2026-09-30T03:07:22.177Z",
+        "modified": "2026-09-30T03:07:22.177Z",
+        "size": 69998
+       }
+      ],
+      "2 - Balance Sheet": [
+       {
+        "name": "Mullan Crossing Balance Sheet 2026-09.pdf",
+        "id": "1_g1OXEBSCi9RMr-5we1-Xqde1S5y7-5W",
+        "mime": "application/pdf",
+        "md5": "6c04f6c4ecabad8f5b74c772eb711067",
+        "created": "2026-09-30T03:05:27.478Z",
+        "modified": "2026-09-30T03:05:27.478Z",
+        "size": 34413
+       }
+      ],
+      "1 - Property Manager Report": [
+       {
+        "name": "SUPERSEDED - Mullan Crossing - Owner Report - September 2026.pdf",
+        "id": "1BODHTB9yukgvxz0Ql89MgT7-t1s3NC2x",
+        "mime": "application/pdf",
+        "md5": "a6ba50efd1d68a009f846ddde9b29b42",
+        "created": "2026-09-30T03:07:59.253Z",
+        "modified": "2026-09-30T05:00:55.698Z",
+        "size": 178259
+       },
+       {
+        "name": "Mullan Crossing - Owner Report - September 2026 (corrected).pdf",
+        "id": "18aSv8LrSYgfhbpMJKqBCFqO6QOqsRJyc",
+        "mime": "application/pdf",
+        "md5": "0b7d58c8b578ec63ae845a4318935abd",
+        "created": "2026-09-30T04:50:13.904Z",
+        "modified": "2026-09-30T04:50:13.904Z",
+        "size": 201831
+       }
+      ]
+     },
+     "loose": [],
+     "output": {
+      "status": [
+       "Needs review (v1) - newer files waiting"
+      ],
+      "status_body": [
+       "Mullan Crossing - September 2026\nStatus: Needs review (v1) - newer files waiting\n\nThe last upload was at 2026-09-30 04:50 UTC. A build starts once nothing has changed for 30 minutes, in case more files are on the way.\n\nFiles\n  Property Manager Report: \"Mullan Crossing - Owner Report - September 2026 (corrected).pdf\" (uploaded 2026-09-30 04:50 UTC)\n      set aside: \"SUPERSEDED - Mullan Crossing - Owner Report - September 2026.pdf\" (uploaded 2026-09-30 03:07 UTC) - a newer file is in this folder\n  Balance Sheet: \"Mullan Crossing Balance Sheet 2026-09.pdf\" (uploaded 2026-09-30 03:05 UTC)\n  Profit and Loss: \"Mullan Crossing P&L YTD 2026-09.pdf\" (uploaded 2026-09-30 03:07 UTC)\n  Distribution Schedule: \"Mullan Crossing Distribution Schedule 2026-09.pdf\" (uploaded 2026-09-30 03:07 UTC)\n\nVersions (newest first)\n  v1 - 2026-09-30 04:07 UTC - needs review - first build\n\nHow this folder works\n  Put one PDF in each numbered folder. Any filename is fine.\n  If a folder holds more than one PDF, the newest upload is used and the others are\n  renamed \"SUPERSEDED - ...\". To go back to an older file, delete the newer one.\n  A new version is built by the first run 30 or more minutes after the\n  last upload, and older versions stay in this folder.\n  Changes after 2026-11-11 are ignored.\n"
+      ],
+      "pdfs": [
+       "Mullan Crossing - Investor Report - September 2026 - v1 - NEEDS REVIEW.pdf"
+      ],
+      "reviews": [
+       "REVIEW - v1.md"
+      ],
+      "other": []
+     },
+     "state": {
+      "versions": [
+       {
+        "version": 1,
+        "built_at": "2026-09-30T04:07:50.798176Z",
+        "status": "needs_review",
+        "fingerprint": "24847f14fbd7812bde46ec86f1be781051566d66a0963e90bc7134be46f0fd8c",
+        "output_file": "Mullan Crossing - Investor Report - September 2026 - v1 - NEEDS REVIEW.pdf",
+        "inputs": [
+         {
+          "role": "pm_source",
+          "file_id": "1BODHTB9yukgvxz0Ql89MgT7-t1s3NC2x",
+          "md5": "a6ba50efd1d68a009f846ddde9b29b42",
+          "name": "Mullan Crossing - Owner Report - September 2026.pdf",
+          "uploaded_at": "2026-09-30T03:07:59.253000Z"
+         },
+         {
+          "role": "cornerstone_balance_sheet",
+          "file_id": "1_g1OXEBSCi9RMr-5we1-Xqde1S5y7-5W",
+          "md5": "6c04f6c4ecabad8f5b74c772eb711067",
+          "name": "Mullan Crossing Balance Sheet 2026-09.pdf",
+          "uploaded_at": "2026-09-30T03:05:27.478000Z"
+         },
+         {
+          "role": "cornerstone_profit_loss_ytd",
+          "file_id": "1R7pv3o-W4S5za13s3J0AR940L6ZGjvEF",
+          "md5": "522ccd797a3f44488610b08548616fda",
+          "name": "Mullan Crossing P&L YTD 2026-09.pdf",
+          "uploaded_at": "2026-09-30T03:07:22.177000Z"
+         },
+         {
+          "role": "cornerstone_distribution_schedule",
+          "file_id": "1TnydVvfVqd-f1_hLCGkgvl5YtHjeO5Wg",
+          "md5": "e6acd212ee3922d4146311d317e87e3b",
+          "name": "Mullan Crossing Distribution Schedule 2026-09.pdf",
+          "uploaded_at": "2026-09-30T03:07:25.376000Z"
+         }
+        ],
+        "review_codes": [
+         "missing_required",
+         "unmapped_section",
+         "unresolved_record"
+        ]
+       }
+      ],
+      "attempts": []
+     }
+    },
+    "2026-06 June": {
+     "components": {},
+     "loose": [],
+     "output": null,
+     "state": null,
+     "other_folders": [
+      "inputs"
+     ]
+    }
+   },
+   "loose": []
+  },
+  "waypointe": {
+   "months": {
+    "2026-10 October": {
+     "components": {
+      "4 - Distribution Schedule": [
+       {
+        "name": "WayPointe Distribution Schedule 2026-10.pdf",
+        "id": "1phvoWOZHyqTSl0MgdR_7Tq4EmdqC96TB",
+        "mime": "application/pdf",
+        "md5": "35691cbcfb8329369cbdd182aeaa6ef1",
+        "created": "2026-09-30T01:39:14.181Z",
+        "modified": "2026-09-30T01:39:14.181Z",
+        "size": 211477
+       }
+      ],
+      "3 - Profit and Loss": [
+       {
+        "name": "SUPERSEDED - WayPointe P&L YTD 2026-10.pdf",
+        "id": "1jNXzQnakxyRKQGe0Cs6OVKqXL9a62UT7",
+        "mime": "application/pdf",
+        "md5": "fee1dc0d443f49d29adc83e929758384",
+        "created": "2026-09-30T01:39:11.504Z",
+        "modified": "2026-09-30T03:32:21.971Z",
+        "size": 32092
+       },
+       {
+        "name": "WayPointe P&L YTD 2026-10 corrected.pdf",
+        "id": "1Vm62E71Hop8dSi9o4TU6DfEZa23lv7dn",
+        "mime": "application/pdf",
+        "md5": "b8675ce060f501eb6483532434bc4d2f",
+        "created": "2026-09-30T03:15:15.649Z",
+        "modified": "2026-09-30T03:15:15.649Z",
+        "size": 32118
+       }
+      ],
+      "2 - Balance Sheet": [
+       {
+        "name": "WayPointe Balance Sheet 2026-10.pdf",
+        "id": "1ymH-yZzkF1UdKdfFs7zkVKkDzlXXV86s",
+        "mime": "application/pdf",
+        "md5": "2b5ed11d17a7e47c95603910ff6b1907",
+        "created": "2026-09-30T01:39:04.680Z",
+        "modified": "2026-09-30T01:39:04.680Z",
+        "size": 31897
+       }
+      ],
+      "1 - Property Manager Report": [
+       {
+        "name": "WayPointe - Owner Report - October 2026.pdf",
+        "id": "1D0Fq4vaYXRXGw4GT-9KTmK5uKT7iDq4f",
+        "mime": "application/pdf",
+        "md5": "36ecf2ffcf55b229e010d4b9b6ec4eb8",
+        "created": "2026-09-30T01:39:01.798Z",
+        "modified": "2026-09-30T01:39:01.798Z",
+        "size": 179299
+       }
+      ]
+     },
+     "loose": [],
+     "output": {
+      "status": [
+       "Built v2 (current)"
+      ],
+      "status_body": [
+       "WayPointe - October 2026\nStatus: Built v2 (current)\n\nv2 was built from exactly the files listed below.\n\nFiles\n  Property Manager Report: \"WayPointe - Owner Report - October 2026.pdf\" (uploaded 2026-09-30 01:39 UTC)\n  Balance Sheet: \"WayPointe Balance Sheet 2026-10.pdf\" (uploaded 2026-09-30 01:39 UTC)\n  Profit and Loss: \"WayPointe P&L YTD 2026-10 corrected.pdf\" (uploaded 2026-09-30 03:15 UTC)\n      set aside: \"SUPERSEDED - WayPointe P&L YTD 2026-10.pdf\" (uploaded 2026-09-30 01:39 UTC) - a newer file is in this folder\n  Distribution Schedule: \"WayPointe Distribution Schedule 2026-10.pdf\" (uploaded 2026-09-30 01:39 UTC)\n\nVersions (newest first)\n  v2 - 2026-09-30 04:39 UTC - built - Profit and Loss replaced (uploaded 2026-09-30 03:15 UTC)\n  v1 - 2026-09-30 02:42 UTC - built - first build\n\nHow this folder works\n  Put one PDF in each numbered folder. Any filename is fine.\n  If a folder holds more than one PDF, the newest upload is used and the others are\n  renamed \"SUPERSEDED - ...\". To go back to an older file, delete the newer one.\n  A new version is built by the first run 30 or more minutes after the\n  last upload, and older versions stay in this folder.\n  Changes after 2026-12-12 are ignored.\n"
+      ],
+      "pdfs": [
+       "WayPointe - Investor Report - October 2026 - v1.pdf",
+       "WayPointe - Investor Report - October 2026 - v2.pdf"
+      ],
+      "reviews": [],
+      "other": []
+     },
+     "state": {
+      "versions": [
+       {
+        "version": 1,
+        "built_at": "2026-09-30T02:42:57.424871Z",
+        "status": "built",
+        "fingerprint": "4d008d8bcffa37b152a205ca42b08730b65b8873853def45a996315bca3e4e8f",
+        "output_file": "WayPointe - Investor Report - October 2026 - v1.pdf",
+        "inputs": [
+         {
+          "role": "pm_source",
+          "file_id": "1D0Fq4vaYXRXGw4GT-9KTmK5uKT7iDq4f",
+          "md5": "36ecf2ffcf55b229e010d4b9b6ec4eb8",
+          "name": "WayPointe - Owner Report - October 2026.pdf",
+          "uploaded_at": "2026-09-30T01:39:01.798000Z"
+         },
+         {
+          "role": "cornerstone_balance_sheet",
+          "file_id": "1ymH-yZzkF1UdKdfFs7zkVKkDzlXXV86s",
+          "md5": "2b5ed11d17a7e47c95603910ff6b1907",
+          "name": "WayPointe Balance Sheet 2026-10.pdf",
+          "uploaded_at": "2026-09-30T01:39:04.680000Z"
+         },
+         {
+          "role": "cornerstone_profit_loss_ytd",
+          "file_id": "1jNXzQnakxyRKQGe0Cs6OVKqXL9a62UT7",
+          "md5": "fee1dc0d443f49d29adc83e929758384",
+          "name": "WayPointe P&L YTD 2026-10.pdf",
+          "uploaded_at": "2026-09-30T01:39:11.504000Z"
+         },
+         {
+          "role": "cornerstone_distribution_schedule",
+          "file_id": "1phvoWOZHyqTSl0MgdR_7Tq4EmdqC96TB",
+          "md5": "35691cbcfb8329369cbdd182aeaa6ef1",
+          "name": "WayPointe Distribution Schedule 2026-10.pdf",
+          "uploaded_at": "2026-09-30T01:39:14.181000Z"
+         }
+        ],
+        "review_codes": []
+       },
+       {
+        "version": 2,
+        "built_at": "2026-09-30T04:39:00.678596Z",
+        "status": "built",
+        "fingerprint": "261ac89acea34824fae05fe5361be129217189f7b2ec6b70e03e6648f567ab52",
+        "output_file": "WayPointe - Investor Report - October 2026 - v2.pdf",
+        "inputs": [
+         {
+          "role": "pm_source",
+          "file_id": "1D0Fq4vaYXRXGw4GT-9KTmK5uKT7iDq4f",
+          "md5": "36ecf2ffcf55b229e010d4b9b6ec4eb8",
+          "name": "WayPointe - Owner Report - October 2026.pdf",
+          "uploaded_at": "2026-09-30T01:39:01.798000Z"
+         },
+         {
+          "role": "cornerstone_balance_sheet",
+          "file_id": "1ymH-yZzkF1UdKdfFs7zkVKkDzlXXV86s",
+          "md5": "2b5ed11d17a7e47c95603910ff6b1907",
+          "name": "WayPointe Balance Sheet 2026-10.pdf",
+          "uploaded_at": "2026-09-30T01:39:04.680000Z"
+         },
+         {
+          "role": "cornerstone_profit_loss_ytd",
+          "file_id": "1Vm62E71Hop8dSi9o4TU6DfEZa23lv7dn",
+          "md5": "b8675ce060f501eb6483532434bc4d2f",
+          "name": "WayPointe P&L YTD 2026-10 corrected.pdf",
+          "uploaded_at": "2026-09-30T03:15:15.649000Z"
+         },
+         {
+          "role": "cornerstone_distribution_schedule",
+          "file_id": "1phvoWOZHyqTSl0MgdR_7Tq4EmdqC96TB",
+          "md5": "35691cbcfb8329369cbdd182aeaa6ef1",
+          "name": "WayPointe Distribution Schedule 2026-10.pdf",
+          "uploaded_at": "2026-09-30T01:39:14.181000Z"
+         }
+        ],
+        "review_codes": []
+       }
+      ],
+      "attempts": []
+     }
+    },
+    "2026-09 September": {
+     "components": {
+      "4 - Distribution Schedule": [
+       {
+        "name": "WayPointe Distribution Schedule 2026-09.pdf",
+        "id": "1rbi6yzuhelCNttmb0G1LzrUCj2NRjRBJ",
+        "mime": "application/pdf",
+        "md5": "eff47b2899af41c30fade53a30509d2f",
+        "created": "2026-09-30T03:07:50.517Z",
+        "modified": "2026-09-30T03:07:50.517Z",
+        "size": 211477
+       }
+      ],
+      "3 - Profit and Loss": [
+       {
+        "name": "WayPointe P&L YTD 2026-09.pdf",
+        "id": "10ZWUuP85rPir9yHp6VEB_3jXbJSoe7yJ",
+        "mime": "application/pdf",
+        "md5": "92058a2d769868d6db306046d5f2184f",
+        "created": "2026-09-30T03:07:47.830Z",
+        "modified": "2026-09-30T03:07:47.830Z",
+        "size": 32092
+       }
+      ],
+      "2 - Balance Sheet": [
+       {
+        "name": "WayPointe Balance Sheet 2026-09.pdf",
+        "id": "1uT52vZ4UNOKh2FZYHiPjX3R-FgnTICY_",
+        "mime": "application/pdf",
+        "md5": "ea61c846fef9b2ac8176d54b23e15b42",
+        "created": "2026-09-30T03:05:44.407Z",
+        "modified": "2026-09-30T03:05:44.407Z",
+        "size": 31897
+       }
+      ],
+      "1 - Property Manager Report": [
+       {
+        "name": "WayPointe - Owner Report - September 2026.pdf",
+        "id": "1c8cb6zD5chA0jfsHRC2_Ro0IPdkdtZcL",
+        "mime": "application/pdf",
+        "md5": "09a8737201a1983bf7601ce017ab8e92",
+        "created": "2026-09-30T03:08:01.984Z",
+        "modified": "2026-09-30T03:08:01.984Z",
+        "size": 179299
+       }
+      ]
+     },
+     "loose": [],
+     "output": {
+      "status": [
+       "Built v1 (current)"
+      ],
+      "status_body": [
+       "WayPointe - September 2026\nStatus: Built v1 (current)\n\nv1 was built from exactly the files listed below.\n\nFiles\n  Property Manager Report: \"WayPointe - Owner Report - September 2026.pdf\" (uploaded 2026-09-30 03:08 UTC)\n  Balance Sheet: \"WayPointe Balance Sheet 2026-09.pdf\" (uploaded 2026-09-30 03:05 UTC)\n  Profit and Loss: \"WayPointe P&L YTD 2026-09.pdf\" (uploaded 2026-09-30 03:07 UTC)\n  Distribution Schedule: \"WayPointe Distribution Schedule 2026-09.pdf\" (uploaded 2026-09-30 03:07 UTC)\n\nVersions (newest first)\n  v1 - 2026-09-30 04:31 UTC - built - first build\n\nHow this folder works\n  Put one PDF in each numbered folder. Any filename is fine.\n  If a folder holds more than one PDF, the newest upload is used and the others are\n  renamed \"SUPERSEDED - ...\". To go back to an older file, delete the newer one.\n  A new version is built by the first run 30 or more minutes after the\n  last upload, and older versions stay in this folder.\n  Changes after 2026-11-11 are ignored.\n"
+      ],
+      "pdfs": [
+       "WayPointe - Investor Report - September 2026 - v1.pdf"
+      ],
+      "reviews": [],
+      "other": []
+     },
+     "state": {
+      "versions": [
+       {
+        "version": 1,
+        "built_at": "2026-09-30T04:31:18.429469Z",
+        "status": "built",
+        "fingerprint": "816d07ca1f83aebf3fc78a83839d23c2a40df9dc0b4d046ff51e3166bc2a1003",
+        "output_file": "WayPointe - Investor Report - September 2026 - v1.pdf",
+        "inputs": [
+         {
+          "role": "pm_source",
+          "file_id": "1c8cb6zD5chA0jfsHRC2_Ro0IPdkdtZcL",
+          "md5": "09a8737201a1983bf7601ce017ab8e92",
+          "name": "WayPointe - Owner Report - September 2026.pdf",
+          "uploaded_at": "2026-09-30T03:08:01.984000Z"
+         },
+         {
+          "role": "cornerstone_balance_sheet",
+          "file_id": "1uT52vZ4UNOKh2FZYHiPjX3R-FgnTICY_",
+          "md5": "ea61c846fef9b2ac8176d54b23e15b42",
+          "name": "WayPointe Balance Sheet 2026-09.pdf",
+          "uploaded_at": "2026-09-30T03:05:44.407000Z"
+         },
+         {
+          "role": "cornerstone_profit_loss_ytd",
+          "file_id": "10ZWUuP85rPir9yHp6VEB_3jXbJSoe7yJ",
+          "md5": "92058a2d769868d6db306046d5f2184f",
+          "name": "WayPointe P&L YTD 2026-09.pdf",
+          "uploaded_at": "2026-09-30T03:07:47.830000Z"
+         },
+         {
+          "role": "cornerstone_distribution_schedule",
+          "file_id": "1rbi6yzuhelCNttmb0G1LzrUCj2NRjRBJ",
+          "md5": "eff47b2899af41c30fade53a30509d2f",
+          "name": "WayPointe Distribution Schedule 2026-09.pdf",
+          "uploaded_at": "2026-09-30T03:07:50.517000Z"
+         }
+        ],
+        "review_codes": []
+       }
+      ],
+      "attempts": []
+     }
+    },
+    "2026-06 June": {
+     "components": {},
+     "loose": [],
+     "output": null,
+     "state": null,
+     "other_folders": [
+      "inputs"
+     ]
+    }
+   },
+   "loose": []
+  },
+  "timber-place": {
+   "months": {
+    "2026-10 October": {
+     "components": {
+      "4 - Distribution Schedule": [],
+      "3 - Profit and Loss": [
+       {
+        "name": "Timber Place P&L YTD 2026-10.pdf",
+        "id": "1NleEUWe4kbbeXc04NybDkNqdctxYxVIw",
+        "mime": "application/pdf",
+        "md5": "ab5eb818e4a26cee87b79b326bb9e171",
+        "created": "2026-09-30T02:03:06.910Z",
+        "modified": "2026-09-30T02:03:06.910Z",
+        "size": 32237
+       }
+      ],
+      "2 - Balance Sheet": [
+       {
+        "name": "Timber Place Balance Sheet 2026-10.pdf",
+        "id": "1091UoewnjMgOxwDq0KXCj0HtKTmjQFru",
+        "mime": "application/pdf",
+        "md5": "f82041f4b7e1a409e9e6756260ef0311",
+        "created": "2026-09-30T02:02:48.668Z",
+        "modified": "2026-09-30T02:02:48.668Z",
+        "size": 33959
+       }
+      ],
+      "1 - Property Manager Report": [
+       {
+        "name": "Timber Place Owner Packet 10-2026.pdf",
+        "id": "1aH-yleJuOaEHW7UE9gFvgA9YQewsHZUW",
+        "mime": "application/pdf",
+        "md5": "9dfae56671a1b9cc1186f07bafcadaef",
+        "created": "2026-09-30T02:02:45.754Z",
+        "modified": "2026-09-30T02:02:45.754Z",
+        "size": 1397992
+       }
+      ]
+     },
+     "loose": [],
+     "output": {
+      "status": [
+       "Built v1 (current)"
+      ],
+      "status_body": [
+       "Timber Place - October 2026\nStatus: Built v1 (current)\n\nv1 was built from exactly the files listed below.\n\nFiles\n  Property Manager Report: \"Timber Place Owner Packet 10-2026.pdf\" (uploaded 2026-09-30 02:02 UTC)\n  Balance Sheet: \"Timber Place Balance Sheet 2026-10.pdf\" (uploaded 2026-09-30 02:02 UTC)\n  Profit and Loss: \"Timber Place P&L YTD 2026-10.pdf\" (uploaded 2026-09-30 02:03 UTC)\n  Distribution Schedule: none - optional; the report is built without it\n\nVersions (newest first)\n  v1 - 2026-09-30 03:01 UTC - built - first build\n\nHow this folder works\n  Put one PDF in each numbered folder. Any filename is fine.\n  If a folder holds more than one PDF, the newest upload is used and the others are\n  renamed \"SUPERSEDED - ...\". To go back to an older file, delete the newer one.\n  A new version is built by the first run 30 or more minutes after the\n  last upload, and older versions stay in this folder.\n  Changes after 2026-12-12 are ignored.\n"
+      ],
+      "pdfs": [
+       "Timber Place - Investor Report - October 2026 - v1.pdf"
+      ],
+      "reviews": [],
+      "other": []
+     },
+     "state": {
+      "versions": [
+       {
+        "version": 1,
+        "built_at": "2026-09-30T03:01:36.255056Z",
+        "status": "built",
+        "fingerprint": "18bca46937f2c170b7118fcefe0ac57dafd1b7892960d26f190973100cf71e9b",
+        "output_file": "Timber Place - Investor Report - October 2026 - v1.pdf",
+        "inputs": [
+         {
+          "role": "pm_source",
+          "file_id": "1aH-yleJuOaEHW7UE9gFvgA9YQewsHZUW",
+          "md5": "9dfae56671a1b9cc1186f07bafcadaef",
+          "name": "Timber Place Owner Packet 10-2026.pdf",
+          "uploaded_at": "2026-09-30T02:02:45.754000Z"
+         },
+         {
+          "role": "cornerstone_balance_sheet",
+          "file_id": "1091UoewnjMgOxwDq0KXCj0HtKTmjQFru",
+          "md5": "f82041f4b7e1a409e9e6756260ef0311",
+          "name": "Timber Place Balance Sheet 2026-10.pdf",
+          "uploaded_at": "2026-09-30T02:02:48.668000Z"
+         },
+         {
+          "role": "cornerstone_profit_loss_ytd",
+          "file_id": "1NleEUWe4kbbeXc04NybDkNqdctxYxVIw",
+          "md5": "ab5eb818e4a26cee87b79b326bb9e171",
+          "name": "Timber Place P&L YTD 2026-10.pdf",
+          "uploaded_at": "2026-09-30T02:03:06.910000Z"
+         }
+        ],
+        "review_codes": []
+       }
+      ],
+      "attempts": []
+     }
+    },
+    "2026-09 September": {
+     "components": {
+      "4 - Distribution Schedule": [],
+      "3 - Profit and Loss": [
+       {
+        "name": "Timber Place P&L YTD 2026-09.pdf",
+        "id": "1nzqfzbx3qwRc7CW30XaAwt6684SRA56x",
+        "mime": "application/pdf",
+        "md5": "55b8dba1011c26cddcb7c36eaf1fbb6c",
+        "created": "2026-09-30T03:07:43.771Z",
+        "modified": "2026-09-30T03:07:43.771Z",
+        "size": 32237
+       }
+      ],
+      "2 - Balance Sheet": [
+       {
+        "name": "SUPERSEDED - Timber Place Balance Sheet 2026-09.pdf",
+        "id": "19ohsOekmPQYIK_NBgEXD3EWIqsvxkVS3",
+        "mime": "application/pdf",
+        "md5": "b936a30f36f7be65a46084ea0d8dcd94",
+        "created": "2026-09-30T03:05:41.116Z",
+        "modified": "2026-09-30T05:01:13.408Z",
+        "size": 33959
+       },
+       {
+        "name": "Timber Place Balance Sheet 2026-09 reissued.pdf",
+        "id": "1q-PtHxMBvnQk-c9gjrb8DbBpZ5IPJX15",
+        "mime": "application/pdf",
+        "md5": "11ed0051be7106caf75ed3b5d66a8e3e",
+        "created": "2026-09-30T04:50:30.261Z",
+        "modified": "2026-09-30T04:50:30.261Z",
+        "size": 33983
+       }
+      ],
+      "1 - Property Manager Report": [
+       {
+        "name": "Timber Place Owner Packet 09-2026.pdf",
+        "id": "144QSjusEVdtg4HBCYx1RKPDPPD6icH_s",
+        "mime": "application/pdf",
+        "md5": "9cb7154e0c98a7f5a2e5547a14aa6757",
+        "created": "2026-09-30T03:08:12.428Z",
+        "modified": "2026-09-30T03:08:12.428Z",
+        "size": 1397992
+       }
+      ]
+     },
+     "loose": [],
+     "output": {
+      "status": [
+       "Built v1 - newer files waiting"
+      ],
+      "status_body": [
+       "Timber Place - September 2026\nStatus: Built v1 - newer files waiting\n\nThe last upload was at 2026-09-30 04:50 UTC. A build starts once nothing has changed for 30 minutes, in case more files are on the way.\n\nFiles\n  Property Manager Report: \"Timber Place Owner Packet 09-2026.pdf\" (uploaded 2026-09-30 03:08 UTC)\n  Balance Sheet: \"Timber Place Balance Sheet 2026-09 reissued.pdf\" (uploaded 2026-09-30 04:50 UTC)\n      set aside: \"SUPERSEDED - Timber Place Balance Sheet 2026-09.pdf\" (uploaded 2026-09-30 03:05 UTC) - a newer file is in this folder\n  Profit and Loss: \"Timber Place P&L YTD 2026-09.pdf\" (uploaded 2026-09-30 03:07 UTC)\n  Distribution Schedule: none - optional; the report is built without it\n\nVersions (newest first)\n  v1 - 2026-09-30 04:16 UTC - built - first build\n\nHow this folder works\n  Put one PDF in each numbered folder. Any filename is fine.\n  If a folder holds more than one PDF, the newest upload is used and the others are\n  renamed \"SUPERSEDED - ...\". To go back to an older file, delete the newer one.\n  A new version is built by the first run 30 or more minutes after the\n  last upload, and older versions stay in this folder.\n  Changes after 2026-11-11 are ignored.\n"
+      ],
+      "pdfs": [
+       "Timber Place - Investor Report - September 2026 - v1.pdf"
+      ],
+      "reviews": [],
+      "other": []
+     },
+     "state": {
+      "versions": [
+       {
+        "version": 1,
+        "built_at": "2026-09-30T04:16:34.177889Z",
+        "status": "built",
+        "fingerprint": "72db846ffc121c0d2beac338f5c5819c6fba7c7e2513d179bdfe2f46dcbd69f3",
+        "output_file": "Timber Place - Investor Report - September 2026 - v1.pdf",
+        "inputs": [
+         {
+          "role": "pm_source",
+          "file_id": "144QSjusEVdtg4HBCYx1RKPDPPD6icH_s",
+          "md5": "9cb7154e0c98a7f5a2e5547a14aa6757",
+          "name": "Timber Place Owner Packet 09-2026.pdf",
+          "uploaded_at": "2026-09-30T03:08:12.428000Z"
+         },
+         {
+          "role": "cornerstone_balance_sheet",
+          "file_id": "19ohsOekmPQYIK_NBgEXD3EWIqsvxkVS3",
+          "md5": "b936a30f36f7be65a46084ea0d8dcd94",
+          "name": "Timber Place Balance Sheet 2026-09.pdf",
+          "uploaded_at": "2026-09-30T03:05:41.116000Z"
+         },
+         {
+          "role": "cornerstone_profit_loss_ytd",
+          "file_id": "1nzqfzbx3qwRc7CW30XaAwt6684SRA56x",
+          "md5": "55b8dba1011c26cddcb7c36eaf1fbb6c",
+          "name": "Timber Place P&L YTD 2026-09.pdf",
+          "uploaded_at": "2026-09-30T03:07:43.771000Z"
+         }
+        ],
+        "review_codes": []
+       }
+      ],
+      "attempts": []
+     }
+    },
+    "2026-06 June": {
+     "components": {},
+     "loose": [],
+     "output": null,
+     "state": null,
+     "other_folders": [
+      "inputs"
+     ]
+    }
+   },
+   "loose": []
+  },
+  "river-falls": {
+   "months": {
+    "2026-10 October": {
+     "components": {
+      "4 - Distribution Schedule": [
+       {
+        "name": "River Falls Distribution Schedule 2026-10.pdf",
+        "id": "1xgM815xswWeIHlBL_hbeEL53pMLjwqkZ",
+        "mime": "application/pdf",
+        "md5": "505d07cf848cdfcf6df0b99dfe83fbac",
+        "created": "2026-09-30T01:58:06.569Z",
+        "modified": "2026-09-30T01:58:06.569Z",
+        "size": 214007
+       }
+      ],
+      "3 - Profit and Loss": [
+       {
+        "name": "River Falls P&L YTD 2026-10.pdf",
+        "id": "16nNeNJ8R3ITjxBG_rtIKBKJxCuBgxIdm",
+        "mime": "application/pdf",
+        "md5": "df8fb2a49ea756f8f2b3be5f2b6dcbf9",
+        "created": "2026-09-30T01:58:03.069Z",
+        "modified": "2026-09-30T01:58:03.069Z",
+        "size": 33198
+       }
+      ],
+      "2 - Balance Sheet": [
+       {
+        "name": "River Falls Balance Sheet 2026-10.pdf",
+        "id": "1JmHIEkJCVYbmAr8Ve_OpiwfLGI5OyArE",
+        "mime": "application/pdf",
+        "md5": "2a29cbc91066a9f7c5a0091d6ddcd236",
+        "created": "2026-09-30T01:57:45.031Z",
+        "modified": "2026-09-30T01:57:45.031Z",
+        "size": 35121
+       }
+      ],
+      "1 - Property Manager Report": [
+       {
+        "name": "River Falls Owner Packet 10-2026.pdf",
+        "id": "1ME2dMEVvXXMpmOeInCxK4Pbk2TdF0yzI",
+        "mime": "application/pdf",
+        "md5": "b66f99cd1ca464dcb7cbb89d6826bd90",
+        "created": "2026-09-30T01:57:41.732Z",
+        "modified": "2026-09-30T01:57:41.732Z",
+        "size": 1756039
+       }
+      ]
+     },
+     "loose": [],
+     "output": {
+      "status": [
+       "Built v1 (current)"
+      ],
+      "status_body": [
+       "River Falls - October 2026\nStatus: Built v1 (current)\n\nv1 was built from exactly the files listed below.\n\nFiles\n  Property Manager Report: \"River Falls Owner Packet 10-2026.pdf\" (uploaded 2026-09-30 01:57 UTC)\n  Balance Sheet: \"River Falls Balance Sheet 2026-10.pdf\" (uploaded 2026-09-30 01:57 UTC)\n  Profit and Loss: \"River Falls P&L YTD 2026-10.pdf\" (uploaded 2026-09-30 01:58 UTC)\n  Distribution Schedule: \"River Falls Distribution Schedule 2026-10.pdf\" (uploaded 2026-09-30 01:58 UTC)\n\nVersions (newest first)\n  v1 - 2026-09-30 02:37 UTC - built - first build\n\nHow this folder works\n  Put one PDF in each numbered folder. Any filename is fine.\n  If a folder holds more than one PDF, the newest upload is used and the others are\n  renamed \"SUPERSEDED - ...\". To go back to an older file, delete the newer one.\n  A new version is built by the first run 30 or more minutes after the\n  last upload, and older versions stay in this folder.\n  Changes after 2026-12-12 are ignored.\n"
+      ],
+      "pdfs": [
+       "River Falls - Investor Report - October 2026 - v1.pdf"
+      ],
+      "reviews": [],
+      "other": []
+     },
+     "state": {
+      "versions": [
+       {
+        "version": 1,
+        "built_at": "2026-09-30T02:37:54.255258Z",
+        "status": "built",
+        "fingerprint": "ca3fb4fcb1963656c37a85a8746eb3903e1eab83b501a70ea0eec6ec6d41adc7",
+        "output_file": "River Falls - Investor Report - October 2026 - v1.pdf",
+        "inputs": [
+         {
+          "role": "pm_source",
+          "file_id": "1ME2dMEVvXXMpmOeInCxK4Pbk2TdF0yzI",
+          "md5": "b66f99cd1ca464dcb7cbb89d6826bd90",
+          "name": "River Falls Owner Packet 10-2026.pdf",
+          "uploaded_at": "2026-09-30T01:57:41.732000Z"
+         },
+         {
+          "role": "cornerstone_balance_sheet",
+          "file_id": "1JmHIEkJCVYbmAr8Ve_OpiwfLGI5OyArE",
+          "md5": "2a29cbc91066a9f7c5a0091d6ddcd236",
+          "name": "River Falls Balance Sheet 2026-10.pdf",
+          "uploaded_at": "2026-09-30T01:57:45.031000Z"
+         },
+         {
+          "role": "cornerstone_profit_loss_ytd",
+          "file_id": "16nNeNJ8R3ITjxBG_rtIKBKJxCuBgxIdm",
+          "md5": "df8fb2a49ea756f8f2b3be5f2b6dcbf9",
+          "name": "River Falls P&L YTD 2026-10.pdf",
+          "uploaded_at": "2026-09-30T01:58:03.069000Z"
+         },
+         {
+          "role": "cornerstone_distribution_schedule",
+          "file_id": "1xgM815xswWeIHlBL_hbeEL53pMLjwqkZ",
+          "md5": "505d07cf848cdfcf6df0b99dfe83fbac",
+          "name": "River Falls Distribution Schedule 2026-10.pdf",
+          "uploaded_at": "2026-09-30T01:58:06.569000Z"
+         }
+        ],
+        "review_codes": []
+       }
+      ],
+      "attempts": []
+     }
+    },
+    "2026-09 September": {
+     "components": {
+      "4 - Distribution Schedule": [
+       {
+        "name": "River Falls Distribution Schedule 2026-09.pdf",
+        "id": "1AKkFTFL13S119_e35AAyfbYoiwSFgRpd",
+        "mime": "application/pdf",
+        "md5": "ff956be16551161bf3e4e80a5ee72054",
+        "created": "2026-09-30T03:07:32.360Z",
+        "modified": "2026-09-30T03:07:32.360Z",
+        "size": 214007
+       }
+      ],
+      "3 - Profit and Loss": [
+       {
+        "name": "River Falls P&L YTD 2026-09.pdf",
+        "id": "1l9yHfzfRDrX6v1srFm7L4pUU8kxU0eHy",
+        "mime": "application/pdf",
+        "md5": "898614bc0e983ce56e46e6242b7fa299",
+        "created": "2026-09-30T03:07:28.422Z",
+        "modified": "2026-09-30T03:07:28.422Z",
+        "size": 33198
+       }
+      ],
+      "2 - Balance Sheet": [
+       {
+        "name": "SUPERSEDED - River Falls Balance Sheet 2026-09.pdf",
+        "id": "1yVgFKsEacOJ_KZuJ0yy1CqRC9L4wi1SW",
+        "mime": "application/pdf",
+        "md5": "53103b903534afa2eab2e12923d7ff29",
+        "created": "2026-09-30T03:05:32.919Z",
+        "modified": "2026-09-30T05:01:02.762Z",
+        "size": 35121
+       },
+       {
+        "name": "River Falls Balance Sheet 2026-09 reissued.pdf",
+        "id": "1sOJoqiNnb-jGPVT5GmDnzLuCfZcw4QqI",
+        "mime": "application/pdf",
+        "md5": "d826caf60ff438ebf4f650f10b2db62f",
+        "created": "2026-09-30T04:50:23.677Z",
+        "modified": "2026-09-30T04:50:23.677Z",
+        "size": 35145
+       }
+      ],
+      "1 - Property Manager Report": [
+       {
+        "name": "River Falls Owner Packet 09-2026.pdf",
+        "id": "1gjmIgbmNCf0g0DWxLLWJKCljNxgmZI_Y",
+        "mime": "application/pdf",
+        "md5": "bd0dd2aa38983b0147fbc8f5d2fe19c6",
+        "created": "2026-09-30T03:08:09.669Z",
+        "modified": "2026-09-30T03:08:09.669Z",
+        "size": 1756039
+       }
+      ]
+     },
+     "loose": [],
+     "output": {
+      "status": [
+       "Built v1 - newer files waiting"
+      ],
+      "status_body": [
+       "River Falls - September 2026\nStatus: Built v1 - newer files waiting\n\nThe last upload was at 2026-09-30 04:50 UTC. A build starts once nothing has changed for 30 minutes, in case more files are on the way.\n\nFiles\n  Property Manager Report: \"River Falls Owner Packet 09-2026.pdf\" (uploaded 2026-09-30 03:08 UTC)\n  Balance Sheet: \"River Falls Balance Sheet 2026-09 reissued.pdf\" (uploaded 2026-09-30 04:50 UTC)\n      set aside: \"SUPERSEDED - River Falls Balance Sheet 2026-09.pdf\" (uploaded 2026-09-30 03:05 UTC) - a newer file is in this folder\n  Profit and Loss: \"River Falls P&L YTD 2026-09.pdf\" (uploaded 2026-09-30 03:07 UTC)\n  Distribution Schedule: \"River Falls Distribution Schedule 2026-09.pdf\" (uploaded 2026-09-30 03:07 UTC)\n\nVersions (newest first)\n  v1 - 2026-09-30 04:09 UTC - built - first build\n\nHow this folder works\n  Put one PDF in each numbered folder. Any filename is fine.\n  If a folder holds more than one PDF, the newest upload is used and the others are\n  renamed \"SUPERSEDED - ...\". To go back to an older file, delete the newer one.\n  A new version is built by the first run 30 or more minutes after the\n  last upload, and older versions stay in this folder.\n  Changes after 2026-11-11 are ignored.\n"
+      ],
+      "pdfs": [
+       "River Falls - Investor Report - September 2026 - v1.pdf"
+      ],
+      "reviews": [],
+      "other": []
+     },
+     "state": {
+      "versions": [
+       {
+        "version": 1,
+        "built_at": "2026-09-30T04:09:52.483830Z",
+        "status": "built",
+        "fingerprint": "5f372acf7cf0f0fe426066e8812c2e7f15a85b18b20e7f1334745140487c9213",
+        "output_file": "River Falls - Investor Report - September 2026 - v1.pdf",
+        "inputs": [
+         {
+          "role": "pm_source",
+          "file_id": "1gjmIgbmNCf0g0DWxLLWJKCljNxgmZI_Y",
+          "md5": "bd0dd2aa38983b0147fbc8f5d2fe19c6",
+          "name": "River Falls Owner Packet 09-2026.pdf",
+          "uploaded_at": "2026-09-30T03:08:09.669000Z"
+         },
+         {
+          "role": "cornerstone_balance_sheet",
+          "file_id": "1yVgFKsEacOJ_KZuJ0yy1CqRC9L4wi1SW",
+          "md5": "53103b903534afa2eab2e12923d7ff29",
+          "name": "River Falls Balance Sheet 2026-09.pdf",
+          "uploaded_at": "2026-09-30T03:05:32.919000Z"
+         },
+         {
+          "role": "cornerstone_profit_loss_ytd",
+          "file_id": "1l9yHfzfRDrX6v1srFm7L4pUU8kxU0eHy",
+          "md5": "898614bc0e983ce56e46e6242b7fa299",
+          "name": "River Falls P&L YTD 2026-09.pdf",
+          "uploaded_at": "2026-09-30T03:07:28.422000Z"
+         },
+         {
+          "role": "cornerstone_distribution_schedule",
+          "file_id": "1AKkFTFL13S119_e35AAyfbYoiwSFgRpd",
+          "md5": "ff956be16551161bf3e4e80a5ee72054",
+          "name": "River Falls Distribution Schedule 2026-09.pdf",
+          "uploaded_at": "2026-09-30T03:07:32.360000Z"
+         }
+        ],
+        "review_codes": []
+       }
+      ],
+      "attempts": []
+     }
+    },
+    "2026-06 June": {
+     "components": {},
+     "loose": [],
+     "output": null,
+     "state": null,
+     "other_folders": [
+      "inputs"
+     ]
+    }
+   },
+   "loose": []
+  },
+  "bridgewater": {
+   "months": {
+    "2026-10 October": {
+     "components": {
+      "4 - Distribution Schedule": [
+       {
+        "name": "Bridgewater Distribution Schedule 2026-10.pdf",
+        "id": "1ezxLpmi26F_TPxdlWk7GGyKUyBcmikTX",
+        "mime": "application/pdf",
+        "md5": "8e21a02dcbd333f7ec557ac5104429bb",
+        "created": "2026-09-30T03:08:19.104Z",
+        "modified": "2026-09-30T03:08:19.104Z",
+        "size": 468317
+       }
+      ],
+      "3 - Profit and Loss": [
+       {
+        "name": "Bridgewater P&L YTD 2026-10.pdf",
+        "id": "1y1lsmnMvzkb6TbUDgyl9bZ8I1ruhfdhq",
+        "mime": "application/pdf",
+        "md5": "ec640e009398365d18d362c7b41b9f23",
+        "created": "2026-09-30T03:08:16.001Z",
+        "modified": "2026-09-30T03:08:16.001Z",
+        "size": 54774
+       }
+      ],
+      "2 - Balance Sheet": [
+       {
+        "name": "Bridgewater Balance Sheet 2026-10.pdf",
+        "id": "1z7CjdocpEMtIGYAVRzTbb_105tBZ81fF",
+        "mime": "application/pdf",
+        "md5": "24537d0cb84f4caa4097020cd38e6afb",
+        "created": "2026-09-30T03:08:04.556Z",
+        "modified": "2026-09-30T03:08:04.556Z",
+        "size": 56102
+       }
+      ],
+      "1 - Property Manager Report": [
+       {
+        "name": "411 Bridgewater Owner Statement Oct 2026.pdf",
+        "id": "1BiIW3MXta_u2rxJOu4oB0_k-9tmGRQ6Y",
+        "mime": "application/pdf",
+        "md5": "c1b63c920e2cdbb2c0f4e7b381622a66",
+        "created": "2026-09-30T03:08:34.223Z",
+        "modified": "2026-09-30T03:08:34.223Z",
+        "size": 435557
+       }
+      ]
+     },
+     "loose": [],
+     "output": {
+      "status": [
+       "Built v1 (current)"
+      ],
+      "status_body": [
+       "Bridgewater - October 2026\nStatus: Built v1 (current)\n\nv1 was built from exactly the files listed below.\n\nFiles\n  Property Manager Report: \"411 Bridgewater Owner Statement Oct 2026.pdf\" (uploaded 2026-09-30 03:08 UTC)\n  Balance Sheet: \"Bridgewater Balance Sheet 2026-10.pdf\" (uploaded 2026-09-30 03:08 UTC)\n  Profit and Loss: \"Bridgewater P&L YTD 2026-10.pdf\" (uploaded 2026-09-30 03:08 UTC)\n  Distribution Schedule: \"Bridgewater Distribution Schedule 2026-10.pdf\" (uploaded 2026-09-30 03:08 UTC)\n\nVersions (newest first)\n  v1 - 2026-09-30 04:33 UTC - built - first build\n\nHow this folder works\n  Put one PDF in each numbered folder. Any filename is fine.\n  If a folder holds more than one PDF, the newest upload is used and the others are\n  renamed \"SUPERSEDED - ...\". To go back to an older file, delete the newer one.\n  A new version is built by the first run 30 or more minutes after the\n  last upload, and older versions stay in this folder.\n  Changes after 2026-12-12 are ignored.\n"
+      ],
+      "pdfs": [
+       "Bridgewater - Investor Report - October 2026 - v1.pdf"
+      ],
+      "reviews": [],
+      "other": []
+     },
+     "state": {
+      "versions": [
+       {
+        "version": 1,
+        "built_at": "2026-09-30T04:33:30.462264Z",
+        "status": "built",
+        "fingerprint": "4a5cfa6e0ea2439618d74ce469b1d4ba67e89a556875ceed700e9b6494e613a9",
+        "output_file": "Bridgewater - Investor Report - October 2026 - v1.pdf",
+        "inputs": [
+         {
+          "role": "pm_source",
+          "file_id": "1BiIW3MXta_u2rxJOu4oB0_k-9tmGRQ6Y",
+          "md5": "c1b63c920e2cdbb2c0f4e7b381622a66",
+          "name": "411 Bridgewater Owner Statement Oct 2026.pdf",
+          "uploaded_at": "2026-09-30T03:08:34.223000Z"
+         },
+         {
+          "role": "cornerstone_balance_sheet",
+          "file_id": "1z7CjdocpEMtIGYAVRzTbb_105tBZ81fF",
+          "md5": "24537d0cb84f4caa4097020cd38e6afb",
+          "name": "Bridgewater Balance Sheet 2026-10.pdf",
+          "uploaded_at": "2026-09-30T03:08:04.556000Z"
+         },
+         {
+          "role": "cornerstone_profit_loss_ytd",
+          "file_id": "1y1lsmnMvzkb6TbUDgyl9bZ8I1ruhfdhq",
+          "md5": "ec640e009398365d18d362c7b41b9f23",
+          "name": "Bridgewater P&L YTD 2026-10.pdf",
+          "uploaded_at": "2026-09-30T03:08:16.001000Z"
+         },
+         {
+          "role": "cornerstone_distribution_schedule",
+          "file_id": "1ezxLpmi26F_TPxdlWk7GGyKUyBcmikTX",
+          "md5": "8e21a02dcbd333f7ec557ac5104429bb",
+          "name": "Bridgewater Distribution Schedule 2026-10.pdf",
+          "uploaded_at": "2026-09-30T03:08:19.104000Z"
+         }
+        ],
+        "review_codes": []
+       }
+      ],
+      "attempts": []
+     }
+    },
+    "2026-09 September": {
+     "components": {
+      "4 - Distribution Schedule": [
+       {
+        "name": "Bridgewater Distribution Schedule 2026-09.pdf",
+        "id": "1ctVhV8GiG3KKM5JzMWjj4yFhaJl97-xT",
+        "mime": "application/pdf",
+        "md5": "4e8ecbc21f1b864b4af2ac566d86876e",
+        "created": "2026-09-30T03:07:04.788Z",
+        "modified": "2026-09-30T03:07:04.788Z",
+        "size": 468317
+       }
+      ],
+      "3 - Profit and Loss": [
+       {
+        "name": "Bridgewater P&L YTD 2026-09.pdf",
+        "id": "1DQEYdCcUcna6JyKKlWXGNyZDOI1T15WW",
+        "mime": "application/pdf",
+        "md5": "0020d65833b44110d4b6ba994b39435b",
+        "created": "2026-09-30T03:07:01.958Z",
+        "modified": "2026-09-30T03:07:01.958Z",
+        "size": 54774
+       }
+      ],
+      "2 - Balance Sheet": [
+       {
+        "name": "SUPERSEDED - Bridgewater Balance Sheet 2026-09.pdf",
+        "id": "1jJafXMNeJZdV3omhqE8iIBhfCszAR4Pr",
+        "mime": "application/pdf",
+        "md5": "95134c7ded9defabbcffd0cdc92358ac",
+        "created": "2026-09-30T03:05:17.198Z",
+        "modified": "2026-09-30T05:00:41.120Z",
+        "size": 56102
+       },
+       {
+        "name": "Bridgewater Balance Sheet 2026-09 reissued.pdf",
+        "id": "1Ik5PQ5m7Bakero2Y72XbblYb6sbESe3N",
+        "mime": "application/pdf",
+        "md5": "b085e475d11b8919a1d125cc7bea54ed",
+        "created": "2026-09-30T04:50:20.474Z",
+        "modified": "2026-09-30T04:50:20.474Z",
+        "size": 56126
+       }
+      ],
+      "1 - Property Manager Report": [
+       {
+        "name": "411 Bridgewater Owner Statement Sep 2026.pdf",
+        "id": "1WGe1HpHa5tgmWJnlDtSKSZJwKYotfzAQ",
+        "mime": "application/pdf",
+        "md5": "3ef2892d86fd1bc64faf478cba4ae069",
+        "created": "2026-09-30T03:08:27.198Z",
+        "modified": "2026-09-30T03:08:27.198Z",
+        "size": 435557
+       }
+      ]
+     },
+     "loose": [],
+     "output": {
+      "status": [
+       "Built v1 - newer files waiting"
+      ],
+      "status_body": [
+       "Bridgewater - September 2026\nStatus: Built v1 - newer files waiting\n\nThe last upload was at 2026-09-30 04:50 UTC. A build starts once nothing has changed for 30 minutes, in case more files are on the way.\n\nFiles\n  Property Manager Report: \"411 Bridgewater Owner Statement Sep 2026.pdf\" (uploaded 2026-09-30 03:08 UTC)\n  Balance Sheet: \"Bridgewater Balance Sheet 2026-09 reissued.pdf\" (uploaded 2026-09-30 04:50 UTC)\n      set aside: \"SUPERSEDED - Bridgewater Balance Sheet 2026-09.pdf\" (uploaded 2026-09-30 03:05 UTC) - a newer file is in this folder\n  Profit and Loss: \"Bridgewater P&L YTD 2026-09.pdf\" (uploaded 2026-09-30 03:07 UTC)\n  Distribution Schedule: \"Bridgewater Distribution Schedule 2026-09.pdf\" (uploaded 2026-09-30 03:07 UTC)\n\nVersions (newest first)\n  v1 - 2026-09-30 04:00 UTC - built - first build\n\nHow this folder works\n  Put one PDF in each numbered folder. Any filename is fine.\n  If a folder holds more than one PDF, the newest upload is used and the others are\n  renamed \"SUPERSEDED - ...\". To go back to an older file, delete the newer one.\n  A new version is built by the first run 30 or more minutes after the\n  last upload, and older versions stay in this folder.\n  Changes after 2026-11-11 are ignored.\n"
+      ],
+      "pdfs": [
+       "Bridgewater - Investor Report - September 2026 - v1.pdf"
+      ],
+      "reviews": [],
+      "other": []
+     },
+     "state": {
+      "versions": [
+       {
+        "version": 1,
+        "built_at": "2026-09-30T04:00:49.011959Z",
+        "status": "built",
+        "fingerprint": "0d71019c51917502adf339d92d6a595a68a9c5dbc0709b868758bbda1f026a2b",
+        "output_file": "Bridgewater - Investor Report - September 2026 - v1.pdf",
+        "inputs": [
+         {
+          "role": "pm_source",
+          "file_id": "1WGe1HpHa5tgmWJnlDtSKSZJwKYotfzAQ",
+          "md5": "3ef2892d86fd1bc64faf478cba4ae069",
+          "name": "411 Bridgewater Owner Statement Sep 2026.pdf",
+          "uploaded_at": "2026-09-30T03:08:27.198000Z"
+         },
+         {
+          "role": "cornerstone_balance_sheet",
+          "file_id": "1jJafXMNeJZdV3omhqE8iIBhfCszAR4Pr",
+          "md5": "95134c7ded9defabbcffd0cdc92358ac",
+          "name": "Bridgewater Balance Sheet 2026-09.pdf",
+          "uploaded_at": "2026-09-30T03:05:17.198000Z"
+         },
+         {
+          "role": "cornerstone_profit_loss_ytd",
+          "file_id": "1DQEYdCcUcna6JyKKlWXGNyZDOI1T15WW",
+          "md5": "0020d65833b44110d4b6ba994b39435b",
+          "name": "Bridgewater P&L YTD 2026-09.pdf",
+          "uploaded_at": "2026-09-30T03:07:01.958000Z"
+         },
+         {
+          "role": "cornerstone_distribution_schedule",
+          "file_id": "1ctVhV8GiG3KKM5JzMWjj4yFhaJl97-xT",
+          "md5": "4e8ecbc21f1b864b4af2ac566d86876e",
+          "name": "Bridgewater Distribution Schedule 2026-09.pdf",
+          "uploaded_at": "2026-09-30T03:07:04.788000Z"
+         }
+        ],
+        "review_codes": []
+       }
+      ],
+      "attempts": []
+     }
+    },
+    "2026-06 June": {
+     "components": {},
+     "loose": [],
+     "output": null,
+     "state": null,
+     "other_folders": [
+      "inputs"
+     ]
+    }
+   },
+   "loose": []
+  },
+  "salmon-crossing": {
+   "months": {
+    "2026-10 October": {
+     "components": {
+      "4 - Distribution Schedule": [
+       {
+        "name": "Salmon Crossing Distribution Schedule 2026-10.pdf",
+        "id": "1qc-9TsUvrFvDHzqrOlsPSDFd8_xTnUXY",
+        "mime": "application/pdf",
+        "md5": "e4f9faf95f314e6ea1adf33632af7783",
+        "created": "2026-09-30T03:08:24.636Z",
+        "modified": "2026-09-30T03:08:24.636Z",
+        "size": 211651
+       }
+      ],
+      "3 - Profit and Loss": [
+       {
+        "name": "Salmon Crossing P&L YTD 2026-10.pdf",
+        "id": "1Mjsekd8EHa_deQca6Nn5lsU_KJVayxE7",
+        "mime": "application/pdf",
+        "md5": "f9a8d04de4d3677c175fe2acf3249a93",
+        "created": "2026-09-30T03:08:21.912Z",
+        "modified": "2026-09-30T03:08:21.912Z",
+        "size": 54248
+       }
+      ],
+      "2 - Balance Sheet": [
+       {
+        "name": "Salmon Crossing Balance Sheet 2026-10.pdf",
+        "id": "1A6vhuanaWEVXDWh0czUB9lkFPnPK8aQ0",
+        "mime": "application/pdf",
+        "md5": "df0229595d04b79c855e63dd1e070a87",
+        "created": "2026-09-30T03:08:07.139Z",
+        "modified": "2026-09-30T03:08:07.139Z",
+        "size": 56549
+       }
+      ],
+      "1 - Property Manager Report": [
+       {
+        "name": "405 Salmon Crossing Owner Statement Oct 2026.pdf",
+        "id": "1JvUTbupbXOCLxvglo3fHPQn4RoK1slsc",
+        "mime": "application/pdf",
+        "md5": "dacac8008685a6d2234674dc0d4b9b23",
+        "created": "2026-09-30T03:08:39.152Z",
+        "modified": "2026-09-30T03:08:39.152Z",
+        "size": 389868
+       }
+      ]
+     },
+     "loose": [],
+     "output": {
+      "status": [
+       "Built v1 (current)"
+      ],
+      "status_body": [
+       "Salmon Crossing - October 2026\nStatus: Built v1 (current)\n\nv1 was built from exactly the files listed below.\n\nFiles\n  Property Manager Report: \"405 Salmon Crossing Owner Statement Oct 2026.pdf\" (uploaded 2026-09-30 03:08 UTC)\n  Balance Sheet: \"Salmon Crossing Balance Sheet 2026-10.pdf\" (uploaded 2026-09-30 03:08 UTC)\n  Profit and Loss: \"Salmon Crossing P&L YTD 2026-10.pdf\" (uploaded 2026-09-30 03:08 UTC)\n  Distribution Schedule: \"Salmon Crossing Distribution Schedule 2026-10.pdf\" (uploaded 2026-09-30 03:08 UTC)\n\nVersions (newest first)\n  v1 - 2026-09-30 04:36 UTC - built - first build\n\nHow this folder works\n  Put one PDF in each numbered folder. Any filename is fine.\n  If a folder holds more than one PDF, the newest upload is used and the others are\n  renamed \"SUPERSEDED - ...\". To go back to an older file, delete the newer one.\n  A new version is built by the first run 30 or more minutes after the\n  last upload, and older versions stay in this folder.\n  Changes after 2026-12-12 are ignored.\n"
+      ],
+      "pdfs": [
+       "Salmon Crossing - Investor Report - October 2026 - v1.pdf"
+      ],
+      "reviews": [],
+      "other": []
+     },
+     "state": {
+      "versions": [
+       {
+        "version": 1,
+        "built_at": "2026-09-30T04:36:48.355685Z",
+        "status": "built",
+        "fingerprint": "621a7126922f2ed82162f5b1641f10d73925aa633c912adcb8f8c188f50d84b1",
+        "output_file": "Salmon Crossing - Investor Report - October 2026 - v1.pdf",
+        "inputs": [
+         {
+          "role": "pm_source",
+          "file_id": "1JvUTbupbXOCLxvglo3fHPQn4RoK1slsc",
+          "md5": "dacac8008685a6d2234674dc0d4b9b23",
+          "name": "405 Salmon Crossing Owner Statement Oct 2026.pdf",
+          "uploaded_at": "2026-09-30T03:08:39.152000Z"
+         },
+         {
+          "role": "cornerstone_balance_sheet",
+          "file_id": "1A6vhuanaWEVXDWh0czUB9lkFPnPK8aQ0",
+          "md5": "df0229595d04b79c855e63dd1e070a87",
+          "name": "Salmon Crossing Balance Sheet 2026-10.pdf",
+          "uploaded_at": "2026-09-30T03:08:07.139000Z"
+         },
+         {
+          "role": "cornerstone_profit_loss_ytd",
+          "file_id": "1Mjsekd8EHa_deQca6Nn5lsU_KJVayxE7",
+          "md5": "f9a8d04de4d3677c175fe2acf3249a93",
+          "name": "Salmon Crossing P&L YTD 2026-10.pdf",
+          "uploaded_at": "2026-09-30T03:08:21.912000Z"
+         },
+         {
+          "role": "cornerstone_distribution_schedule",
+          "file_id": "1qc-9TsUvrFvDHzqrOlsPSDFd8_xTnUXY",
+          "md5": "e4f9faf95f314e6ea1adf33632af7783",
+          "name": "Salmon Crossing Distribution Schedule 2026-10.pdf",
+          "uploaded_at": "2026-09-30T03:08:24.636000Z"
+         }
+        ],
+        "review_codes": []
+       }
+      ],
+      "attempts": []
+     }
+    },
+    "2026-09 September": {
+     "components": {
+      "4 - Distribution Schedule": [
+       {
+        "name": "Salmon Crossing Distribution Schedule 2026-09.pdf",
+        "id": "1eprHrDjCpTpkHl3nUfIa5DATHDj4dr8f",
+        "mime": "application/pdf",
+        "md5": "9440b342d700e0ccd6a3dcf0e635b530",
+        "created": "2026-09-30T03:07:39.041Z",
+        "modified": "2026-09-30T03:07:39.041Z",
+        "size": 211651
+       }
+      ],
+      "3 - Profit and Loss": [
+       {
+        "name": "Salmon Crossing P&L YTD 2026-09.pdf",
+        "id": "1BtUni22Mi-l1RWcLLKTbdd5EwplMewsD",
+        "mime": "application/pdf",
+        "md5": "6ce6c147c43eeb32782810a566b70899",
+        "created": "2026-09-30T03:07:35.708Z",
+        "modified": "2026-09-30T03:07:35.708Z",
+        "size": 54248
+       }
+      ],
+      "2 - Balance Sheet": [
+       {
+        "name": "Salmon Crossing Balance Sheet 2026-09.pdf",
+        "id": "1KJL2kF5sI43YRk11EqXVhKBE42tLBDaf",
+        "mime": "application/pdf",
+        "md5": "b31fa049a0aa5fdb266c267b97eb48f0",
+        "created": "2026-09-30T03:05:35.967Z",
+        "modified": "2026-09-30T03:05:35.967Z",
+        "size": 56549
+       }
+      ],
+      "1 - Property Manager Report": [
+       {
+        "name": "405 Salmon Crossing Owner Statement Sep 2026.pdf",
+        "id": "1PLbvv-GGMJOUs5vefDMF_XZiFqSq3uHD",
+        "mime": "application/pdf",
+        "md5": "8481aad22f2b56c43a2f8b87e94ad0e5",
+        "created": "2026-09-30T03:08:29.888Z",
+        "modified": "2026-09-30T03:08:29.888Z",
+        "size": 389868
+       }
+      ]
+     },
+     "loose": [],
+     "output": {
+      "status": [
+       "Built v1 (current)"
+      ],
+      "status_body": [
+       "Salmon Crossing - September 2026\nStatus: Built v1 (current)\n\nv1 was built from exactly the files listed below.\n\nFiles\n  Property Manager Report: \"405 Salmon Crossing Owner Statement Sep 2026.pdf\" (uploaded 2026-09-30 03:08 UTC)\n  Balance Sheet: \"Salmon Crossing Balance Sheet 2026-09.pdf\" (uploaded 2026-09-30 03:05 UTC)\n  Profit and Loss: \"Salmon Crossing P&L YTD 2026-09.pdf\" (uploaded 2026-09-30 03:07 UTC)\n  Distribution Schedule: \"Salmon Crossing Distribution Schedule 2026-09.pdf\" (uploaded 2026-09-30 03:07 UTC)\n\nVersions (newest first)\n  v1 - 2026-09-30 04:14 UTC - built - first build\n\nHow this folder works\n  Put one PDF in each numbered folder. Any filename is fine.\n  If a folder holds more than one PDF, the newest upload is used and the others are\n  renamed \"SUPERSEDED - ...\". To go back to an older file, delete the newer one.\n  A new version is built by the first run 30 or more minutes after the\n  last upload, and older versions stay in this folder.\n  Changes after 2026-11-11 are ignored.\n"
+      ],
+      "pdfs": [
+       "Salmon Crossing - Investor Report - September 2026 - v1.pdf"
+      ],
+      "reviews": [],
+      "other": []
+     },
+     "state": {
+      "versions": [
+       {
+        "version": 1,
+        "built_at": "2026-09-30T04:14:34.405608Z",
+        "status": "built",
+        "fingerprint": "89e0215f349d724d82d1454ffe95744773b9aeb1be7e17d4ebbf8f0e266e646c",
+        "output_file": "Salmon Crossing - Investor Report - September 2026 - v1.pdf",
+        "inputs": [
+         {
+          "role": "pm_source",
+          "file_id": "1PLbvv-GGMJOUs5vefDMF_XZiFqSq3uHD",
+          "md5": "8481aad22f2b56c43a2f8b87e94ad0e5",
+          "name": "405 Salmon Crossing Owner Statement Sep 2026.pdf",
+          "uploaded_at": "2026-09-30T03:08:29.888000Z"
+         },
+         {
+          "role": "cornerstone_balance_sheet",
+          "file_id": "1KJL2kF5sI43YRk11EqXVhKBE42tLBDaf",
+          "md5": "b31fa049a0aa5fdb266c267b97eb48f0",
+          "name": "Salmon Crossing Balance Sheet 2026-09.pdf",
+          "uploaded_at": "2026-09-30T03:05:35.967000Z"
+         },
+         {
+          "role": "cornerstone_profit_loss_ytd",
+          "file_id": "1BtUni22Mi-l1RWcLLKTbdd5EwplMewsD",
+          "md5": "6ce6c147c43eeb32782810a566b70899",
+          "name": "Salmon Crossing P&L YTD 2026-09.pdf",
+          "uploaded_at": "2026-09-30T03:07:35.708000Z"
+         },
+         {
+          "role": "cornerstone_distribution_schedule",
+          "file_id": "1eprHrDjCpTpkHl3nUfIa5DATHDj4dr8f",
+          "md5": "9440b342d700e0ccd6a3dcf0e635b530",
+          "name": "Salmon Crossing Distribution Schedule 2026-09.pdf",
+          "uploaded_at": "2026-09-30T03:07:39.041000Z"
+         }
+        ],
+        "review_codes": []
+       }
+      ],
+      "attempts": []
+     }
+    },
+    "2026-06 June": {
+     "components": {},
+     "loose": [],
+     "output": null,
+     "state": null,
+     "other_folders": [
+      "inputs"
+     ]
+    }
+   },
+   "loose": []
+  }
+ },
+ "spent_usd": 7.3917
+}

@@ -156,7 +156,10 @@ it with the next version. *Consequence:* no property-identity check. The one pla
 matched is the Rent Manager schema's `Property:` line, which must split WayPointe's report
 between its two records (SPEC §5 rule 3); as a side effect it also sends a Missoula report whose entity
 name matches no configured record to review (`unresolved_record`) until `config/properties.yaml`
-is updated.
+is updated. *Kept for all four Missoula properties* (owner decision, 2026-09-30), not narrowed to
+WayPointe: a report filed under the wrong Missoula entity is caught before it reaches investors,
+and the accepted cost is that a Rent Manager rename holds that property's reports until its
+`pm_name` is updated and the month is rebuilt with `reconcile --force` (RUNBOOK).
 
 **D-26 · The settle window is 30 minutes (was 60).**
 Owner decision, 2026-09-29, after the production live test. A month is built by the first run

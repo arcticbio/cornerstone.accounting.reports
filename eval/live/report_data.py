@@ -1,4 +1,4 @@
-"""Tables for the live test's report, from the evidence alone: events, snapshots and golden.
+"""Tables for a live test's report, from the evidence alone: events, snapshots and golden.
 
     uv run python eval/live/report_data.py      # prints them and writes tables.md
 
@@ -19,9 +19,10 @@ from typing import Any
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import evaluate
+import which
 
-REPO = Path(__file__).resolve().parents[2]
-OUT = REPO / "eval" / "reports" / "live-test-2026-09-29"
+REPO = which.REPO
+OUT = which.OUT
 DS = "cornerstone_distribution_schedule"
 
 
@@ -51,8 +52,44 @@ def golden() -> dict[str, dict[str, int]]:
     return out
 
 
-def _events() -> list[dict[str, Any]]:
-    return [json.loads(line) for line in (OUT / "events.jsonl").read_text().splitlines()]
+def _events(out: Path = OUT) -> list[dict[str, Any]]:
+    return [json.loads(line) for line in (out / "events.jsonl").read_text().splitlines()]
+
+
+def _latest_snapshot() -> dict[str, Any]:
+    paths = sorted((OUT / "snapshots").glob("2*.json"))
+    return json.loads(paths[-1].read_text()) if paths else {}
+
+
+def _index_entries(snap: dict[str, Any]) -> dict[str, dict[str, Any]]:
+    """Each version's entry in its month's index (inputs with upload times), by `prop|month|vN`."""
+    out: dict[str, dict[str, Any]] = {}
+    for prop, record in (snap.get("properties") or {}).items():
+        for month, facts in record.get("months", {}).items():
+            state = facts.get("state") or {}
+            for entry in state.get("versions", []) if isinstance(state, dict) else []:
+                out[f"{prop}|{month}|v{entry['version']}"] = entry
+    return out
+
+
+def _wait_minutes(entry: dict[str, Any] | None, run_start: datetime | None) -> str:
+    """Minutes from the version's newest input upload to the start of the run that built it
+    (what the settle window governs), then to the start of its build."""
+    if not entry or not entry.get("inputs"):
+        return "-"
+    last = max(_t(i["uploaded_at"]) for i in entry["inputs"] if i.get("uploaded_at"))
+    built = _t(entry.get("built_at"))
+    if not (built and last):
+        return "-"
+    to_build = f"{(built - last).total_seconds() / 60:.0f}"
+    if run_start is None:
+        return to_build
+    return f"{(run_start - last).total_seconds() / 60:.0f} / {to_build}"
+
+
+def _classify_s(v: dict[str, Any]) -> str:
+    ms = (v.get("timings_ms") or {}).get("classify")
+    return f"{ms / 1000:.1f}" if ms is not None else "-"
 
 
 def _shape(v: dict[str, Any], gold: dict[str, int]) -> str:
@@ -91,15 +128,21 @@ def tables() -> str:
                 return host
         return "(lease not captured)"
 
+    def run_start(v: dict[str, Any]) -> datetime | None:
+        host = run_of(v)
+        return next((_t(k[1]) for k in leases if k[0] == host), None)
+
     lines: list[str] = []
 
     # Runs
     lines += [
         "### Runs seen holding the lease",
         "",
-        "| Host | Kind | Acquired | Released | Took | Builds | Model spend |",
-        "|---|---|---|---|---|---|---|",
+        "| Host | Kind | Acquired | Released | Took | Builds | Model spend | Probes |",
+        "|---|---|---|---|---|---|---|---|",
     ]
+    snap = _latest_snapshot()
+    probes = [_t(p) for p in snap.get("probes_created") or []] if "probes_created" in snap else None
     by_run: dict[str, list[dict[str, Any]]] = defaultdict(list)
     for v in versions:
         by_run[run_of(v)].append(v)
@@ -110,9 +153,14 @@ def tables() -> str:
         kind = "Azure, scheduled" if host.startswith("crr-quarterly-") else "Actions, forced"
         built = by_run.get(host, [])
         usd = sum(v.get("usd") or 0 for v in built)
+        made = (
+            "-"
+            if probes is None or not (start and end)
+            else str(sum(1 for p in probes if p and start <= p <= end))
+        )
         lines.append(
             f"| `{host}` | {kind} | {_hms(acquired)} | {_hms(lease.get('released'))} | {took} "
-            f"| {len(built)} | ${usd:.2f} |"
+            f"| {len(built)} | ${usd:.2f} | {made} |"
         )
     if by_run.get("(lease not captured)"):
         built = by_run["(lease not captured)"]
@@ -127,9 +175,10 @@ def tables() -> str:
         "### Every version published",
         "",
         "| Built | Property | Month | v | State | Pages/bm | Shape | Title | Calls | $ | Reused "
-        "| Review codes |",
-        "|---|---|---|---|---|---|---|---|---|---|---|---|",
+        "| Classify s | Last upload → run / build, min | Review codes |",
+        "|---|---|---|---|---|---|---|---|---|---|---|---|---|---|",
     ]
+    entries = _index_entries(snap)
     for v in versions:
         g = gold[v["prop"]]
         title_ok = bool(v.get("title")) and str(v.get("file", "")).startswith(f"{v['title']} - v")
@@ -137,9 +186,36 @@ def tables() -> str:
             f"| {_hms(v.get('built_at'))} | {v['prop']} | {v['month'][:7]} | {v['version']} "
             f"| {v.get('state_status')} | {v.get('pages')}/{v.get('bookmarks')} | {_shape(v, g)} "
             f"| {'ok' if title_ok else 'CHECK'} | {v.get('calls')} | {(v.get('usd') or 0):.3f} "
-            f"| {len(v.get('reused') or [])} | {', '.join(v.get('review_codes') or []) or '-'} |"
+            f"| {len(v.get('reused') or [])} | {_classify_s(v)} "
+            f"| {_wait_minutes(entries.get(v['key']), run_start(v))} "
+            f"| {', '.join(sorted(set(v.get('review_codes') or []))) or '-'} |"
         )
     lines.append("")
+
+    # One-file rebuilds: the capacity change, against the first test where there is one
+    quick = [v for v in versions if v.get("reused") and v.get("calls") == 1]
+    first = REPO / "eval" / "reports" / "live-test-2026-09-29"
+    before: dict[str, list[float]] = defaultdict(list)
+    if first != OUT and (first / "events.jsonl").exists():
+        for e in _events(first):
+            ms = (e.get("timings_ms") or {}).get("classify")
+            if e["kind"] == "version" and e.get("reused") and e.get("calls") == 1 and ms:
+                before[e["prop"]].append(ms / 1000)
+    if quick:
+        lines += [
+            "### One-file rebuilds (labels reused, one model call)",
+            "",
+            "| Property | Month | v | Reused docs | Classify s | Same property, 2026-09-29 |",
+            "|---|---|---|---|---|---|",
+        ]
+        for v in quick:
+            was = before.get(v["prop"])
+            then = f"{min(was):.0f}-{max(was):.0f} s ({len(was)})" if was else "-"
+            lines.append(
+                f"| {v['prop']} | {v['month'][:7]} | {v['version']} | {len(v.get('reused') or [])} "
+                f"| {_classify_s(v)} | {then} |"
+            )
+        lines.append("")
 
     # Spend
     total = sum(v.get("usd") or 0 for v in versions)

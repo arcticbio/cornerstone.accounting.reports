@@ -309,7 +309,7 @@ tenant names and secrets are never among them.
 | *Needs review:* `footer_disagrees` | The printed report name and the label disagree | One of them is wrong; look at the page. The footer never overrides the model (D-05), so this always comes to a human. |
 | *Needs review:* `unmapped_section` | A section was found that is in neither `flow` nor `drop` | Decide which, and add it. The system will not guess. |
 | *Needs review:* `missing_required` | A required flow item or source resolved to nothing | If the source is genuinely gone, mark that flow item `required: false`. If it should be there, chase it. |
-| *Needs review:* `unresolved_record` | A `Property:` header matches no record | The manager renamed a property. Update `pm_name` in `config/properties.yaml`. |
+| *Needs review:* `unresolved_record` | A Rent Manager `Property:` line names no record of this property | Read the `Property:` line in the review PDF. **Another property's report** (D-25): ask the manager for this property's; its upload builds the next version. **This property under a new name** in Rent Manager: update `pm_name` in `config/properties.yaml`, then *Build a period* → `reconcile --force` for the month — a config change alone does not rebuild it. |
 | *Needs review:* `cardinality_violation` | A once-only section appeared twice | Look at the pages. If it is now legitimately two reports, change the section's `cardinality`, or address a specific instance with `#n` in the flow. |
 | *Needs review:* `page_count_drift` | The export changed size by more than half | Usually a manager changing their export settings. Compare against the previous period's manifest before shipping. |
 

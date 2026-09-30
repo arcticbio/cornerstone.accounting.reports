@@ -102,9 +102,10 @@ identical to the golden-label build ($3.73). See `docs/ANALYSIS-model-successor-
    `intake.lease_held` and do nothing (A-14); Cost Management's Container Apps vCPU-seconds for
    the first full day with no builds, divided by 96, is the billed seconds per run (A-15); the
    shared drive's Trash collects ~48 `.crr-preflight-…` probes a day, which Drive deletes after
-   30 days (RUNBOOK → *The folders in Drive*). **Follow-up done (2026-09-29, awaiting
-   review):** `crr reconcile` now runs the preflight only before a run's first build, so a
-   run with nothing to build writes no probe (SPEC §18.9 step 1).
+   30 days (RUNBOOK → *The folders in Drive*). **Follow-up done (2026-09-29, merged
+   in [#20](https://github.com/arcticbio/cornerstone.accounting.reports/pull/20)):** `crr reconcile`
+   now runs the preflight only before a run's first build, so a run with nothing to build
+   writes no probe (SPEC §18.9 step 1).
    **Live-tested in production, 2026-09-29 05:30–13:00 UTC** (`eval/reports/live-test-2026-09-29/REPORT.md`):
    a scripted cast of stakeholders performed 123 actions in the production drive while the
    armed schedule ran on its own — 16 scheduled runs, all clean; 45 versions published, every
@@ -116,12 +117,33 @@ identical to the golden-label build ($3.73). See `docs/ANALYSIS-model-successor-
    D-25, SPEC §18.6: the folder declares the property, as it declares component and month; a
    name check would hold genuine reports); F2 (a deferred month's stale status), F3 (a deleted
    published PDF unnoticed) and the capacity note (reused labels were cross-checked for
-   orientation again) are fixed in the follow-up PR, which also lowers the settle window to 30
-   minutes (D-26: a report now comes 30–60 minutes after the last upload, not 60–90); F4 and F5
-   were documented in #20. The
+   orientation again) are fixed in
+   [#21](https://github.com/arcticbio/cornerstone.accounting.reports/pull/21), which also lowers
+   the settle window to 30 minutes (D-26: a report now comes 30–60 minutes after the last
+   upload, not 60–90); F4 and F5 were documented in #20. **#21 is live:** merged 2026-09-29
+   23:52 UTC; CI ([run 36647485751](https://github.com/arcticbio/cornerstone.accounting.reports/actions/runs/36647485751))
+   republished `:build-v1` at 00:00 UTC on 2026-09-30, and every scheduled execution pulls that
+   tag, so production has built with it since the 00:30 UTC run at the latest. The
    probe change (ec061b7) is live: the first runs after #20 merged left no probe. The test
    months were moved to the rehearsal root afterwards; production holds only June and the
    empty months the schedule prepares.
+   **Live-tested again, 2026-09-30 01:30–05:30 UTC, hands off**
+   (`eval/reports/live-test-2026-09-30/REPORT.md`). Property managers, accounting and a
+   reviewer only, with no operator or forced run and fresh exports into the prepared months.
+   Nine scheduled runs, all clean; **64 of 64 predictions met**; 23 versions, each golden-shaped
+   except the two deliberate cases; $7.81. Each change since the first test was seen working
+   in production:
+   - the 30-minute settle (a month built 32 minutes after its last upload, another made to
+     wait at 27);
+   - F2's `Ready - building on the next run` and `… newer files ready, building next run` on
+     the five months a quarter-end crunch deferred;
+   - F3's `report file missing`, and the status again current after the reviewer restored the
+     report from Trash;
+   - one-file rebuilds classifying in 4.9–11.9 s (28–52 s on 29 September);
+   - D-25's Missoula exception (another entity's report to review, the right one to v2), which
+     the owner confirmed stays for all four Missoula properties;
+   - one probe per building run and none otherwise.
+   The test months were moved to the rehearsal root afterwards.
 
 1. ~~**B-08 — the two McCathren packages go to review on `cardinality_violation`.**~~
    **Fixed 2026-09-11, root-caused with a real-model run.** Not a labelling error: a re-run of
