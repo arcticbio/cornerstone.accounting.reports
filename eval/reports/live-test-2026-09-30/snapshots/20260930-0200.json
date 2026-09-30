@@ -1,0 +1,629 @@
+{
+ "tag": "20260930-0200",
+ "taken": "2026-09-30T02:01:41Z",
+ "tick": "2026-09-30T02:00:00Z",
+ "offset": 30,
+ "run_observed": true,
+ "lease": {
+  "host": "crr-quarterly-29845560-k6jr2",
+  "acquired": "2026-09-30T02:00:20Z",
+  "released": "2026-09-30T02:01:30Z",
+  "expires": "2026-09-30T02:30:20Z"
+ },
+ "summary": [
+  "Investor report status - one line per property, newest month with any files",
+  "",
+  "Fort Grounds - October 2026 - Waiting for uploads to settle",
+  "Lolo Peak Village - October 2026 - Waiting for uploads to settle",
+  "Mullan Crossing - October 2026 - Waiting for uploads to settle",
+  "WayPointe - October 2026 - Waiting for uploads to settle",
+  "River Falls - October 2026 - Waiting for uploads to settle",
+  "",
+  "Last checked 2026-09-30 02:00 UTC. Open a property's month folder, then output/, for detail."
+ ],
+ "root_files": [
+  "Cobalt Properties Group",
+  "McCathren Management and Real Estate Services",
+  "Missoula Property Management",
+  "_LEASE - reconcile run (do not edit).json",
+  "_STATUS - All properties.txt"
+ ],
+ "probes_created": [],
+ "properties": {
+  "fort-grounds": {
+   "months": {
+    "2026-10 October": {
+     "components": {
+      "4 - Distribution Schedule": [
+       {
+        "name": "Fort Grounds Distribution Schedule 2026-10.pdf",
+        "id": "1RUnS2F8RCVrg5Kr_SIVClaOkEDIV9vsM",
+        "mime": "application/pdf",
+        "md5": "ec62a1090586f9a59807e7c8b0a88383",
+        "created": "2026-09-30T01:50:08.543Z",
+        "modified": "2026-09-30T01:50:08.543Z",
+        "size": 107871
+       }
+      ],
+      "3 - Profit and Loss": [
+       {
+        "name": "Fort Grounds P&L YTD 2026-10.pdf",
+        "id": "1pQuIJLeSu6zpDyJSZKYEaNZV3LJCQHBK",
+        "mime": "application/pdf",
+        "md5": "f86e391a699b96dc940e0d7f7c29ffc5",
+        "created": "2026-09-30T01:38:44.435Z",
+        "modified": "2026-09-30T01:38:44.435Z",
+        "size": 32035
+       }
+      ],
+      "2 - Balance Sheet": [
+       {
+        "name": "Fort Grounds Balance Sheet 2026-10.pdf",
+        "id": "1Rtsace5204vYbDowF2VHpewQ-m4du4qC",
+        "mime": "application/pdf",
+        "md5": "f7b9b11391e4ee8461bfaf7e57d76283",
+        "created": "2026-09-30T01:38:34.775Z",
+        "modified": "2026-09-30T01:38:34.775Z",
+        "size": 33851
+       }
+      ],
+      "1 - Property Manager Report": [
+       {
+        "name": "Fort Grounds - Owner Report - October 2026.pdf",
+        "id": "1nKDkYG_SGHGEXNG3xniDWxxTxghG4JTJ",
+        "mime": "application/pdf",
+        "md5": "4c12c45eecf76dc5ebf2445345c34094",
+        "created": "2026-09-30T01:38:31.240Z",
+        "modified": "2026-09-30T01:38:31.240Z",
+        "size": 193795
+       }
+      ]
+     },
+     "loose": [],
+     "output": {
+      "status": [
+       "Waiting for uploads to settle"
+      ],
+      "status_body": [
+       "Fort Grounds - October 2026\nStatus: Waiting for uploads to settle\n\nThe last upload was at 2026-09-30 01:50 UTC. A build starts once nothing has changed for 30 minutes, in case more files are on the way.\n\nFiles\n  Property Manager Report: \"Fort Grounds - Owner Report - October 2026.pdf\" (uploaded 2026-09-30 01:38 UTC)\n  Balance Sheet: \"Fort Grounds Balance Sheet 2026-10.pdf\" (uploaded 2026-09-30 01:38 UTC)\n  Profit and Loss: \"Fort Grounds P&L YTD 2026-10.pdf\" (uploaded 2026-09-30 01:38 UTC)\n  Distribution Schedule: \"Fort Grounds Distribution Schedule 2026-10.pdf\" (uploaded 2026-09-30 01:50 UTC)\n\nHow this folder works\n  Put one PDF in each numbered folder. Any filename is fine.\n  If a folder holds more than one PDF, the newest upload is used and the others are\n  renamed \"SUPERSEDED - ...\". To go back to an older file, delete the newer one.\n  A new version is built by the first run 30 or more minutes after the\n  last upload, and older versions stay in this folder.\n  Changes after 2026-12-12 are ignored.\n"
+      ],
+      "pdfs": [],
+      "reviews": [],
+      "other": []
+     },
+     "state": null
+    },
+    "2026-09 September": {
+     "components": {
+      "4 - Distribution Schedule": [],
+      "3 - Profit and Loss": [],
+      "2 - Balance Sheet": [],
+      "1 - Property Manager Report": []
+     },
+     "loose": [],
+     "output": {
+      "status": [],
+      "status_body": [],
+      "pdfs": [],
+      "reviews": [],
+      "other": []
+     },
+     "state": null
+    },
+    "2026-06 June": {
+     "components": {},
+     "loose": [],
+     "output": null,
+     "state": null,
+     "other_folders": [
+      "inputs"
+     ]
+    }
+   },
+   "loose": []
+  },
+  "lolo-peak-village": {
+   "months": {
+    "2026-10 October": {
+     "components": {
+      "4 - Distribution Schedule": [
+       {
+        "name": "Lolo Peak Village Distribution Schedule 2026-10.pdf",
+        "id": "18dlKkF8FezbstbSiPDTPkv6GVigIDTy1",
+        "mime": "application/pdf",
+        "md5": "78f4113edf061be9a76b99eeff51cdd5",
+        "created": "2026-09-30T01:38:51.993Z",
+        "modified": "2026-09-30T01:38:51.993Z",
+        "size": 105012
+       }
+      ],
+      "3 - Profit and Loss": [
+       {
+        "name": "Lolo Peak Village P&L YTD 2026-10.pdf",
+        "id": "1KiTx2EScN3Zd1nX8a9cRD0ES9AwkwSGD",
+        "mime": "application/pdf",
+        "md5": "734768618439516e5afaa618b6b07ae1",
+        "created": "2026-09-30T01:38:48.594Z",
+        "modified": "2026-09-30T01:38:48.594Z",
+        "size": 70059
+       }
+      ],
+      "2 - Balance Sheet": [
+       {
+        "name": "Lolo Peak Village Balance Sheet 2026-10.pdf",
+        "id": "1EvacgN3Vx8CJiSkKGoSkPtErql9afqH8",
+        "mime": "application/pdf",
+        "md5": "0feb8fea839b4702f44b01b331ff82b0",
+        "created": "2026-09-30T01:38:41.396Z",
+        "modified": "2026-09-30T01:38:41.396Z",
+        "size": 33629
+       }
+      ],
+      "1 - Property Manager Report": [
+       {
+        "name": "Lolo Peak Village - Owner Report - October 2026.pdf",
+        "id": "1FPFbkcWWLLkPSjn2o2CWjdK-WlthdHTe",
+        "mime": "application/pdf",
+        "md5": "bd60679394639222af6fb6ad222e72ef",
+        "created": "2026-09-30T01:38:37.911Z",
+        "modified": "2026-09-30T01:38:37.911Z",
+        "size": 178215
+       }
+      ]
+     },
+     "loose": [],
+     "output": {
+      "status": [
+       "Waiting for uploads to settle"
+      ],
+      "status_body": [
+       "Lolo Peak Village - October 2026\nStatus: Waiting for uploads to settle\n\nThe last upload was at 2026-09-30 01:38 UTC. A build starts once nothing has changed for 30 minutes, in case more files are on the way.\n\nFiles\n  Property Manager Report: \"Lolo Peak Village - Owner Report - October 2026.pdf\" (uploaded 2026-09-30 01:38 UTC)\n  Balance Sheet: \"Lolo Peak Village Balance Sheet 2026-10.pdf\" (uploaded 2026-09-30 01:38 UTC)\n  Profit and Loss: \"Lolo Peak Village P&L YTD 2026-10.pdf\" (uploaded 2026-09-30 01:38 UTC)\n  Distribution Schedule: \"Lolo Peak Village Distribution Schedule 2026-10.pdf\" (uploaded 2026-09-30 01:38 UTC)\n\nHow this folder works\n  Put one PDF in each numbered folder. Any filename is fine.\n  If a folder holds more than one PDF, the newest upload is used and the others are\n  renamed \"SUPERSEDED - ...\". To go back to an older file, delete the newer one.\n  A new version is built by the first run 30 or more minutes after the\n  last upload, and older versions stay in this folder.\n  Changes after 2026-12-12 are ignored.\n"
+      ],
+      "pdfs": [],
+      "reviews": [],
+      "other": []
+     },
+     "state": null
+    },
+    "2026-09 September": {
+     "components": {
+      "4 - Distribution Schedule": [],
+      "3 - Profit and Loss": [],
+      "2 - Balance Sheet": [],
+      "1 - Property Manager Report": []
+     },
+     "loose": [],
+     "output": {
+      "status": [],
+      "status_body": [],
+      "pdfs": [],
+      "reviews": [],
+      "other": []
+     },
+     "state": null
+    },
+    "2026-06 June": {
+     "components": {},
+     "loose": [],
+     "output": null,
+     "state": null,
+     "other_folders": [
+      "inputs"
+     ]
+    }
+   },
+   "loose": []
+  },
+  "mullan-crossing": {
+   "months": {
+    "2026-10 October": {
+     "components": {
+      "4 - Distribution Schedule": [],
+      "3 - Profit and Loss": [
+       {
+        "name": "Mullan Crossing P&L YTD 2026-10.pdf",
+        "id": "1oYNp0iY2hhvkH6PbIfbgqyDB8v7KFsaM",
+        "mime": "application/pdf",
+        "md5": "0b7d27baef8602b4f14334cce3309c42",
+        "created": "2026-09-30T01:39:08.376Z",
+        "modified": "2026-09-30T01:39:08.376Z",
+        "size": 69998
+       }
+      ],
+      "2 - Balance Sheet": [
+       {
+        "name": "Mullan Crossing Balance Sheet 2026-10.pdf",
+        "id": "16mpqqyOFSWMVoDf_i11_QIpDQSkbI0a-",
+        "mime": "application/pdf",
+        "md5": "f8be069e9b42a1461082aeea53095d8e",
+        "created": "2026-09-30T01:38:58.743Z",
+        "modified": "2026-09-30T01:38:58.743Z",
+        "size": 34413
+       }
+      ],
+      "1 - Property Manager Report": [
+       {
+        "name": "Mullan Crossing - Owner Report - October 2026.pdf",
+        "id": "1kRSVA4oWTERywwxsuf6_DXKFuOcI3gNu",
+        "mime": "application/pdf",
+        "md5": "16dacb63c93c6b33f06f7e7c9c9b7cf9",
+        "created": "2026-09-30T01:38:54.974Z",
+        "modified": "2026-09-30T01:38:54.974Z",
+        "size": 201831
+       }
+      ]
+     },
+     "loose": [],
+     "output": {
+      "status": [
+       "Waiting for uploads to settle"
+      ],
+      "status_body": [
+       "Mullan Crossing - October 2026\nStatus: Waiting for uploads to settle\n\nThe last upload was at 2026-09-30 01:39 UTC. A build starts once nothing has changed for 30 minutes, in case more files are on the way.\n\nFiles\n  Property Manager Report: \"Mullan Crossing - Owner Report - October 2026.pdf\" (uploaded 2026-09-30 01:38 UTC)\n  Balance Sheet: \"Mullan Crossing Balance Sheet 2026-10.pdf\" (uploaded 2026-09-30 01:38 UTC)\n  Profit and Loss: \"Mullan Crossing P&L YTD 2026-10.pdf\" (uploaded 2026-09-30 01:39 UTC)\n  Distribution Schedule: none - optional; the report is built without it\n\nHow this folder works\n  Put one PDF in each numbered folder. Any filename is fine.\n  If a folder holds more than one PDF, the newest upload is used and the others are\n  renamed \"SUPERSEDED - ...\". To go back to an older file, delete the newer one.\n  A new version is built by the first run 30 or more minutes after the\n  last upload, and older versions stay in this folder.\n  Changes after 2026-12-12 are ignored.\n"
+      ],
+      "pdfs": [],
+      "reviews": [],
+      "other": []
+     },
+     "state": null
+    },
+    "2026-09 September": {
+     "components": {
+      "4 - Distribution Schedule": [],
+      "3 - Profit and Loss": [],
+      "2 - Balance Sheet": [],
+      "1 - Property Manager Report": []
+     },
+     "loose": [],
+     "output": {
+      "status": [],
+      "status_body": [],
+      "pdfs": [],
+      "reviews": [],
+      "other": []
+     },
+     "state": null
+    },
+    "2026-06 June": {
+     "components": {},
+     "loose": [],
+     "output": null,
+     "state": null,
+     "other_folders": [
+      "inputs"
+     ]
+    }
+   },
+   "loose": []
+  },
+  "waypointe": {
+   "months": {
+    "2026-10 October": {
+     "components": {
+      "4 - Distribution Schedule": [
+       {
+        "name": "WayPointe Distribution Schedule 2026-10.pdf",
+        "id": "1phvoWOZHyqTSl0MgdR_7Tq4EmdqC96TB",
+        "mime": "application/pdf",
+        "md5": "35691cbcfb8329369cbdd182aeaa6ef1",
+        "created": "2026-09-30T01:39:14.181Z",
+        "modified": "2026-09-30T01:39:14.181Z",
+        "size": 211477
+       }
+      ],
+      "3 - Profit and Loss": [
+       {
+        "name": "WayPointe P&L YTD 2026-10.pdf",
+        "id": "1jNXzQnakxyRKQGe0Cs6OVKqXL9a62UT7",
+        "mime": "application/pdf",
+        "md5": "fee1dc0d443f49d29adc83e929758384",
+        "created": "2026-09-30T01:39:11.504Z",
+        "modified": "2026-09-30T01:39:11.504Z",
+        "size": 32092
+       }
+      ],
+      "2 - Balance Sheet": [
+       {
+        "name": "WayPointe Balance Sheet 2026-10.pdf",
+        "id": "1ymH-yZzkF1UdKdfFs7zkVKkDzlXXV86s",
+        "mime": "application/pdf",
+        "md5": "2b5ed11d17a7e47c95603910ff6b1907",
+        "created": "2026-09-30T01:39:04.680Z",
+        "modified": "2026-09-30T01:39:04.680Z",
+        "size": 31897
+       }
+      ],
+      "1 - Property Manager Report": [
+       {
+        "name": "WayPointe - Owner Report - October 2026.pdf",
+        "id": "1D0Fq4vaYXRXGw4GT-9KTmK5uKT7iDq4f",
+        "mime": "application/pdf",
+        "md5": "36ecf2ffcf55b229e010d4b9b6ec4eb8",
+        "created": "2026-09-30T01:39:01.798Z",
+        "modified": "2026-09-30T01:39:01.798Z",
+        "size": 179299
+       }
+      ]
+     },
+     "loose": [],
+     "output": {
+      "status": [
+       "Waiting for uploads to settle"
+      ],
+      "status_body": [
+       "WayPointe - October 2026\nStatus: Waiting for uploads to settle\n\nThe last upload was at 2026-09-30 01:39 UTC. A build starts once nothing has changed for 30 minutes, in case more files are on the way.\n\nFiles\n  Property Manager Report: \"WayPointe - Owner Report - October 2026.pdf\" (uploaded 2026-09-30 01:39 UTC)\n  Balance Sheet: \"WayPointe Balance Sheet 2026-10.pdf\" (uploaded 2026-09-30 01:39 UTC)\n  Profit and Loss: \"WayPointe P&L YTD 2026-10.pdf\" (uploaded 2026-09-30 01:39 UTC)\n  Distribution Schedule: \"WayPointe Distribution Schedule 2026-10.pdf\" (uploaded 2026-09-30 01:39 UTC)\n\nHow this folder works\n  Put one PDF in each numbered folder. Any filename is fine.\n  If a folder holds more than one PDF, the newest upload is used and the others are\n  renamed \"SUPERSEDED - ...\". To go back to an older file, delete the newer one.\n  A new version is built by the first run 30 or more minutes after the\n  last upload, and older versions stay in this folder.\n  Changes after 2026-12-12 are ignored.\n"
+      ],
+      "pdfs": [],
+      "reviews": [],
+      "other": []
+     },
+     "state": null
+    },
+    "2026-09 September": {
+     "components": {
+      "4 - Distribution Schedule": [],
+      "3 - Profit and Loss": [],
+      "2 - Balance Sheet": [],
+      "1 - Property Manager Report": []
+     },
+     "loose": [],
+     "output": {
+      "status": [],
+      "status_body": [],
+      "pdfs": [],
+      "reviews": [],
+      "other": []
+     },
+     "state": null
+    },
+    "2026-06 June": {
+     "components": {},
+     "loose": [],
+     "output": null,
+     "state": null,
+     "other_folders": [
+      "inputs"
+     ]
+    }
+   },
+   "loose": []
+  },
+  "timber-place": {
+   "months": {
+    "2026-10 October": {
+     "components": {
+      "4 - Distribution Schedule": [],
+      "3 - Profit and Loss": [],
+      "2 - Balance Sheet": [],
+      "1 - Property Manager Report": []
+     },
+     "loose": [],
+     "output": {
+      "status": [],
+      "status_body": [],
+      "pdfs": [],
+      "reviews": [],
+      "other": []
+     },
+     "state": null
+    },
+    "2026-09 September": {
+     "components": {
+      "4 - Distribution Schedule": [],
+      "3 - Profit and Loss": [],
+      "2 - Balance Sheet": [],
+      "1 - Property Manager Report": []
+     },
+     "loose": [],
+     "output": {
+      "status": [],
+      "status_body": [],
+      "pdfs": [],
+      "reviews": [],
+      "other": []
+     },
+     "state": null
+    },
+    "2026-06 June": {
+     "components": {},
+     "loose": [],
+     "output": null,
+     "state": null,
+     "other_folders": [
+      "inputs"
+     ]
+    }
+   },
+   "loose": []
+  },
+  "river-falls": {
+   "months": {
+    "2026-10 October": {
+     "components": {
+      "4 - Distribution Schedule": [
+       {
+        "name": "River Falls Distribution Schedule 2026-10.pdf",
+        "id": "1xgM815xswWeIHlBL_hbeEL53pMLjwqkZ",
+        "mime": "application/pdf",
+        "md5": "505d07cf848cdfcf6df0b99dfe83fbac",
+        "created": "2026-09-30T01:58:06.569Z",
+        "modified": "2026-09-30T01:58:06.569Z",
+        "size": 214007
+       }
+      ],
+      "3 - Profit and Loss": [
+       {
+        "name": "River Falls P&L YTD 2026-10.pdf",
+        "id": "16nNeNJ8R3ITjxBG_rtIKBKJxCuBgxIdm",
+        "mime": "application/pdf",
+        "md5": "df8fb2a49ea756f8f2b3be5f2b6dcbf9",
+        "created": "2026-09-30T01:58:03.069Z",
+        "modified": "2026-09-30T01:58:03.069Z",
+        "size": 33198
+       }
+      ],
+      "2 - Balance Sheet": [
+       {
+        "name": "River Falls Balance Sheet 2026-10.pdf",
+        "id": "1JmHIEkJCVYbmAr8Ve_OpiwfLGI5OyArE",
+        "mime": "application/pdf",
+        "md5": "2a29cbc91066a9f7c5a0091d6ddcd236",
+        "created": "2026-09-30T01:57:45.031Z",
+        "modified": "2026-09-30T01:57:45.031Z",
+        "size": 35121
+       }
+      ],
+      "1 - Property Manager Report": [
+       {
+        "name": "River Falls Owner Packet 10-2026.pdf",
+        "id": "1ME2dMEVvXXMpmOeInCxK4Pbk2TdF0yzI",
+        "mime": "application/pdf",
+        "md5": "b66f99cd1ca464dcb7cbb89d6826bd90",
+        "created": "2026-09-30T01:57:41.732Z",
+        "modified": "2026-09-30T01:57:41.732Z",
+        "size": 1756039
+       }
+      ]
+     },
+     "loose": [],
+     "output": {
+      "status": [
+       "Waiting for uploads to settle"
+      ],
+      "status_body": [
+       "River Falls - October 2026\nStatus: Waiting for uploads to settle\n\nThe last upload was at 2026-09-30 01:58 UTC. A build starts once nothing has changed for 30 minutes, in case more files are on the way.\n\nFiles\n  Property Manager Report: \"River Falls Owner Packet 10-2026.pdf\" (uploaded 2026-09-30 01:57 UTC)\n  Balance Sheet: \"River Falls Balance Sheet 2026-10.pdf\" (uploaded 2026-09-30 01:57 UTC)\n  Profit and Loss: \"River Falls P&L YTD 2026-10.pdf\" (uploaded 2026-09-30 01:58 UTC)\n  Distribution Schedule: \"River Falls Distribution Schedule 2026-10.pdf\" (uploaded 2026-09-30 01:58 UTC)\n\nHow this folder works\n  Put one PDF in each numbered folder. Any filename is fine.\n  If a folder holds more than one PDF, the newest upload is used and the others are\n  renamed \"SUPERSEDED - ...\". To go back to an older file, delete the newer one.\n  A new version is built by the first run 30 or more minutes after the\n  last upload, and older versions stay in this folder.\n  Changes after 2026-12-12 are ignored.\n"
+      ],
+      "pdfs": [],
+      "reviews": [],
+      "other": []
+     },
+     "state": null
+    },
+    "2026-09 September": {
+     "components": {
+      "4 - Distribution Schedule": [],
+      "3 - Profit and Loss": [],
+      "2 - Balance Sheet": [],
+      "1 - Property Manager Report": []
+     },
+     "loose": [],
+     "output": {
+      "status": [],
+      "status_body": [],
+      "pdfs": [],
+      "reviews": [],
+      "other": []
+     },
+     "state": null
+    },
+    "2026-06 June": {
+     "components": {},
+     "loose": [],
+     "output": null,
+     "state": null,
+     "other_folders": [
+      "inputs"
+     ]
+    }
+   },
+   "loose": []
+  },
+  "bridgewater": {
+   "months": {
+    "2026-10 October": {
+     "components": {
+      "4 - Distribution Schedule": [],
+      "3 - Profit and Loss": [],
+      "2 - Balance Sheet": [],
+      "1 - Property Manager Report": []
+     },
+     "loose": [],
+     "output": {
+      "status": [],
+      "status_body": [],
+      "pdfs": [],
+      "reviews": [],
+      "other": []
+     },
+     "state": null
+    },
+    "2026-09 September": {
+     "components": {
+      "4 - Distribution Schedule": [],
+      "3 - Profit and Loss": [],
+      "2 - Balance Sheet": [],
+      "1 - Property Manager Report": []
+     },
+     "loose": [],
+     "output": {
+      "status": [],
+      "status_body": [],
+      "pdfs": [],
+      "reviews": [],
+      "other": []
+     },
+     "state": null
+    },
+    "2026-06 June": {
+     "components": {},
+     "loose": [],
+     "output": null,
+     "state": null,
+     "other_folders": [
+      "inputs"
+     ]
+    }
+   },
+   "loose": []
+  },
+  "salmon-crossing": {
+   "months": {
+    "2026-10 October": {
+     "components": {
+      "4 - Distribution Schedule": [],
+      "3 - Profit and Loss": [],
+      "2 - Balance Sheet": [],
+      "1 - Property Manager Report": []
+     },
+     "loose": [],
+     "output": {
+      "status": [],
+      "status_body": [],
+      "pdfs": [],
+      "reviews": [],
+      "other": []
+     },
+     "state": null
+    },
+    "2026-09 September": {
+     "components": {
+      "4 - Distribution Schedule": [],
+      "3 - Profit and Loss": [],
+      "2 - Balance Sheet": [],
+      "1 - Property Manager Report": []
+     },
+     "loose": [],
+     "output": {
+      "status": [],
+      "status_body": [],
+      "pdfs": [],
+      "reviews": [],
+      "other": []
+     },
+     "state": null
+    },
+    "2026-06 June": {
+     "components": {},
+     "loose": [],
+     "output": null,
+     "state": null,
+     "other_folders": [
+      "inputs"
+     ]
+    }
+   },
+   "loose": []
+  }
+ },
+ "spent_usd": 0
+}

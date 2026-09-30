@@ -24,3 +24,13 @@ predicted depends on them landing before B+8.5 — the B+30 run still sees them 
 but its lease window (01:30) is unchanged, so its probe count still scores that run. A tracked
 background watcher now holds the session open for as long as the conductor runs, and wakes this
 session the moment it exits.
+
+**02:09 — after the B+30 run (02:00): 7 of 7 predictions due so far met.** The run held the lease
+02:00:20–02:01:30 and wrote no probe; the four Missoula Octobers and River Falls read `Waiting for
+uploads to settle`. The boundary pair is in place: River Falls October's last upload was 01:58:08,
+~32 minutes before the 02:30 run's clock, and Timber Place October's 02:03:08, ~27 minutes before.
+**One plan error, no effect:** Timber Place has no distribution schedule in the June samples (the
+first test's plan knew, `ds=False`); this plan asked accounting to upload one for Timber Place in
+October (O6) and September (S7). O6's act failed at 02:03:08 while finding the local file
+(`StopIteration`), before anything reached Drive; S7's will fail the same way at B+95.5. The
+schedule is optional and no prediction depends on it, so the plan is left as committed.
