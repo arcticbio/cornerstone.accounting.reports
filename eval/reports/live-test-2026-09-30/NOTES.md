@@ -45,3 +45,15 @@ last upload (01:58:08), where the old 60-minute window would have waited for 03:
 ~27 minutes, waits; and the status files now say "the first run 30 or more minutes after the
 last upload". Stakeholder actions since: Mullan Crossing's schedule at 02:45:09; the reviewer
 trashed Lolo Peak Village's v1 at 02:50:03.
+
+**03:13 — after the B+90 run (03:00): 18 of 18 met.** The run held the lease 03:00:21–03:05:32,
+wrote one probe (03:01:33) and built Timber Place October v1 from its scanned report: 25 pages /
+13 bookmarks, golden, 71 s of OCR, $0.57. **F3 is live:** Lolo Peak Village October reads
+`Built v1 - report file missing`, and its status names the file ("Lolo Peak Village - Investor
+Report - October 2026 - v1.pdf") and advises restoring it from the shared drive's Trash. The
+reviewer did so at 03:10:13. Mullan Crossing October reads `Built v1 - newer files waiting` (its
+schedule, 02:45). **Quarter-end is in:** 39 uploads between 03:05:18 and 03:08:41 — every
+September file for the eight properties (Mullan Crossing's owner report being Lolo Peak
+Village's) and Cobalt's two Octobers; the fortieth, Timber Place's September schedule, failed as
+expected (none in the samples). The last landed ~22 minutes before the 03:30 run and ~52 before
+04:00, the crunch.
