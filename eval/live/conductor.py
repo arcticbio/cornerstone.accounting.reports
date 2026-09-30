@@ -1,11 +1,11 @@
-"""Conductor for the overnight live test of 2026-09-29 (plan: eval/live/plan.py).
+"""Conductor for the live tests of production (the plan: `which.plan`; see `which.py`).
 
 Plays the stakeholders into a Drive root at the planned minutes — uploads, new versions,
-renames, moves, deletions, folders made by hand — and after every Azure run snapshots what the
-system did. It never runs the reconciler: the Azure schedule does all the processing, exactly
-as it will for real uploads.
+renames, moves, deletions, restores from Trash, folders made by hand — and after every Azure
+run snapshots what the system did. It never runs the reconciler: the Azure schedule does all
+the processing, exactly as it will for real uploads.
 
-    uv run python eval/live/conductor.py run --base 2026-09-29T06:30:00Z
+    uv run python eval/live/conductor.py run --base 2026-09-30T02:00:00Z
     uv run python eval/live/conductor.py snapshot [--root ID] [--tag NAME]
     uv run python eval/live/conductor.py smoke --root <rehearsal root id>
 
@@ -26,7 +26,7 @@ from pathlib import Path
 from typing import Any
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-import plan
+import which
 
 from crr.config import load_config
 from crr.intake.lease import LEASE_FILE, parse
@@ -37,13 +37,18 @@ from crr.repository.drive_client import RETRIES, DriveFile, GoogleDriveApi
 from crr.repository.google_drive import OUTPUT
 from crr.settings import Settings
 
-REPO = Path(__file__).resolve().parents[2]
-OUT = REPO / "eval" / "reports" / "live-test-2026-09-29"
-WORK = REPO / "work" / "livetest"
+plan = which.plan
+REPO = which.REPO
+OUT = which.OUT
+WORK = which.WORK
 BUNDLE = REPO / "data" / "bundle" / "2026-06"
 CONFIG = load_config(REPO / "config")
-END_OFFSET = 450  # the last tick whose run is observed
-BUDGET_USD = 95.0  # stop starting new scenarios here; the owner's cap is $100
+END_OFFSET: int = getattr(plan, "END_OFFSET", 450)  # the last tick whose run is observed
+BUDGET_USD: float = getattr(plan, "BUDGET_USD", 95.0)  # no new scenario starts past this spend
+#: Every upload is a fresh export: the sample re-saved with its own metadata, so no two uploads
+#: — nor any upload of an earlier test — share bytes. The first test uploaded the samples as-is.
+FRESH_EXPORTS: bool = getattr(plan, "FRESH_EXPORTS", False)
+PROBE = ".crr-preflight-"
 
 
 def now() -> datetime:
@@ -91,21 +96,42 @@ def _bundle_file(prop: str, key: str) -> Path:
     return next(p for p in sorted(_inputs(prop).iterdir()) if p.name.startswith(prefix))
 
 
-def source(prop: str, key: str) -> Path:
-    """The local file an action uploads, made on first use under work/ (never committed)."""
+def source(prop: str, key: str, period: str = "") -> Path:
+    """The local file an action uploads, made on first use under work/ (never committed).
+
+    `key@other` is the other property's file, uploaded into this property's folder.
+    """
     from pypdf import PdfReader, PdfWriter
 
+    target, full_key = prop, key
     if "@" in key:
         key, prop = key.split("@")
-    if key in ("pm", "bs", "pl", "ds"):
+    if key in ("pm", "bs", "pl", "ds") and not FRESH_EXPORTS:
         return _bundle_file(prop, key)
     ext = {"docx": "docx", "jpg": "jpg"}.get(key, "pdf")
-    dest = WORK / "files" / prop / f"{key}.{ext}"
+    if FRESH_EXPORTS:
+        dest = WORK / "files" / target / (period or "any") / f"{full_key}.{ext}"
+    else:
+        dest = WORK / "files" / prop / f"{key}.{ext}"
     if dest.exists():
         return dest
     dest.parent.mkdir(parents=True, exist_ok=True)
     base = key.split("-")[0]
-    if key in ("bs-corrected", "bs-corrected-2", "bs-reissued", "pl-corrected"):
+    if key in ("pm", "bs", "pl", "ds", "bs-corrected", "bs-reissued", "pl-corrected") and (
+        FRESH_EXPORTS
+    ):
+        writer = PdfWriter(clone_from=str(_bundle_file(prop, base)))
+        stamp = now().strftime("D:%Y%m%d%H%M%SZ")  # an export carries the time it was made
+        writer.add_metadata(
+            {
+                "/Subject": f"{full_key} for {target} {period} (live test {which.NAME})",
+                "/Keywords": f"{full_key} {target} {period} {which.NAME}",
+                "/CreationDate": stamp,
+                "/ModDate": stamp,
+            }
+        )
+        writer.write(str(dest))
+    elif key in ("bs-corrected", "bs-corrected-2", "bs-reissued", "pl-corrected"):
         writer = PdfWriter(clone_from=str(_bundle_file(prop, base)))
         writer.add_metadata({"/Subject": f"{key} (live test)", "/Keywords": key})
         writer.write(str(dest))
@@ -213,6 +239,62 @@ class Drive:
             raise RuntimeError(f"no file containing {contains!r}")
         return sorted(files, key=lambda f: f.created_time or "")[-1]
 
+    def find_trashed(self, folder_id: str, contains: str) -> dict[str, Any]:
+        """The newest file in the folder's Trash whose name contains `contains`."""
+        response = (
+            self.svc.files()
+            .list(
+                q=f"'{folder_id}' in parents and trashed = true",
+                fields="files(id, name, createdTime)",
+                pageSize=200,
+                supportsAllDrives=True,
+                includeItemsFromAllDrives=True,
+            )
+            .execute(num_retries=RETRIES)
+        )
+        files = [f for f in response.get("files", []) if contains in f["name"]]
+        if not files:
+            raise RuntimeError(f"nothing in the Trash containing {contains!r}")
+        return dict(sorted(files, key=lambda f: f.get("createdTime") or "")[-1])
+
+    def untrash(self, file_id: str) -> None:
+        self.svc.files().update(
+            fileId=file_id, body={"trashed": False}, supportsAllDrives=True, fields="id"
+        ).execute(num_retries=RETRIES)
+
+    def probes_since(self, since: str) -> list[str]:
+        """Creation times of the publish probes (SPEC §18.9 step 1) made since `since`.
+
+        A run trashes its probe at once, so they are found in the shared drive's Trash.
+        """
+        drive_id = (
+            self.svc.files()
+            .get(fileId=self.root, fields="driveId", supportsAllDrives=True)
+            .execute(num_retries=RETRIES)
+            .get("driveId")
+        )
+        out: list[str] = []
+        page_token: str | None = None
+        while True:
+            response = (
+                self.svc.files()
+                .list(
+                    corpora="drive",
+                    driveId=drive_id,
+                    includeItemsFromAllDrives=True,
+                    supportsAllDrives=True,
+                    q=f"name contains '{PROBE}' and createdTime > '{since}'",
+                    fields="nextPageToken, files(createdTime, trashed)",
+                    pageSize=200,
+                    pageToken=page_token,
+                )
+                .execute(num_retries=RETRIES)
+            )
+            out += [f["createdTime"] for f in response.get("files", [])]
+            page_token = response.get("nextPageToken")
+            if not page_token:
+                return sorted(out)
+
     def move(self, file_id: str, src: str, dst: str) -> None:
         self.svc.files().update(
             fileId=file_id, addParents=dst, removeParents=src, supportsAllDrives=True, fields="id"
@@ -238,7 +320,7 @@ def perform(drive: Drive, act: plan.Act) -> dict[str, Any]:
     """Do one stakeholder action; return what was done, by id."""
     op = act.op
     if op == "upload":
-        path = source(act.prop, act.src or "")
+        path = source(act.prop, act.src or "", act.period)
         dest = drive.place_id(act.prop, act.period, act.role, act.extra.get("place"))
         made = drive.api.upload(dest, path, act.name)
         return {"file_id": made.id, "mime": made.mime_type, "name": made.name}
@@ -247,7 +329,7 @@ def perform(drive: Drive, act: plan.Act) -> dict[str, Any]:
         target = drive.child(folder, act.name or "", folder=False)
         if target is None:
             raise RuntimeError(f"no file named {act.name!r} to update")
-        drive.api.update_content(target.id, source(act.prop, act.src or ""))
+        drive.api.update_content(target.id, source(act.prop, act.src or "", act.period))
         return {"file_id": target.id, "name": target.name}
     if op in ("trash", "trash_output"):
         place = "output" if op == "trash_output" else None
@@ -255,6 +337,11 @@ def perform(drive: Drive, act: plan.Act) -> dict[str, Any]:
         target = drive.find(folder, act.name or "")
         drive.api.trash(target.id)
         return {"file_id": target.id, "name": target.name}
+    if op == "untrash":  # a reviewer restores a published report from the shared drive's Trash
+        folder = drive.place_id(act.prop, act.period, act.role, "output")
+        found = drive.find_trashed(folder, act.name or "")
+        drive.untrash(found["id"])
+        return {"file_id": found["id"], "name": found["name"]}
     if op == "rename":
         folder = drive.place_id(act.prop, act.period, act.role, None)
         target = drive.find(folder, act.name or "")
@@ -370,9 +457,10 @@ def _manifest_facts(text: str) -> dict[str, Any]:
 
 
 class Observer:
-    def __init__(self, drive: Drive, log: Log) -> None:
+    def __init__(self, drive: Drive, log: Log, probe_since: str | None = None) -> None:
         self.drive = drive
         self.log = log
+        self.probe_since = probe_since
         self.seen: set[str] = set()
         for e in log.read():
             if e["kind"] == "version":
@@ -399,6 +487,9 @@ class Observer:
         files = self.drive.children(folder.id)
         res: dict[str, Any] = {
             "status": [headline_of(f.name) for f in files if is_status_filename(f.name)],
+            "status_body": [
+                self.drive.read_text(f.id) for f in files if is_status_filename(f.name)
+            ],
             "pdfs": sorted(f.name for f in files if f.name.endswith(".pdf")),
             "reviews": sorted(f.name for f in files if f.name.startswith("REVIEW")),
             "other": sorted(
@@ -456,6 +547,8 @@ class Observer:
         summary = self.drive.child(self.drive.root, ROOT_SUMMARY, folder=False)
         snap["summary"] = self.drive.read_text(summary.id).splitlines() if summary else None
         snap["root_files"] = sorted(f.name for f in self.drive.children(self.drive.root))
+        if self.probe_since:
+            snap["probes_created"] = self.drive.probes_since(self.probe_since)
         snap["properties"] = {}
         for entry in CONFIG.properties.properties:
             prop_id = self.drive.property_id(entry.id)
@@ -487,7 +580,7 @@ class Observer:
 def run(base: datetime, root: str) -> None:
     log = Log(OUT)
     drive = Drive(root)
-    observer = Observer(drive, log)
+    observer = Observer(drive, log, probe_since=iso(base - timedelta(minutes=10)))
     events = log.read()
     done_acts = {e["index"] for e in events if e["kind"] in ("act", "act_failed", "act_skipped")}
     done_ticks = {e["tag"] for e in events if e["kind"] == "snapshot"}
@@ -677,9 +770,49 @@ def smoke(root: str) -> None:
     log.write("smoke_done", trashed=len(set(made)))
 
 
+def smoke_restore(root: str) -> None:
+    """The operations new since the first test, once each, in the rehearsal root; then tidy up.
+
+    A fresh export uploaded; a file put in `output/`, trashed and restored from the Trash, as a
+    reviewer would; the publish probes counted; one status file read back.
+    """
+    log = Log(WORK / "smoke")
+    drive = Drive(root)
+    prop, period = "fort-grounds", plan.OCT
+    steps = [
+        plan.Act(0, "smoke", "t", "upload", prop, period, plan.PM, "pm@lolo-peak-village", "s.pdf"),
+        plan.Act(
+            0,
+            "smoke",
+            "t",
+            "upload",
+            prop,
+            period,
+            None,
+            "bs",
+            "smoke out.pdf",
+            {"place": "output"},
+        ),
+        plan.Act(0, "smoke", "t", "trash_output", prop, period, None, name="smoke out"),
+        plan.Act(0, "smoke", "t", "untrash", prop, period, None, name="smoke out"),
+    ]
+    made: list[str] = []
+    for act in steps:
+        result = perform(drive, act)
+        log.write("smoke", op=act.op, src=act.src, result=result)
+        made += [v for k, v in result.items() if k == "file_id"]
+    restored = drive.child(drive.place_id(prop, period, None, "output"), "smoke out.pdf")
+    log.write("smoke", check="restored", present=restored is not None)
+    since = iso(now() - timedelta(hours=24))
+    log.write("smoke", check="probes", since=since, count=len(drive.probes_since(since)))
+    for file_id in dict.fromkeys(made):
+        drive.api.trash(file_id)
+    log.write("smoke_done", trashed=len(set(made)))
+
+
 def main() -> None:
     parser = argparse.ArgumentParser()
-    parser.add_argument("command", choices=["run", "snapshot", "smoke"])
+    parser.add_argument("command", choices=["run", "snapshot", "smoke", "smoke-restore"])
     parser.add_argument("--base")
     parser.add_argument("--root", default=Settings().gdrive_root_folder_id)
     parser.add_argument("--tag", default=None)
@@ -688,6 +821,8 @@ def main() -> None:
         run(parse_iso(args.base), args.root)
     elif args.command == "smoke":
         smoke(args.root)
+    elif args.command == "smoke-restore":
+        smoke_restore(args.root)
     else:
         log = Log(OUT if args.root == Settings().gdrive_root_folder_id else WORK / "adhoc")
         Observer(Drive(args.root), log).snapshot(args.tag or now().strftime("adhoc-%H%M%S"))

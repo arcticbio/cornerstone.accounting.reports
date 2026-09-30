@@ -1,4 +1,4 @@
-"""After the live test: move its months out of the production root, into the rehearsal root.
+"""After a live test: move its months out of the production root, into the rehearsal root.
 
     uv run python eval/live/cleanup.py --dry-run   # say what would move
     uv run python eval/live/cleanup.py             # move it
@@ -6,7 +6,7 @@
 Nothing is deleted: every test month folder — September and October, and the month folders
 made by hand (August, a misnamed August, July) — moves whole, with its uploads, versions,
 statuses and index, to the same manager/property path under the rehearsal root, renamed
-"<name> (live test 2026-09-29)". Files the test dropped straight into a property folder go the
+"<name> (live test <date>)". Files the test dropped straight into a property folder go the
 same way. The next scheduled run then recreates empty September and October folders in
 production and rewrites the summary without them.
 
@@ -29,14 +29,18 @@ import conductor
 from crr.repository.drive_client import RETRIES
 
 REHEARSAL_ROOT = "1eGZGlv5IGVd7OGM0-_2jcDfa56FkwAlz"
-SUFFIX = " (live test 2026-09-29)"
-TEST_MONTHS = (
-    "2026-09 September",
-    "2026-10 October",
-    "2026-08 August",
-    "2026-08",
-    "August 2026",
-    "2026-07 July",
+SUFFIX = f" (live test {conductor.which.NAME})"
+TEST_MONTHS: tuple[str, ...] = getattr(
+    conductor.plan,
+    "TEST_MONTHS",
+    (
+        "2026-09 September",
+        "2026-10 October",
+        "2026-08 August",
+        "2026-08",
+        "August 2026",
+        "2026-07 July",
+    ),
 )
 DROPPED = "(dropped in the property folder)"
 

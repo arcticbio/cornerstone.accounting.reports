@@ -1,4 +1,4 @@
-"""Tables for the live test's report, from the evidence alone: events, snapshots and golden.
+"""Tables for a live test's report, from the evidence alone: events, snapshots and golden.
 
     uv run python eval/live/report_data.py      # prints them and writes tables.md
 
@@ -19,9 +19,10 @@ from typing import Any
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import evaluate
+import which
 
-REPO = Path(__file__).resolve().parents[2]
-OUT = REPO / "eval" / "reports" / "live-test-2026-09-29"
+REPO = which.REPO
+OUT = which.OUT
 DS = "cornerstone_distribution_schedule"
 
 
