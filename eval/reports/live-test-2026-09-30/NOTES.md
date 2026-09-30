@@ -82,3 +82,11 @@ report, is `Needs review (v1)` with four `unresolved_record` reasons (each per-r
 names Lolo Peak Village LP) and, following from them, two `missing_required` (the flow's
 per-record items resolved to nothing) and three `unmapped_section`; its review PDF has 5 pages.
 Six of the seven September reports are their golden shape (24/8, 8/6, 8/6, 29/13, 18/8, 25/13).
+
+**04:49 — after the B+180 run (04:30): 53 of 53 met.** The run held the lease 04:30:19–04:39:26,
+wrote one probe and built the five months the crunch deferred, in month order: WayPointe
+September v1 (04:31:18), Bridgewater October v1 (04:33:30), Fort Grounds October v2 (04:36:12),
+Salmon Crossing October v1 (04:36:48) and WayPointe October v2 (04:39:00) — $1.23, each its
+golden shape (10/8, 24/8, 8/6, 18/8, 10/8). The two corrections were one model call each ($0.02)
+with three documents' labels reused, and **classified in 5.2 s and 5.5 s**. Next: accounting's
+three reissued Balance Sheets and Missoula's corrected Mullan Crossing report at 04:50.
